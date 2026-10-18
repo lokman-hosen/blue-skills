@@ -54,6 +54,8 @@ img, svg, video { max-width: 100%; }
 
 /* Visible focus everywhere (2px brand ring, offset so it shows on brand fills too). */
 :focus-visible { outline: 3px solid rgb(var(--brand)); outline-offset: 2px; }
+/* Headings that receive focus programmatically (step changes) are announced, not outlined. */
+[tabindex="-1"]:focus { outline: none; }
 .skip-link { position: absolute; inset-inline-start: 8px; top: -60px; z-index: 100; }
 .skip-link:focus { top: 8px; }
 
@@ -93,6 +95,8 @@ dialog.drawer[open] { animation: bs-in-start .2s ease-out; }
 }
 
 /* Sidebar collapse (org/admin workspaces, lg+) */
+[data-collapsed] { --sb: 16rem; }
+[data-collapsed="true"] { --sb: 76px; }
 @media (min-width: 1024px) {
   [data-collapsed="true"] .sidebar { width: 76px; }
   [data-collapsed="true"] .sidebar .nav-label { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }

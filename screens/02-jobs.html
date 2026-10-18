@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="bn" data-i18n-page>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Find Jobs · BLUESKILLS</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,700;12..96,800&family=Figtree:wght@400;500;600;700&family=JetBrains+Mono:wght@500;700&family=Noto+Sans+Bengali:wght@400;600;700&family=Noto+Sans+Devanagari:wght@400;600;700&family=Noto+Naskh+Arabic:wght@400;600;700&display=swap">
+<link rel="stylesheet" href="../assets/tokens.css">
+<script src="https://cdn.tailwindcss.com/3.4.17"></script>
+<script src="../assets/tailwind.config.js"></script>
+<script src="../assets/i18n.js"></script>
+<script src="../assets/i18n-screens.js"></script>
+<script src="../assets/app.js"></script>
+</head>
+<body class="font-sans">
+<a href="#main" class="skip-link inline-flex items-center min-h-11 rounded-lg bg-brand text-onbrand px-4 font-semibold">Skip to content</a>
+
+<aside class="hidden lg:flex fixed inset-y-0 start-0 z-30 w-64 flex-col border-e border-line bg-surface">
+  <a href="../index.html" class="flex items-center gap-2 h-16 px-5 border-b border-line" aria-label="BLUESKILLS home">
+    <span class="grid place-items-center w-9 h-9 rounded-lg bg-brand text-onbrand"><svg class="w-5 h-5" aria-hidden="true"><use href="#i-passport"/></svg></span>
+    <span class="font-display text-lg font-extrabold tracking-tight">BLUESKILLS</span>
+  </a>
+  <nav aria-label="Main" class="flex-1 overflow-y-auto p-3">
+    <ul class="space-y-1"><li><a href="../layouts/worker.html" class="flex items-center gap-3 min-h-12 px-3 rounded-xl text-ink hover:bg-surface2 text-base font-semibold"><svg class="w-6 h-6 text-muted" aria-hidden="true"><use href="#i-home"/></svg><span data-i18n="home">Home</span></a></li><li><a href="02-jobs.html" aria-current="page" class="flex items-center gap-3 min-h-12 px-3 rounded-xl bg-brandsoft text-brand text-base font-semibold"><svg class="w-6 h-6" aria-hidden="true"><use href="#i-search"/></svg><span data-i18n="jobs">Jobs</span></a></li><li><a href="05-apply.html#tracker" class="flex items-center gap-3 min-h-12 px-3 rounded-xl text-ink hover:bg-surface2 text-base font-semibold"><svg class="w-6 h-6 text-muted" aria-hidden="true"><use href="#i-list"/></svg><span data-i18n="applications">Applications</span></a></li><li><a href="#" class="flex items-center gap-3 min-h-12 px-3 rounded-xl text-ink hover:bg-surface2 text-base font-semibold"><svg class="w-6 h-6 text-muted" aria-hidden="true"><use href="#i-chat"/></svg><span data-i18n="messages">Messages</span></a></li><li><a href="04-passport.html" class="flex items-center gap-3 min-h-12 px-3 rounded-xl text-ink hover:bg-surface2 text-base font-semibold"><svg class="w-6 h-6 text-muted" aria-hidden="true"><use href="#i-passport"/></svg><span data-i18n="passport">Passport</span></a></li></ul>
+    <ul class="mt-4 pt-4 border-t border-line space-y-1">
+      <li><a href="10-settings.html" class="flex items-center gap-3 min-h-12 px-3 rounded-xl text-ink hover:bg-surface2 font-semibold"><svg class="w-6 h-6 text-muted" aria-hidden="true"><use href="#i-settings"/></svg><span data-i18n="settings">Settings</span></a></li>
+      <li><a href="#" class="flex items-center gap-3 min-h-12 px-3 rounded-xl text-ink font-semibold hover:bg-surface2"><svg class="w-6 h-6 text-muted" aria-hidden="true"><use href="#i-help"/></svg><span data-i18n="help">Help</span></a></li>
+    </ul>
+  </nav>
+  <div class="p-3 border-t border-line"><div class="flex items-center gap-3 rounded-xl p-2"><span class="grid place-items-center w-11 h-11 shrink-0 rounded-full bg-brandsoft text-brand font-bold">RU</span><div class="min-w-0"><p class="font-semibold truncate">Md Rahim Uddin</p><p class="text-sm text-muted truncate" data-i18n="trElectrician">Electrician</p></div></div></div>
+</aside>
+
+<div class="lg:ps-64">
+  <header class="sticky top-0 z-20 border-b border-line bg-surface/95 backdrop-blur pt-[env(safe-area-inset-top)]">
+    <div class="mx-auto max-w-7xl flex items-center gap-2 h-16 px-4">
+      <a href="../index.html" class="lg:hidden flex items-center gap-2 min-h-11 min-w-11" aria-label="BLUESKILLS home">
+        <span class="grid place-items-center w-9 h-9 rounded-lg bg-brand text-onbrand"><svg class="w-5 h-5" aria-hidden="true"><use href="#i-passport"/></svg></span>
+      </a>
+      <p class="text-lg font-bold truncate" data-i18n="findJobs">Find jobs</p>
+      <div class="ms-auto flex items-center gap-1">
+        <button type="button" data-open="lang-sheet" class="inline-flex items-center gap-2 min-h-11 px-3 rounded-full border border-linestrong bg-surface font-semibold hover:bg-surface2"><svg class="w-5 h-5 text-muted" aria-hidden="true"><use href="#i-globe"/></svg><span data-lang-current>বাংলা</span><span class="sr-only" data-i18n="language">Language</span></button>
+        <button type="button" data-theme-toggle aria-label="Dark theme" class="grid place-items-center w-11 h-11 rounded-full hover:bg-surface2"><svg class="w-5 h-5" aria-hidden="true"><use href="#i-moon"/></svg></button>
+      </div>
+    </div>
+  </header>
+
+  <main id="main" class="mx-auto max-w-7xl px-4 pt-5 pb-28 lg:pb-12">
+    <div id="search-bar" class="space-y-3">
+      <div class="grid gap-2 sm:grid-cols-[minmax(0,1fr)_minmax(0,14rem)]" role="search">
+        <label class="relative block">
+          <span class="sr-only" data-i18n="jobOrSkill">Job or skill</span>
+          <svg class="pointer-events-none absolute start-4 top-1/2 -translate-y-1/2 w-5 h-5 text-muted" aria-hidden="true"><use href="#i-search"/></svg>
+          <input id="q" type="search" data-i18n-placeholder="searchPh" placeholder="Electrician, welder, driver…" class="block w-full min-h-12 rounded-full border border-linestrong bg-surface ps-12 pe-4 text-base text-ink placeholder:text-muted focus:outline-none focus:border-brand focus:ring-[3px] focus:ring-brand/40">
+        </label>
+        <label class="relative block">
+          <span class="sr-only" data-i18n="country">Country</span>
+          <svg class="pointer-events-none absolute start-4 top-1/2 -translate-y-1/2 w-5 h-5 text-muted" aria-hidden="true"><use href="#i-pin"/></svg>
+          <select id="country" class="appearance-none block w-full min-h-12 rounded-full border border-linestrong bg-surface ps-12 pe-10 text-base text-ink focus:outline-none focus:border-brand focus:ring-[3px] focus:ring-brand/40">
+            <option value="" data-i18n="anyCountry">Any country</option><option>United Arab Emirates</option><option>Saudi Arabia</option><option>Poland</option><option>Japan</option><option>Czechia</option>
+          </select>
+          <svg class="pointer-events-none absolute end-4 top-1/2 -translate-y-1/2 w-5 h-5 text-muted" aria-hidden="true"><use href="#i-down"/></svg>
+        </label>
+      </div>
+      <div class="flex gap-2 overflow-x-auto pb-1" role="group" aria-label="Filters">
+        <button type="button" data-filter="housing" aria-pressed="false" class="shrink-0 inline-flex items-center gap-1.5 min-h-11 rounded-full border border-linestrong bg-surface px-4 text-[15px] font-semibold text-ink hover:bg-surface2 aria-pressed:border-brand aria-pressed:bg-brandsoft aria-pressed:text-brand"><svg class="w-5 h-5" aria-hidden="true"><use href="#i-bed"/></svg><span data-i18n="fHousing">Housing given</span></button>
+        <button type="button" data-filter="nocost" aria-pressed="false" class="shrink-0 inline-flex items-center gap-1.5 min-h-11 rounded-full border border-linestrong bg-surface px-4 text-[15px] font-semibold text-ink hover:bg-surface2 aria-pressed:border-brand aria-pressed:bg-brandsoft aria-pressed:text-brand"><svg class="w-5 h-5" aria-hidden="true"><use href="#i-money"/></svg><span data-i18n="fNoCost">You pay nothing</span></button>
+        <button type="button" data-filter="verified" aria-pressed="false" class="shrink-0 inline-flex items-center gap-1.5 min-h-11 rounded-full border border-linestrong bg-surface px-4 text-[15px] font-semibold text-ink hover:bg-surface2 aria-pressed:border-brand aria-pressed:bg-brandsoft aria-pressed:text-brand"><svg class="w-5 h-5" aria-hidden="true"><use href="#i-shield-check"/></svg><span data-i18n="fVerified">Verified employer</span></button>
+      </div>
+      <div class="flex flex-wrap items-center gap-2">
+        <p id="count" class="font-semibold me-auto" aria-live="polite"></p>
+        <span class="inline-flex items-center gap-1 rounded-md border border-dashed border-linestrong px-2 py-0.5 text-[13px] font-semibold text-muted" data-i18n="sample">Sample data</span>
+      </div>
+    </div>
+
+    <div class="mt-4 grid grid-cols-1 gap-5 lg:grid-cols-[minmax(0,22rem)_minmax(0,1fr)] xl:grid-cols-[minmax(0,26rem)_minmax(0,1fr)] items-start">
+      <section id="list-wrap" aria-label="Jobs">
+        <ul id="list" class="space-y-3"></ul>
+      </section>
+      <section id="detail-wrap" aria-label="Job details" class="max-lg:hidden lg:sticky lg:top-20">
+        <a href="#" class="lg:hidden inline-flex items-center gap-1 min-h-11 -ms-2 px-2 mb-2 rounded-lg font-semibold text-brand hover:bg-brandsoft"><svg class="w-5 h-5 flip-rtl" aria-hidden="true"><use href="#i-back"/></svg><span data-i18n="backToJobs">Back to jobs</span></a>
+        <div class="hidden lg:flex items-center gap-2 mb-3">
+          <a id="apply-d" href="05-apply.html" class="inline-flex items-center justify-center gap-2 min-h-14 px-6 rounded-2xl bg-brand text-onbrand text-lg font-bold hover:bg-brand/90"><svg class="w-6 h-6" aria-hidden="true"><use href="#i-check"/></svg><span data-i18n="iCanDo">I can do this job</span></a>
+          <button type="button" data-toast="Saved" data-toast-key="savedAns" data-toast-tone="ok" class="inline-flex items-center justify-center gap-2 min-h-14 px-5 rounded-2xl border border-linestrong bg-surface font-semibold hover:bg-surface2"><svg class="w-5 h-5" aria-hidden="true"><use href="#i-star"/></svg><span data-i18n="save">Save</span></button>
+        </div>
+        <div id="detail"></div>
+      </section>
+    </div>
+
+    <!-- Phone detail: main action stays at the bottom of the screen -->
+    <div id="apply-bar" class="hidden lg:hidden fixed bottom-0 inset-x-0 z-30 border-t border-line bg-surface p-3 pb-[max(0.75rem,env(safe-area-inset-bottom))]">
+      <a id="apply-m" href="05-apply.html" class="flex w-full items-center justify-center gap-2 min-h-14 rounded-2xl bg-brand text-onbrand text-lg font-bold hover:bg-brand/90"><svg class="w-6 h-6" aria-hidden="true"><use href="#i-check"/></svg><span data-i18n="iCanDo">I can do this job</span></a>
+    </div>
+
+  </main>
+</div>
+
+<nav id="bottom-tabs" aria-label="Main" class="lg:hidden fixed bottom-0 inset-x-0 z-30 border-t border-line bg-surface pb-[env(safe-area-inset-bottom)]">
+  <ul class="grid grid-cols-5"><li><a href="../layouts/worker.html" class="relative flex flex-col items-center justify-center gap-0.5 min-h-16 px-1 text-muted hover:text-ink"><svg class="w-6 h-6" aria-hidden="true"><use href="#i-home"/></svg><span class="text-[13px] font-semibold leading-tight text-center" data-i18n="home">Home</span></a></li><li><a href="02-jobs.html" aria-current="page" class="relative flex flex-col items-center justify-center gap-0.5 min-h-16 px-1 text-brand"><span class="absolute top-0 inset-x-3 h-1 rounded-b-full bg-brand" aria-hidden="true"></span><svg class="w-6 h-6" aria-hidden="true"><use href="#i-search"/></svg><span class="text-[13px] font-semibold leading-tight text-center" data-i18n="jobs">Jobs</span></a></li><li><a href="05-apply.html#tracker" class="relative flex flex-col items-center justify-center gap-0.5 min-h-16 px-1 text-muted hover:text-ink"><svg class="w-6 h-6" aria-hidden="true"><use href="#i-list"/></svg><span class="text-[13px] font-semibold leading-tight text-center" data-i18n="tabApps">Applied</span></a></li><li><a href="#" class="relative flex flex-col items-center justify-center gap-0.5 min-h-16 px-1 text-muted hover:text-ink"><svg class="w-6 h-6" aria-hidden="true"><use href="#i-chat"/></svg><span class="text-[13px] font-semibold leading-tight text-center" data-i18n="messages">Messages</span></a></li><li><a href="04-passport.html" class="relative flex flex-col items-center justify-center gap-0.5 min-h-16 px-1 text-muted hover:text-ink"><svg class="w-6 h-6" aria-hidden="true"><use href="#i-passport"/></svg><span class="text-[13px] font-semibold leading-tight text-center" data-i18n="passport">Passport</span></a></li></ul>
+</nav>
+<!-- Language sheet -->
+<dialog id="lang-sheet" class="sheet" aria-labelledby="lang-sheet-t">
+  <div class="rounded-t-3xl sm:rounded-2xl bg-surface sm:w-[28rem] max-h-[85vh] overflow-y-auto p-5 pb-[max(1.25rem,env(safe-area-inset-bottom))]">
+    <div class="mx-auto mb-3 h-1.5 w-12 rounded-full bg-line sm:hidden" aria-hidden="true"></div>
+    <div class="flex items-center justify-between gap-2">
+      <h2 id="lang-sheet-t" class="text-xl font-bold" data-i18n="chooseLang">Choose your language</h2>
+      <button type="button" data-close aria-label="Close" class="grid place-items-center w-11 h-11 rounded-full hover:bg-surface2"><svg class="w-5 h-5" aria-hidden="true"><use href="#i-x"/></svg></button>
+    </div>
+    <fieldset class="mt-3 grid grid-cols-2 gap-2">
+      <legend class="sr-only" data-i18n="language">Language</legend>
+      <label class="flex flex-col items-center justify-center min-h-20 rounded-2xl border-2 border-line p-2 cursor-pointer has-[:checked]:border-brand has-[:checked]:bg-brandsoft has-[:focus-visible]:ring-[3px] has-[:focus-visible]:ring-brand/50"><input type="radio" name="lang" data-lang-option="bn" class="sr-only"><span lang="bn" class="text-xl font-bold">বাংলা</span><span class="text-sm text-muted">Bangla</span></label>
+      <label class="flex flex-col items-center justify-center min-h-20 rounded-2xl border-2 border-line p-2 cursor-pointer has-[:checked]:border-brand has-[:checked]:bg-brandsoft has-[:focus-visible]:ring-[3px] has-[:focus-visible]:ring-brand/50"><input type="radio" name="lang" data-lang-option="hi" class="sr-only"><span lang="hi" class="text-xl font-bold">हिन्दी</span><span class="text-sm text-muted">Hindi</span></label>
+      <label class="flex flex-col items-center justify-center min-h-20 rounded-2xl border-2 border-line p-2 cursor-pointer has-[:checked]:border-brand has-[:checked]:bg-brandsoft has-[:focus-visible]:ring-[3px] has-[:focus-visible]:ring-brand/50"><input type="radio" name="lang" data-lang-option="ur" class="sr-only"><span lang="ur" class="text-xl font-bold">اردو</span><span class="text-sm text-muted">Urdu</span></label>
+      <label class="flex flex-col items-center justify-center min-h-20 rounded-2xl border-2 border-line p-2 cursor-pointer has-[:checked]:border-brand has-[:checked]:bg-brandsoft has-[:focus-visible]:ring-[3px] has-[:focus-visible]:ring-brand/50"><input type="radio" name="lang" data-lang-option="ne" class="sr-only"><span lang="ne" class="text-xl font-bold">नेपाली</span><span class="text-sm text-muted">Nepali</span></label>
+      <label class="col-span-2 flex flex-col items-center justify-center min-h-20 rounded-2xl border-2 border-line p-2 cursor-pointer has-[:checked]:border-brand has-[:checked]:bg-brandsoft has-[:focus-visible]:ring-[3px] has-[:focus-visible]:ring-brand/50"><input type="radio" name="lang" data-lang-option="en" class="sr-only"><span lang="en" class="text-xl font-bold">English</span></label>
+    </fieldset>
+    <button type="button" data-close class="mt-4 flex w-full items-center justify-center min-h-14 rounded-2xl bg-brand text-onbrand text-lg font-bold hover:bg-brand/90" data-i18n="cont">Continue</button>
+  </div>
+</dialog>
+
+<dialog id="report-dlg" class="sheet" aria-labelledby="report-t">
+  <form method="dialog" class="rounded-t-3xl sm:rounded-2xl bg-surface sm:w-[30rem] max-h-[85vh] overflow-y-auto p-5 pb-[max(1.25rem,env(safe-area-inset-bottom))]">
+    <div class="mx-auto mb-3 h-1.5 w-12 rounded-full bg-line sm:hidden" aria-hidden="true"></div>
+    <div class="flex items-center justify-between gap-2">
+      <h2 id="report-t" class="flex items-center gap-2 text-xl font-bold"><svg class="w-6 h-6 text-bad" aria-hidden="true"><use href="#i-flag"/></svg><span data-i18n="reportJob">Report this job</span></h2>
+      <button type="button" data-close aria-label="Close" class="grid place-items-center w-11 h-11 rounded-full hover:bg-surface2"><svg class="w-5 h-5" aria-hidden="true"><use href="#i-x"/></svg></button>
+    </div>
+    <fieldset class="mt-3">
+      <legend class="font-semibold" data-i18n="reportWhy">What is wrong?</legend>
+      <div class="mt-2 space-y-1">
+        <label class="flex items-center gap-3 min-h-12 rounded-xl px-2 hover:bg-surface2 cursor-pointer"><input type="radio" name="why" checked class="w-6 h-6 accent-brand"><span data-i18n="rPay">They asked me to pay money</span></label>
+        <label class="flex items-center gap-3 min-h-12 rounded-xl px-2 hover:bg-surface2 cursor-pointer"><input type="radio" name="why" class="w-6 h-6 accent-brand"><span data-i18n="rSalary">Pay or conditions are not true</span></label>
+        <label class="flex items-center gap-3 min-h-12 rounded-xl px-2 hover:bg-surface2 cursor-pointer"><input type="radio" name="why" class="w-6 h-6 accent-brand"><span data-i18n="rFake">Fake job or company</span></label>
+        <label class="flex items-center gap-3 min-h-12 rounded-xl px-2 hover:bg-surface2 cursor-pointer"><input type="radio" name="why" class="w-6 h-6 accent-brand"><span data-i18n="rOther">Something else</span></label>
+      </div>
+    </fieldset>
+    <label for="rep-note" class="mt-3 block font-semibold" data-i18n="tellMore">Tell us more (optional)</label>
+    <textarea id="rep-note" rows="3" class="mt-1.5 block w-full rounded-xl border border-linestrong bg-surface px-4 py-3 text-base text-ink focus:outline-none focus:border-brand focus:ring-[3px] focus:ring-brand/40"></textarea>
+    <p class="mt-2 flex items-start gap-2 text-sm text-muted"><svg class="w-4 h-4 shrink-0 mt-0.5" aria-hidden="true"><use href="#i-eye-off"/></svg><span data-i18n="reportPrivate">The employer will not see your name.</span></p>
+    <button data-toast="Report sent. Thank you." data-toast-key="reportSent" data-toast-tone="ok" class="mt-4 flex w-full items-center justify-center gap-2 min-h-14 rounded-2xl bg-bad text-onbrand text-lg font-bold hover:bg-bad/90"><svg class="w-6 h-6" aria-hidden="true"><use href="#i-send"/></svg><span data-i18n="sendReport">Send report</span></button>
+  </form>
+</dialog>
+
+<script src="../assets/sample-data.js"></script>
+<script src="../assets/render.js"></script>
+<script>
+  /* Jobs search: desktop = list + Truth Card side panel; phone = list → detail page (#JOB-ID). */
+  (function () {
+    const { JOBS } = BS_DATA;
+    const wide = matchMedia('(min-width: 1024px)');
+    const $ = id => document.getElementById(id);
+    const on = new Set();
+    const tests = {
+      housing: j => !!j.accommodation && !/not provided/i.test(j.accommodation),
+      nocost: j => !BSR.workerCosts(j).items.length,
+      verified: j => (j.checks || []).some(([t, tone]) => tone === 'ok' && /employer verified/i.test(t))
+    };
+    const EMPTY = `<li class="rounded-2xl border border-line bg-surface p-6 text-center">
+      <span class="mx-auto grid place-items-center w-16 h-16 rounded-full bg-surface2 text-muted">${BSR.icon('search', 'w-8 h-8')}</span>
+      ${BSR.L('noJobs', 'No jobs found', null, 'p', 'mt-3 text-lg font-bold')}${BSR.L('noJobsHint', 'Try fewer filters or another country.', null, 'p', 'text-muted')}
+      <button type="button" id="clear" class="mt-4 inline-flex items-center justify-center gap-2 min-h-12 px-5 rounded-xl bg-brandsoft text-brand font-semibold hover:bg-brandsoft/70">${BSR.L('clearFilters', 'Clear filters')}</button></li>`;
+
+    function results() {
+      const q = $('q').value.trim().toLowerCase(), c = $('country').value;
+      return JOBS.filter(j => (!q || [j.title, j.occ, j.city, j.country, j.employer].join(' ').toLowerCase().includes(q))
+        && (!c || j.country === c) && [...on].every(f => tests[f](j)));
+    }
+    function render() {
+      const id = decodeURIComponent(location.hash.slice(1));
+      const list = results();
+      const picked = JOBS.find(j => j.id === id);
+      const sel = picked || (wide.matches ? list[0] : null);
+      $('list').innerHTML = list.length ? list.map(j => `<li>${BSR.jobCard(j, { href: '#' + j.id, selected: wide.matches && sel && sel.id === j.id })}</li>`).join('') : EMPTY;
+      $('count').innerHTML = BSR.L('jobsFound', '{n} jobs', { n: list.length });
+      $('detail').innerHTML = sel ? BSR.truthCard(sel) : '';
+      ['apply-d', 'apply-m'].forEach(a => { $(a).href = '05-apply.html' + (sel ? '#' + sel.id : ''); });
+      const detailPage = !wide.matches && !!picked;          // phone: show one job as its own page
+      $('list-wrap').classList.toggle('max-lg:hidden', detailPage);
+      $('search-bar').classList.toggle('max-lg:hidden', detailPage);
+      $('detail-wrap').classList.toggle('max-lg:hidden', !detailPage);
+      $('apply-bar').classList.toggle('hidden', !detailPage);
+      $('bottom-tabs').classList.toggle('hidden', detailPage);
+      if (detailPage) window.scrollTo(0, 0);
+      $('clear')?.addEventListener('click', () => { on.clear(); $('q').value = ''; $('country').value = ''; document.querySelectorAll('[data-filter]').forEach(b => b.setAttribute('aria-pressed', 'false')); render(); });
+      if (window.BS) BS.translate(document);
+    }
+    document.querySelectorAll('[data-filter]').forEach(b => b.addEventListener('click', () => {
+      const f = b.dataset.filter; on.has(f) ? on.delete(f) : on.add(f); b.setAttribute('aria-pressed', on.has(f)); render();
+    }));
+    $('q').addEventListener('input', render); $('country').addEventListener('change', render);
+    addEventListener('hashchange', render); wide.addEventListener('change', render);
+    document.addEventListener('DOMContentLoaded', render);
+    render();
+  })();
+</script>
+
+</body>
+</html>

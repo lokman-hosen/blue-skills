@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Talent Search · BLUESKILLS</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,700;12..96,800&family=Figtree:wght@400;500;600;700&family=JetBrains+Mono:wght@500;700&display=swap">
+<link rel="stylesheet" href="../assets/tokens.css">
+<script src="https://cdn.tailwindcss.com/3.4.17"></script>
+<script src="../assets/tailwind.config.js"></script>
+<script src="../assets/app.js"></script>
+</head>
+<body class="font-sans">
+<a href="#main" class="skip-link inline-flex items-center min-h-11 rounded-lg bg-brand text-onbrand px-4 font-semibold">Skip to content</a>
+
+<div data-collapsed="false" class="min-h-screen lg:flex">
+  <aside class="sidebar hidden lg:flex sticky top-0 h-screen w-64 shrink-0 flex-col border-e border-line bg-surface transition-[width] duration-200 overflow-hidden">
+    <div class="flex items-center gap-2 h-16 px-4 border-b border-line">
+      <a href="../index.html" class="grid place-items-center w-11 h-11 shrink-0 rounded-lg bg-brand text-onbrand" aria-label="BLUESKILLS home"><svg class="w-5 h-5" aria-hidden="true"><use href="#i-passport"/></svg></a>
+      <div class="nav-label min-w-0"><p class="font-bold truncate leading-tight">ABC Contracting LLC</p><p class="text-[13px] text-muted truncate">Employer · Dubai, UAE</p></div>
+    </div>
+    <nav aria-label="Workspace" class="flex-1 overflow-y-auto p-3"><p class="nav-section px-3 pt-1 pb-2 text-[13px] font-bold uppercase tracking-wider text-muted">Recruitment</p><ul class="space-y-0.5"><li><a href="../layouts/org.html" title="Overview" class="flex items-center gap-3 min-h-11 px-3 rounded-lg text-ink font-medium hover:bg-surface2"><svg class="w-5 h-5 shrink-0 text-muted" aria-hidden="true"><use href="#i-grid"/></svg><span class="nav-label">Overview</span></a></li><li><a href="06-post-job.html" title="Jobs" class="flex items-center gap-3 min-h-11 px-3 rounded-lg text-ink font-medium hover:bg-surface2"><svg class="w-5 h-5 shrink-0 text-muted" aria-hidden="true"><use href="#i-briefcase"/></svg><span class="nav-label">Jobs</span></a></li><li><a href="07-talent.html" aria-current="page" title="Talent search" class="flex items-center gap-3 min-h-11 px-3 rounded-lg bg-brandsoft text-brand font-semibold"><svg class="w-5 h-5 shrink-0" aria-hidden="true"><use href="#i-search"/></svg><span class="nav-label">Talent search</span></a></li><li><a href="08-pipeline.html" title="Pipeline" class="flex items-center gap-3 min-h-11 px-3 rounded-lg text-ink font-medium hover:bg-surface2"><svg class="w-5 h-5 shrink-0 text-muted" aria-hidden="true"><use href="#i-kanban"/></svg><span class="nav-label">Pipeline</span></a></li><li><a href="#" title="Messages" class="flex items-center gap-3 min-h-11 px-3 rounded-lg text-ink font-medium hover:bg-surface2"><svg class="w-5 h-5 shrink-0 text-muted" aria-hidden="true"><use href="#i-chat"/></svg><span class="nav-label">Messages</span></a></li><li><a href="#" title="Reports" class="flex items-center gap-3 min-h-11 px-3 rounded-lg text-ink font-medium hover:bg-surface2"><svg class="w-5 h-5 shrink-0 text-muted" aria-hidden="true"><use href="#i-chart"/></svg><span class="nav-label">Reports</span></a></li></ul><p class="nav-section px-3 pt-5 pb-2 text-[13px] font-bold uppercase tracking-wider text-muted">Organisation</p><ul class="space-y-0.5"><li><a href="#" title="Verification" class="flex items-center gap-3 min-h-11 px-3 rounded-lg text-ink font-medium hover:bg-surface2"><svg class="w-5 h-5 shrink-0 text-muted" aria-hidden="true"><use href="#i-shield-check"/></svg><span class="nav-label">Verification</span></a></li><li><a href="#" title="Team" class="flex items-center gap-3 min-h-11 px-3 rounded-lg text-ink font-medium hover:bg-surface2"><svg class="w-5 h-5 shrink-0 text-muted" aria-hidden="true"><use href="#i-users"/></svg><span class="nav-label">Team</span></a></li><li><a href="#" title="Settings" class="flex items-center gap-3 min-h-11 px-3 rounded-lg text-ink font-medium hover:bg-surface2"><svg class="w-5 h-5 shrink-0 text-muted" aria-hidden="true"><use href="#i-settings"/></svg><span class="nav-label">Settings</span></a></li></ul></nav>
+    <div class="p-3 border-t border-line">
+      <button type="button" data-sidebar-toggle aria-expanded="true" title="Collapse sidebar" class="flex w-full items-center gap-3 min-h-11 px-3 rounded-lg text-muted font-medium hover:bg-surface2 hover:text-ink"><svg class="w-5 h-5 shrink-0" aria-hidden="true"><use href="#i-panel"/></svg><span class="nav-label">Collapse</span></button>
+    </div>
+  </aside>
+
+  <div class="flex-1 min-w-0">
+    <header class="sticky top-0 z-20 border-b border-line bg-surface/95 backdrop-blur">
+      <div class="flex items-center gap-2 h-16 px-4 lg:px-6">
+        <button type="button" data-open="ws-drawer" class="lg:hidden grid place-items-center w-11 h-11 shrink-0 -ms-2 rounded-lg hover:bg-surface2" aria-label="Open menu"><svg class="w-6 h-6" aria-hidden="true"><use href="#i-menu"/></svg></button>
+        <p class="lg:hidden font-bold truncate">ABC Contracting</p>
+        <label class="relative hidden md:block w-full max-w-sm">
+          <span class="sr-only">Search</span>
+          <svg class="pointer-events-none absolute start-3 top-1/2 -translate-y-1/2 w-5 h-5 text-muted" aria-hidden="true"><use href="#i-search"/></svg>
+          <input type="search" placeholder="Search jobs, candidates, job IDs…" class="block w-full min-h-11 rounded-lg border border-linestrong bg-surface ps-10 pe-3 text-[15px] text-ink placeholder:text-muted focus:outline-none focus:border-brand focus:ring-[3px] focus:ring-brand/40">
+        </label>
+        <div class="ms-auto flex items-center gap-1">
+          <span class="hidden sm:inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-sm font-semibold bg-oksoft text-ok"><svg class="w-4 h-4" aria-hidden="true"><use href="#i-shield-check"/></svg>Verified organisation</span>
+          <button type="button" data-theme-toggle aria-label="Dark theme" class="grid place-items-center w-11 h-11 rounded-lg hover:bg-surface2"><svg class="w-5 h-5" aria-hidden="true"><use href="#i-moon"/></svg></button>
+          <button type="button" class="flex items-center gap-2 min-h-11 ps-1 pe-2 rounded-lg hover:bg-surface2" aria-label="Account: Sara K., HR Admin"><span class="grid place-items-center w-9 h-9 rounded-full bg-stampsoft text-stamp font-bold text-sm">SK</span><span class="hidden xl:block text-start leading-tight"><span class="block text-[15px] font-semibold">Sara K.</span><span class="block text-[13px] text-muted">HR Admin</span></span></button>
+        </div>
+      </div>
+    </header>
+    <main id="main" class="px-4 lg:px-6 py-6 max-w-[100rem]">
+      <div class="flex flex-wrap items-center gap-3">
+        <h1 class="font-display text-2xl sm:text-3xl font-bold me-auto">Find workers</h1>
+        <span class="inline-flex items-center gap-1 rounded-md border border-dashed border-linestrong px-2 py-0.5 text-[13px] font-semibold text-muted">Sample data</span>
+      </div>
+
+      <div class="mt-4 grid gap-2 md:grid-cols-[minmax(0,1fr)_minmax(0,20rem)]">
+        <label class="relative block">
+          <span class="sr-only">Search by skill or trade</span>
+          <svg class="pointer-events-none absolute start-3 top-1/2 -translate-y-1/2 w-5 h-5 text-muted" aria-hidden="true"><use href="#i-search"/></svg>
+          <input id="q" type="search" placeholder="Skill or trade, e.g. DB installation" class="block w-full min-h-12 rounded-xl border border-linestrong bg-surface ps-10 pe-3 text-base placeholder:text-muted focus:outline-none focus:border-brand focus:ring-[3px] focus:ring-brand/40">
+        </label>
+        <label class="relative block">
+          <span class="sr-only">Match against job</span>
+          <svg class="pointer-events-none absolute start-3 top-1/2 -translate-y-1/2 w-5 h-5 text-muted" aria-hidden="true"><use href="#i-briefcase"/></svg>
+          <select class="appearance-none block w-full min-h-12 rounded-xl border border-linestrong bg-surface ps-10 pe-10 text-base focus:outline-none focus:border-brand focus:ring-[3px] focus:ring-brand/40"><option>Match: Building Electrician · UAE-EL-0001</option><option>Match: HVAC Technician · SA-HV-0021</option></select>
+          <svg class="pointer-events-none absolute end-3 top-1/2 -translate-y-1/2 w-5 h-5 text-muted" aria-hidden="true"><use href="#i-down"/></svg>
+        </label>
+      </div>
+
+      <div class="mt-3 flex items-start gap-3 rounded-xl border border-brand/30 bg-brandsoft p-3 text-[15px]"><svg class="w-5 h-5 shrink-0 mt-0.5 text-brand" aria-hidden="true"><use href="#i-lock"/></svg><p>Phone numbers, passports and documents are never shown in search. You see them only after a worker accepts your invite and agrees to share.</p></div>
+
+      <div class="mt-5 grid grid-cols-1 gap-6 lg:grid-cols-[17rem_minmax(0,1fr)] items-start">
+        <aside class="hidden lg:block sticky top-20 rounded-xl border border-line bg-surface p-4" aria-labelledby="f-h">
+          <div class="flex items-center justify-between"><h2 id="f-h" class="font-bold">Filters</h2><button type="button" data-clear class="inline-flex items-center min-h-11 px-2 rounded-lg text-[15px] font-semibold text-brand hover:bg-brandsoft">Clear all</button></div>
+          <form id="filters-d" class="mt-2 space-y-5" onsubmit="return false"></form>
+        </aside>
+
+        <section aria-labelledby="res-h" class="min-w-0">
+          <div class="flex flex-wrap items-center gap-2">
+            <button type="button" data-open="filter-sheet" class="lg:hidden inline-flex items-center gap-2 min-h-11 px-4 rounded-full border border-linestrong bg-surface font-semibold hover:bg-surface2"><svg class="w-5 h-5" aria-hidden="true"><use href="#i-filter"/></svg>Filters<span id="f-count" class="grid place-items-center min-w-6 h-6 rounded-full bg-brand text-onbrand text-[13px] font-bold px-1.5">0</span></button>
+            <h2 id="res-h" class="font-semibold me-auto" aria-live="polite"><span id="n">6</span> workers</h2>
+            <label class="relative">
+              <span class="sr-only">Sort</span>
+              <select id="sort" class="appearance-none min-h-11 rounded-full border border-linestrong bg-surface ps-4 pe-9 text-[15px] font-semibold focus:outline-none focus:border-brand focus:ring-[3px] focus:ring-brand/40"><option value="match">Best match</option><option value="exp">Most experience</option></select>
+              <svg class="pointer-events-none absolute end-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted" aria-hidden="true"><use href="#i-down"/></svg>
+            </label>
+          </div>
+          <ul id="chips" class="mt-3 flex flex-wrap gap-2" aria-label="Active filters"></ul>
+          <ul id="results" class="mt-3 grid gap-3 xl:grid-cols-2"></ul>
+        </section>
+      </div>
+
+    </main>
+  </div>
+</div>
+
+<dialog id="ws-drawer" class="drawer" aria-labelledby="ws-drawer-t">
+  <nav class="h-full bg-surface flex flex-col" aria-label="Workspace">
+    <div class="flex items-center gap-2 h-16 px-4 border-b border-line">
+      <span class="grid place-items-center w-10 h-10 shrink-0 rounded-lg bg-brand text-onbrand"><svg class="w-5 h-5" aria-hidden="true"><use href="#i-passport"/></svg></span>
+      <div class="min-w-0 flex-1"><p id="ws-drawer-t" class="font-bold truncate leading-tight">ABC Contracting LLC</p><p class="text-[13px] text-muted truncate">Employer · Dubai, UAE</p></div>
+      <button type="button" data-close aria-label="Close menu" class="grid place-items-center w-11 h-11 rounded-lg hover:bg-surface2"><svg class="w-5 h-5" aria-hidden="true"><use href="#i-x"/></svg></button>
+    </div>
+    <div class="flex-1 overflow-y-auto p-3"><p class="px-3 pt-1 pb-2 text-[13px] font-bold uppercase tracking-wider text-muted">Recruitment</p><ul class="space-y-0.5"><li><a href="../layouts/org.html" class="flex items-center gap-3 min-h-12 px-3 rounded-lg text-ink font-medium hover:bg-surface2"><svg class="w-5 h-5 shrink-0 text-muted" aria-hidden="true"><use href="#i-grid"/></svg>Overview</a></li><li><a href="06-post-job.html" class="flex items-center gap-3 min-h-12 px-3 rounded-lg text-ink font-medium hover:bg-surface2"><svg class="w-5 h-5 shrink-0 text-muted" aria-hidden="true"><use href="#i-briefcase"/></svg>Jobs</a></li><li><a href="07-talent.html" aria-current="page" class="flex items-center gap-3 min-h-12 px-3 rounded-lg bg-brandsoft text-brand font-semibold"><svg class="w-5 h-5 shrink-0" aria-hidden="true"><use href="#i-search"/></svg>Talent search</a></li><li><a href="08-pipeline.html" class="flex items-center gap-3 min-h-12 px-3 rounded-lg text-ink font-medium hover:bg-surface2"><svg class="w-5 h-5 shrink-0 text-muted" aria-hidden="true"><use href="#i-kanban"/></svg>Pipeline</a></li><li><a href="#" class="flex items-center gap-3 min-h-12 px-3 rounded-lg text-ink font-medium hover:bg-surface2"><svg class="w-5 h-5 shrink-0 text-muted" aria-hidden="true"><use href="#i-chat"/></svg>Messages</a></li><li><a href="#" class="flex items-center gap-3 min-h-12 px-3 rounded-lg text-ink font-medium hover:bg-surface2"><svg class="w-5 h-5 shrink-0 text-muted" aria-hidden="true"><use href="#i-chart"/></svg>Reports</a></li></ul><p class="px-3 pt-5 pb-2 text-[13px] font-bold uppercase tracking-wider text-muted">Organisation</p><ul class="space-y-0.5"><li><a href="#" class="flex items-center gap-3 min-h-12 px-3 rounded-lg text-ink font-medium hover:bg-surface2"><svg class="w-5 h-5 shrink-0 text-muted" aria-hidden="true"><use href="#i-shield-check"/></svg>Verification</a></li><li><a href="#" class="flex items-center gap-3 min-h-12 px-3 rounded-lg text-ink font-medium hover:bg-surface2"><svg class="w-5 h-5 shrink-0 text-muted" aria-hidden="true"><use href="#i-users"/></svg>Team</a></li><li><a href="#" class="flex items-center gap-3 min-h-12 px-3 rounded-lg text-ink font-medium hover:bg-surface2"><svg class="w-5 h-5 shrink-0 text-muted" aria-hidden="true"><use href="#i-settings"/></svg>Settings</a></li></ul></div>
+  </nav>
+</dialog>
+
+<dialog id="filter-sheet" class="sheet" aria-labelledby="fs-t">
+  <div class="rounded-t-3xl sm:rounded-2xl bg-surface sm:w-[30rem] max-h-[88vh] flex flex-col">
+    <div class="flex items-center justify-between gap-2 p-4 border-b border-line"><h2 id="fs-t" class="text-xl font-bold">Filters</h2><div class="flex items-center gap-1"><button type="button" data-clear class="inline-flex items-center min-h-11 px-3 rounded-lg font-semibold text-brand hover:bg-brandsoft">Clear all</button><button type="button" data-close aria-label="Close filters" class="grid place-items-center w-11 h-11 rounded-full hover:bg-surface2"><svg class="w-5 h-5" aria-hidden="true"><use href="#i-x"/></svg></button></div></div>
+    <form id="filters-m" class="flex-1 overflow-y-auto p-4 space-y-5" onsubmit="return false"></form>
+    <div class="p-4 border-t border-line pb-[max(1rem,env(safe-area-inset-bottom))]"><button type="button" data-close class="flex w-full items-center justify-center min-h-12 rounded-xl bg-brand text-onbrand font-semibold hover:bg-brand/90">Show <span id="n-m" class="mx-1">6</span> workers</button></div>
+  </div>
+</dialog>
+
+<dialog id="video-dlg" aria-labelledby="vd-t" class="w-[min(92vw,26rem)] rounded-2xl">
+  <div class="rounded-2xl bg-surface p-4">
+    <div class="flex items-center justify-between gap-2"><h2 id="vd-t" class="font-bold">SkillShow · <span id="vd-name"></span></h2><button type="button" data-close aria-label="Close video" class="grid place-items-center w-11 h-11 rounded-full hover:bg-surface2"><svg class="w-5 h-5" aria-hidden="true"><use href="#i-x"/></svg></button></div>
+    <div class="mt-2 aspect-video rounded-xl bg-[linear-gradient(135deg,rgb(var(--ink)/.85),rgb(var(--brand)/.85))] grid place-items-center text-white"><svg class="w-12 h-12" aria-hidden="true"><use href="#i-play"/></svg></div>
+    <p class="mt-3 inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-sm font-semibold bg-surface2 text-muted"><svg class="w-4 h-4" aria-hidden="true"><use href="#i-video"/></svg>Worker demonstration · not certification</p>
+    <p class="mt-2 text-sm text-muted">Do not rank workers by video alone. Use it next to checks and experience.</p>
+  </div>
+</dialog>
+
+<script src="../assets/sample-data.js"></script>
+<script src="../assets/render.js"></script>
+<script>
+  (function () {
+    const { CANDS } = BS_DATA, $ = id => document.getElementById(id), { icon, esc, chip } = BSR;
+    const state = { exp: 0, gcc: false, idv: false, ss: false, passport: false, avail: [], from: [] };
+    const box = (name, label, sub) => `<label class="flex items-start gap-3 min-h-11 rounded-lg px-1 py-1.5 hover:bg-surface2 cursor-pointer"><input type="checkbox" name="${name}" class="mt-0.5 w-5 h-5 shrink-0 accent-brand"><span><span class="block">${label}</span>${sub ? `<span class="block text-sm text-muted">${sub}</span>` : ''}</span></label>`;
+    const filtersHTML = () => `
+      <fieldset><legend class="font-semibold">Experience</legend><div class="mt-2 grid grid-cols-4 gap-1 rounded-xl bg-surface2 p-1">
+        ${[0, 3, 5, 8].map(v => `<label class="grid place-items-center min-h-11 rounded-lg font-semibold cursor-pointer has-[:checked]:bg-surface has-[:checked]:shadow-sm has-[:focus-visible]:ring-[3px] has-[:focus-visible]:ring-brand/50"><input type="radio" name="exp" value="${v}" class="sr-only" ${v === 0 ? 'checked' : ''}>${v ? v + '+' : 'Any'}</label>`).join('')}</div></fieldset>
+      <fieldset><legend class="font-semibold">Checks</legend><div class="mt-1">
+        ${box('idv', 'ID checked', 'Checked by BLUESKILLS')}${box('ss', 'Has SkillShow video', 'Worker demonstration')}${box('passport', 'Says passport is ready', 'Said by worker · not checked')}</div></fieldset>
+      <fieldset><legend class="font-semibold">Experience abroad</legend><div class="mt-1">${box('gcc', 'Has Gulf (GCC) experience')}</div></fieldset>
+      <fieldset><legend class="font-semibold">Can start</legend><div class="mt-1">${['Immediately', 'In 30 days', 'In 60 days'].map(a => box('avail', a)).join('')}</div></fieldset>
+      <fieldset><legend class="font-semibold">From</legend><div class="mt-1">${['Bangladesh', 'India', 'Nepal', 'Pakistan', 'Sri Lanka'].map(c => box('from', c)).join('')}</div></fieldset>`;
+    ['filters-d', 'filters-m'].forEach(id => {
+      $(id).innerHTML = filtersHTML();
+      // give same-name checkboxes their value (label text)
+      $(id).querySelectorAll('input[type=checkbox][name=avail], input[type=checkbox][name=from]').forEach(i => { i.value = i.closest('label').querySelector('span span').textContent; });
+    });
+    function read(form) {
+      const f = new FormData(form);
+      Object.assign(state, { exp: +f.get('exp') || 0, idv: f.has('idv'), ss: f.has('ss'), passport: f.has('passport'), gcc: f.has('gcc'), avail: f.getAll('avail'), from: f.getAll('from') });
+    }
+    function write(form) {   // keep desktop column and phone sheet in sync
+      form.querySelectorAll('input').forEach(i => {
+        if (i.name === 'exp') i.checked = +i.value === state.exp;
+        else if (i.name === 'avail' || i.name === 'from') i.checked = state[i.name].includes(i.value);
+        else i.checked = !!state[i.name];
+      });
+    }
+    function card(c) {
+      const pct = c.match * 10;
+      return `<li><article class="h-full rounded-xl border border-line bg-surface p-4 flex flex-col">
+        <div class="flex items-start gap-3">
+          <span class="grid place-items-center w-12 h-12 shrink-0 rounded-full bg-brandsoft text-brand font-bold">${c.ini}</span>
+          <div class="min-w-0 flex-1"><h3 class="font-bold leading-snug"><a href="04-passport.html" class="hover:underline">${esc(c.name)}</a></h3><p class="text-sm text-muted">${esc(c.occ)} · ${c.exp} years · ${esc(c.from)}</p></div>
+          ${c.ss ? `<button type="button" data-video="${esc(c.name)}" class="relative grid place-items-center w-16 h-12 shrink-0 rounded-lg bg-[linear-gradient(135deg,rgb(var(--ink)/.85),rgb(var(--brand)/.85))] text-white" aria-label="Play SkillShow video of ${esc(c.name)}">${icon('play', 'w-5 h-5')}</button>` : ''}
+        </div>
+        <p class="mt-2 text-[15px]"><span class="text-muted">Worked in</span> ${esc(c.worked)}</p>
+        <p class="text-[15px]"><span class="text-muted">Languages</span> ${esc(c.langs)}</p>
+        <div class="mt-2 flex flex-wrap gap-1.5">
+          ${c.idv ? chip('ID checked', 'ok', 'shield-check', '!px-2 !py-0.5 !text-[13px]') : chip('ID not checked', 'neutral', 'info', '!px-2 !py-0.5 !text-[13px]')}
+          ${c.ss ? chip('SkillShow', 'neutral', 'video', '!px-2 !py-0.5 !text-[13px]') : ''}
+          ${c.passport ? chip('Passport ready · said by worker', 'neutral', 'user', '!px-2 !py-0.5 !text-[13px]') : ''}
+          ${chip(esc(c.avail), 'neutral', 'calendar', '!px-2 !py-0.5 !text-[13px]')}
+        </div>
+        <div class="mt-3"><div class="flex items-center justify-between text-[15px]"><span class="font-semibold">${c.match} of 10 requirements met</span></div>
+          <div class="mt-1 h-2 rounded-full bg-surface2 overflow-hidden" role="progressbar" aria-label="Requirements met" aria-valuemin="0" aria-valuemax="10" aria-valuenow="${c.match}"><div class="h-full rounded-full ${pct >= 75 ? 'bg-ok' : 'bg-warn'}" style="width:${pct}%"></div></div></div>
+        <div class="mt-auto pt-4 flex flex-wrap gap-2">
+          <button type="button" data-toast="Invite sent to ${esc(c.name)}. You will see contact details if they accept." data-toast-tone="ok" class="inline-flex items-center gap-1.5 min-h-11 px-4 rounded-lg bg-brand text-onbrand font-semibold hover:bg-brand/90">${icon('send', 'w-4 h-4')}Invite to apply</button>
+          <button type="button" data-toast="Saved to shortlist" class="inline-flex items-center gap-1.5 min-h-11 px-4 rounded-lg border border-linestrong bg-surface font-semibold hover:bg-surface2">${icon('star', 'w-4 h-4')}Save</button>
+        </div>
+      </article></li>`;
+    }
+    function render() {
+      let list = CANDS.filter(c => c.exp >= state.exp && (!state.idv || c.idv) && (!state.ss || c.ss) && (!state.passport || c.passport) && (!state.gcc || c.gcc)
+        && (!state.avail.length || state.avail.includes(c.avail)) && (!state.from.length || state.from.includes(c.from)));
+      const q = $('q').value.trim().toLowerCase();
+      if (q) list = list.filter(c => [c.occ, ...c.skills].join(' ').toLowerCase().includes(q));
+      list.sort((a, b) => $('sort').value === 'exp' ? b.exp - a.exp : b.match - a.match);
+      $('results').innerHTML = list.length ? list.map(card).join('') : `<li class="xl:col-span-2 rounded-xl border border-line bg-surface p-6 text-center"><span class="mx-auto grid place-items-center w-16 h-16 rounded-full bg-surface2 text-muted">${icon('users', 'w-8 h-8')}</span><p class="mt-3 text-lg font-bold">No workers match</p><p class="text-muted">Remove a filter to see more.</p><button type="button" data-clear class="mt-4 inline-flex items-center min-h-12 px-5 rounded-xl bg-brandsoft text-brand font-semibold">Clear filters</button></li>`;
+      $('n').textContent = $('n-m').textContent = list.length;
+      const active = [state.exp && `${state.exp}+ years`, state.idv && 'ID checked', state.ss && 'Has SkillShow', state.passport && 'Passport ready', state.gcc && 'Gulf experience', ...state.avail, ...state.from].filter(Boolean);
+      $('f-count').textContent = active.length;
+      $('chips').innerHTML = active.map(a => `<li class="inline-flex items-center gap-1 min-h-11 rounded-full bg-surface2 ps-4 pe-1 text-[15px] font-semibold">${esc(a)}</li>`).join('');
+    }
+    ['filters-d', 'filters-m'].forEach(id => $(id).addEventListener('change', () => { read($(id)); write($(id === 'filters-d' ? 'filters-m' : 'filters-d')); render(); }));
+    document.addEventListener('click', e => {
+      if (e.target.closest('[data-clear]')) { Object.assign(state, { exp: 0, gcc: false, idv: false, ss: false, passport: false, avail: [], from: [] }); write($('filters-d')); write($('filters-m')); render(); }
+      const v = e.target.closest('[data-video]'); if (v) { $('vd-name').textContent = v.dataset.video; $('video-dlg').showModal(); }
+    });
+    $('q').addEventListener('input', render); $('sort').addEventListener('change', render);
+    render();
+  })();
+</script>
+
+</body>
+</html>

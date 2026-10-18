@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Recruitment Pipeline · BLUESKILLS</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,700;12..96,800&family=Figtree:wght@400;500;600;700&family=JetBrains+Mono:wght@500;700&display=swap">
+<link rel="stylesheet" href="../assets/tokens.css">
+<script src="https://cdn.tailwindcss.com/3.4.17"></script>
+<script src="../assets/tailwind.config.js"></script>
+<script src="../assets/app.js"></script>
+</head>
+<body class="font-sans">
+<a href="#main" class="skip-link inline-flex items-center min-h-11 rounded-lg bg-brand text-onbrand px-4 font-semibold">Skip to content</a>
+
+<div data-collapsed="false" class="min-h-screen lg:flex">
+  <aside class="sidebar hidden lg:flex sticky top-0 h-screen w-64 shrink-0 flex-col border-e border-line bg-surface transition-[width] duration-200 overflow-hidden">
+    <div class="flex items-center gap-2 h-16 px-4 border-b border-line">
+      <a href="../index.html" class="grid place-items-center w-11 h-11 shrink-0 rounded-lg bg-brand text-onbrand" aria-label="BLUESKILLS home"><svg class="w-5 h-5" aria-hidden="true"><use href="#i-passport"/></svg></a>
+      <div class="nav-label min-w-0"><p class="font-bold truncate leading-tight">ABC Contracting LLC</p><p class="text-[13px] text-muted truncate">Employer · Dubai, UAE</p></div>
+    </div>
+    <nav aria-label="Workspace" class="flex-1 overflow-y-auto p-3"><p class="nav-section px-3 pt-1 pb-2 text-[13px] font-bold uppercase tracking-wider text-muted">Recruitment</p><ul class="space-y-0.5"><li><a href="../layouts/org.html" title="Overview" class="flex items-center gap-3 min-h-11 px-3 rounded-lg text-ink font-medium hover:bg-surface2"><svg class="w-5 h-5 shrink-0 text-muted" aria-hidden="true"><use href="#i-grid"/></svg><span class="nav-label">Overview</span></a></li><li><a href="06-post-job.html" title="Jobs" class="flex items-center gap-3 min-h-11 px-3 rounded-lg text-ink font-medium hover:bg-surface2"><svg class="w-5 h-5 shrink-0 text-muted" aria-hidden="true"><use href="#i-briefcase"/></svg><span class="nav-label">Jobs</span></a></li><li><a href="07-talent.html" title="Talent search" class="flex items-center gap-3 min-h-11 px-3 rounded-lg text-ink font-medium hover:bg-surface2"><svg class="w-5 h-5 shrink-0 text-muted" aria-hidden="true"><use href="#i-search"/></svg><span class="nav-label">Talent search</span></a></li><li><a href="08-pipeline.html" aria-current="page" title="Pipeline" class="flex items-center gap-3 min-h-11 px-3 rounded-lg bg-brandsoft text-brand font-semibold"><svg class="w-5 h-5 shrink-0" aria-hidden="true"><use href="#i-kanban"/></svg><span class="nav-label">Pipeline</span></a></li><li><a href="#" title="Messages" class="flex items-center gap-3 min-h-11 px-3 rounded-lg text-ink font-medium hover:bg-surface2"><svg class="w-5 h-5 shrink-0 text-muted" aria-hidden="true"><use href="#i-chat"/></svg><span class="nav-label">Messages</span></a></li><li><a href="#" title="Reports" class="flex items-center gap-3 min-h-11 px-3 rounded-lg text-ink font-medium hover:bg-surface2"><svg class="w-5 h-5 shrink-0 text-muted" aria-hidden="true"><use href="#i-chart"/></svg><span class="nav-label">Reports</span></a></li></ul><p class="nav-section px-3 pt-5 pb-2 text-[13px] font-bold uppercase tracking-wider text-muted">Organisation</p><ul class="space-y-0.5"><li><a href="#" title="Verification" class="flex items-center gap-3 min-h-11 px-3 rounded-lg text-ink font-medium hover:bg-surface2"><svg class="w-5 h-5 shrink-0 text-muted" aria-hidden="true"><use href="#i-shield-check"/></svg><span class="nav-label">Verification</span></a></li><li><a href="#" title="Team" class="flex items-center gap-3 min-h-11 px-3 rounded-lg text-ink font-medium hover:bg-surface2"><svg class="w-5 h-5 shrink-0 text-muted" aria-hidden="true"><use href="#i-users"/></svg><span class="nav-label">Team</span></a></li><li><a href="#" title="Settings" class="flex items-center gap-3 min-h-11 px-3 rounded-lg text-ink font-medium hover:bg-surface2"><svg class="w-5 h-5 shrink-0 text-muted" aria-hidden="true"><use href="#i-settings"/></svg><span class="nav-label">Settings</span></a></li></ul></nav>
+    <div class="p-3 border-t border-line">
+      <button type="button" data-sidebar-toggle aria-expanded="true" title="Collapse sidebar" class="flex w-full items-center gap-3 min-h-11 px-3 rounded-lg text-muted font-medium hover:bg-surface2 hover:text-ink"><svg class="w-5 h-5 shrink-0" aria-hidden="true"><use href="#i-panel"/></svg><span class="nav-label">Collapse</span></button>
+    </div>
+  </aside>
+
+  <div class="flex-1 min-w-0">
+    <header class="sticky top-0 z-20 border-b border-line bg-surface/95 backdrop-blur">
+      <div class="flex items-center gap-2 h-16 px-4 lg:px-6">
+        <button type="button" data-open="ws-drawer" class="lg:hidden grid place-items-center w-11 h-11 shrink-0 -ms-2 rounded-lg hover:bg-surface2" aria-label="Open menu"><svg class="w-6 h-6" aria-hidden="true"><use href="#i-menu"/></svg></button>
+        <p class="lg:hidden font-bold truncate">ABC Contracting</p>
+        <label class="relative hidden md:block w-full max-w-sm">
+          <span class="sr-only">Search</span>
+          <svg class="pointer-events-none absolute start-3 top-1/2 -translate-y-1/2 w-5 h-5 text-muted" aria-hidden="true"><use href="#i-search"/></svg>
+          <input type="search" placeholder="Search jobs, candidates, job IDs…" class="block w-full min-h-11 rounded-lg border border-linestrong bg-surface ps-10 pe-3 text-[15px] text-ink placeholder:text-muted focus:outline-none focus:border-brand focus:ring-[3px] focus:ring-brand/40">
+        </label>
+        <div class="ms-auto flex items-center gap-1">
+          <span class="hidden sm:inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-sm font-semibold bg-oksoft text-ok"><svg class="w-4 h-4" aria-hidden="true"><use href="#i-shield-check"/></svg>Verified organisation</span>
+          <button type="button" data-theme-toggle aria-label="Dark theme" class="grid place-items-center w-11 h-11 rounded-lg hover:bg-surface2"><svg class="w-5 h-5" aria-hidden="true"><use href="#i-moon"/></svg></button>
+          <button type="button" class="flex items-center gap-2 min-h-11 ps-1 pe-2 rounded-lg hover:bg-surface2" aria-label="Account: Sara K., HR Admin"><span class="grid place-items-center w-9 h-9 rounded-full bg-stampsoft text-stamp font-bold text-sm">SK</span><span class="hidden xl:block text-start leading-tight"><span class="block text-[15px] font-semibold">Sara K.</span><span class="block text-[13px] text-muted">HR Admin</span></span></button>
+        </div>
+      </div>
+    </header>
+    <main id="main" class="px-4 lg:px-6 py-6 max-w-[100rem]">
+      <div class="flex flex-wrap items-start gap-3">
+        <div class="me-auto min-w-0">
+          <nav aria-label="Breadcrumb" class="text-sm text-muted"><ol class="flex items-center gap-1"><li><a href="#" class="inline-flex items-center justify-center min-h-11 min-w-11 hover:text-ink">Pipeline</a></li><li aria-hidden="true">/</li><li aria-current="page" class="text-ink font-medium font-mono">UAE-EL-0001</li></ol></nav>
+          <h1 class="font-display text-2xl sm:text-3xl font-bold">200 Electricians · Dubai</h1>
+          <p class="text-muted">Building Electrician · with Northstar Manpower · mandate MD-1107</p>
+        </div>
+        <span class="inline-flex items-center gap-1 rounded-md border border-dashed border-linestrong px-2 py-0.5 text-[13px] font-semibold text-muted">Sample data</span>
+      </div>
+
+      <div class="mt-4 rounded-xl border border-line bg-surface p-4 grid gap-4 md:grid-cols-[minmax(0,1fr)_auto] md:items-center">
+        <div>
+          <div class="flex items-center justify-between text-[15px]"><span class="font-semibold">Selected so far</span><span class="tabular-nums"><b>142</b> / 200 target</span></div>
+          <div class="mt-1.5 h-3 rounded-full bg-surface2 overflow-hidden" role="progressbar" aria-label="Selected against target" aria-valuemin="0" aria-valuemax="200" aria-valuenow="142"><div class="h-full rounded-full bg-ok" style="width:71%"></div></div>
+        </div>
+        <div class="flex flex-wrap gap-2">
+          <button type="button" class="inline-flex items-center gap-1.5 min-h-11 px-4 rounded-lg border border-linestrong bg-surface font-semibold hover:bg-surface2"><svg class="w-5 h-5" aria-hidden="true"><use href="#i-download"/></svg>Export</button>
+          <a href="07-talent.html" class="inline-flex items-center gap-1.5 min-h-11 px-4 rounded-lg bg-brand text-onbrand font-semibold hover:bg-brand/90"><svg class="w-5 h-5" aria-hidden="true"><use href="#i-plus"/></svg>Add candidates</a>
+        </div>
+      </div>
+
+      <p class="mt-4 text-sm text-muted lg:hidden">Swipe sideways to see every stage.</p>
+      <div id="board" class="mt-2 lg:mt-4 flex gap-3 overflow-x-auto snap-x snap-mandatory pb-4 -mx-4 px-4 lg:mx-0 lg:px-0" role="region" aria-label="Pipeline board" tabindex="0"></div>
+
+      <div class="h-24" aria-hidden="true"></div>
+      <!-- Bulk action bar -->
+      <div id="bulk" class="hidden fixed bottom-4 inset-x-4 lg:start-[calc(var(--sb)+1.5rem)] lg:end-6 z-30 rounded-2xl border border-line bg-surface shadow-[0_20px_50px_-20px_rgb(var(--ink)/.45)] p-3" role="region" aria-label="Bulk actions">
+        <div class="flex flex-wrap items-center gap-2">
+          <p class="font-bold me-auto"><span id="sel-n">0</span> selected</p>
+          <label class="relative">
+            <span class="sr-only">Move to stage</span>
+            <select id="bulk-stage" class="appearance-none min-h-11 rounded-lg border border-linestrong bg-surface ps-3 pe-9 font-semibold focus:outline-none focus:border-brand focus:ring-[3px] focus:ring-brand/40"></select>
+            <svg class="pointer-events-none absolute end-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted" aria-hidden="true"><use href="#i-down"/></svg>
+          </label>
+          <button type="button" id="bulk-move" class="inline-flex items-center gap-1.5 min-h-11 px-4 rounded-lg bg-brand text-onbrand font-semibold hover:bg-brand/90"><svg class="w-4 h-4 flip-rtl" aria-hidden="true"><use href="#i-arrow"/></svg>Move</button>
+          <button type="button" data-toast="Message sent to selected workers" class="inline-flex items-center gap-1.5 min-h-11 px-3 rounded-lg border border-linestrong bg-surface font-semibold hover:bg-surface2"><svg class="w-4 h-4" aria-hidden="true"><use href="#i-chat"/></svg>Message</button>
+          <button type="button" data-toast="Interview invites sent" class="inline-flex items-center gap-1.5 min-h-11 px-3 rounded-lg border border-linestrong bg-surface font-semibold hover:bg-surface2"><svg class="w-4 h-4" aria-hidden="true"><use href="#i-calendar"/></svg>Schedule</button>
+          <button type="button" data-open="reject-dlg" class="inline-flex items-center gap-1.5 min-h-11 px-3 rounded-lg font-semibold text-bad hover:bg-badsoft"><svg class="w-4 h-4" aria-hidden="true"><use href="#i-x-circle"/></svg>Not selected</button>
+          <button type="button" id="bulk-clear" aria-label="Clear selection" class="grid place-items-center w-11 h-11 rounded-lg hover:bg-surface2"><svg class="w-5 h-5" aria-hidden="true"><use href="#i-x"/></svg></button>
+        </div>
+      </div>
+
+    </main>
+  </div>
+</div>
+
+<dialog id="ws-drawer" class="drawer" aria-labelledby="ws-drawer-t">
+  <nav class="h-full bg-surface flex flex-col" aria-label="Workspace">
+    <div class="flex items-center gap-2 h-16 px-4 border-b border-line">
+      <span class="grid place-items-center w-10 h-10 shrink-0 rounded-lg bg-brand text-onbrand"><svg class="w-5 h-5" aria-hidden="true"><use href="#i-passport"/></svg></span>
+      <div class="min-w-0 flex-1"><p id="ws-drawer-t" class="font-bold truncate leading-tight">ABC Contracting LLC</p><p class="text-[13px] text-muted truncate">Employer · Dubai, UAE</p></div>
+      <button type="button" data-close aria-label="Close menu" class="grid place-items-center w-11 h-11 rounded-lg hover:bg-surface2"><svg class="w-5 h-5" aria-hidden="true"><use href="#i-x"/></svg></button>
+    </div>
+    <div class="flex-1 overflow-y-auto p-3"><p class="px-3 pt-1 pb-2 text-[13px] font-bold uppercase tracking-wider text-muted">Recruitment</p><ul class="space-y-0.5"><li><a href="../layouts/org.html" class="flex items-center gap-3 min-h-12 px-3 rounded-lg text-ink font-medium hover:bg-surface2"><svg class="w-5 h-5 shrink-0 text-muted" aria-hidden="true"><use href="#i-grid"/></svg>Overview</a></li><li><a href="06-post-job.html" class="flex items-center gap-3 min-h-12 px-3 rounded-lg text-ink font-medium hover:bg-surface2"><svg class="w-5 h-5 shrink-0 text-muted" aria-hidden="true"><use href="#i-briefcase"/></svg>Jobs</a></li><li><a href="07-talent.html" class="flex items-center gap-3 min-h-12 px-3 rounded-lg text-ink font-medium hover:bg-surface2"><svg class="w-5 h-5 shrink-0 text-muted" aria-hidden="true"><use href="#i-search"/></svg>Talent search</a></li><li><a href="08-pipeline.html" aria-current="page" class="flex items-center gap-3 min-h-12 px-3 rounded-lg bg-brandsoft text-brand font-semibold"><svg class="w-5 h-5 shrink-0" aria-hidden="true"><use href="#i-kanban"/></svg>Pipeline</a></li><li><a href="#" class="flex items-center gap-3 min-h-12 px-3 rounded-lg text-ink font-medium hover:bg-surface2"><svg class="w-5 h-5 shrink-0 text-muted" aria-hidden="true"><use href="#i-chat"/></svg>Messages</a></li><li><a href="#" class="flex items-center gap-3 min-h-12 px-3 rounded-lg text-ink font-medium hover:bg-surface2"><svg class="w-5 h-5 shrink-0 text-muted" aria-hidden="true"><use href="#i-chart"/></svg>Reports</a></li></ul><p class="px-3 pt-5 pb-2 text-[13px] font-bold uppercase tracking-wider text-muted">Organisation</p><ul class="space-y-0.5"><li><a href="#" class="flex items-center gap-3 min-h-12 px-3 rounded-lg text-ink font-medium hover:bg-surface2"><svg class="w-5 h-5 shrink-0 text-muted" aria-hidden="true"><use href="#i-shield-check"/></svg>Verification</a></li><li><a href="#" class="flex items-center gap-3 min-h-12 px-3 rounded-lg text-ink font-medium hover:bg-surface2"><svg class="w-5 h-5 shrink-0 text-muted" aria-hidden="true"><use href="#i-users"/></svg>Team</a></li><li><a href="#" class="flex items-center gap-3 min-h-12 px-3 rounded-lg text-ink font-medium hover:bg-surface2"><svg class="w-5 h-5 shrink-0 text-muted" aria-hidden="true"><use href="#i-settings"/></svg>Settings</a></li></ul></div>
+  </nav>
+</dialog>
+
+<dialog id="move-dlg" class="sheet" aria-labelledby="mv-t">
+  <div class="rounded-t-3xl sm:rounded-2xl bg-surface sm:w-[24rem] max-h-[85vh] overflow-y-auto p-4 pb-[max(1rem,env(safe-area-inset-bottom))]">
+    <div class="flex items-center justify-between gap-2"><h2 id="mv-t" class="text-lg font-bold">Move <span id="mv-name"></span> to</h2><button type="button" data-close aria-label="Close" class="grid place-items-center w-11 h-11 rounded-full hover:bg-surface2"><svg class="w-5 h-5" aria-hidden="true"><use href="#i-x"/></svg></button></div>
+    <ul id="mv-list" class="mt-2 space-y-0.5"></ul>
+  </div>
+</dialog>
+
+<dialog id="reject-dlg" aria-labelledby="rj-t" class="w-[min(92vw,30rem)] rounded-2xl">
+  <form method="dialog" class="rounded-2xl bg-surface p-5">
+    <h2 id="rj-t" class="text-xl font-bold">Mark <span id="rj-n">0</span> as not selected</h2>
+    <p class="mt-1 text-muted">Workers get a short, respectful message in their language. They do not see your note.</p>
+    <label for="rj-reason" class="mt-4 block font-semibold">Reason <span class="text-bad">*</span></label>
+    <div class="relative mt-1.5"><select id="rj-reason" required class="appearance-none block w-full min-h-12 rounded-xl border border-linestrong bg-surface ps-4 pe-10 text-base focus:outline-none focus:border-brand focus:ring-[3px] focus:ring-brand/40"><option value="">Choose a reason</option><option>Skills do not match</option><option>Not enough experience</option><option>Did not pass trade assessment</option><option>Positions filled</option><option>Worker withdrew</option></select><svg class="pointer-events-none absolute end-4 top-1/2 -translate-y-1/2 w-5 h-5 text-muted" aria-hidden="true"><use href="#i-down"/></svg></div>
+    <label for="rj-note" class="mt-3 block font-semibold">Internal note <span class="font-normal text-muted">(team only)</span></label>
+    <textarea id="rj-note" rows="2" class="mt-1.5 block w-full rounded-xl border border-linestrong bg-surface px-4 py-3 text-base focus:outline-none focus:border-brand focus:ring-[3px] focus:ring-brand/40"></textarea>
+    <div class="mt-5 flex flex-col-reverse sm:flex-row sm:justify-end gap-2">
+      <button type="button" data-close class="inline-flex items-center justify-center min-h-12 px-5 rounded-xl border border-linestrong bg-surface font-semibold hover:bg-surface2">Cancel</button>
+      <button type="button" id="rj-go" class="inline-flex items-center justify-center min-h-12 px-5 rounded-xl bg-bad text-onbrand font-semibold hover:bg-bad/90">Confirm</button>
+    </div>
+  </form>
+</dialog>
+
+<script src="../assets/sample-data.js"></script>
+<script src="../assets/render.js"></script>
+<script>
+  (function () {
+    const { STAGES } = BS_DATA, $ = id => document.getElementById(id), { icon, esc, chip } = BSR;
+    const TOTAL = [412, 186, 120, 96, 48, 30, 62, 54, 26];               // full stage counts for the project
+    const P = [
+      ['Jamal Hossain', 'Bangladesh', 6, 7, 1, 0, 0], ['Bikash Gurung', 'Nepal', 4, 6, 1, 0, 0], ['Ramesh Yadav', 'India', 9, 8, 0, 1, 0],
+      ['Imran Khan', 'Pakistan', 7, 8, 1, 1, 1], ['Kamal Perera', 'Sri Lanka', 5, 7, 1, 0, 1],
+      ['Anwar Hossain', 'Bangladesh', 8, 9, 1, 1, 2], ['Suresh Kumar', 'India', 6, 8, 1, 0, 2],
+      ['Rahim Uddin', 'Bangladesh', 8, 9, 1, 1, 3], ['Karim Ahmed', 'Bangladesh', 6, 7, 1, 1, 3], ['Arjun Kumar', 'India', 7, 8, 1, 0, 3],
+      ['Hasan Ali', 'Pakistan', 10, 8, 0, 1, 4], ['Dipak Rai', 'Nepal', 6, 8, 1, 1, 4],
+      ['Mohammad Asif', 'Pakistan', 9, 9, 1, 1, 5], ['Rafiq Islam', 'Bangladesh', 11, 9, 1, 0, 6], ['Nimal Perera', 'Sri Lanka', 4, 6, 1, 1, 7]
+    ].map(([name, from, exp, match, idv, ss, stage], i) => ({ id: 'p' + i, name, from, exp, match, idv, ss, stage, ini: name.split(' ').map(w => w[0]).join('') }));
+    const sel = new Set();
+    const STAGE_TONE = ['brand', 'brand', 'brand', 'stamp', 'stamp', 'stamp', 'ok', 'ok', 'ok'];
+
+    function cardHTML(p) {
+      const on = sel.has(p.id);
+      return `<li><article class="rounded-xl border ${on ? 'border-brand ring-2 ring-brand/30' : 'border-line'} bg-surface p-3">
+        <div class="flex items-start gap-2">
+          <label class="grid place-items-center w-11 h-11 -m-1.5 shrink-0 cursor-pointer"><input type="checkbox" data-sel="${p.id}" ${on ? 'checked' : ''} aria-label="Select ${esc(p.name)}" class="w-5 h-5 accent-brand"></label>
+          <div class="min-w-0 flex-1"><p class="font-semibold leading-snug">${esc(p.name)}</p><p class="text-sm text-muted">${p.exp} years · ${esc(p.from)}</p></div>
+          <button type="button" data-move-open="${p.id}" aria-label="Move ${esc(p.name)} to another stage" class="grid place-items-center w-11 h-11 -m-1.5 shrink-0 rounded-lg hover:bg-surface2">${icon('more')}</button>
+        </div>
+        <div class="mt-2 flex flex-wrap gap-1">${p.idv ? chip('ID checked', 'ok', 'shield-check', '!px-2 !py-0.5 !text-[13px]') : ''}${p.ss ? chip('SkillShow', 'neutral', 'video', '!px-2 !py-0.5 !text-[13px]') : ''}</div>
+        <p class="mt-2 text-sm"><span class="font-semibold tabular-nums">${p.match} of 10</span> <span class="text-muted">requirements met</span></p>
+      </article></li>`;
+    }
+    function render() {
+      $('board').innerHTML = STAGES.map((s, k) => {
+        const items = P.filter(p => p.stage === k);
+        const allOn = items.length && items.every(p => sel.has(p.id));
+        return `<section class="snap-start shrink-0 w-[min(84vw,17.5rem)] rounded-xl bg-surface2/70 border border-line flex flex-col max-h-[70vh]" aria-labelledby="col-${k}">
+          <header class="flex items-center gap-2 p-3 border-b border-line">
+            <label class="grid place-items-center w-11 h-11 -m-1.5 shrink-0 cursor-pointer"><input type="checkbox" data-col="${k}" ${allOn ? 'checked' : ''} ${items.length ? '' : 'disabled'} aria-label="Select all shown in ${esc(s)}" class="w-5 h-5 accent-brand"></label>
+            <h2 id="col-${k}" class="font-bold me-auto">${esc(s)}</h2>
+            ${chip(`<span class="tabular-nums">${BSR.fmt(TOTAL[k])}</span>`, STAGE_TONE[k], '', '!px-2 !py-0.5 !text-[13px]')}
+          </header>
+          <ul class="flex-1 overflow-y-auto p-2 space-y-2">${items.map(cardHTML).join('') || `<li class="p-4 text-center text-sm text-muted">No cards shown</li>`}</ul>
+          <a href="#" class="m-2 mt-0 inline-flex items-center justify-center min-h-11 rounded-lg text-[15px] font-semibold text-brand hover:bg-brandsoft">Show all ${BSR.fmt(TOTAL[k])}</a>
+        </section>`;
+      }).join('');
+      $('sel-n').textContent = $('rj-n').textContent = sel.size;
+      $('bulk').classList.toggle('hidden', !sel.size);
+    }
+    $('bulk-stage').innerHTML = STAGES.map((s, k) => `<option value="${k}">Move to: ${esc(s)}</option>`).join('');
+    $('bulk-stage').value = 4;
+    const moveSel = to => { P.forEach(p => { if (sel.has(p.id)) p.stage = to; }); const n = sel.size; sel.clear(); render(); BS.toast(`${n} moved to ${STAGES[to]}`, 'ok'); };
+    document.addEventListener('change', e => {
+      const t = e.target;
+      if (t.dataset.sel) { t.checked ? sel.add(t.dataset.sel) : sel.delete(t.dataset.sel); render(); }
+      if (t.dataset.col) { P.filter(p => p.stage === +t.dataset.col).forEach(p => t.checked ? sel.add(p.id) : sel.delete(p.id)); render(); }
+    });
+    document.addEventListener('click', e => {
+      const o = e.target.closest('[data-move-open]');
+      if (o) {
+        const p = P.find(x => x.id === o.dataset.moveOpen);
+        $('mv-name').textContent = p.name;
+        $('mv-list').innerHTML = STAGES.map((s, k) => `<li><button type="button" data-move="${p.id}" data-to="${k}" ${k === p.stage ? 'disabled aria-current="true"' : ''} class="flex w-full items-center gap-3 min-h-12 px-3 rounded-xl text-start font-semibold hover:bg-surface2 disabled:text-muted disabled:hover:bg-transparent"><span class="grid place-items-center w-7 h-7 rounded-full border-2 ${k === p.stage ? 'border-brand bg-brand text-onbrand' : 'border-linestrong'} text-[13px]">${k + 1}</span>${esc(s)}${k === p.stage ? '<span class="ms-auto text-sm font-normal">Current</span>' : ''}</button></li>`).join('');
+        $('move-dlg').showModal();
+      }
+      const m = e.target.closest('[data-move]'); if (!m) return;
+      const p = P.find(x => x.id === m.dataset.move); p.stage = +m.dataset.to; $('move-dlg').close(); render(); BS.toast(`${p.name} moved to ${STAGES[p.stage]}`, 'ok');
+    });
+    $('bulk-move').addEventListener('click', () => moveSel(+$('bulk-stage').value));
+    $('bulk-clear').addEventListener('click', () => { sel.clear(); render(); });
+    $('rj-go').addEventListener('click', () => {
+      if (!$('rj-reason').value) { $('rj-reason').setAttribute('aria-invalid', 'true'); $('rj-reason').classList.add('border-bad', 'border-2'); $('rj-reason').focus(); return; }
+      const n = sel.size; P.splice(0, P.length, ...P.filter(p => !sel.has(p.id))); sel.clear(); $('reject-dlg').close(); render(); BS.toast(`${n} marked not selected · reason: ${$('rj-reason').value}`, 'ok');
+    });
+    // Preselect 3 cards so the bulk bar is visible on first load.
+    ['p7', 'p8', 'p9'].forEach(id => sel.add(id));
+    render();
+  })();
+</script>
+
+</body>
+</html>

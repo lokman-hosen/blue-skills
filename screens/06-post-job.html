@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Post a Job · BLUESKILLS</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,700;12..96,800&family=Figtree:wght@400;500;600;700&family=JetBrains+Mono:wght@500;700&display=swap">
+<link rel="stylesheet" href="../assets/tokens.css">
+<script src="https://cdn.tailwindcss.com/3.4.17"></script>
+<script src="../assets/tailwind.config.js"></script>
+<script src="../assets/app.js"></script>
+</head>
+<body class="font-sans">
+<a href="#main" class="skip-link inline-flex items-center min-h-11 rounded-lg bg-brand text-onbrand px-4 font-semibold">Skip to content</a>
+
+<div data-collapsed="false" class="min-h-screen lg:flex">
+  <aside class="sidebar hidden lg:flex sticky top-0 h-screen w-64 shrink-0 flex-col border-e border-line bg-surface transition-[width] duration-200 overflow-hidden">
+    <div class="flex items-center gap-2 h-16 px-4 border-b border-line">
+      <a href="../index.html" class="grid place-items-center w-11 h-11 shrink-0 rounded-lg bg-brand text-onbrand" aria-label="BLUESKILLS home"><svg class="w-5 h-5" aria-hidden="true"><use href="#i-passport"/></svg></a>
+      <div class="nav-label min-w-0"><p class="font-bold truncate leading-tight">ABC Contracting LLC</p><p class="text-[13px] text-muted truncate">Employer · Dubai, UAE</p></div>
+    </div>
+    <nav aria-label="Workspace" class="flex-1 overflow-y-auto p-3"><p class="nav-section px-3 pt-1 pb-2 text-[13px] font-bold uppercase tracking-wider text-muted">Recruitment</p><ul class="space-y-0.5"><li><a href="../layouts/org.html" title="Overview" class="flex items-center gap-3 min-h-11 px-3 rounded-lg text-ink font-medium hover:bg-surface2"><svg class="w-5 h-5 shrink-0 text-muted" aria-hidden="true"><use href="#i-grid"/></svg><span class="nav-label">Overview</span></a></li><li><a href="06-post-job.html" aria-current="page" title="Jobs" class="flex items-center gap-3 min-h-11 px-3 rounded-lg bg-brandsoft text-brand font-semibold"><svg class="w-5 h-5 shrink-0" aria-hidden="true"><use href="#i-briefcase"/></svg><span class="nav-label">Jobs</span></a></li><li><a href="07-talent.html" title="Talent search" class="flex items-center gap-3 min-h-11 px-3 rounded-lg text-ink font-medium hover:bg-surface2"><svg class="w-5 h-5 shrink-0 text-muted" aria-hidden="true"><use href="#i-search"/></svg><span class="nav-label">Talent search</span></a></li><li><a href="08-pipeline.html" title="Pipeline" class="flex items-center gap-3 min-h-11 px-3 rounded-lg text-ink font-medium hover:bg-surface2"><svg class="w-5 h-5 shrink-0 text-muted" aria-hidden="true"><use href="#i-kanban"/></svg><span class="nav-label">Pipeline</span></a></li><li><a href="#" title="Messages" class="flex items-center gap-3 min-h-11 px-3 rounded-lg text-ink font-medium hover:bg-surface2"><svg class="w-5 h-5 shrink-0 text-muted" aria-hidden="true"><use href="#i-chat"/></svg><span class="nav-label">Messages</span></a></li><li><a href="#" title="Reports" class="flex items-center gap-3 min-h-11 px-3 rounded-lg text-ink font-medium hover:bg-surface2"><svg class="w-5 h-5 shrink-0 text-muted" aria-hidden="true"><use href="#i-chart"/></svg><span class="nav-label">Reports</span></a></li></ul><p class="nav-section px-3 pt-5 pb-2 text-[13px] font-bold uppercase tracking-wider text-muted">Organisation</p><ul class="space-y-0.5"><li><a href="#" title="Verification" class="flex items-center gap-3 min-h-11 px-3 rounded-lg text-ink font-medium hover:bg-surface2"><svg class="w-5 h-5 shrink-0 text-muted" aria-hidden="true"><use href="#i-shield-check"/></svg><span class="nav-label">Verification</span></a></li><li><a href="#" title="Team" class="flex items-center gap-3 min-h-11 px-3 rounded-lg text-ink font-medium hover:bg-surface2"><svg class="w-5 h-5 shrink-0 text-muted" aria-hidden="true"><use href="#i-users"/></svg><span class="nav-label">Team</span></a></li><li><a href="#" title="Settings" class="flex items-center gap-3 min-h-11 px-3 rounded-lg text-ink font-medium hover:bg-surface2"><svg class="w-5 h-5 shrink-0 text-muted" aria-hidden="true"><use href="#i-settings"/></svg><span class="nav-label">Settings</span></a></li></ul></nav>
+    <div class="p-3 border-t border-line">
+      <button type="button" data-sidebar-toggle aria-expanded="true" title="Collapse sidebar" class="flex w-full items-center gap-3 min-h-11 px-3 rounded-lg text-muted font-medium hover:bg-surface2 hover:text-ink"><svg class="w-5 h-5 shrink-0" aria-hidden="true"><use href="#i-panel"/></svg><span class="nav-label">Collapse</span></button>
+    </div>
+  </aside>
+
+  <div class="flex-1 min-w-0">
+    <header class="sticky top-0 z-20 border-b border-line bg-surface/95 backdrop-blur">
+      <div class="flex items-center gap-2 h-16 px-4 lg:px-6">
+        <button type="button" data-open="ws-drawer" class="lg:hidden grid place-items-center w-11 h-11 shrink-0 -ms-2 rounded-lg hover:bg-surface2" aria-label="Open menu"><svg class="w-6 h-6" aria-hidden="true"><use href="#i-menu"/></svg></button>
+        <p class="lg:hidden font-bold truncate">ABC Contracting</p>
+        <label class="relative hidden md:block w-full max-w-sm">
+          <span class="sr-only">Search</span>
+          <svg class="pointer-events-none absolute start-3 top-1/2 -translate-y-1/2 w-5 h-5 text-muted" aria-hidden="true"><use href="#i-search"/></svg>
+          <input type="search" placeholder="Search jobs, candidates, job IDs…" class="block w-full min-h-11 rounded-lg border border-linestrong bg-surface ps-10 pe-3 text-[15px] text-ink placeholder:text-muted focus:outline-none focus:border-brand focus:ring-[3px] focus:ring-brand/40">
+        </label>
+        <div class="ms-auto flex items-center gap-1">
+          <span class="hidden sm:inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-sm font-semibold bg-oksoft text-ok"><svg class="w-4 h-4" aria-hidden="true"><use href="#i-shield-check"/></svg>Verified organisation</span>
+          <button type="button" data-theme-toggle aria-label="Dark theme" class="grid place-items-center w-11 h-11 rounded-lg hover:bg-surface2"><svg class="w-5 h-5" aria-hidden="true"><use href="#i-moon"/></svg></button>
+          <button type="button" class="flex items-center gap-2 min-h-11 ps-1 pe-2 rounded-lg hover:bg-surface2" aria-label="Account: Sara K., HR Admin"><span class="grid place-items-center w-9 h-9 rounded-full bg-stampsoft text-stamp font-bold text-sm">SK</span><span class="hidden xl:block text-start leading-tight"><span class="block text-[15px] font-semibold">Sara K.</span><span class="block text-[13px] text-muted">HR Admin</span></span></button>
+        </div>
+      </div>
+    </header>
+    <main id="main" class="px-4 lg:px-6 py-6 max-w-[100rem]">
+      <div class="flex flex-wrap items-center gap-3">
+        <div class="me-auto min-w-0">
+          <nav aria-label="Breadcrumb" class="text-sm text-muted"><ol class="flex items-center gap-1"><li><a href="#" class="inline-flex items-center justify-center min-h-11 min-w-11 hover:text-ink">Jobs</a></li><li aria-hidden="true">/</li><li aria-current="page" class="text-ink font-medium">New job</li></ol></nav>
+          <h1 class="font-display text-2xl sm:text-3xl font-bold">Post a job</h1>
+        </div>
+        <span class="inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-sm font-semibold bg-surface2 text-muted"><svg class="w-4 h-4" aria-hidden="true"><use href="#i-edit"/></svg>Draft · saved 1 min ago</span>
+        <button type="button" data-open="preview-dlg" class="xl:hidden inline-flex items-center gap-2 min-h-11 px-4 rounded-lg border border-linestrong bg-surface font-semibold hover:bg-surface2"><svg class="w-5 h-5" aria-hidden="true"><use href="#i-eye"/></svg>Preview</button>
+      </div>
+
+      <!-- Stepper -->
+      <nav aria-label="Steps" class="mt-5">
+        <div class="xl:hidden">
+          <p class="font-semibold"><span id="st-m">Step 1 of 5</span> · <span id="st-name" class="text-brand">Job</span></p>
+          <div class="mt-2 h-2 rounded-full bg-surface2 overflow-hidden"><div id="st-bar" class="h-full rounded-full bg-brand transition-all" style="width:20%"></div></div>
+        </div>
+        <ol id="stepper" class="hidden xl:flex items-center gap-2"></ol>
+      </nav>
+
+      <div class="mt-6 grid grid-cols-1 gap-6 xl:grid-cols-[minmax(0,1fr)_30rem] items-start">
+        <form id="wiz" class="rounded-xl border border-line bg-surface p-4 sm:p-6" onsubmit="return false" novalidate>
+          <!-- 1 Job -->
+          <section data-wstep="1" class="space-y-5">
+            <h2 class="text-xl font-bold">The job</h2>
+            <div class="grid gap-4 sm:grid-cols-2">
+              <div class="sm:col-span-2"><label for="title" class="block font-semibold">Job title</label><input id="title" name="title" value="Building Electrician" class="mt-1.5 block w-full min-h-12 rounded-xl border border-linestrong bg-surface px-4 text-base focus:outline-none focus:border-brand focus:ring-[3px] focus:ring-brand/40"></div>
+              <div><label for="occ" class="block font-semibold">Occupation</label><p class="text-sm text-muted">From the skills taxonomy</p>
+                <div class="relative mt-1.5"><select id="occ" name="occ" class="appearance-none block w-full min-h-12 rounded-xl border border-linestrong bg-surface ps-4 pe-10 text-base focus:outline-none focus:border-brand focus:ring-[3px] focus:ring-brand/40"><option>Electrician</option><option>Welder</option><option>HVAC technician</option><option>Warehouse operative</option><option>Driver</option></select><svg class="pointer-events-none absolute end-4 top-1/2 -translate-y-1/2 w-5 h-5 text-muted" aria-hidden="true"><use href="#i-down"/></svg></div></div>
+              <div><label for="headcount" class="block font-semibold">Workers needed</label><p class="text-sm text-muted">&nbsp;</p><input id="headcount" name="headcount" type="number" min="1" value="200" class="mt-1.5 block w-full min-h-12 rounded-xl border border-linestrong bg-surface px-4 text-base tabular-nums focus:outline-none focus:border-brand focus:ring-[3px] focus:ring-brand/40"></div>
+              <div><label for="country" class="block font-semibold">Country</label>
+                <div class="relative mt-1.5"><select id="country" name="country" class="appearance-none block w-full min-h-12 rounded-xl border border-linestrong bg-surface ps-4 pe-10 text-base focus:outline-none focus:border-brand focus:ring-[3px] focus:ring-brand/40"><option>United Arab Emirates</option><option>Saudi Arabia</option><option>Poland</option><option>Japan</option><option>Czechia</option></select><svg class="pointer-events-none absolute end-4 top-1/2 -translate-y-1/2 w-5 h-5 text-muted" aria-hidden="true"><use href="#i-down"/></svg></div></div>
+              <div><label for="city" class="block font-semibold">City</label><input id="city" name="city" value="Dubai" class="mt-1.5 block w-full min-h-12 rounded-xl border border-linestrong bg-surface px-4 text-base focus:outline-none focus:border-brand focus:ring-[3px] focus:ring-brand/40"></div>
+              <div><label for="deadline" class="block font-semibold">Apply by</label><input id="deadline" name="deadline" value="30 Nov 2026" class="mt-1.5 block w-full min-h-12 rounded-xl border border-linestrong bg-surface px-4 text-base focus:outline-none focus:border-brand focus:ring-[3px] focus:ring-brand/40"></div>
+            </div>
+            <fieldset>
+              <legend class="font-semibold">Who is recruiting?</legend>
+              <div class="mt-2 grid gap-2 sm:grid-cols-2">
+                <label class="flex items-start gap-3 rounded-xl border-2 border-line p-3 cursor-pointer has-[:checked]:border-brand has-[:checked]:bg-brandsoft has-[:focus-visible]:ring-[3px] has-[:focus-visible]:ring-brand/50"><input type="radio" name="via" value="direct" class="mt-0.5 w-5 h-5 accent-brand"><span><span class="block font-semibold">We hire directly</span><span class="block text-sm text-muted">No agency</span></span></label>
+                <label class="flex items-start gap-3 rounded-xl border-2 border-line p-3 cursor-pointer has-[:checked]:border-brand has-[:checked]:bg-brandsoft has-[:focus-visible]:ring-[3px] has-[:focus-visible]:ring-brand/50"><input type="radio" name="via" value="agency" checked class="mt-0.5 w-5 h-5 accent-brand"><span><span class="block font-semibold">Through a licensed agency</span><span class="block text-sm text-muted">Northstar Manpower · licence verified</span></span></label>
+              </div>
+            </fieldset>
+          </section>
+
+          <!-- 2 Skills -->
+          <section data-wstep="2" class="space-y-5" hidden>
+            <h2 class="text-xl font-bold">Skills and requirements</h2>
+            <div>
+              <label for="skill-in" class="block font-semibold">Required skills</label>
+              <p class="text-sm text-muted">Workers see "X of Y requirements met". Matching is rules-based.</p>
+              <ul id="skills" class="mt-2 flex flex-wrap gap-2"></ul>
+              <div class="mt-2 flex gap-2"><input id="skill-in" placeholder="Add a skill, e.g. Conduit bending" class="min-w-0 flex-1 min-h-12 rounded-xl border border-linestrong bg-surface px-4 text-base placeholder:text-muted focus:outline-none focus:border-brand focus:ring-[3px] focus:ring-brand/40"><button type="button" id="skill-add" class="inline-flex items-center gap-1.5 min-h-12 px-4 rounded-xl bg-brandsoft text-brand font-semibold hover:bg-brandsoft/70"><svg class="w-5 h-5" aria-hidden="true"><use href="#i-plus"/></svg>Add</button></div>
+            </div>
+            <div class="grid gap-4 sm:grid-cols-2">
+              <div><label for="exp" class="block font-semibold">Minimum experience (years)</label><input id="exp" name="exp" type="number" min="0" value="5" class="mt-1.5 block w-full min-h-12 rounded-xl border border-linestrong bg-surface px-4 text-base tabular-nums focus:outline-none focus:border-brand focus:ring-[3px] focus:ring-brand/40"></div>
+              <div><label for="lang" class="block font-semibold">Language</label><input id="lang" name="lang" value="Basic English or Hindi/Urdu" class="mt-1.5 block w-full min-h-12 rounded-xl border border-linestrong bg-surface px-4 text-base focus:outline-none focus:border-brand focus:ring-[3px] focus:ring-brand/40"></div>
+            </div>
+          </section>
+
+          <!-- 3 Pay -->
+          <section data-wstep="3" class="space-y-5" hidden>
+            <h2 class="text-xl font-bold">Pay and hours</h2>
+            <div class="grid gap-4 sm:grid-cols-2">
+              <div><label for="salary" class="block font-semibold">Basic salary per month</label>
+                <div class="mt-1.5 flex"><span id="cur-l" class="inline-flex items-center min-h-12 px-3 rounded-s-xl border border-e-0 border-linestrong bg-surface2 font-semibold">AED</span><input id="salary" name="salary" type="number" min="0" value="2200" class="min-w-0 flex-1 min-h-12 rounded-e-xl border border-linestrong bg-surface px-4 text-base tabular-nums focus:outline-none focus:border-brand focus:ring-[3px] focus:ring-brand/40"></div>
+                <p class="mt-1 text-sm text-muted">Currency follows the country.</p></div>
+              <div><label for="contract" class="block font-semibold">Contract length (months)</label><input id="contract" name="contract" type="number" min="1" value="24" class="mt-1.5 block w-full min-h-12 rounded-xl border border-linestrong bg-surface px-4 text-base tabular-nums focus:outline-none focus:border-brand focus:ring-[3px] focus:ring-brand/40"></div>
+              <div><label for="hours" class="block font-semibold">Hours per day</label><input id="hours" name="hours" type="number" min="1" max="12" value="8" class="mt-1.5 block w-full min-h-12 rounded-xl border border-linestrong bg-surface px-4 text-base tabular-nums focus:outline-none focus:border-brand focus:ring-[3px] focus:ring-brand/40"></div>
+              <div><label for="days" class="block font-semibold">Days per week</label><input id="days" name="days" type="number" min="1" max="7" value="6" class="mt-1.5 block w-full min-h-12 rounded-xl border border-linestrong bg-surface px-4 text-base tabular-nums focus:outline-none focus:border-brand focus:ring-[3px] focus:ring-brand/40"></div>
+              <div class="sm:col-span-2"><label for="overtime" class="block font-semibold">Overtime</label><input id="overtime" name="overtime" value="Paid at 1.25× basic hourly rate" class="mt-1.5 block w-full min-h-12 rounded-xl border border-linestrong bg-surface px-4 text-base focus:outline-none focus:border-brand focus:ring-[3px] focus:ring-brand/40"></div>
+            </div>
+          </section>
+
+          <!-- 4 Living & costs -->
+          <section data-wstep="4" class="space-y-5" hidden>
+            <h2 class="text-xl font-bold">Living, travel and costs</h2>
+            <p class="text-muted">Leave a field empty and workers will see <span class="italic font-medium text-warn">Not disclosed</span>. Never guess.</p>
+            <div class="grid gap-4 sm:grid-cols-2">
+              <div><label for="accommodation" class="block font-semibold">Housing</label><input id="accommodation" name="accommodation" value="Provided · shared, 4 per room" class="mt-1.5 block w-full min-h-12 rounded-xl border border-linestrong bg-surface px-4 text-base focus:outline-none focus:border-brand focus:ring-[3px] focus:ring-brand/40"></div>
+              <div><label for="food" class="block font-semibold">Food</label><input id="food" name="food" value="" placeholder="e.g. AED 300 monthly allowance" class="mt-1.5 block w-full min-h-12 rounded-xl border border-linestrong bg-surface px-4 text-base placeholder:text-muted focus:outline-none focus:border-brand focus:ring-[3px] focus:ring-brand/40"></div>
+              <div><label for="transport" class="block font-semibold">Transport to work</label><input id="transport" name="transport" value="Provided to site" class="mt-1.5 block w-full min-h-12 rounded-xl border border-linestrong bg-surface px-4 text-base focus:outline-none focus:border-brand focus:ring-[3px] focus:ring-brand/40"></div>
+              <div><label for="medical" class="block font-semibold">Medical</label><input id="medical" name="medical" value="" placeholder="e.g. Employer health insurance" class="mt-1.5 block w-full min-h-12 rounded-xl border border-linestrong bg-surface px-4 text-base placeholder:text-muted focus:outline-none focus:border-brand focus:ring-[3px] focus:ring-brand/40"></div>
+              <div class="sm:col-span-2"><label for="airfare" class="block font-semibold">Air ticket</label>
+                <div class="relative mt-1.5"><select id="airfare" name="airfare" class="appearance-none block w-full min-h-12 rounded-xl border border-linestrong bg-surface ps-4 pe-10 text-base focus:outline-none focus:border-brand focus:ring-[3px] focus:ring-brand/40"><option value="Employer pays (both ways)">Employer pays, both ways</option><option value="Employer pays (arrival)">Employer pays, arrival only</option><option value="Not provided">Not provided</option><option value="">Not decided yet</option></select><svg class="pointer-events-none absolute end-4 top-1/2 -translate-y-1/2 w-5 h-5 text-muted" aria-hidden="true"><use href="#i-down"/></svg></div></div>
+            </div>
+            <div class="grid gap-4 sm:grid-cols-2">
+              <fieldset><legend class="font-semibold">Work permit paid by</legend><div class="mt-2 flex gap-2"><label class="flex-1 flex items-center gap-2 min-h-12 rounded-xl border-2 border-line px-3 cursor-pointer has-[:checked]:border-brand has-[:checked]:bg-brandsoft"><input type="radio" name="permitPayer" value="Employer" checked class="w-5 h-5 accent-brand">Employer</label><label class="flex-1 flex items-center gap-2 min-h-12 rounded-xl border-2 border-line px-3 cursor-pointer has-[:checked]:border-brand has-[:checked]:bg-brandsoft"><input type="radio" name="permitPayer" value="Worker" class="w-5 h-5 accent-brand">Worker</label></div></fieldset>
+              <fieldset><legend class="font-semibold">Visa paid by</legend><div class="mt-2 flex gap-2"><label class="flex-1 flex items-center gap-2 min-h-12 rounded-xl border-2 border-line px-3 cursor-pointer has-[:checked]:border-brand has-[:checked]:bg-brandsoft"><input type="radio" name="visaPayer" value="Employer" checked class="w-5 h-5 accent-brand">Employer</label><label class="flex-1 flex items-center gap-2 min-h-12 rounded-xl border-2 border-line px-3 cursor-pointer has-[:checked]:border-brand has-[:checked]:bg-brandsoft"><input type="radio" name="visaPayer" value="Worker" class="w-5 h-5 accent-brand">Worker</label></div></fieldset>
+            </div>
+            <div>
+              <p class="font-semibold">Costs the worker pays</p>
+              <p class="text-sm text-muted">Every item is shown to workers with its amount.</p>
+              <ul id="costs" class="mt-2 space-y-2"></ul>
+              <button type="button" id="cost-add" class="mt-2 inline-flex items-center gap-1.5 min-h-11 px-3 rounded-lg font-semibold text-brand hover:bg-brandsoft"><svg class="w-5 h-5" aria-hidden="true"><use href="#i-plus"/></svg>Add a cost</button>
+              <div id="rule-warn" role="alert" class="mt-3 hidden gap-3 rounded-xl border border-bad/40 bg-badsoft p-3"><svg class="w-6 h-6 shrink-0 text-bad" aria-hidden="true"><use href="#i-alert"/></svg><div><p class="font-semibold">Not allowed for <span id="rule-c">UAE</span> jobs</p><p class="text-[15px]">Country rule: workers cannot be charged recruitment, visa or permit fees. Remove these costs or the job will be rejected.</p></div></div>
+            </div>
+          </section>
+
+          <!-- 5 Check -->
+          <section data-wstep="5" class="space-y-5" hidden>
+            <h2 class="text-xl font-bold">Check and send for review</h2>
+            <div id="nd-box" class="flex gap-3 rounded-xl border border-warn/40 bg-warnsoft p-4"><svg class="w-6 h-6 shrink-0 text-warn" aria-hidden="true"><use href="#i-info"/></svg><div><p class="font-semibold"><span id="nd-n">2</span> fields will show "Not disclosed"</p><p id="nd-list" class="text-[15px]">Food, Medical</p><button type="button" data-goto="4" class="inline-flex items-center min-h-11 font-semibold text-brand underline underline-offset-4">Fill them in</button></div></div>
+            <ul class="space-y-2">
+              <li class="flex items-start gap-3"><svg class="w-6 h-6 shrink-0 text-brand" aria-hidden="true"><use href="#i-shield"/></svg><span>Our team checks every job before it goes live, usually within 48 hours.</span></li>
+              <li class="flex items-start gap-3"><svg class="w-6 h-6 shrink-0 text-brand" aria-hidden="true"><use href="#i-refresh"/></svg><span>If you later change pay, costs or housing, the job goes back to review and workers see "Being checked again".</span></li>
+              <li class="flex items-start gap-3"><svg class="w-6 h-6 shrink-0 text-brand" aria-hidden="true"><use href="#i-file"/></svg><span>Mandate MD-1107 from Northstar Manpower will be attached.</span></li>
+            </ul>
+            <label class="flex items-start gap-3 min-h-12 rounded-xl p-2 hover:bg-surface2 cursor-pointer"><input type="checkbox" id="attest" class="mt-0.5 w-6 h-6 shrink-0 accent-brand"><span>I confirm this information is true and matches the contract workers will sign.</span></label>
+          </section>
+
+          <div class="mt-8 pt-4 border-t border-line flex items-center gap-2">
+            <button type="button" id="prev" class="inline-flex items-center gap-1.5 min-h-12 px-4 rounded-xl border border-linestrong bg-surface font-semibold hover:bg-surface2 disabled:opacity-50 disabled:pointer-events-none"><svg class="w-5 h-5 flip-rtl" aria-hidden="true"><use href="#i-back"/></svg>Back</button>
+            <button type="button" data-toast="Draft saved" data-toast-tone="ok" class="hidden sm:inline-flex items-center min-h-12 px-4 rounded-xl font-semibold text-brand hover:bg-brandsoft">Save draft</button>
+            <button type="button" id="next" class="ms-auto inline-flex items-center gap-1.5 min-h-12 px-5 rounded-xl bg-brand text-onbrand font-semibold hover:bg-brand/90">Next<svg class="w-5 h-5 flip-rtl" aria-hidden="true"><use href="#i-next"/></svg></button>
+            <button type="button" id="submit" hidden class="ms-auto inline-flex items-center gap-1.5 min-h-12 px-5 rounded-xl bg-brand text-onbrand font-semibold hover:bg-brand/90 disabled:opacity-50 disabled:pointer-events-none"><svg class="w-5 h-5" aria-hidden="true"><use href="#i-send"/></svg>Send for review</button>
+          </div>
+        </form>
+
+        <aside class="hidden xl:block sticky top-20" aria-labelledby="pv-h">
+          <div class="flex items-center gap-2 mb-2"><h2 id="pv-h" class="font-bold me-auto">Live preview</h2><span class="text-sm text-muted">What workers will see</span></div>
+          <div id="preview" aria-live="polite"></div>
+        </aside>
+      </div>
+
+    </main>
+  </div>
+</div>
+
+<dialog id="ws-drawer" class="drawer" aria-labelledby="ws-drawer-t">
+  <nav class="h-full bg-surface flex flex-col" aria-label="Workspace">
+    <div class="flex items-center gap-2 h-16 px-4 border-b border-line">
+      <span class="grid place-items-center w-10 h-10 shrink-0 rounded-lg bg-brand text-onbrand"><svg class="w-5 h-5" aria-hidden="true"><use href="#i-passport"/></svg></span>
+      <div class="min-w-0 flex-1"><p id="ws-drawer-t" class="font-bold truncate leading-tight">ABC Contracting LLC</p><p class="text-[13px] text-muted truncate">Employer · Dubai, UAE</p></div>
+      <button type="button" data-close aria-label="Close menu" class="grid place-items-center w-11 h-11 rounded-lg hover:bg-surface2"><svg class="w-5 h-5" aria-hidden="true"><use href="#i-x"/></svg></button>
+    </div>
+    <div class="flex-1 overflow-y-auto p-3"><p class="px-3 pt-1 pb-2 text-[13px] font-bold uppercase tracking-wider text-muted">Recruitment</p><ul class="space-y-0.5"><li><a href="../layouts/org.html" class="flex items-center gap-3 min-h-12 px-3 rounded-lg text-ink font-medium hover:bg-surface2"><svg class="w-5 h-5 shrink-0 text-muted" aria-hidden="true"><use href="#i-grid"/></svg>Overview</a></li><li><a href="06-post-job.html" aria-current="page" class="flex items-center gap-3 min-h-12 px-3 rounded-lg bg-brandsoft text-brand font-semibold"><svg class="w-5 h-5 shrink-0" aria-hidden="true"><use href="#i-briefcase"/></svg>Jobs</a></li><li><a href="07-talent.html" class="flex items-center gap-3 min-h-12 px-3 rounded-lg text-ink font-medium hover:bg-surface2"><svg class="w-5 h-5 shrink-0 text-muted" aria-hidden="true"><use href="#i-search"/></svg>Talent search</a></li><li><a href="08-pipeline.html" class="flex items-center gap-3 min-h-12 px-3 rounded-lg text-ink font-medium hover:bg-surface2"><svg class="w-5 h-5 shrink-0 text-muted" aria-hidden="true"><use href="#i-kanban"/></svg>Pipeline</a></li><li><a href="#" class="flex items-center gap-3 min-h-12 px-3 rounded-lg text-ink font-medium hover:bg-surface2"><svg class="w-5 h-5 shrink-0 text-muted" aria-hidden="true"><use href="#i-chat"/></svg>Messages</a></li><li><a href="#" class="flex items-center gap-3 min-h-12 px-3 rounded-lg text-ink font-medium hover:bg-surface2"><svg class="w-5 h-5 shrink-0 text-muted" aria-hidden="true"><use href="#i-chart"/></svg>Reports</a></li></ul><p class="px-3 pt-5 pb-2 text-[13px] font-bold uppercase tracking-wider text-muted">Organisation</p><ul class="space-y-0.5"><li><a href="#" class="flex items-center gap-3 min-h-12 px-3 rounded-lg text-ink font-medium hover:bg-surface2"><svg class="w-5 h-5 shrink-0 text-muted" aria-hidden="true"><use href="#i-shield-check"/></svg>Verification</a></li><li><a href="#" class="flex items-center gap-3 min-h-12 px-3 rounded-lg text-ink font-medium hover:bg-surface2"><svg class="w-5 h-5 shrink-0 text-muted" aria-hidden="true"><use href="#i-users"/></svg>Team</a></li><li><a href="#" class="flex items-center gap-3 min-h-12 px-3 rounded-lg text-ink font-medium hover:bg-surface2"><svg class="w-5 h-5 shrink-0 text-muted" aria-hidden="true"><use href="#i-settings"/></svg>Settings</a></li></ul></div>
+  </nav>
+</dialog>
+
+<dialog id="preview-dlg" class="sheet" aria-labelledby="pvd-t">
+  <div class="rounded-t-3xl sm:rounded-2xl bg-surface2 sm:w-[32rem] max-h-[90vh] overflow-y-auto p-4 pb-[max(1rem,env(safe-area-inset-bottom))]">
+    <div class="flex items-center justify-between gap-2 mb-3"><h2 id="pvd-t" class="text-lg font-bold">What workers will see</h2><button type="button" data-close aria-label="Close preview" class="grid place-items-center w-11 h-11 rounded-full hover:bg-surface">
+      <svg class="w-5 h-5" aria-hidden="true"><use href="#i-x"/></svg></button></div>
+    <div id="preview-m"></div>
+  </div>
+</dialog>
+
+<script src="../assets/sample-data.js"></script>
+<script src="../assets/render.js"></script>
+<script>
+  /* One job object → wizard fields, Truth Card preview and compliance checks. */
+  (function () {
+    const $ = id => document.getElementById(id), form = $('wiz');
+    const STEPS = ['Job', 'Skills', 'Pay', 'Living & costs', 'Check & send'];
+    const CUR = { 'United Arab Emirates': 'AED', 'Saudi Arabia': 'SAR', 'Poland': 'PLN', 'Japan': 'JPY', 'Czechia': 'CZK' };
+    const NO_WORKER_FEES = ['United Arab Emirates', 'Saudi Arabia'];   // from country config
+    let step = 1;
+    let skills = ['Industrial wiring', 'DB installation', 'Cable termination'];
+    let costs = [];
+
+    function job() {
+      const f = new FormData(form), g = k => (f.get(k) || '').toString().trim();
+      const agency = g('via') === 'agency';
+      return {
+        id: 'DRAFT', title: g('title'), occ: g('occ'), city: g('city'), country: g('country'), employer: 'ABC Contracting LLC',
+        postedBy: agency ? 'Northstar Manpower (licensed agency)' : 'ABC Contracting LLC (direct employer)',
+        agencyLicence: agency ? 'Licence RA-2026-0418 · valid to Mar 2027' : '', mandate: agency ? 'MD-1107 · ' + (g('headcount') || '?') + ' workers' : 'Direct hire · no agency',
+        salary: g('salary'), cur: CUR[g('country')] || 'AED', hours: g('hours'), days: g('days'), overtime: g('overtime'), contract: g('contract'),
+        accommodation: g('accommodation'), food: g('food'), transport: g('transport'), medical: g('medical'), airfare: g('airfare'),
+        permitPayer: g('permitPayer'), visaPayer: g('visaPayer'), headcount: g('headcount'), deadline: g('deadline'),
+        costs: costs.filter(c => c.item).map(c => ({ ...c, payer: 'Worker' })),
+        checks: [['Employer verified', 'ok']].concat(agency ? [['Agency licence verified', 'ok'], ['Mandate in review', 'warn']] : []).concat([['Salary declared by employer', 'neutral']])
+      };
+    }
+    function update() {
+      const j = job();
+      $('cur-l').textContent = j.cur;
+      const html = BSR.truthCard(j, { match: false, id: 'pv' });
+      $('preview').innerHTML = html; $('preview-m').innerHTML = html.replace(/id="pv/g, 'id="pvm').replace(/#pv-say/g, '#pvm-say');
+      const missing = [['Housing', j.accommodation], ['Food', j.food], ['Transport', j.transport], ['Medical', j.medical], ['Air ticket', j.airfare], ['Overtime', j.overtime]].filter(([, v]) => !v).map(([k]) => k);
+      $('nd-n').textContent = missing.length; $('nd-list').textContent = missing.join(', ');
+      $('nd-box').hidden = !missing.length;
+      const bad = NO_WORKER_FEES.includes(j.country) && (j.costs.length || j.permitPayer === 'Worker' || j.visaPayer === 'Worker');
+      $('rule-warn').classList.toggle('hidden', !bad); $('rule-warn').classList.toggle('flex', bad);
+      $('rule-c').textContent = j.country === 'United Arab Emirates' ? 'UAE' : j.country;
+      $('submit').disabled = bad || !$('attest').checked;
+    }
+    function renderSkills() {
+      $('skills').innerHTML = skills.map((s, i) => `<li class="inline-flex items-center gap-1 min-h-11 rounded-full bg-surface2 ps-4 pe-1 text-[15px] font-semibold">${BSR.esc(s)}<button type="button" data-rm-skill="${i}" aria-label="Remove ${BSR.esc(s)}" class="grid place-items-center w-11 h-11 -my-1 rounded-full hover:bg-line">${BSR.icon('x', 'w-4 h-4')}</button></li>`).join('');
+    }
+    function renderCosts() {
+      $('costs').innerHTML = costs.map((c, i) => `<li class="grid grid-cols-[minmax(0,1fr)_7rem_auto] gap-2 items-center">
+        <label class="sr-only" for="ci${i}">Cost item</label><input id="ci${i}" data-cost="${i}" data-k="item" value="${BSR.esc(c.item)}" placeholder="e.g. Medical check" class="min-w-0 min-h-12 rounded-xl border border-linestrong bg-surface px-3 text-base placeholder:text-muted focus:outline-none focus:border-brand focus:ring-[3px] focus:ring-brand/40">
+        <label class="sr-only" for="ca${i}">Amount</label><input id="ca${i}" data-cost="${i}" data-k="amount" type="number" min="0" value="${BSR.esc(c.amount)}" placeholder="0" class="min-w-0 min-h-12 rounded-xl border border-linestrong bg-surface px-3 text-base tabular-nums focus:outline-none focus:border-brand focus:ring-[3px] focus:ring-brand/40">
+        <button type="button" data-rm-cost="${i}" aria-label="Remove cost" class="grid place-items-center w-11 h-11 rounded-lg text-muted hover:bg-badsoft hover:text-bad">${BSR.icon('trash')}</button></li>`).join('');
+    }
+    function go(n) {
+      step = Math.min(5, Math.max(1, n));
+      form.querySelectorAll('[data-wstep]').forEach(s => { s.hidden = +s.dataset.wstep !== step; });
+      $('stepper').innerHTML = STEPS.map((s, i) => {
+        const k = i + 1, done = k < step, now = k === step;
+        return `<li class="flex items-center gap-2 ${k < 5 ? 'flex-1' : ''}"><button type="button" data-goto="${k}" ${now ? 'aria-current="step"' : ''} class="flex items-center gap-2 min-h-11 rounded-lg pe-2 font-semibold ${now ? 'text-brand' : done ? 'text-ink' : 'text-muted'}">
+          <span class="grid place-items-center w-8 h-8 shrink-0 rounded-full ${done ? 'bg-ok text-onbrand' : now ? 'bg-brand text-onbrand' : 'border-2 border-linestrong'} text-sm font-bold">${done ? BSR.icon('check', 'w-4 h-4') : k}</span><span class="whitespace-nowrap">${s}</span></button>${k < 5 ? `<span class="h-0.5 flex-1 min-w-4 ${done ? 'bg-ok' : 'bg-line'}" aria-hidden="true"></span>` : ''}</li>`;
+      }).join('');
+      $('st-m').textContent = `Step ${step} of 5`; $('st-name').textContent = STEPS[step - 1]; $('st-bar').style.width = step * 20 + '%';
+      $('prev').disabled = step === 1; $('next').hidden = step === 5; $('submit').hidden = step !== 5;
+      update();
+    }
+    form.addEventListener('input', e => {
+      const c = e.target.dataset.cost; if (c !== undefined) costs[c][e.target.dataset.k] = e.target.value;
+      update();
+    });
+    form.addEventListener('change', update);
+    document.addEventListener('click', e => {
+      const b = e.target.closest('[data-goto],[data-rm-skill],[data-rm-cost]'); if (!b) return;
+      if (b.dataset.goto) go(+b.dataset.goto);
+      if (b.dataset.rmSkill) { skills.splice(+b.dataset.rmSkill, 1); renderSkills(); }
+      if (b.dataset.rmCost) { costs.splice(+b.dataset.rmCost, 1); renderCosts(); update(); }
+    });
+    $('skill-add').addEventListener('click', () => { const v = $('skill-in').value.trim(); if (v) { skills.push(v); $('skill-in').value = ''; renderSkills(); } });
+    $('skill-in').addEventListener('keydown', e => { if (e.key === 'Enter') { e.preventDefault(); $('skill-add').click(); } });
+    $('cost-add').addEventListener('click', () => { costs.push({ item: '', amount: '', cur: '' }); renderCosts(); $('ci' + (costs.length - 1)).focus(); });
+    $('prev').addEventListener('click', () => go(step - 1));
+    $('next').addEventListener('click', () => { go(step + 1); window.scrollTo({ top: 0 }); });
+    $('submit').addEventListener('click', () => BS.toast('Sent for review. We will reply within 48 hours.', 'ok'));
+    renderSkills(); renderCosts();
+    const start = +location.hash.slice(1); go(start >= 1 && start <= 5 ? start : 1);
+  })();
+</script>
+
+</body>
+</html>

@@ -1,7 +1,7 @@
 /* BLUESKILLS design-pack behaviour. Load in <head> (not deferred) so theme + language + direction
    apply before first paint. Everything else binds on DOMContentLoaded via data attributes:
    data-theme-toggle · select[data-lang-select] · data-i18n="key" · data-open="dialogId" · data-close
-   [role=tablist] · data-toast="message" · data-sidebar-toggle · data-speak="#selector" · input[data-file-list] */
+   [role=tablist] · data-toast="message" (+ data-toast-key for i18n) · data-sidebar-toggle · data-speak="#selector" · input[data-file-list] */
 (function () {
   const html = document.documentElement;
   const store = {
@@ -31,7 +31,8 @@
   function t(key, vars) {
     const dict = window.BS_I18N || {};
     let s = (dict[lang] && dict[lang][key]) ?? (dict.en && dict.en[key]) ?? null;
-    if (s && vars) for (const k in vars) s = s.split(`{${k}}`).join(vars[k]);
+    // Inserted values (dates, names, numbers) are bidi-isolated so they keep their order inside Urdu text.
+    if (s && vars) for (const k in vars) s = s.split(`{${k}}`).join('\u2068' + vars[k] + '\u2069');
     return s;
   }
   function translate(root) {
@@ -49,6 +50,7 @@
   function setLang(code) {
     if (!LANGS[code]) return;
     lang = code; store.set('bs-lang', code); applyDir(); translate(document);
+    document.dispatchEvent(new CustomEvent('bs:lang', { detail: code }));
     document.querySelectorAll('select[data-lang-select]').forEach(s => { s.value = code; });
     document.querySelectorAll('[data-lang-option]').forEach(el => {
       const on = el.dataset.langOption === code;
@@ -95,6 +97,7 @@
     file: '<path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/>',
     trash: '<path d="M3 6h18"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6"/><path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/>',
     plus: '<path d="M12 5v14M5 12h14"/>',
+    minus: '<path d="M5 12h14"/>',
     filter: '<path d="M21 4h-7M10 4H3M21 12h-9M8 12H3M21 20h-5M12 20H3M14 2v4M8 10v4M16 18v4"/>',
     pin: '<path d="M20 10c0 5-5.5 10.2-7.4 11.8a1 1 0 0 1-1.2 0C9.5 20.2 4 15 4 10a8 8 0 0 1 16 0"/><circle cx="12" cy="10" r="3"/>',
     money: '<rect x="2" y="6" width="20" height="12" rx="2"/><circle cx="12" cy="12" r="2"/><path d="M6 12h.01M18 12h.01"/>',
@@ -222,7 +225,7 @@
       }
       if (el.dataset.open) { const d = document.getElementById(el.dataset.open); if (d && !d.open) d.showModal(); }
       if (el.hasAttribute('data-close')) el.closest('dialog')?.close();
-      if (el.dataset.toast) toast(el.dataset.toast, el.dataset.toastTone);
+      if (el.dataset.toast) toast((el.dataset.toastKey && t(el.dataset.toastKey)) || el.dataset.toast, el.dataset.toastTone);
       if (el.hasAttribute('data-sidebar-toggle') && shell) {
         const c = shell.dataset.collapsed !== 'true'; shell.dataset.collapsed = c; store.set('bs-sidebar', c ? 'collapsed' : 'open');
         el.setAttribute('aria-expanded', !c);
@@ -250,5 +253,5 @@
     });
   });
 
-  window.BS = { toast, setLang, t, speak, get lang() { return lang; } };
+  window.BS = { toast, setLang, t, speak, translate, get lang() { return lang; } };
 })();

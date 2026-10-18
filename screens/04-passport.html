@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="bn" data-i18n-page>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Skill Passport · BLUESKILLS</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,700;12..96,800&family=Figtree:wght@400;500;600;700&family=JetBrains+Mono:wght@500;700&family=Noto+Sans+Bengali:wght@400;600;700&family=Noto+Sans+Devanagari:wght@400;600;700&family=Noto+Naskh+Arabic:wght@400;600;700&display=swap">
+<link rel="stylesheet" href="../assets/tokens.css">
+<script src="https://cdn.tailwindcss.com/3.4.17"></script>
+<script src="../assets/tailwind.config.js"></script>
+<script src="../assets/i18n.js"></script>
+<script src="../assets/i18n-screens.js"></script>
+<script src="../assets/app.js"></script>
+</head>
+<body class="font-sans">
+<a href="#main" class="skip-link inline-flex items-center min-h-11 rounded-lg bg-brand text-onbrand px-4 font-semibold">Skip to content</a>
+
+<aside class="hidden lg:flex fixed inset-y-0 start-0 z-30 w-64 flex-col border-e border-line bg-surface">
+  <a href="../index.html" class="flex items-center gap-2 h-16 px-5 border-b border-line" aria-label="BLUESKILLS home">
+    <span class="grid place-items-center w-9 h-9 rounded-lg bg-brand text-onbrand"><svg class="w-5 h-5" aria-hidden="true"><use href="#i-passport"/></svg></span>
+    <span class="font-display text-lg font-extrabold tracking-tight">BLUESKILLS</span>
+  </a>
+  <nav aria-label="Main" class="flex-1 overflow-y-auto p-3">
+    <ul class="space-y-1"><li><a href="../layouts/worker.html" class="flex items-center gap-3 min-h-12 px-3 rounded-xl text-ink hover:bg-surface2 text-base font-semibold"><svg class="w-6 h-6 text-muted" aria-hidden="true"><use href="#i-home"/></svg><span data-i18n="home">Home</span></a></li><li><a href="02-jobs.html" class="flex items-center gap-3 min-h-12 px-3 rounded-xl text-ink hover:bg-surface2 text-base font-semibold"><svg class="w-6 h-6 text-muted" aria-hidden="true"><use href="#i-search"/></svg><span data-i18n="jobs">Jobs</span></a></li><li><a href="05-apply.html#tracker" class="flex items-center gap-3 min-h-12 px-3 rounded-xl text-ink hover:bg-surface2 text-base font-semibold"><svg class="w-6 h-6 text-muted" aria-hidden="true"><use href="#i-list"/></svg><span data-i18n="applications">Applications</span></a></li><li><a href="#" class="flex items-center gap-3 min-h-12 px-3 rounded-xl text-ink hover:bg-surface2 text-base font-semibold"><svg class="w-6 h-6 text-muted" aria-hidden="true"><use href="#i-chat"/></svg><span data-i18n="messages">Messages</span></a></li><li><a href="04-passport.html" aria-current="page" class="flex items-center gap-3 min-h-12 px-3 rounded-xl bg-brandsoft text-brand text-base font-semibold"><svg class="w-6 h-6" aria-hidden="true"><use href="#i-passport"/></svg><span data-i18n="passport">Passport</span></a></li></ul>
+    <ul class="mt-4 pt-4 border-t border-line space-y-1">
+      <li><a href="10-settings.html" class="flex items-center gap-3 min-h-12 px-3 rounded-xl text-ink hover:bg-surface2 font-semibold"><svg class="w-6 h-6 text-muted" aria-hidden="true"><use href="#i-settings"/></svg><span data-i18n="settings">Settings</span></a></li>
+      <li><a href="#" class="flex items-center gap-3 min-h-12 px-3 rounded-xl text-ink font-semibold hover:bg-surface2"><svg class="w-6 h-6 text-muted" aria-hidden="true"><use href="#i-help"/></svg><span data-i18n="help">Help</span></a></li>
+    </ul>
+  </nav>
+  <div class="p-3 border-t border-line"><div class="flex items-center gap-3 rounded-xl p-2"><span class="grid place-items-center w-11 h-11 shrink-0 rounded-full bg-brandsoft text-brand font-bold">RU</span><div class="min-w-0"><p class="font-semibold truncate">Md Rahim Uddin</p><p class="text-sm text-muted truncate" data-i18n="trElectrician">Electrician</p></div></div></div>
+</aside>
+
+<div class="lg:ps-64">
+  <header class="sticky top-0 z-20 border-b border-line bg-surface/95 backdrop-blur pt-[env(safe-area-inset-top)]">
+    <div class="mx-auto max-w-5xl flex items-center gap-2 h-16 px-4">
+      <a href="../index.html" class="lg:hidden flex items-center gap-2 min-h-11 min-w-11" aria-label="BLUESKILLS home">
+        <span class="grid place-items-center w-9 h-9 rounded-lg bg-brand text-onbrand"><svg class="w-5 h-5" aria-hidden="true"><use href="#i-passport"/></svg></span>
+      </a>
+      <p class="text-lg font-bold truncate" data-i18n="skillPassport">Skill Passport</p>
+      <div class="ms-auto flex items-center gap-1">
+        <button type="button" data-open="lang-sheet" class="inline-flex items-center gap-2 min-h-11 px-3 rounded-full border border-linestrong bg-surface font-semibold hover:bg-surface2"><svg class="w-5 h-5 text-muted" aria-hidden="true"><use href="#i-globe"/></svg><span data-lang-current>বাংলা</span><span class="sr-only" data-i18n="language">Language</span></button>
+        <button type="button" data-theme-toggle aria-label="Dark theme" class="grid place-items-center w-11 h-11 rounded-full hover:bg-surface2"><svg class="w-5 h-5" aria-hidden="true"><use href="#i-moon"/></svg></button>
+      </div>
+    </div>
+  </header>
+
+  <main id="main" class="mx-auto max-w-5xl px-4 pt-5 pb-28 lg:pb-12">
+    <div class="grid grid-cols-1 gap-5 lg:grid-cols-[minmax(0,1fr)_19rem] items-start">
+      <div class="space-y-5 min-w-0">
+        <!-- Cover -->
+        <section class="passport-cover rounded-3xl p-5 sm:p-6 overflow-hidden" aria-labelledby="pp-name">
+          <div class="flex items-start gap-4">
+            <span class="grid place-items-center w-20 h-20 shrink-0 rounded-2xl bg-onbrand/15 text-3xl font-bold" aria-hidden="true">RU</span>
+            <div class="min-w-0 flex-1">
+              <p class="text-[13px] font-bold uppercase tracking-[.14em] opacity-90" data-i18n="skillPassport">Skill Passport</p>
+              <h1 id="pp-name" class="font-display text-2xl sm:text-3xl font-bold leading-tight">Md Rahim Uddin</h1>
+              <p class="text-lg font-semibold"><span data-i18n="trElectrician">Electrician</span> · <span data-i18n="nYears" data-i18n-vars='{"n":"8"}'>8 years</span></p>
+              <p class="opacity-90">Bangladesh</p>
+            </div>
+          </div>
+          <div class="mt-4 flex flex-wrap items-center gap-2">
+            <span class="inline-flex items-center gap-1.5 rounded-full bg-onbrand/15 px-3 py-1 text-sm font-semibold"><svg class="w-4 h-4" aria-hidden="true"><use href="#i-shield-check"/></svg><span data-i18n="idChecked">ID checked</span></span>
+            <span class="inline-flex items-center gap-1.5 rounded-full bg-onbrand/15 px-3 py-1 text-sm font-semibold"><svg class="w-4 h-4" aria-hidden="true"><use href="#i-school"/></svg><span data-i18n="oneAttested">1 certificate attested</span></span>
+            <span class="font-mono text-[13px] opacity-90 ms-auto" dir="ltr">BSP-BD-26-004812</span>
+          </div>
+          <p class="mt-3 font-mono text-[12px] tracking-[.12em] break-all opacity-60 select-none" aria-hidden="true" dir="ltr">P&lt;BGDUDDIN&lt;&lt;MD&lt;RAHIM&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;ELEC&lt;08Y</p>
+          <div class="mt-4 grid grid-cols-2 gap-2">
+            <button type="button" data-toast="Link copied" data-toast-key="linkCopied" data-toast-tone="ok" class="inline-flex items-center justify-center gap-2 min-h-12 px-4 rounded-xl bg-onbrand text-brand font-bold hover:bg-onbrand/90"><svg class="w-5 h-5" aria-hidden="true"><use href="#i-send"/></svg><span data-i18n="share">Share</span></button>
+            <button type="button" data-open="emp-view" class="inline-flex items-center justify-center gap-2 min-h-12 px-4 rounded-xl border border-onbrand/50 font-semibold hover:bg-onbrand/10"><svg class="w-5 h-5" aria-hidden="true"><use href="#i-eye"/></svg><span data-i18n="employerView">Employer view</span></button>
+          </div>
+        </section>
+
+        <!-- Legend: who says each line is true -->
+        <section aria-labelledby="legend-h" class="rounded-2xl border border-line bg-surface p-4">
+          <h2 id="legend-h" class="font-semibold" data-i18n="whoSays">Who says this is true?</h2>
+          <ul class="mt-2 flex flex-wrap gap-2">
+            <li class="inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-sm font-semibold bg-oksoft text-ok"><svg class="w-4 h-4" aria-hidden="true"><use href="#i-shield-check"/></svg><span data-i18n="srcChecked">Checked by BLUESKILLS</span></li>
+            <li class="inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-sm font-semibold bg-brandsoft text-brand"><svg class="w-4 h-4" aria-hidden="true"><use href="#i-school"/></svg><span data-i18n="srcInstitute">Attested by institute</span></li>
+            <li class="inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-sm font-semibold bg-surface2 text-muted"><svg class="w-4 h-4" aria-hidden="true"><use href="#i-user"/></svg><span data-i18n="srcYou">Said by you</span></li>
+          </ul>
+        </section>
+
+        <!-- Work -->
+        <section aria-labelledby="work-h" class="rounded-2xl border border-line bg-surface">
+          <div class="flex items-center gap-2 px-4 pt-4"><h2 id="work-h" class="text-lg font-bold me-auto" data-i18n="secWork">Work</h2><a href="03-signin-voice.html#idle" class="inline-flex items-center gap-1.5 min-h-11 px-3 rounded-lg font-semibold text-brand hover:bg-brandsoft"><svg class="w-5 h-5" aria-hidden="true"><use href="#i-edit"/></svg><span data-i18n="editBtn">Edit</span></a></div>
+          <dl class="px-4 pb-2 divide-y divide-line">
+            <div class="py-3 grid gap-1 sm:grid-cols-[10rem_minmax(0,1fr)_auto] sm:items-center"><dt class="text-muted" data-i18n="occupation">Trade</dt><dd><p class="font-semibold">Industrial electrician</p><p class="text-sm text-muted">Construction &amp; MEP › Electrical</p></dd><dd><span class="inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-sm font-semibold bg-surface2 text-muted"><svg class="w-4 h-4" aria-hidden="true"><use href="#i-user"/></svg><span data-i18n="srcYou">Said by you</span></span></dd></div>
+            <div class="py-3 grid gap-1 sm:grid-cols-[10rem_minmax(0,1fr)_auto] sm:items-center"><dt class="text-muted" data-i18n="experience">Experience</dt><dd class="font-semibold" data-i18n="nYears" data-i18n-vars='{"n":"8"}'>8 years</dd><dd><span class="inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-sm font-semibold bg-surface2 text-muted"><svg class="w-4 h-4" aria-hidden="true"><use href="#i-user"/></svg><span data-i18n="srcYou">Said by you</span></span></dd></div>
+            <div class="py-3 grid gap-1 sm:grid-cols-[10rem_minmax(0,1fr)_auto] sm:items-start"><dt class="text-muted" data-i18n="countriesWorked">Countries worked</dt>
+              <dd><ul class="space-y-1"><li class="font-semibold">Bangladesh · <span data-i18n="nYears" data-i18n-vars='{"n":"5"}'>5 years</span></li><li class="font-semibold">UAE · <span data-i18n="nYears" data-i18n-vars='{"n":"3"}'>3 years</span> <span class="block text-sm font-normal text-muted" data-i18n="refFrom" data-i18n-vars='{"o":"Emirates Power Works LLC"}'>Reference from Emirates Power Works LLC</span></li></ul></dd>
+              <dd class="flex flex-wrap gap-1 sm:flex-col sm:items-end"><span class="inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-sm font-semibold bg-oksoft text-ok"><svg class="w-4 h-4" aria-hidden="true"><use href="#i-shield-check"/></svg><span data-i18n="uaeRefChecked">UAE reference checked</span></span></dd></div>
+            <div class="py-3 grid gap-1 sm:grid-cols-[10rem_minmax(0,1fr)_auto] sm:items-center"><dt class="text-muted" data-i18n="canStart">Can start</dt><dd class="font-semibold" data-i18n="now">Now</dd><dd></dd></div>
+            <div class="py-3 grid gap-1 sm:grid-cols-[10rem_minmax(0,1fr)_auto] sm:items-center"><dt class="text-muted" data-i18n="wantsCountries">Wants to work in</dt><dd class="font-semibold">UAE, Poland</dd><dd></dd></div>
+            <div class="py-3 grid gap-1 sm:grid-cols-[10rem_minmax(0,1fr)_auto] sm:items-center"><dt class="text-muted" data-i18n="languages">Languages</dt><dd class="font-semibold">বাংলা · हिन्दी · English <span class="font-normal text-muted">(basic)</span></dd><dd></dd></div>
+          </dl>
+        </section>
+
+        <!-- Skills + certificates -->
+        <section aria-labelledby="skills-h" class="rounded-2xl border border-line bg-surface p-4">
+          <div class="flex items-center gap-2"><h2 id="skills-h" class="text-lg font-bold me-auto" data-i18n="skillsT">Skills</h2><button type="button" class="inline-flex items-center gap-1.5 min-h-11 px-3 rounded-lg font-semibold text-brand hover:bg-brandsoft"><svg class="w-5 h-5" aria-hidden="true"><use href="#i-plus"/></svg><span data-i18n="addSkill">Add skill</span></button></div>
+          <ul class="mt-2 divide-y divide-line">
+            <li class="py-3 flex flex-wrap items-center gap-2"><span class="flex items-center gap-2 font-semibold me-auto"><svg class="w-5 h-5 text-stamp" aria-hidden="true"><use href="#i-zap"/></svg>Industrial wiring</span><span class="inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-sm font-semibold bg-brandsoft text-brand"><svg class="w-4 h-4" aria-hidden="true"><use href="#i-school"/></svg><span data-i18n="srcInstitute">Attested by institute</span></span></li>
+            <li class="py-3 flex flex-wrap items-center gap-2"><span class="flex items-center gap-2 font-semibold me-auto"><svg class="w-5 h-5 text-stamp" aria-hidden="true"><use href="#i-zap"/></svg>DB installation</span><span class="inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-sm font-semibold bg-surface2 text-muted"><svg class="w-4 h-4" aria-hidden="true"><use href="#i-video"/></svg><span data-i18n="inVideo">Shown in video</span></span></li>
+            <li class="py-3 flex flex-wrap items-center gap-2"><span class="flex items-center gap-2 font-semibold me-auto"><svg class="w-5 h-5 text-stamp" aria-hidden="true"><use href="#i-wrench"/></svg>Maintenance</span><span class="inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-sm font-semibold bg-surface2 text-muted"><svg class="w-4 h-4" aria-hidden="true"><use href="#i-user"/></svg><span data-i18n="srcYou">Said by you</span></span></li>
+          </ul>
+          <h3 class="mt-4 font-bold" data-i18n="certificates">Certificates</h3>
+          <ul class="mt-2 space-y-2">
+            <li class="flex items-start gap-3 rounded-xl bg-surface2 p-3"><svg class="w-6 h-6 shrink-0 text-brand" aria-hidden="true"><use href="#i-award"/></svg><div class="min-w-0 flex-1"><p class="font-semibold">NSDA Electrician · Level 3</p><p class="text-sm text-muted">Meghna Technical Training Centre · 2018</p></div><span class="inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-[13px] font-semibold bg-brandsoft text-brand whitespace-nowrap"><svg class="w-4 h-4" aria-hidden="true"><use href="#i-school"/></svg><span data-i18n="attested">Attested</span></span></li>
+            <li class="flex items-start gap-3 rounded-xl bg-surface2 p-3"><svg class="w-6 h-6 shrink-0 text-muted" aria-hidden="true"><use href="#i-wrench"/></svg><div class="min-w-0 flex-1"><p class="font-semibold" data-i18n="tradeTest">Trade test</p><p class="text-sm text-muted" data-i18n="notTaken">Not taken yet</p></div><span class="inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-[13px] font-semibold bg-surface text-muted whitespace-nowrap"><svg class="w-4 h-4" aria-hidden="true"><use href="#i-info"/></svg><span data-i18n="notChecked">Not checked</span></span></li>
+          </ul>
+        </section>
+
+        <!-- SkillShow -->
+        <section aria-labelledby="ss-h" class="rounded-2xl border border-line bg-surface p-4">
+          <div class="flex items-center gap-2"><h2 id="ss-h" class="text-lg font-bold me-auto" data-i18n="skillshow">SkillShow video</h2><button type="button" class="inline-flex items-center gap-1.5 min-h-11 px-3 rounded-lg font-semibold text-brand hover:bg-brandsoft"><svg class="w-5 h-5" aria-hidden="true"><use href="#i-camera"/></svg><span data-i18n="addVideoShort">Add video</span></button></div>
+          <div class="mt-3 grid gap-4 sm:grid-cols-[13rem_minmax(0,1fr)]">
+            <button type="button" class="relative aspect-video sm:aspect-[4/5] rounded-2xl overflow-hidden bg-[linear-gradient(135deg,rgb(var(--ink)/.85),rgb(var(--brand)/.85))] text-white grid place-items-center" aria-label="Play SkillShow video: DB panel wiring, 28 seconds">
+              <span class="grid place-items-center w-16 h-16 rounded-full bg-white/20 backdrop-blur"><svg class="w-8 h-8" aria-hidden="true"><use href="#i-play"/></svg></span>
+              <span class="absolute bottom-2 end-2 rounded-md bg-black/60 px-1.5 py-0.5 font-mono text-[13px]" dir="ltr">0:28</span>
+            </button>
+            <div class="min-w-0">
+              <p class="font-semibold">DB panel wiring</p>
+              <p class="text-sm text-muted">DB installation · Cable termination</p>
+              <div class="mt-3 flex flex-wrap gap-2">
+                <span class="inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-sm font-semibold bg-oksoft text-ok"><svg class="w-4 h-4" aria-hidden="true"><use href="#i-eye"/></svg><span data-i18n="published">Published</span></span>
+                <span class="inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-sm font-semibold bg-surface2 text-muted"><svg class="w-4 h-4" aria-hidden="true"><use href="#i-video"/></svg><span data-i18n="demoNotCert">Worker demonstration · not certification</span></span>
+              </div>
+              <p class="mt-3 text-[15px] text-muted" data-i18n="ssNote">Employers see this video to know your work. It is not a certificate.</p>
+            </div>
+          </div>
+        </section>
+
+        <!-- Documents: private by default -->
+        <section aria-labelledby="doc-h" class="rounded-2xl border border-line bg-surface p-4">
+          <h2 id="doc-h" class="text-lg font-bold" data-i18n="docsT">Identity and documents</h2>
+          <div class="mt-2 flex items-start gap-3 rounded-xl border border-brand/30 bg-brandsoft p-3"><svg class="w-6 h-6 shrink-0 text-brand" aria-hidden="true"><use href="#i-eye-off"/></svg><p class="text-[15px] font-medium" data-i18n="neverInSearch">Your passport scan and phone number are never shown in search.</p></div>
+          <ul class="mt-3 divide-y divide-line">
+            <li class="py-3 flex flex-wrap items-center gap-3"><svg class="w-6 h-6 text-muted" aria-hidden="true"><use href="#i-passport"/></svg><div class="min-w-0 flex-1"><p class="font-semibold" data-i18n="passportCopy">Passport copy</p><p class="text-sm text-muted" data-i18n="validTo" data-i18n-vars='{"d":"2030"}'>Valid to 2030</p></div><span class="inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-sm font-semibold bg-surface2 text-muted"><svg class="w-4 h-4" aria-hidden="true"><use href="#i-lock"/></svg><span data-i18n="private">Private</span></span></li>
+            <li class="py-3 flex flex-wrap items-center gap-3"><svg class="w-6 h-6 text-muted" aria-hidden="true"><use href="#i-award"/></svg><div class="min-w-0 flex-1"><p class="font-semibold">NSDA certificate</p><p class="text-sm text-muted">PDF · 1.2 MB</p></div><span class="inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-sm font-semibold bg-warnsoft text-warn"><svg class="w-4 h-4" aria-hidden="true"><use href="#i-eye"/></svg><span data-i18n="sharedWithN" data-i18n-vars='{"n":"1"}'>Shared with 1 employer</span></span></li>
+          </ul>
+          <a href="10-settings.html#sharing" class="mt-1 inline-flex items-center gap-1 min-h-11 font-semibold text-brand"><span data-i18n="manageSharing">Manage sharing</span><svg class="w-5 h-5 flip-rtl" aria-hidden="true"><use href="#i-next"/></svg></a>
+        </section>
+      </div>
+
+      <!-- Side: strength + next step -->
+      <aside class="space-y-4 lg:sticky lg:top-20">
+        <section class="rounded-2xl border border-line bg-surface p-4" aria-labelledby="str-h">
+          <h2 id="str-h" class="font-bold" data-i18n="profile">Your profile</h2>
+          <div class="mt-2 flex items-center justify-between text-[15px]"><span data-i18n="profileDone" data-i18n-vars='{"n":"70"}'>70% complete</span></div>
+          <div class="mt-1.5 h-3 rounded-full bg-surface2 overflow-hidden" role="progressbar" aria-label="Profile complete" aria-valuemin="0" aria-valuemax="100" aria-valuenow="70"><div class="h-full rounded-full bg-brand" style="width:70%"></div></div>
+          <ul class="mt-4 space-y-2 text-[15px]">
+            <li class="flex items-center gap-2"><svg class="w-5 h-5 text-ok" aria-hidden="true"><use href="#i-check-circle"/></svg><span data-i18n="secWork">Work</span></li>
+            <li class="flex items-center gap-2"><svg class="w-5 h-5 text-ok" aria-hidden="true"><use href="#i-check-circle"/></svg><span data-i18n="skillsT">Skills</span></li>
+            <li class="flex items-center gap-2"><svg class="w-5 h-5 text-ok" aria-hidden="true"><use href="#i-check-circle"/></svg><span data-i18n="skillshow">SkillShow video</span></li>
+            <li class="flex items-center gap-2 text-muted"><svg class="w-5 h-5" aria-hidden="true"><use href="#i-clock"/></svg><span data-i18n="tradeTest">Trade test</span></li>
+          </ul>
+        </section>
+        <section class="rounded-2xl border border-line bg-surface p-4" aria-labelledby="nx-h">
+          <h2 id="nx-h" class="text-sm font-bold uppercase tracking-wider text-stamp" data-i18n="nextStep">Do this next</h2>
+          <p class="mt-2 font-bold" data-i18n="bookTest">Book a trade test</p>
+          <p class="text-[15px] text-muted" data-i18n="bookTestHint">A passed test gets a green check employers trust.</p>
+          <a href="02-jobs.html" class="mt-3 flex w-full items-center justify-center gap-2 min-h-12 rounded-xl bg-brand text-onbrand font-semibold hover:bg-brand/90"><svg class="w-5 h-5" aria-hidden="true"><use href="#i-calendar"/></svg><span data-i18n="start">Start</span></a>
+        </section>
+      </aside>
+    </div>
+
+  </main>
+</div>
+
+<nav id="bottom-tabs" aria-label="Main" class="lg:hidden fixed bottom-0 inset-x-0 z-30 border-t border-line bg-surface pb-[env(safe-area-inset-bottom)]">
+  <ul class="grid grid-cols-5"><li><a href="../layouts/worker.html" class="relative flex flex-col items-center justify-center gap-0.5 min-h-16 px-1 text-muted hover:text-ink"><svg class="w-6 h-6" aria-hidden="true"><use href="#i-home"/></svg><span class="text-[13px] font-semibold leading-tight text-center" data-i18n="home">Home</span></a></li><li><a href="02-jobs.html" class="relative flex flex-col items-center justify-center gap-0.5 min-h-16 px-1 text-muted hover:text-ink"><svg class="w-6 h-6" aria-hidden="true"><use href="#i-search"/></svg><span class="text-[13px] font-semibold leading-tight text-center" data-i18n="jobs">Jobs</span></a></li><li><a href="05-apply.html#tracker" class="relative flex flex-col items-center justify-center gap-0.5 min-h-16 px-1 text-muted hover:text-ink"><svg class="w-6 h-6" aria-hidden="true"><use href="#i-list"/></svg><span class="text-[13px] font-semibold leading-tight text-center" data-i18n="tabApps">Applied</span></a></li><li><a href="#" class="relative flex flex-col items-center justify-center gap-0.5 min-h-16 px-1 text-muted hover:text-ink"><svg class="w-6 h-6" aria-hidden="true"><use href="#i-chat"/></svg><span class="text-[13px] font-semibold leading-tight text-center" data-i18n="messages">Messages</span></a></li><li><a href="04-passport.html" aria-current="page" class="relative flex flex-col items-center justify-center gap-0.5 min-h-16 px-1 text-brand"><span class="absolute top-0 inset-x-3 h-1 rounded-b-full bg-brand" aria-hidden="true"></span><svg class="w-6 h-6" aria-hidden="true"><use href="#i-passport"/></svg><span class="text-[13px] font-semibold leading-tight text-center" data-i18n="passport">Passport</span></a></li></ul>
+</nav>
+<!-- Language sheet -->
+<dialog id="lang-sheet" class="sheet" aria-labelledby="lang-sheet-t">
+  <div class="rounded-t-3xl sm:rounded-2xl bg-surface sm:w-[28rem] max-h-[85vh] overflow-y-auto p-5 pb-[max(1.25rem,env(safe-area-inset-bottom))]">
+    <div class="mx-auto mb-3 h-1.5 w-12 rounded-full bg-line sm:hidden" aria-hidden="true"></div>
+    <div class="flex items-center justify-between gap-2">
+      <h2 id="lang-sheet-t" class="text-xl font-bold" data-i18n="chooseLang">Choose your language</h2>
+      <button type="button" data-close aria-label="Close" class="grid place-items-center w-11 h-11 rounded-full hover:bg-surface2"><svg class="w-5 h-5" aria-hidden="true"><use href="#i-x"/></svg></button>
+    </div>
+    <fieldset class="mt-3 grid grid-cols-2 gap-2">
+      <legend class="sr-only" data-i18n="language">Language</legend>
+      <label class="flex flex-col items-center justify-center min-h-20 rounded-2xl border-2 border-line p-2 cursor-pointer has-[:checked]:border-brand has-[:checked]:bg-brandsoft has-[:focus-visible]:ring-[3px] has-[:focus-visible]:ring-brand/50"><input type="radio" name="lang" data-lang-option="bn" class="sr-only"><span lang="bn" class="text-xl font-bold">বাংলা</span><span class="text-sm text-muted">Bangla</span></label>
+      <label class="flex flex-col items-center justify-center min-h-20 rounded-2xl border-2 border-line p-2 cursor-pointer has-[:checked]:border-brand has-[:checked]:bg-brandsoft has-[:focus-visible]:ring-[3px] has-[:focus-visible]:ring-brand/50"><input type="radio" name="lang" data-lang-option="hi" class="sr-only"><span lang="hi" class="text-xl font-bold">हिन्दी</span><span class="text-sm text-muted">Hindi</span></label>
+      <label class="flex flex-col items-center justify-center min-h-20 rounded-2xl border-2 border-line p-2 cursor-pointer has-[:checked]:border-brand has-[:checked]:bg-brandsoft has-[:focus-visible]:ring-[3px] has-[:focus-visible]:ring-brand/50"><input type="radio" name="lang" data-lang-option="ur" class="sr-only"><span lang="ur" class="text-xl font-bold">اردو</span><span class="text-sm text-muted">Urdu</span></label>
+      <label class="flex flex-col items-center justify-center min-h-20 rounded-2xl border-2 border-line p-2 cursor-pointer has-[:checked]:border-brand has-[:checked]:bg-brandsoft has-[:focus-visible]:ring-[3px] has-[:focus-visible]:ring-brand/50"><input type="radio" name="lang" data-lang-option="ne" class="sr-only"><span lang="ne" class="text-xl font-bold">नेपाली</span><span class="text-sm text-muted">Nepali</span></label>
+      <label class="col-span-2 flex flex-col items-center justify-center min-h-20 rounded-2xl border-2 border-line p-2 cursor-pointer has-[:checked]:border-brand has-[:checked]:bg-brandsoft has-[:focus-visible]:ring-[3px] has-[:focus-visible]:ring-brand/50"><input type="radio" name="lang" data-lang-option="en" class="sr-only"><span lang="en" class="text-xl font-bold">English</span></label>
+    </fieldset>
+    <button type="button" data-close class="mt-4 flex w-full items-center justify-center min-h-14 rounded-2xl bg-brand text-onbrand text-lg font-bold hover:bg-brand/90" data-i18n="cont">Continue</button>
+  </div>
+</dialog>
+
+<dialog id="emp-view" class="sheet" aria-labelledby="ev-t">
+  <div class="rounded-t-3xl sm:rounded-2xl bg-surface sm:w-[30rem] max-h-[85vh] overflow-y-auto p-5 pb-[max(1.25rem,env(safe-area-inset-bottom))]">
+    <div class="mx-auto mb-3 h-1.5 w-12 rounded-full bg-line sm:hidden" aria-hidden="true"></div>
+    <div class="flex items-center justify-between gap-2"><h2 id="ev-t" class="text-xl font-bold" data-i18n="employerSees">What employers see</h2><button type="button" data-close aria-label="Close" class="grid place-items-center w-11 h-11 rounded-full hover:bg-surface2"><svg class="w-5 h-5" aria-hidden="true"><use href="#i-x"/></svg></button></div>
+    <ul class="mt-3 space-y-2">
+      <li class="flex items-center gap-3"><svg class="w-6 h-6 text-ok" aria-hidden="true"><use href="#i-check-circle"/></svg><span data-i18n="evName">Name, trade, experience, skills</span></li>
+      <li class="flex items-center gap-3"><svg class="w-6 h-6 text-ok" aria-hidden="true"><use href="#i-check-circle"/></svg><span data-i18n="evVideo">Your SkillShow video</span></li>
+      <li class="flex items-center gap-3"><svg class="w-6 h-6 text-ok" aria-hidden="true"><use href="#i-check-circle"/></svg><span data-i18n="evChecks">Which lines are checked</span></li>
+      <li class="flex items-center gap-3 text-muted"><svg class="w-6 h-6 text-bad" aria-hidden="true"><use href="#i-x-circle"/></svg><span data-i18n="evNoPhone">Not your phone number</span></li>
+      <li class="flex items-center gap-3 text-muted"><svg class="w-6 h-6 text-bad" aria-hidden="true"><use href="#i-x-circle"/></svg><span data-i18n="evNoPassport">Not your passport or documents</span></li>
+    </ul>
+    <button type="button" data-close class="mt-5 flex w-full items-center justify-center min-h-14 rounded-2xl bg-brand text-onbrand text-lg font-bold hover:bg-brand/90" data-i18n="ok">OK</button>
+  </div>
+</dialog>
+
+</body>
+</html>

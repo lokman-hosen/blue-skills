@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Verification Queue · BLUESKILLS</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,700;12..96,800&family=Figtree:wght@400;500;600;700&family=JetBrains+Mono:wght@500;700&display=swap">
+<link rel="stylesheet" href="../assets/tokens.css">
+<script src="https://cdn.tailwindcss.com/3.4.17"></script>
+<script src="../assets/tailwind.config.js"></script>
+<script src="../assets/app.js"></script>
+</head>
+<body class="font-sans">
+<a href="#main" class="skip-link inline-flex items-center min-h-11 rounded-lg bg-brand text-onbrand px-4 font-semibold">Skip to content</a>
+<div class="bg-stampsoft text-stamp border-b border-stamp/30"><p class="flex items-center gap-2 px-4 lg:px-6 min-h-9 text-sm font-semibold"><svg class="w-4 h-4 shrink-0" aria-hidden="true"><use href="#i-lock"/></svg>Staff area · every action is recorded in the audit log</p></div>
+
+<div data-collapsed="false" class="min-h-screen lg:flex">
+  <aside class="sidebar hidden lg:flex sticky top-0 h-screen w-64 shrink-0 flex-col border-e border-line bg-surface transition-[width] duration-200 overflow-hidden">
+    <div class="flex items-center gap-2 h-16 px-4 border-b border-line">
+      <a href="../index.html" class="grid place-items-center w-11 h-11 shrink-0 rounded-lg bg-ink text-bg" aria-label="BLUESKILLS home"><svg class="w-5 h-5" aria-hidden="true"><use href="#i-shield"/></svg></a>
+      <div class="nav-label min-w-0"><p class="font-bold truncate leading-tight">BLUESKILLS Ops</p><p class="text-[13px] text-muted truncate">Admin console</p></div>
+    </div>
+    <nav aria-label="Workspace" class="flex-1 overflow-y-auto p-3"><p class="nav-section px-3 pt-1 pb-2 text-[13px] font-bold uppercase tracking-wider text-muted">Verification</p><ul class="space-y-0.5"><li><a href="09-admin-queue.html" aria-current="page" title="Queue" class="flex items-center gap-3 min-h-11 px-3 rounded-lg bg-brandsoft text-brand font-semibold"><svg class="w-5 h-5 shrink-0" aria-hidden="true"><use href="#i-list"/></svg><span class="nav-label">Queue</span></a></li><li><a href="#" title="Organisations" class="flex items-center gap-3 min-h-11 px-3 rounded-lg text-ink font-medium hover:bg-surface2"><svg class="w-5 h-5 shrink-0 text-muted" aria-hidden="true"><use href="#i-building"/></svg><span class="nav-label">Organisations</span></a></li><li><a href="#" title="Agencies &amp; mandates" class="flex items-center gap-3 min-h-11 px-3 rounded-lg text-ink font-medium hover:bg-surface2"><svg class="w-5 h-5 shrink-0 text-muted" aria-hidden="true"><use href="#i-briefcase"/></svg><span class="nav-label">Agencies &amp; mandates</span></a></li><li><a href="#" title="Jobs review" class="flex items-center gap-3 min-h-11 px-3 rounded-lg text-ink font-medium hover:bg-surface2"><svg class="w-5 h-5 shrink-0 text-muted" aria-hidden="true"><use href="#i-file"/></svg><span class="nav-label">Jobs review</span></a></li><li><a href="#" title="SkillShow moderation" class="flex items-center gap-3 min-h-11 px-3 rounded-lg text-ink font-medium hover:bg-surface2"><svg class="w-5 h-5 shrink-0 text-muted" aria-hidden="true"><use href="#i-video"/></svg><span class="nav-label">SkillShow moderation</span></a></li></ul><p class="nav-section px-3 pt-5 pb-2 text-[13px] font-bold uppercase tracking-wider text-muted">Trust &amp; safety</p><ul class="space-y-0.5"><li><a href="#" title="Reports" class="flex items-center gap-3 min-h-11 px-3 rounded-lg text-ink font-medium hover:bg-surface2"><svg class="w-5 h-5 shrink-0 text-muted" aria-hidden="true"><use href="#i-flag"/></svg><span class="nav-label">Reports</span></a></li><li><a href="#" title="Appeals" class="flex items-center gap-3 min-h-11 px-3 rounded-lg text-ink font-medium hover:bg-surface2"><svg class="w-5 h-5 shrink-0 text-muted" aria-hidden="true"><use href="#i-refresh"/></svg><span class="nav-label">Appeals</span></a></li><li><a href="#" title="Audit log" class="flex items-center gap-3 min-h-11 px-3 rounded-lg text-ink font-medium hover:bg-surface2"><svg class="w-5 h-5 shrink-0 text-muted" aria-hidden="true"><use href="#i-history"/></svg><span class="nav-label">Audit log</span></a></li></ul><p class="nav-section px-3 pt-5 pb-2 text-[13px] font-bold uppercase tracking-wider text-muted">Configuration</p><ul class="space-y-0.5"><li><a href="#" title="Countries" class="flex items-center gap-3 min-h-11 px-3 rounded-lg text-ink font-medium hover:bg-surface2"><svg class="w-5 h-5 shrink-0 text-muted" aria-hidden="true"><use href="#i-globe"/></svg><span class="nav-label">Countries</span></a></li><li><a href="#" title="Skills taxonomy" class="flex items-center gap-3 min-h-11 px-3 rounded-lg text-ink font-medium hover:bg-surface2"><svg class="w-5 h-5 shrink-0 text-muted" aria-hidden="true"><use href="#i-grid"/></svg><span class="nav-label">Skills taxonomy</span></a></li><li><a href="#" title="Staff &amp; roles" class="flex items-center gap-3 min-h-11 px-3 rounded-lg text-ink font-medium hover:bg-surface2"><svg class="w-5 h-5 shrink-0 text-muted" aria-hidden="true"><use href="#i-users"/></svg><span class="nav-label">Staff &amp; roles</span></a></li></ul></nav>
+    <div class="p-3 border-t border-line">
+      <button type="button" data-sidebar-toggle aria-expanded="true" title="Collapse sidebar" class="flex w-full items-center gap-3 min-h-11 px-3 rounded-lg text-muted font-medium hover:bg-surface2 hover:text-ink"><svg class="w-5 h-5 shrink-0" aria-hidden="true"><use href="#i-panel"/></svg><span class="nav-label">Collapse</span></button>
+    </div>
+  </aside>
+
+  <div class="flex-1 min-w-0">
+    <header class="sticky top-0 z-20 border-b border-line bg-surface/95 backdrop-blur">
+      <div class="flex items-center gap-2 h-16 px-4 lg:px-6">
+        <button type="button" data-open="ws-drawer" class="lg:hidden grid place-items-center w-11 h-11 shrink-0 -ms-2 rounded-lg hover:bg-surface2" aria-label="Open menu"><svg class="w-6 h-6" aria-hidden="true"><use href="#i-menu"/></svg></button>
+        <p class="lg:hidden font-bold truncate">Admin console</p>
+        <label class="relative hidden md:block w-full max-w-sm">
+          <span class="sr-only">Search</span>
+          <svg class="pointer-events-none absolute start-3 top-1/2 -translate-y-1/2 w-5 h-5 text-muted" aria-hidden="true"><use href="#i-search"/></svg>
+          <input type="search" placeholder="Search ID, organisation, worker…" class="block w-full min-h-11 rounded-lg border border-linestrong bg-surface ps-10 pe-3 text-[15px] text-ink placeholder:text-muted focus:outline-none focus:border-brand focus:ring-[3px] focus:ring-brand/40">
+        </label>
+        <div class="ms-auto flex items-center gap-1">
+          <span class="hidden sm:inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-sm font-semibold bg-brandsoft text-brand"><svg class="w-4 h-4" aria-hidden="true"><use href="#i-lock"/></svg>MFA · Verification officer</span>
+          <button type="button" data-theme-toggle aria-label="Dark theme" class="grid place-items-center w-11 h-11 rounded-lg hover:bg-surface2"><svg class="w-5 h-5" aria-hidden="true"><use href="#i-moon"/></svg></button>
+          <button type="button" class="flex items-center gap-2 min-h-11 ps-1 pe-2 rounded-lg hover:bg-surface2" aria-label="Account: S. Rahman"><span class="grid place-items-center w-9 h-9 rounded-full bg-surface2 font-bold text-sm">SR</span><span class="hidden xl:block text-[15px] font-semibold">S. Rahman</span></button>
+        </div>
+      </div>
+    </header>
+    <main id="main" class="px-4 lg:px-6 py-6 max-w-[100rem]">
+      <div class="flex flex-wrap items-center gap-3">
+        <h1 class="font-display text-2xl sm:text-3xl font-bold me-auto">Verification queue</h1>
+        <span class="inline-flex items-center gap-1 rounded-md border border-dashed border-linestrong px-2 py-0.5 text-[13px] font-semibold text-muted">Sample data</span>
+      </div>
+
+      <div class="mt-4 grid grid-cols-1 gap-4 lg:grid-cols-[20rem_minmax(0,1fr)] 2xl:grid-cols-[20rem_minmax(0,1fr)_22rem] items-start">
+        <!-- Queue -->
+        <section id="q-wrap" aria-labelledby="q-h" class="rounded-xl border border-line bg-surface overflow-hidden lg:sticky lg:top-20">
+          <div class="flex items-center gap-2 px-4 py-3 border-b border-line"><h2 id="q-h" class="font-bold me-auto">Waiting · 27</h2>
+            <label class="relative"><span class="sr-only">Sort</span><select class="appearance-none min-h-11 rounded-lg border border-linestrong bg-surface ps-3 pe-8 text-[15px] font-semibold focus:outline-none focus:border-brand focus:ring-[3px] focus:ring-brand/40"><option>Oldest first</option><option>Newest first</option></select><svg class="pointer-events-none absolute end-2.5 top-1/2 -translate-y-1/2 w-4 h-4 text-muted" aria-hidden="true"><use href="#i-down"/></svg></label></div>
+          <ul id="queue" class="divide-y divide-line lg:max-h-[calc(100vh-14rem)] lg:overflow-y-auto"></ul>
+        </section>
+
+        <!-- Case -->
+        <div id="case-wrap" class="max-lg:hidden min-w-0 space-y-4 2xl:contents">
+          <section aria-labelledby="case-h" class="min-w-0 rounded-xl border border-line bg-surface">
+            <div class="p-4 border-b border-line">
+              <a href="#" class="lg:hidden inline-flex items-center gap-1 min-h-11 -ms-2 px-2 mb-1 rounded-lg font-semibold text-brand hover:bg-brandsoft"><svg class="w-5 h-5 flip-rtl" aria-hidden="true"><use href="#i-back"/></svg>Back to queue</a>
+              <div class="flex flex-wrap items-start gap-2">
+                <div class="min-w-0 me-auto"><p class="text-sm text-muted">Job mandate · <span class="font-mono">MD-1121</span></p><h2 id="case-h" class="text-xl font-bold">Al Noor Facilities Co. → Northstar Manpower</h2><p class="text-sm text-muted">40 HVAC Technicians · Riyadh · job SA-HV-0021</p></div>
+                <span class="inline-flex items-center gap-1 font-semibold text-bad text-sm whitespace-nowrap"><svg class="w-4 h-4" aria-hidden="true"><use href="#i-clock"/></svg>52h · past SLA</span>
+              </div>
+            </div>
+            <div role="tablist" aria-label="Evidence" class="flex gap-1 overflow-x-auto border-b border-line px-2">
+              <button role="tab" id="et-1" aria-controls="ep-1" aria-selected="true" class="shrink-0 min-h-12 px-4 border-b-[3px] border-transparent font-semibold text-muted hover:text-ink aria-selected:border-brand aria-selected:text-brand">Documents · 2</button>
+              <button role="tab" id="et-2" aria-controls="ep-2" aria-selected="false" tabindex="-1" class="shrink-0 min-h-12 px-4 border-b-[3px] border-transparent font-semibold text-muted hover:text-ink aria-selected:border-brand aria-selected:text-brand">Declared vs document</button>
+              <button role="tab" id="et-3" aria-controls="ep-3" aria-selected="false" tabindex="-1" class="shrink-0 min-h-12 px-4 border-b-[3px] border-transparent font-semibold text-muted hover:text-ink aria-selected:border-brand aria-selected:text-brand">Organisation</button>
+            </div>
+            <div id="ep-1" role="tabpanel" aria-labelledby="et-1" tabindex="0" class="p-4">
+              <div class="flex flex-wrap gap-2" role="group" aria-label="Files">
+                <button type="button" aria-pressed="true" class="inline-flex items-center gap-2 min-h-11 px-3 rounded-lg border border-brand bg-brandsoft text-brand font-semibold"><svg class="w-5 h-5" aria-hidden="true"><use href="#i-file"/></svg>Mandate letter.pdf</button>
+                <button type="button" aria-pressed="false" class="inline-flex items-center gap-2 min-h-11 px-3 rounded-lg border border-linestrong bg-surface font-semibold hover:bg-surface2"><svg class="w-5 h-5" aria-hidden="true"><use href="#i-file"/></svg>Commercial register.pdf</button>
+              </div>
+              <!-- Viewer: watermarked, no download -->
+              <div class="relative mt-3 rounded-xl border border-line bg-surface2 overflow-hidden">
+                <div class="mx-auto my-4 w-[min(100%-2rem,30rem)] aspect-[1/1.3] rounded-md bg-white text-[#1a2340] shadow p-5 sm:p-7 text-[11px] sm:text-[13px] leading-relaxed" role="img" aria-label="Mandate letter, page 1 of 2: Al Noor Facilities authorises Northstar Manpower to recruit 40 HVAC technicians for Riyadh until 31 March 2027, signed by Ahmed Al-Mansoori.">
+                  <p class="font-bold text-[13px] sm:text-[15px]">AL NOOR FACILITIES CO.</p><p class="text-[#5a6380]">Riyadh, Kingdom of Saudi Arabia · CR 1010-448812</p>
+                  <p class="mt-4 font-bold">Recruitment mandate MD-1121</p>
+                  <p class="mt-2">We authorise <b>Northstar Manpower</b> (licence RA-2026-0418) to recruit <b>40 HVAC Technicians</b> for our Riyadh projects.</p>
+                  <p class="mt-2">Valid until <b>31 March 2027</b>.</p>
+                  <div class="mt-3 space-y-1.5" aria-hidden="true"><div class="h-2 rounded bg-[#e3e7f0] w-full"></div><div class="h-2 rounded bg-[#e3e7f0] w-11/12"></div><div class="h-2 rounded bg-[#e3e7f0] w-4/5"></div><div class="h-2 rounded bg-[#e3e7f0] w-full"></div><div class="h-2 rounded bg-[#e3e7f0] w-2/3"></div></div>
+                  <p class="mt-6">Ahmed Al-Mansoori<br><span class="text-[#5a6380]">HR Director</span></p>
+                </div>
+                <div class="pointer-events-none absolute inset-0 grid place-items-center overflow-hidden" aria-hidden="true"><p class="-rotate-[24deg] whitespace-nowrap font-mono text-sm sm:text-base font-bold text-bad/25">BLUESKILLS · VERIFICATION ONLY · S. RAHMAN · 19 OCT 2026 10:42</p></div>
+                <div class="flex items-center justify-between gap-2 border-t border-line bg-surface px-3 py-1.5 text-sm">
+                  <span class="flex items-center gap-1.5 min-w-0 text-muted"><svg class="w-4 h-4" aria-hidden="true"><use href="#i-eye"/></svg>View is logged · download off</span>
+                  <span class="flex shrink-0 items-center gap-1"><button type="button" disabled aria-label="Previous page" class="grid place-items-center w-11 h-11 shrink-0 rounded-lg disabled:opacity-40"><svg class="w-4 h-4 flip-rtl" aria-hidden="true"><use href="#i-back"/></svg></button><span class="tabular-nums">1 / 2</span><button type="button" aria-label="Next page" class="grid place-items-center w-11 h-11 shrink-0 rounded-lg hover:bg-surface2"><svg class="w-4 h-4 flip-rtl" aria-hidden="true"><use href="#i-next"/></svg></button></span>
+                </div>
+              </div>
+            </div>
+            <div id="ep-2" role="tabpanel" aria-labelledby="et-2" tabindex="0" class="p-4" hidden>
+              <table class="w-full text-[15px]">
+                <thead class="text-sm text-muted"><tr><th scope="col" class="py-2 pe-2 text-start font-semibold">Field</th><th scope="col" class="py-2 px-2 text-start font-semibold">Declared</th><th scope="col" class="py-2 px-2 text-start font-semibold max-sm:hidden">In document</th><th scope="col" class="py-2 ps-2 text-end font-semibold">Result</th></tr></thead>
+                <tbody class="divide-y divide-line">
+                  <tr><td class="py-2.5 pe-2 text-muted">Employer</td><td class="py-2.5 px-2">Al Noor Facilities Co.</td><td class="py-2.5 px-2 max-sm:hidden">Al Noor Facilities Co.</td><td class="py-2.5 ps-2 text-end"><span class="inline-flex items-center gap-1 font-semibold text-ok"><svg class="w-4 h-4" aria-hidden="true"><use href="#i-check-circle"/></svg>Match</span></td></tr>
+                  <tr><td class="py-2.5 pe-2 text-muted">Workers</td><td class="py-2.5 px-2 tabular-nums">40</td><td class="py-2.5 px-2 max-sm:hidden tabular-nums">40</td><td class="py-2.5 ps-2 text-end"><span class="inline-flex items-center gap-1 font-semibold text-ok"><svg class="w-4 h-4" aria-hidden="true"><use href="#i-check-circle"/></svg>Match</span></td></tr>
+                  <tr><td class="py-2.5 pe-2 text-muted">Valid until</td><td class="py-2.5 px-2">31 Mar 2027</td><td class="py-2.5 px-2 max-sm:hidden">31 Mar 2027</td><td class="py-2.5 ps-2 text-end"><span class="inline-flex items-center gap-1 font-semibold text-ok"><svg class="w-4 h-4" aria-hidden="true"><use href="#i-check-circle"/></svg>Match</span></td></tr>
+                  <tr><td class="py-2.5 pe-2 text-muted">Agency licence</td><td class="py-2.5 px-2 font-mono text-[14px]">RA-2026-0418</td><td class="py-2.5 px-2 max-sm:hidden">Registry lookup</td><td class="py-2.5 ps-2 text-end"><span class="inline-flex items-center gap-1 font-semibold text-ok"><svg class="w-4 h-4" aria-hidden="true"><use href="#i-shield-check"/></svg>Valid</span></td></tr>
+                  <tr><td class="py-2.5 pe-2 text-muted">Salary</td><td class="py-2.5 px-2 tabular-nums">SAR 2,500</td><td class="py-2.5 px-2 max-sm:hidden italic text-warn">Not in document</td><td class="py-2.5 ps-2 text-end"><span class="inline-flex items-center gap-1 font-semibold text-warn"><svg class="w-4 h-4" aria-hidden="true"><use href="#i-alert"/></svg>Declared only</span></td></tr>
+                </tbody>
+              </table>
+            </div>
+            <div id="ep-3" role="tabpanel" aria-labelledby="et-3" tabindex="0" class="p-4" hidden>
+              <dl class="grid gap-x-4 gap-y-2 sm:grid-cols-[10rem_minmax(0,1fr)] text-[15px]">
+                <dt class="text-muted">Organisation</dt><dd>Al Noor Facilities Co. <span class="inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-[13px] font-semibold bg-oksoft text-ok ms-1"><svg class="w-3.5 h-3.5" aria-hidden="true"><use href="#i-shield-check"/></svg>Verified Mar 2026</span></dd>
+                <dt class="text-muted">Agency</dt><dd>Northstar Manpower · licence RA-2026-0418 · valid to Mar 2027</dd>
+                <dt class="text-muted">Submitted by</dt><dd>Imran H. · Case officer · MFA on</dd>
+                <dt class="text-muted">Past decisions</dt><dd>3 mandates approved · 0 rejected · 1 report closed</dd>
+              </dl>
+            </div>
+          </section>
+
+          <!-- Decision + audit -->
+          <div class="space-y-4 min-w-0">
+            <section aria-labelledby="dec-h" class="rounded-xl border border-line bg-surface p-4">
+              <h2 id="dec-h" class="font-bold">Checks before deciding</h2>
+              <div class="mt-2 space-y-0.5">
+                <label class="flex items-start gap-3 min-h-11 rounded-lg px-1 py-1.5 hover:bg-surface2 cursor-pointer"><input type="checkbox" data-chk checked class="mt-0.5 w-5 h-5 shrink-0 accent-brand"><span>Documents are readable and complete</span></label>
+                <label class="flex items-start gap-3 min-h-11 rounded-lg px-1 py-1.5 hover:bg-surface2 cursor-pointer"><input type="checkbox" data-chk checked class="mt-0.5 w-5 h-5 shrink-0 accent-brand"><span>Names and numbers match the declaration</span></label>
+                <label class="flex items-start gap-3 min-h-11 rounded-lg px-1 py-1.5 hover:bg-surface2 cursor-pointer"><input type="checkbox" data-chk checked class="mt-0.5 w-5 h-5 shrink-0 accent-brand"><span>Agency licence is valid in the registry</span></label>
+                <label class="flex items-start gap-3 min-h-11 rounded-lg px-1 py-1.5 hover:bg-surface2 cursor-pointer"><input type="checkbox" data-chk class="mt-0.5 w-5 h-5 shrink-0 accent-brand"><span>Signatory is authorised for the employer</span></label>
+              </div>
+              <fieldset class="mt-4">
+                <legend class="font-semibold">Decision</legend>
+                <div class="mt-2 grid grid-cols-3 gap-1 rounded-xl bg-surface2 p-1">
+                  <label class="grid place-items-center min-h-11 rounded-lg px-1 text-center text-[15px] font-semibold cursor-pointer has-[:checked]:bg-surface has-[:checked]:text-ok has-[:checked]:shadow-sm has-[:focus-visible]:ring-[3px] has-[:focus-visible]:ring-brand/50"><input type="radio" name="dec" value="approve" class="sr-only">Approve</label>
+                  <label class="grid place-items-center min-h-11 rounded-lg px-1 text-center text-[15px] font-semibold cursor-pointer has-[:checked]:bg-surface has-[:checked]:text-warn has-[:checked]:shadow-sm has-[:focus-visible]:ring-[3px] has-[:focus-visible]:ring-brand/50"><input type="radio" name="dec" value="info" checked class="sr-only">Ask for info</label>
+                  <label class="grid place-items-center min-h-11 rounded-lg px-1 text-center text-[15px] font-semibold cursor-pointer has-[:checked]:bg-surface has-[:checked]:text-bad has-[:checked]:shadow-sm has-[:focus-visible]:ring-[3px] has-[:focus-visible]:ring-brand/50"><input type="radio" name="dec" value="reject" class="sr-only">Reject</label>
+                </div>
+              </fieldset>
+              <div id="reason-box" class="mt-3">
+                <label for="reason" class="block font-semibold">Reason code <span class="text-bad">*</span></label>
+                <div class="relative mt-1.5"><select id="reason" class="appearance-none block w-full min-h-11 rounded-lg border border-linestrong bg-surface ps-3 pe-9 text-[15px] focus:outline-none focus:border-brand focus:ring-[3px] focus:ring-brand/40"><option value="">Choose a reason</option><option selected>MND-03 · Signatory authority not shown</option><option>MND-01 · Document unreadable</option><option>MND-02 · Details do not match</option><option>MND-04 · Mandate expired</option><option>LIC-01 · Agency licence invalid</option></select><svg class="pointer-events-none absolute end-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted" aria-hidden="true"><use href="#i-down"/></svg></div>
+                <label for="msg" class="mt-3 block font-semibold">Message to organisation</label>
+                <textarea id="msg" rows="3" class="mt-1.5 block w-full rounded-lg border border-linestrong bg-surface px-3 py-2 text-[15px] focus:outline-none focus:border-brand focus:ring-[3px] focus:ring-brand/40">Please upload proof that Ahmed Al-Mansoori can sign for Al Noor Facilities (e.g. authorised signatory list).</textarea>
+              </div>
+              <label for="internal" class="mt-3 block font-semibold">Internal note <span class="font-normal text-muted">(staff only)</span></label>
+              <textarea id="internal" rows="2" class="mt-1.5 block w-full rounded-lg border border-linestrong bg-surface px-3 py-2 text-[15px] focus:outline-none focus:border-brand focus:ring-[3px] focus:ring-brand/40"></textarea>
+              <p id="dec-err" role="alert" class="mt-2 hidden items-center gap-1.5 text-[15px] font-medium text-bad"><svg class="w-4 h-4 shrink-0" aria-hidden="true"><use href="#i-alert"/></svg><span></span></p>
+              <button type="button" id="dec-go" class="mt-4 flex w-full items-center justify-center gap-2 min-h-12 rounded-xl bg-brand text-onbrand font-semibold hover:bg-brand/90">Send request for info</button>
+            </section>
+
+            <section aria-labelledby="audit-h" class="rounded-xl border border-line bg-surface p-4">
+              <div class="flex items-center gap-2"><h2 id="audit-h" class="font-bold me-auto">Audit log</h2><a href="#" class="inline-flex items-center min-h-11 px-2 rounded-lg text-[15px] font-semibold text-brand hover:bg-brandsoft">Full log</a></div>
+              <ol id="audit" class="mt-2 relative border-s-2 border-line ms-2 space-y-4"></ol>
+            </section>
+          </div>
+        </div>
+      </div>
+
+    </main>
+  </div>
+</div>
+
+<dialog id="ws-drawer" class="drawer" aria-labelledby="ws-drawer-t">
+  <nav class="h-full bg-surface flex flex-col" aria-label="Workspace">
+    <div class="flex items-center gap-2 h-16 px-4 border-b border-line">
+      <span class="grid place-items-center w-10 h-10 shrink-0 rounded-lg bg-ink text-bg"><svg class="w-5 h-5" aria-hidden="true"><use href="#i-shield"/></svg></span>
+      <div class="min-w-0 flex-1"><p id="ws-drawer-t" class="font-bold truncate leading-tight">BLUESKILLS Ops</p><p class="text-[13px] text-muted truncate">Admin console</p></div>
+      <button type="button" data-close aria-label="Close menu" class="grid place-items-center w-11 h-11 rounded-lg hover:bg-surface2"><svg class="w-5 h-5" aria-hidden="true"><use href="#i-x"/></svg></button>
+    </div>
+    <div class="flex-1 overflow-y-auto p-3"><p class="px-3 pt-1 pb-2 text-[13px] font-bold uppercase tracking-wider text-muted">Verification</p><ul class="space-y-0.5"><li><a href="09-admin-queue.html" aria-current="page" class="flex items-center gap-3 min-h-12 px-3 rounded-lg bg-brandsoft text-brand font-semibold"><svg class="w-5 h-5 shrink-0" aria-hidden="true"><use href="#i-list"/></svg>Queue</a></li><li><a href="#" class="flex items-center gap-3 min-h-12 px-3 rounded-lg text-ink font-medium hover:bg-surface2"><svg class="w-5 h-5 shrink-0 text-muted" aria-hidden="true"><use href="#i-building"/></svg>Organisations</a></li><li><a href="#" class="flex items-center gap-3 min-h-12 px-3 rounded-lg text-ink font-medium hover:bg-surface2"><svg class="w-5 h-5 shrink-0 text-muted" aria-hidden="true"><use href="#i-briefcase"/></svg>Agencies &amp; mandates</a></li><li><a href="#" class="flex items-center gap-3 min-h-12 px-3 rounded-lg text-ink font-medium hover:bg-surface2"><svg class="w-5 h-5 shrink-0 text-muted" aria-hidden="true"><use href="#i-file"/></svg>Jobs review</a></li><li><a href="#" class="flex items-center gap-3 min-h-12 px-3 rounded-lg text-ink font-medium hover:bg-surface2"><svg class="w-5 h-5 shrink-0 text-muted" aria-hidden="true"><use href="#i-video"/></svg>SkillShow moderation</a></li></ul><p class="px-3 pt-5 pb-2 text-[13px] font-bold uppercase tracking-wider text-muted">Trust &amp; safety</p><ul class="space-y-0.5"><li><a href="#" class="flex items-center gap-3 min-h-12 px-3 rounded-lg text-ink font-medium hover:bg-surface2"><svg class="w-5 h-5 shrink-0 text-muted" aria-hidden="true"><use href="#i-flag"/></svg>Reports</a></li><li><a href="#" class="flex items-center gap-3 min-h-12 px-3 rounded-lg text-ink font-medium hover:bg-surface2"><svg class="w-5 h-5 shrink-0 text-muted" aria-hidden="true"><use href="#i-refresh"/></svg>Appeals</a></li><li><a href="#" class="flex items-center gap-3 min-h-12 px-3 rounded-lg text-ink font-medium hover:bg-surface2"><svg class="w-5 h-5 shrink-0 text-muted" aria-hidden="true"><use href="#i-history"/></svg>Audit log</a></li></ul><p class="px-3 pt-5 pb-2 text-[13px] font-bold uppercase tracking-wider text-muted">Configuration</p><ul class="space-y-0.5"><li><a href="#" class="flex items-center gap-3 min-h-12 px-3 rounded-lg text-ink font-medium hover:bg-surface2"><svg class="w-5 h-5 shrink-0 text-muted" aria-hidden="true"><use href="#i-globe"/></svg>Countries</a></li><li><a href="#" class="flex items-center gap-3 min-h-12 px-3 rounded-lg text-ink font-medium hover:bg-surface2"><svg class="w-5 h-5 shrink-0 text-muted" aria-hidden="true"><use href="#i-grid"/></svg>Skills taxonomy</a></li><li><a href="#" class="flex items-center gap-3 min-h-12 px-3 rounded-lg text-ink font-medium hover:bg-surface2"><svg class="w-5 h-5 shrink-0 text-muted" aria-hidden="true"><use href="#i-users"/></svg>Staff &amp; roles</a></li></ul></div>
+  </nav>
+</dialog>
+
+<script src="../assets/render.js"></script>
+<script>
+  (function () {
+    const $ = id => document.getElementById(id), { esc, icon, chip } = BSR;
+    const Q = [
+      ['MD-1121', 'Al Noor Facilities Co.', 'Job mandate', '52h', 'Under review', 'warn', true],
+      ['ORG-2291', 'Gulf Star Recruiters', 'Agency licence', '20h', 'More info needed', 'warn', false],
+      ['PL-WH-0014', 'XYZ Logistics Sp. z o.o.', 'Job change (salary)', '3h', 'Re-review', 'warn', false],
+      ['ORG-2304', 'Kanto Build KK', 'Organisation', '2h', 'New', 'brand', false],
+      ['SS-88120', 'SkillShow · Sunil T.', 'Video moderation', '1h', 'New', 'brand', false],
+      ['MD-1130', 'Moravia Steelworks s.r.o.', 'Job mandate', '40m', 'New', 'brand', false]
+    ];
+    const AUDIT = [
+      ['19 Oct · 10:42', 'S. Rahman', 'Opened case and viewed Mandate letter.pdf', 'eye'],
+      ['18 Oct · 09:12', 'System', 'SLA warning: waiting over 24 hours', 'clock'],
+      ['17 Oct · 09:14', 'System', 'Licence RA-2026-0418 found in registry · valid', 'shield-check'],
+      ['17 Oct · 09:12', 'Imran H. (Northstar)', 'Submitted mandate MD-1121 with 2 files', 'upload']
+    ];
+    function renderQueue() {
+      const cur = location.hash.slice(1) || 'MD-1121';
+      $('queue').innerHTML = Q.map(([id, org, type, wait, st, tone, late]) => `<li><a href="#${id}" ${id === cur ? 'aria-current="true"' : ''} class="block px-4 py-3 ${id === cur ? 'bg-brandsoft' : 'hover:bg-surface2'}">
+        <div class="flex items-start gap-2"><p class="font-semibold me-auto min-w-0">${esc(org)}</p><span class="text-sm whitespace-nowrap tabular-nums ${late ? 'text-bad font-semibold' : 'text-muted'}">${late ? icon('clock', 'w-4 h-4 inline -mt-0.5 me-0.5') : ''}${wait}</span></div>
+        <p class="text-sm text-muted">${esc(type)} · <span class="font-mono">${id}</span></p>
+        <div class="mt-1.5">${chip(esc(st), tone, tone === 'warn' ? 'clock' : '', '!px-2 !py-0.5 !text-[13px]')}</div></a></li>`).join('');
+      const detail = !!location.hash.slice(1);
+      $('q-wrap').classList.toggle('max-lg:hidden', detail);
+      $('case-wrap').classList.toggle('max-lg:hidden', !detail);
+    }
+    $('audit').innerHTML = AUDIT.map(([t, who, what, ic]) => `<li class="ps-5 relative"><span class="absolute -start-[11px] top-0.5 grid place-items-center w-5 h-5 rounded-full bg-surface border-2 border-line text-muted">${icon(ic, 'w-3 h-3')}</span>
+      <p class="text-sm text-muted tabular-nums">${t}</p><p class="text-[15px]"><b>${esc(who)}</b> · ${esc(what)}</p></li>`).join('');
+
+    const LABEL = { approve: 'Approve and publish', info: 'Send request for info', reject: 'Reject with reason' };
+    const CLS = { approve: 'bg-ok text-onbrand hover:bg-ok/90', info: 'bg-brand text-onbrand hover:bg-brand/90', reject: 'bg-bad text-onbrand hover:bg-bad/90' };
+    const dec = () => document.querySelector('input[name=dec]:checked').value;
+    function syncDecision() {
+      const d = dec(); $('dec-go').textContent = LABEL[d];
+      $('dec-go').className = 'mt-4 flex w-full items-center justify-center gap-2 min-h-12 rounded-xl font-semibold ' + CLS[d];
+      $('reason-box').hidden = d === 'approve';
+      $('dec-err').classList.add('hidden'); $('dec-err').classList.remove('flex');
+    }
+    document.querySelectorAll('input[name=dec]').forEach(r => r.addEventListener('change', syncDecision));
+    $('dec-go').addEventListener('click', () => {
+      const d = dec(), allChecked = [...document.querySelectorAll('[data-chk]')].every(c => c.checked);
+      const err = d === 'approve' && !allChecked ? 'Tick every check before approving.' : d !== 'approve' && !$('reason').value ? 'A reason code is required.' : '';
+      if (err) { $('dec-err').querySelector('span').textContent = err; $('dec-err').classList.remove('hidden'); $('dec-err').classList.add('flex'); return; }
+      AUDIT.unshift(['19 Oct · 10:51', 'S. Rahman', d === 'approve' ? 'Approved mandate' : d === 'info' ? 'Asked for more info · ' + $('reason').value.split(' · ')[0] : 'Rejected · ' + $('reason').value.split(' · ')[0], d === 'approve' ? 'check-circle' : d === 'info' ? 'alert' : 'x-circle']);
+      $('audit').innerHTML = AUDIT.map(([t, who, what, ic]) => `<li class="ps-5 relative"><span class="absolute -start-[11px] top-0.5 grid place-items-center w-5 h-5 rounded-full bg-surface border-2 border-line text-muted">${icon(ic, 'w-3 h-3')}</span><p class="text-sm text-muted tabular-nums">${t}</p><p class="text-[15px]"><b>${esc(who)}</b> · ${esc(what)}</p></li>`).join('');
+      BS.toast('Decision saved and logged', 'ok');
+    });
+    addEventListener('hashchange', renderQueue);
+    syncDecision(); renderQueue();
+  })();
+</script>
+
+</body>
+</html>

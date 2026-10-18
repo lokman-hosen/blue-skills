@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="bn" data-i18n-page>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Sign In &amp; Voice-to-CV · BLUESKILLS</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,700;12..96,800&family=Figtree:wght@400;500;600;700&family=JetBrains+Mono:wght@500;700&family=Noto+Sans+Bengali:wght@400;600;700&family=Noto+Sans+Devanagari:wght@400;600;700&family=Noto+Naskh+Arabic:wght@400;600;700&display=swap">
+<link rel="stylesheet" href="../assets/tokens.css">
+<script src="https://cdn.tailwindcss.com/3.4.17"></script>
+<script src="../assets/tailwind.config.js"></script>
+<script src="../assets/i18n.js"></script>
+<script src="../assets/i18n-screens.js"></script>
+<script src="../assets/app.js"></script>
+</head>
+<body class="font-sans">
+<div class="min-h-screen flex flex-col bg-[radial-gradient(circle_at_top,rgb(var(--brand-soft))_0,transparent_60%)]">
+
+  <!-- Design review only: jump to any step/state. Not part of the product. -->
+  <div class="border-b border-dashed border-linestrong bg-surface/80" dir="ltr" lang="en">
+    <div class="mx-auto max-w-5xl px-4 py-2 flex flex-wrap items-center gap-2 text-sm">
+      <span class="font-bold text-muted me-1">Design review · jump to:</span>
+      <button type="button" data-go="lang" class="min-h-11 px-3 rounded-lg border border-line bg-surface font-semibold hover:bg-surface2">1 Language</button>
+      <button type="button" data-go="phone" class="min-h-11 px-3 rounded-lg border border-line bg-surface font-semibold hover:bg-surface2">2 Phone</button>
+      <button type="button" data-go="otp" class="min-h-11 px-3 rounded-lg border border-line bg-surface font-semibold hover:bg-surface2">3 Code</button>
+      <span class="text-muted">Voice:</span>
+      <button type="button" data-vs="idle" class="min-h-11 px-3 rounded-lg border border-line bg-surface font-semibold hover:bg-surface2">Ready</button>
+      <button type="button" data-vs="listening" class="min-h-11 px-3 rounded-lg border border-line bg-surface font-semibold hover:bg-surface2">Listening</button>
+      <button type="button" data-vs="processing" class="min-h-11 px-3 rounded-lg border border-line bg-surface font-semibold hover:bg-surface2">Working</button>
+      <button type="button" data-vs="confirm" class="min-h-11 px-3 rounded-lg border border-line bg-surface font-semibold hover:bg-surface2">Confirm</button>
+      <button type="button" data-vs="edit" class="min-h-11 px-3 rounded-lg border border-line bg-surface font-semibold hover:bg-surface2">Edit</button>
+      <button type="button" data-vs="error" class="min-h-11 px-3 rounded-lg border border-line bg-surface font-semibold hover:bg-surface2">Not heard</button>
+      <button type="button" data-vs="blocked" class="min-h-11 px-3 rounded-lg border border-line bg-surface font-semibold hover:bg-surface2">Mic blocked</button>
+      <button type="button" data-vs="saved" class="min-h-11 px-3 rounded-lg border border-line bg-surface font-semibold hover:bg-surface2">Saved</button>
+    </div>
+  </div>
+
+  <header class="flex items-center gap-2 px-4 h-16 max-w-5xl w-full mx-auto">
+    <a href="../index.html" class="flex items-center gap-2 min-h-11 min-w-11" aria-label="BLUESKILLS home">
+      <span class="grid place-items-center w-9 h-9 rounded-lg bg-brand text-onbrand"><svg class="w-5 h-5" aria-hidden="true"><use href="#i-passport"/></svg></span>
+      <span class="font-display text-lg font-extrabold tracking-tight hidden min-[400px]:inline">BLUESKILLS</span>
+    </a>
+    <div class="ms-auto flex items-center gap-1">
+      <span class="inline-flex items-center gap-2 min-h-11 px-3 rounded-full border border-linestrong bg-surface font-semibold"><svg class="w-5 h-5 text-muted" aria-hidden="true"><use href="#i-globe"/></svg><span data-lang-current>বাংলা</span></span>
+      <button type="button" data-theme-toggle aria-label="Dark theme" class="grid place-items-center w-11 h-11 rounded-full hover:bg-surface2"><svg class="w-5 h-5" aria-hidden="true"><use href="#i-moon"/></svg></button>
+    </div>
+  </header>
+
+  <main id="main" class="flex-1 grid grid-cols-1 justify-items-center px-4 pt-2 pb-10">
+    <div class="w-full max-w-md">
+      <!-- Step header -->
+      <div class="flex items-center gap-2 mb-3">
+        <button type="button" id="back" class="grid place-items-center w-11 h-11 -ms-2 rounded-full hover:bg-surface2" data-i18n-aria-label="back" aria-label="Back"><svg class="w-6 h-6 flip-rtl" aria-hidden="true"><use href="#i-back"/></svg></button>
+        <p id="step-label" class="font-semibold text-muted" data-i18n="stepOf" data-i18n-vars='{"n":"1","t":"4"}'>Step 1 of 4</p>
+        <div class="ms-auto flex gap-1.5" aria-hidden="true" id="dots"><span class="h-2 w-8 rounded-full bg-brand"></span><span class="h-2 w-8 rounded-full bg-surface2"></span><span class="h-2 w-8 rounded-full bg-surface2"></span><span class="h-2 w-8 rounded-full bg-surface2"></span></div>
+      </div>
+
+      <div class="rounded-3xl border border-line bg-surface shadow-[0_20px_50px_-30px_rgb(var(--ink)/.35)] p-5 sm:p-7">
+
+        <!-- 1 · Language -->
+        <section data-step="lang" aria-labelledby="s1-h">
+          <h1 id="s1-h" class="font-display text-2xl font-bold" data-i18n="chooseLang">Choose your language</h1>
+          <fieldset class="mt-4 grid grid-cols-2 gap-3">
+            <legend class="sr-only" data-i18n="language">Language</legend>
+            <label class="flex flex-col items-center justify-center min-h-24 rounded-2xl border-2 border-line p-2 cursor-pointer has-[:checked]:border-brand has-[:checked]:bg-brandsoft has-[:focus-visible]:ring-[3px] has-[:focus-visible]:ring-brand/50"><input type="radio" name="lang" data-lang-option="bn" class="sr-only"><span lang="bn" class="text-2xl font-bold">বাংলা</span><span class="text-sm text-muted">Bangla</span></label>
+            <label class="flex flex-col items-center justify-center min-h-24 rounded-2xl border-2 border-line p-2 cursor-pointer has-[:checked]:border-brand has-[:checked]:bg-brandsoft has-[:focus-visible]:ring-[3px] has-[:focus-visible]:ring-brand/50"><input type="radio" name="lang" data-lang-option="hi" class="sr-only"><span lang="hi" class="text-2xl font-bold">हिन्दी</span><span class="text-sm text-muted">Hindi</span></label>
+            <label class="flex flex-col items-center justify-center min-h-24 rounded-2xl border-2 border-line p-2 cursor-pointer has-[:checked]:border-brand has-[:checked]:bg-brandsoft has-[:focus-visible]:ring-[3px] has-[:focus-visible]:ring-brand/50"><input type="radio" name="lang" data-lang-option="ur" class="sr-only"><span lang="ur" class="text-2xl font-bold">اردو</span><span class="text-sm text-muted">Urdu</span></label>
+            <label class="flex flex-col items-center justify-center min-h-24 rounded-2xl border-2 border-line p-2 cursor-pointer has-[:checked]:border-brand has-[:checked]:bg-brandsoft has-[:focus-visible]:ring-[3px] has-[:focus-visible]:ring-brand/50"><input type="radio" name="lang" data-lang-option="ne" class="sr-only"><span lang="ne" class="text-2xl font-bold">नेपाली</span><span class="text-sm text-muted">Nepali</span></label>
+            <label class="col-span-2 flex flex-col items-center justify-center min-h-20 rounded-2xl border-2 border-line p-2 cursor-pointer has-[:checked]:border-brand has-[:checked]:bg-brandsoft has-[:focus-visible]:ring-[3px] has-[:focus-visible]:ring-brand/50"><input type="radio" name="lang" data-lang-option="en" class="sr-only"><span lang="en" class="text-2xl font-bold">English</span></label>
+          </fieldset>
+          <button type="button" data-next="phone" class="mt-6 flex w-full items-center justify-center gap-2 min-h-14 rounded-2xl bg-brand text-onbrand text-lg font-bold hover:bg-brand/90"><span data-i18n="cont">Continue</span><svg class="w-6 h-6 flip-rtl" aria-hidden="true"><use href="#i-arrow"/></svg></button>
+        </section>
+
+        <!-- 2 · Phone -->
+        <section data-step="phone" aria-labelledby="s2-h" hidden>
+          <h1 id="s2-h" class="font-display text-2xl font-bold" data-i18n="mobile">Your mobile number</h1>
+          <div class="mt-4 flex gap-2" dir="ltr">
+            <div class="relative">
+              <label for="cc" class="sr-only">Country code</label>
+              <select id="cc" class="appearance-none min-h-14 rounded-xl border border-linestrong bg-surface ps-3 pe-9 text-lg font-semibold text-ink focus:outline-none focus:border-brand focus:ring-[3px] focus:ring-brand/40"><option>+880</option><option>+91</option><option>+92</option><option>+977</option><option>+94</option></select>
+              <svg class="pointer-events-none absolute end-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted" aria-hidden="true"><use href="#i-down"/></svg>
+            </div>
+            <label for="phone" class="sr-only" data-i18n="mobile">Your mobile number</label>
+            <input id="phone" type="tel" inputmode="tel" autocomplete="tel-national" placeholder="1712 345678" aria-describedby="phone-err" class="min-w-0 flex-1 min-h-14 rounded-xl border border-linestrong bg-surface px-4 text-xl tracking-wide text-ink placeholder:text-muted focus:outline-none focus:border-brand focus:ring-[3px] focus:ring-brand/40 aria-[invalid=true]:border-2 aria-[invalid=true]:border-bad">
+          </div>
+          <p id="phone-err" class="mt-2 hidden items-center gap-1.5 font-medium text-bad"><svg class="w-5 h-5 shrink-0" aria-hidden="true"><use href="#i-alert"/></svg><span data-i18n="phoneErr">Write your mobile number</span></p>
+          <p class="mt-3 flex items-start gap-2 text-muted"><svg class="w-5 h-5 shrink-0 mt-0.5" aria-hidden="true"><use href="#i-lock"/></svg><span data-i18n="noPassword">No password needed. We send a code by SMS.</span></p>
+          <button type="button" id="send" class="mt-6 flex w-full items-center justify-center gap-2 min-h-14 rounded-2xl bg-brand text-onbrand text-lg font-bold hover:bg-brand/90"><svg class="w-6 h-6" aria-hidden="true"><use href="#i-chat"/></svg><span data-i18n="sendOtp">Send code</span></button>
+          <p class="mt-3 text-center text-[15px] text-muted"><span data-i18n="whatsappQ">Code by WhatsApp instead?</span> <a href="#" class="inline-flex items-center min-h-11 font-semibold text-brand underline underline-offset-4" data-i18n="useWhatsapp">Use WhatsApp</a></p>
+        </section>
+
+        <!-- 3 · OTP -->
+        <section data-step="otp" aria-labelledby="s3-h" hidden>
+          <h1 id="s3-h" class="font-display text-2xl font-bold" data-i18n="enterCode">Enter the 6-digit code</h1>
+          <p class="mt-1 text-muted"><span data-i18n="codeSent">Sent by SMS to</span> <bdi dir="ltr" class="font-semibold text-ink tabular-nums">+880 1712 •••678</bdi></p>
+          <fieldset class="mt-4">
+            <legend class="sr-only" data-i18n="enterCode">Enter the 6-digit code</legend>
+            <div class="flex justify-between gap-2" dir="ltr" id="otp">
+              <input aria-label="Digit 1" inputmode="numeric" autocomplete="one-time-code" maxlength="1" class="w-full max-w-[3.25rem] h-16 rounded-xl border border-linestrong bg-surface text-center font-mono text-3xl font-bold focus:outline-none focus:border-brand focus:ring-[3px] focus:ring-brand/40">
+              <input aria-label="Digit 2" inputmode="numeric" maxlength="1" class="w-full max-w-[3.25rem] h-16 rounded-xl border border-linestrong bg-surface text-center font-mono text-3xl font-bold focus:outline-none focus:border-brand focus:ring-[3px] focus:ring-brand/40">
+              <input aria-label="Digit 3" inputmode="numeric" maxlength="1" class="w-full max-w-[3.25rem] h-16 rounded-xl border border-linestrong bg-surface text-center font-mono text-3xl font-bold focus:outline-none focus:border-brand focus:ring-[3px] focus:ring-brand/40">
+              <input aria-label="Digit 4" inputmode="numeric" maxlength="1" class="w-full max-w-[3.25rem] h-16 rounded-xl border border-linestrong bg-surface text-center font-mono text-3xl font-bold focus:outline-none focus:border-brand focus:ring-[3px] focus:ring-brand/40">
+              <input aria-label="Digit 5" inputmode="numeric" maxlength="1" class="w-full max-w-[3.25rem] h-16 rounded-xl border border-linestrong bg-surface text-center font-mono text-3xl font-bold focus:outline-none focus:border-brand focus:ring-[3px] focus:ring-brand/40">
+              <input aria-label="Digit 6" inputmode="numeric" maxlength="1" class="w-full max-w-[3.25rem] h-16 rounded-xl border border-linestrong bg-surface text-center font-mono text-3xl font-bold focus:outline-none focus:border-brand focus:ring-[3px] focus:ring-brand/40">
+            </div>
+          </fieldset>
+          <p id="otp-err" role="alert" class="mt-2 hidden items-center gap-1.5 font-medium text-bad"><svg class="w-5 h-5 shrink-0" aria-hidden="true"><use href="#i-alert"/></svg><span data-i18n="codeErr">Write all 6 numbers</span></p>
+          <p class="mt-3 text-muted"><span data-i18n="resendIn">Send again in</span> <span class="font-semibold text-ink tabular-nums" dir="ltr">0:42</span> · <button type="button" data-next="phone" class="inline-flex items-center min-h-11 font-semibold text-brand underline underline-offset-4" data-i18n="changeNumber">Change number</button></p>
+          <button type="button" id="verify" class="mt-5 flex w-full items-center justify-center gap-2 min-h-14 rounded-2xl bg-brand text-onbrand text-lg font-bold hover:bg-brand/90"><svg class="w-6 h-6" aria-hidden="true"><use href="#i-check"/></svg><span data-i18n="verify">Verify</span></button>
+        </section>
+
+        <!-- 4 · Voice-to-CV: one question. States: idle · listening · processing · confirm · edit · error · blocked · saved -->
+        <section data-step="voice" aria-labelledby="q-h" hidden>
+          <p class="text-sm font-bold uppercase tracking-wider text-stamp" data-i18n="questionOf" data-i18n-vars='{"n":"2","t":"7"}'>Question 2 of 7</p>
+          <div class="mt-1 flex items-start gap-2">
+            <h1 id="q-h" class="font-display text-[26px] leading-tight font-bold flex-1" data-i18n="q2">How many years of experience do you have?</h1>
+            <button type="button" data-speak="#q-h" class="shrink-0 grid place-items-center w-12 h-12 rounded-full bg-brandsoft text-brand hover:bg-brandsoft/70" data-i18n-aria-label="listen" aria-label="Listen"><svg class="w-6 h-6" aria-hidden="true"><use href="#i-speaker"/></svg></button>
+          </div>
+
+          <div id="vs" class="mt-6" aria-live="polite">
+            <!-- idle -->
+            <div data-vs-panel="idle" class="text-center">
+              <button type="button" data-vs-to="listening" class="mx-auto grid place-items-center w-28 h-28 rounded-full bg-brand text-onbrand shadow-[0_12px_30px_-10px_rgb(var(--brand)/.7)] hover:bg-brand/90 focus-visible:ring-[4px] focus-visible:ring-offset-4 focus-visible:ring-brand" aria-describedby="tap-l"><svg class="w-12 h-12" aria-hidden="true"><use href="#i-mic"/></svg><span class="sr-only" data-i18n="tapSpeak">Tap and speak</span></button>
+              <p id="tap-l" class="mt-3 text-lg font-bold" data-i18n="tapSpeak">Tap and speak</p>
+              <button type="button" data-vs-to="edit" class="mt-4 inline-flex items-center justify-center gap-2 min-h-12 px-5 rounded-xl text-brand font-semibold hover:bg-brandsoft"><svg class="w-5 h-5" aria-hidden="true"><use href="#i-keyboard"/></svg><span data-i18n="typeInstead">Type instead</span></button>
+            </div>
+            <!-- listening -->
+            <div data-vs-panel="listening" class="text-center" hidden>
+              <div class="mx-auto grid place-items-center w-28 h-28 rounded-full bg-brandsoft ring-8 ring-brandsoft/60 animate-pulse"><div class="wave w-20" aria-hidden="true"><span></span><span></span><span></span><span></span><span></span><span></span><span></span></div></div>
+              <p class="mt-3 text-lg font-bold"><span data-i18n="listening">Listening…</span> <span class="tabular-nums text-muted" dir="ltr">0:04</span></p>
+              <button type="button" data-vs-to="processing" class="mt-4 inline-flex items-center justify-center gap-2 min-h-14 px-8 rounded-2xl bg-bad text-onbrand text-lg font-bold hover:bg-bad/90"><svg class="w-6 h-6" aria-hidden="true"><use href="#i-stop"/></svg><span data-i18n="stopRec">Stop</span></button>
+            </div>
+            <!-- processing -->
+            <div data-vs-panel="processing" class="text-center py-6" hidden>
+              <svg class="mx-auto w-12 h-12 animate-spin text-brand" viewBox="0 0 24 24" fill="none" aria-hidden="true"><circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="3" opacity=".25"/><path d="M21 12a9 9 0 0 0-9-9" stroke="currentColor" stroke-width="3" stroke-linecap="round"/></svg>
+              <p class="mt-3 text-lg font-bold" data-i18n="understanding">Understanding your answer…</p>
+            </div>
+            <!-- confirm: never saved until the worker says yes -->
+            <div data-vs-panel="confirm" hidden>
+              <p class="font-semibold text-muted" data-i18n="youSaid">You said</p>
+              <blockquote class="mt-1 rounded-2xl bg-surface2 px-4 py-3 text-lg italic" data-i18n="spoken2">“Eight years.”</blockquote>
+              <p class="mt-4 font-semibold text-muted" data-i18n="weUnderstood">We understood:</p>
+              <div class="mt-1 flex items-center gap-3 rounded-2xl border-2 border-brand bg-brandsoft p-4">
+                <span class="grid place-items-center w-12 h-12 shrink-0 rounded-xl bg-surface text-brand"><svg class="w-7 h-7" aria-hidden="true"><use href="#i-briefcase"/></svg></span>
+                <div><p class="text-sm text-muted" data-i18n="experience">Experience</p><p class="text-2xl font-bold" data-i18n="nYears" data-i18n-vars='{"n":"8"}'>8 years</p></div>
+              </div>
+              <p class="mt-5 text-xl font-bold" data-i18n="isCorrect">Is this correct?</p>
+              <div class="mt-3 space-y-2">
+                <button type="button" data-vs-to="saved" class="flex w-full items-center justify-center gap-2 min-h-14 rounded-2xl bg-brand text-onbrand text-lg font-bold hover:bg-brand/90"><svg class="w-6 h-6" aria-hidden="true"><use href="#i-check"/></svg><span data-i18n="yes">Yes, continue</span></button>
+                <div class="grid grid-cols-2 gap-2">
+                  <button type="button" data-vs-to="edit" class="flex items-center justify-center gap-2 min-h-12 px-3 rounded-xl border border-linestrong bg-surface font-semibold hover:bg-surface2"><svg class="w-5 h-5" aria-hidden="true"><use href="#i-edit"/></svg><span data-i18n="edit">Edit answer</span></button>
+                  <button type="button" data-vs-to="listening" class="flex items-center justify-center gap-2 min-h-12 px-3 rounded-xl border border-linestrong bg-surface font-semibold hover:bg-surface2"><svg class="w-5 h-5" aria-hidden="true"><use href="#i-mic"/></svg><span data-i18n="speakAgain">Speak again</span></button>
+                </div>
+              </div>
+              <p class="mt-3 flex items-center gap-2 text-sm text-muted"><svg class="w-4 h-4 shrink-0" aria-hidden="true"><use href="#i-info"/></svg><span data-i18n="notSaved">Nothing is saved until you tap Yes.</span></p>
+            </div>
+            <!-- edit / type instead -->
+            <div data-vs-panel="edit" hidden>
+              <label for="yrs" class="block text-lg font-semibold" data-i18n="experience">Experience</label>
+              <div class="mt-2 flex items-center gap-3" dir="ltr">
+                <button type="button" id="minus" class="grid place-items-center w-14 h-14 shrink-0 rounded-2xl border border-linestrong bg-surface hover:bg-surface2" aria-label="Less"><svg class="w-6 h-6" aria-hidden="true"><use href="#i-minus"/></svg></button>
+                <input id="yrs" type="number" inputmode="numeric" min="0" max="50" value="8" class="min-w-0 flex-1 h-14 rounded-2xl border border-linestrong bg-surface text-center text-3xl font-bold focus:outline-none focus:border-brand focus:ring-[3px] focus:ring-brand/40">
+                <button type="button" id="plus" class="grid place-items-center w-14 h-14 shrink-0 rounded-2xl border border-linestrong bg-surface hover:bg-surface2" aria-label="More"><svg class="w-6 h-6" aria-hidden="true"><use href="#i-plus"/></svg></button>
+              </div>
+              <p class="mt-1 text-center text-muted" data-i18n="years">years</p>
+              <button type="button" data-vs-to="saved" class="mt-5 flex w-full items-center justify-center gap-2 min-h-14 rounded-2xl bg-brand text-onbrand text-lg font-bold hover:bg-brand/90"><svg class="w-6 h-6" aria-hidden="true"><use href="#i-check"/></svg><span data-i18n="saveAnswer">Save answer</span></button>
+              <button type="button" data-vs-to="idle" class="mt-2 flex w-full items-center justify-center gap-2 min-h-12 rounded-xl text-brand font-semibold hover:bg-brandsoft"><svg class="w-5 h-5" aria-hidden="true"><use href="#i-mic"/></svg><span data-i18n="speakInstead">Speak instead</span></button>
+            </div>
+            <!-- error: not heard -->
+            <div data-vs-panel="error" role="alert" class="text-center" hidden>
+              <span class="mx-auto grid place-items-center w-20 h-20 rounded-full bg-warnsoft text-warn"><svg class="w-10 h-10" aria-hidden="true"><use href="#i-speaker"/></svg></span>
+              <p class="mt-3 text-xl font-bold" data-i18n="errHear">We could not hear you</p>
+              <p class="text-muted" data-i18n="errHearHint">Speak a little louder, close to the phone.</p>
+              <button type="button" data-vs-to="listening" class="mt-5 flex w-full items-center justify-center gap-2 min-h-14 rounded-2xl bg-brand text-onbrand text-lg font-bold hover:bg-brand/90"><svg class="w-6 h-6" aria-hidden="true"><use href="#i-mic"/></svg><span data-i18n="tryAgain">Try again</span></button>
+              <button type="button" data-vs-to="edit" class="mt-2 flex w-full items-center justify-center gap-2 min-h-12 rounded-xl text-brand font-semibold hover:bg-brandsoft"><svg class="w-5 h-5" aria-hidden="true"><use href="#i-keyboard"/></svg><span data-i18n="typeInstead">Type instead</span></button>
+            </div>
+            <!-- error: microphone blocked -->
+            <div data-vs-panel="blocked" role="alert" class="text-center" hidden>
+              <span class="mx-auto grid place-items-center w-20 h-20 rounded-full bg-badsoft text-bad"><svg class="w-10 h-10" aria-hidden="true"><use href="#i-mic"/></svg></span>
+              <p class="mt-3 text-xl font-bold" data-i18n="micBlocked">Microphone is blocked</p>
+              <p class="text-muted" data-i18n="micBlockedHint">Allow the microphone in your phone settings, or type your answer.</p>
+              <button type="button" data-vs-to="edit" class="mt-5 flex w-full items-center justify-center gap-2 min-h-14 rounded-2xl bg-brand text-onbrand text-lg font-bold hover:bg-brand/90"><svg class="w-6 h-6" aria-hidden="true"><use href="#i-keyboard"/></svg><span data-i18n="typeInstead">Type instead</span></button>
+              <button type="button" data-vs-to="idle" class="mt-2 flex w-full items-center justify-center gap-2 min-h-12 rounded-xl text-brand font-semibold hover:bg-brandsoft"><svg class="w-5 h-5" aria-hidden="true"><use href="#i-refresh"/></svg><span data-i18n="tryAgain">Try again</span></button>
+            </div>
+            <!-- saved -->
+            <div data-vs-panel="saved" class="text-center" hidden>
+              <span class="mx-auto grid place-items-center w-20 h-20 rounded-full bg-oksoft text-ok"><svg class="w-10 h-10" aria-hidden="true"><use href="#i-check-circle"/></svg></span>
+              <p class="mt-3 text-xl font-bold" data-i18n="savedAns">Saved</p>
+              <p class="text-muted"><span data-i18n="experience">Experience</span>: <b class="text-ink" id="saved-yrs" data-i18n="nYears" data-i18n-vars='{"n":"8"}'>8 years</b></p>
+              <button type="button" data-vs-to="idle" class="mt-5 flex w-full items-center justify-center gap-2 min-h-14 rounded-2xl bg-brand text-onbrand text-lg font-bold hover:bg-brand/90"><span data-i18n="nextQ">Next question</span><svg class="w-6 h-6 flip-rtl" aria-hidden="true"><use href="#i-arrow"/></svg></button>
+            </div>
+          </div>
+        </section>
+      </div>
+
+      <div class="mt-4 flex items-start gap-3 rounded-2xl border border-ok/30 bg-oksoft p-4">
+        <svg class="w-6 h-6 shrink-0 text-ok" aria-hidden="true"><use href="#i-shield-check"/></svg>
+        <p class="text-[15px] font-medium" data-i18n="freeWarn">BLUESKILLS is free for workers. Never pay anyone to apply.</p>
+      </div>
+    </div>
+  </main>
+</div>
+
+<script>
+  /* Sign-in steps + Voice-to-CV state machine. Speech is simulated: listening → working → confirm. */
+  (function () {
+    const steps = ['lang', 'phone', 'otp', 'voice'];
+    let step = 'lang', timer;
+    const $ = s => document.querySelector(s);
+    function go(s) {
+      step = s;
+      document.querySelectorAll('[data-step]').forEach(el => { el.hidden = el.dataset.step !== s; });
+      const n = steps.indexOf(s) + 1;
+      $('#step-label').dataset.i18nVars = JSON.stringify({ n, t: 4 });
+      document.querySelectorAll('#dots span').forEach((d, i) => { d.className = 'h-2 w-8 rounded-full ' + (i < n ? 'bg-brand' : 'bg-surface2'); });
+      $('#back').style.visibility = n === 1 ? 'hidden' : '';
+      BS.translate(document);
+      const h = document.querySelector(`[data-step="${s}"] h1`); if (h) { h.tabIndex = -1; h.focus({ preventScroll: true }); }
+    }
+    function vs(state) {
+      clearTimeout(timer);
+      if (step !== 'voice') go('voice');
+      document.querySelectorAll('[data-vs-panel]').forEach(p => { p.hidden = p.dataset.vsPanel !== state; });
+      if (state === 'listening') timer = setTimeout(() => vs('processing'), 3000);
+      if (state === 'processing') timer = setTimeout(() => vs('confirm'), 1200);
+      if (state === 'saved') { const y = $('#yrs').value || 8; $('#saved-yrs').dataset.i18nVars = JSON.stringify({ n: y }); BS.translate(document); }
+    }
+    document.addEventListener('click', e => {
+      const b = e.target.closest('[data-next],[data-go],[data-vs],[data-vs-to]'); if (!b) return;
+      if (b.dataset.next) go(b.dataset.next);
+      if (b.dataset.go) go(b.dataset.go);
+      if (b.dataset.vs || b.dataset.vsTo) vs(b.dataset.vs || b.dataset.vsTo);
+    });
+    $('#back').addEventListener('click', () => { const i = steps.indexOf(step); if (i > 0) go(steps[i - 1]); });
+    $('#send').addEventListener('click', () => {
+      const ok = $('#phone').value.replace(/\D/g, '').length >= 6;
+      $('#phone').setAttribute('aria-invalid', !ok); $('#phone-err').classList.toggle('hidden', ok); $('#phone-err').classList.toggle('flex', !ok);
+      if (ok) go('otp');
+    });
+    const boxes = [...document.querySelectorAll('#otp input')];
+    boxes.forEach((b, i) => {
+      b.addEventListener('input', () => { b.value = b.value.replace(/\D/g, '').slice(-1); if (b.value && boxes[i + 1]) boxes[i + 1].focus(); });
+      b.addEventListener('keydown', e => { if (e.key === 'Backspace' && !b.value && boxes[i - 1]) boxes[i - 1].focus(); });
+      b.addEventListener('paste', e => { const d = (e.clipboardData.getData('text') || '').replace(/\D/g, ''); if (d) { e.preventDefault(); boxes.forEach((x, k) => { x.value = d[k] || ''; }); } });
+    });
+    $('#verify').addEventListener('click', () => {
+      const ok = boxes.every(b => b.value); $('#otp-err').classList.toggle('hidden', ok); $('#otp-err').classList.toggle('flex', !ok);
+      if (ok) { go('voice'); vs('idle'); }
+    });
+    $('#minus').addEventListener('click', () => { $('#yrs').value = Math.max(0, (+$('#yrs').value || 0) - 1); });
+    $('#plus').addEventListener('click', () => { $('#yrs').value = Math.min(50, (+$('#yrs').value || 0) + 1); });
+    const start = location.hash.slice(1);
+    if (steps.includes(start)) go(start); else if (start) vs(start); else go('lang');
+  })();
+</script>
+</body>
+</html>

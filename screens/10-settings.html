@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="bn" data-i18n-page>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Settings & Privacy · BLUESKILLS</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,700;12..96,800&family=Figtree:wght@400;500;600;700&family=JetBrains+Mono:wght@500;700&family=Noto+Sans+Bengali:wght@400;600;700&family=Noto+Sans+Devanagari:wght@400;600;700&family=Noto+Naskh+Arabic:wght@400;600;700&display=swap">
+<link rel="stylesheet" href="../assets/tokens.css">
+<script src="https://cdn.tailwindcss.com/3.4.17"></script>
+<script src="../assets/tailwind.config.js"></script>
+<script src="../assets/i18n.js"></script>
+<script src="../assets/i18n-screens.js"></script>
+<script src="../assets/app.js"></script>
+</head>
+<body class="font-sans">
+<a href="#main" class="skip-link inline-flex items-center min-h-11 rounded-lg bg-brand text-onbrand px-4 font-semibold">Skip to content</a>
+
+<aside class="hidden lg:flex fixed inset-y-0 start-0 z-30 w-64 flex-col border-e border-line bg-surface">
+  <a href="../index.html" class="flex items-center gap-2 h-16 px-5 border-b border-line" aria-label="BLUESKILLS home">
+    <span class="grid place-items-center w-9 h-9 rounded-lg bg-brand text-onbrand"><svg class="w-5 h-5" aria-hidden="true"><use href="#i-passport"/></svg></span>
+    <span class="font-display text-lg font-extrabold tracking-tight">BLUESKILLS</span>
+  </a>
+  <nav aria-label="Main" class="flex-1 overflow-y-auto p-3">
+    <ul class="space-y-1"><li><a href="../layouts/worker.html" class="flex items-center gap-3 min-h-12 px-3 rounded-xl text-ink hover:bg-surface2 text-base font-semibold"><svg class="w-6 h-6 text-muted" aria-hidden="true"><use href="#i-home"/></svg><span data-i18n="home">Home</span></a></li><li><a href="02-jobs.html" class="flex items-center gap-3 min-h-12 px-3 rounded-xl text-ink hover:bg-surface2 text-base font-semibold"><svg class="w-6 h-6 text-muted" aria-hidden="true"><use href="#i-search"/></svg><span data-i18n="jobs">Jobs</span></a></li><li><a href="05-apply.html#tracker" class="flex items-center gap-3 min-h-12 px-3 rounded-xl text-ink hover:bg-surface2 text-base font-semibold"><svg class="w-6 h-6 text-muted" aria-hidden="true"><use href="#i-list"/></svg><span data-i18n="applications">Applications</span></a></li><li><a href="#" class="flex items-center gap-3 min-h-12 px-3 rounded-xl text-ink hover:bg-surface2 text-base font-semibold"><svg class="w-6 h-6 text-muted" aria-hidden="true"><use href="#i-chat"/></svg><span data-i18n="messages">Messages</span></a></li><li><a href="04-passport.html" class="flex items-center gap-3 min-h-12 px-3 rounded-xl text-ink hover:bg-surface2 text-base font-semibold"><svg class="w-6 h-6 text-muted" aria-hidden="true"><use href="#i-passport"/></svg><span data-i18n="passport">Passport</span></a></li></ul>
+    <ul class="mt-4 pt-4 border-t border-line space-y-1">
+      <li><a href="10-settings.html" aria-current="page" class="flex items-center gap-3 min-h-12 px-3 rounded-xl bg-brandsoft text-brand font-semibold"><svg class="w-6 h-6" aria-hidden="true"><use href="#i-settings"/></svg><span data-i18n="settings">Settings</span></a></li>
+      <li><a href="#" class="flex items-center gap-3 min-h-12 px-3 rounded-xl text-ink font-semibold hover:bg-surface2"><svg class="w-6 h-6 text-muted" aria-hidden="true"><use href="#i-help"/></svg><span data-i18n="help">Help</span></a></li>
+    </ul>
+  </nav>
+  <div class="p-3 border-t border-line"><div class="flex items-center gap-3 rounded-xl p-2"><span class="grid place-items-center w-11 h-11 shrink-0 rounded-full bg-brandsoft text-brand font-bold">RU</span><div class="min-w-0"><p class="font-semibold truncate">Md Rahim Uddin</p><p class="text-sm text-muted truncate" data-i18n="trElectrician">Electrician</p></div></div></div>
+</aside>
+
+<div class="lg:ps-64">
+  <header class="sticky top-0 z-20 border-b border-line bg-surface/95 backdrop-blur pt-[env(safe-area-inset-top)]">
+    <div class="mx-auto max-w-3xl flex items-center gap-2 h-16 px-4">
+      <a href="../index.html" class="lg:hidden flex items-center gap-2 min-h-11 min-w-11" aria-label="BLUESKILLS home">
+        <span class="grid place-items-center w-9 h-9 rounded-lg bg-brand text-onbrand"><svg class="w-5 h-5" aria-hidden="true"><use href="#i-passport"/></svg></span>
+      </a>
+      <p class="text-lg font-bold truncate" data-i18n="settings">Settings</p>
+      <div class="ms-auto flex items-center gap-1">
+        <button type="button" data-open="lang-sheet" class="inline-flex items-center gap-2 min-h-11 px-3 rounded-full border border-linestrong bg-surface font-semibold hover:bg-surface2"><svg class="w-5 h-5 text-muted" aria-hidden="true"><use href="#i-globe"/></svg><span data-lang-current>বাংলা</span><span class="sr-only" data-i18n="language">Language</span></button>
+        <button type="button" data-theme-toggle aria-label="Dark theme" class="grid place-items-center w-11 h-11 rounded-full hover:bg-surface2"><svg class="w-5 h-5" aria-hidden="true"><use href="#i-moon"/></svg></button>
+      </div>
+    </div>
+  </header>
+
+  <main id="main" class="mx-auto max-w-3xl px-4 pt-5 pb-28 lg:pb-12">
+    <h1 class="font-display text-2xl sm:text-3xl font-bold" data-i18n="settingsTitle">Settings and privacy</h1>
+    <form id="settings" class="mt-5 space-y-5" onsubmit="return false">
+      <!-- Language -->
+      <section aria-labelledby="s-lang" class="rounded-2xl border border-line bg-surface p-4 sm:p-5">
+        <h2 id="s-lang" class="flex items-center gap-2 text-lg font-bold"><svg class="w-6 h-6 text-brand" aria-hidden="true"><use href="#i-globe"/></svg><span data-i18n="language">Language</span></h2>
+        <fieldset class="mt-3 grid grid-cols-2 sm:grid-cols-5 gap-2">
+          <legend class="sr-only" data-i18n="language">Language</legend>
+          <label class="flex flex-col items-center justify-center min-h-16 rounded-xl border-2 border-line p-2 cursor-pointer has-[:checked]:border-brand has-[:checked]:bg-brandsoft has-[:focus-visible]:ring-[3px] has-[:focus-visible]:ring-brand/50"><input type="radio" name="lang" data-lang-option="bn" class="sr-only"><span lang="bn" class="text-lg font-bold">বাংলা</span></label>
+          <label class="flex flex-col items-center justify-center min-h-16 rounded-xl border-2 border-line p-2 cursor-pointer has-[:checked]:border-brand has-[:checked]:bg-brandsoft has-[:focus-visible]:ring-[3px] has-[:focus-visible]:ring-brand/50"><input type="radio" name="lang" data-lang-option="hi" class="sr-only"><span lang="hi" class="text-lg font-bold">हिन्दी</span></label>
+          <label class="flex flex-col items-center justify-center min-h-16 rounded-xl border-2 border-line p-2 cursor-pointer has-[:checked]:border-brand has-[:checked]:bg-brandsoft has-[:focus-visible]:ring-[3px] has-[:focus-visible]:ring-brand/50"><input type="radio" name="lang" data-lang-option="ur" class="sr-only"><span lang="ur" class="text-lg font-bold">اردو</span></label>
+          <label class="flex flex-col items-center justify-center min-h-16 rounded-xl border-2 border-line p-2 cursor-pointer has-[:checked]:border-brand has-[:checked]:bg-brandsoft has-[:focus-visible]:ring-[3px] has-[:focus-visible]:ring-brand/50"><input type="radio" name="lang" data-lang-option="ne" class="sr-only"><span lang="ne" class="text-lg font-bold">नेपाली</span></label>
+          <label class="col-span-2 sm:col-span-1 flex flex-col items-center justify-center min-h-16 rounded-xl border-2 border-line p-2 cursor-pointer has-[:checked]:border-brand has-[:checked]:bg-brandsoft has-[:focus-visible]:ring-[3px] has-[:focus-visible]:ring-brand/50"><input type="radio" name="lang" data-lang-option="en" class="sr-only"><span lang="en" class="text-lg font-bold">English</span></label>
+        </fieldset>
+      </section>
+
+      <!-- Phone -->
+      <section aria-labelledby="s-phone" class="rounded-2xl border border-line bg-surface p-4 sm:p-5">
+        <h2 id="s-phone" class="flex items-center gap-2 text-lg font-bold"><svg class="w-6 h-6 text-brand" aria-hidden="true"><use href="#i-phone"/></svg><span data-i18n="mobile">Your mobile number</span></h2>
+        <div class="mt-3 flex flex-wrap items-center gap-3">
+          <p class="text-xl font-semibold tabular-nums me-auto" dir="ltr">+880 1712 •••678</p>
+          <span class="inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-sm font-semibold bg-oksoft text-ok"><svg class="w-4 h-4" aria-hidden="true"><use href="#i-check-circle"/></svg><span data-i18n="codeChecked">Checked by code</span></span>
+          <a href="03-signin-voice.html#phone" class="inline-flex items-center gap-1.5 min-h-11 px-4 rounded-xl border border-linestrong bg-surface font-semibold hover:bg-surface2"><svg class="w-5 h-5" aria-hidden="true"><use href="#i-edit"/></svg><span data-i18n="change">Change</span></a>
+        </div>
+        <p class="mt-2 flex items-start gap-2 text-[15px] text-muted"><svg class="w-5 h-5 shrink-0 mt-0.5" aria-hidden="true"><use href="#i-eye-off"/></svg><span data-i18n="phonePrivate">Employers never see this number.</span></p>
+      </section>
+
+      <!-- Notifications -->
+      <section aria-labelledby="s-notif" class="rounded-2xl border border-line bg-surface p-4 sm:p-5">
+        <h2 id="s-notif" class="flex items-center gap-2 text-lg font-bold"><svg class="w-6 h-6 text-brand" aria-hidden="true"><use href="#i-bell"/></svg><span data-i18n="notifications">Notifications</span></h2>
+        <ul class="mt-2 divide-y divide-line">
+          <li class="flex items-center justify-between gap-4 min-h-16 py-2"><label for="n-sms" class="min-w-0"><span class="block font-semibold">SMS</span><span class="block text-sm text-muted" data-i18n="nUpdates">Application updates</span></label><span class="relative inline-flex shrink-0"><input id="n-sms" name="n-sms" type="checkbox" role="switch" checked class="peer sr-only"><span aria-hidden="true" class="w-14 h-8 rounded-full bg-linestrong transition-colors peer-checked:bg-brand peer-focus-visible:ring-[3px] peer-focus-visible:ring-brand peer-focus-visible:ring-offset-2 peer-focus-visible:ring-offset-surface"></span><span aria-hidden="true" class="absolute top-1 start-1 w-6 h-6 rounded-full bg-surface shadow transition-transform peer-checked:translate-x-6 rtl:peer-checked:-translate-x-6"></span></span></li>
+          <li class="flex items-center justify-between gap-4 min-h-16 py-2"><label for="n-wa" class="min-w-0"><span class="block font-semibold">WhatsApp</span><span class="block text-sm text-muted" data-i18n="nUpdatesJobs">Updates and new jobs</span></label><span class="relative inline-flex shrink-0"><input id="n-wa" name="n-wa" type="checkbox" role="switch" checked class="peer sr-only"><span aria-hidden="true" class="w-14 h-8 rounded-full bg-linestrong transition-colors peer-checked:bg-brand peer-focus-visible:ring-[3px] peer-focus-visible:ring-brand peer-focus-visible:ring-offset-2 peer-focus-visible:ring-offset-surface"></span><span aria-hidden="true" class="absolute top-1 start-1 w-6 h-6 rounded-full bg-surface shadow transition-transform peer-checked:translate-x-6 rtl:peer-checked:-translate-x-6"></span></span></li>
+          <li class="flex items-center justify-between gap-4 min-h-16 py-2"><label for="n-alerts" class="min-w-0"><span class="block font-semibold" data-i18n="jobAlerts">New job alerts</span><span class="block text-sm text-muted"><span data-i18n="trElectrician">Electrician</span> · UAE, Poland</span></label><span class="relative inline-flex shrink-0"><input id="n-alerts" name="n-alerts" type="checkbox" role="switch" class="peer sr-only"><span aria-hidden="true" class="w-14 h-8 rounded-full bg-linestrong transition-colors peer-checked:bg-brand peer-focus-visible:ring-[3px] peer-focus-visible:ring-brand peer-focus-visible:ring-offset-2 peer-focus-visible:ring-offset-surface"></span><span aria-hidden="true" class="absolute top-1 start-1 w-6 h-6 rounded-full bg-surface shadow transition-transform peer-checked:translate-x-6 rtl:peer-checked:-translate-x-6"></span></span></li>
+        </ul>
+      </section>
+
+      <!-- Privacy -->
+      <section aria-labelledby="s-priv" class="rounded-2xl border border-line bg-surface p-4 sm:p-5">
+        <h2 id="s-priv" class="flex items-center gap-2 text-lg font-bold"><svg class="w-6 h-6 text-brand" aria-hidden="true"><use href="#i-shield"/></svg><span data-i18n="privacy">Privacy</span></h2>
+        <div class="mt-2 flex items-center justify-between gap-4 min-h-16 py-2 border-b border-line"><label for="p-find" class="min-w-0"><span class="block font-semibold" data-i18n="pFind">Employers can find my profile</span><span class="block text-sm text-muted" data-i18n="pFindSub">Only verified employers. Not your number or documents.</span></label><span class="relative inline-flex shrink-0"><input id="p-find" name="p-find" type="checkbox" role="switch" checked class="peer sr-only"><span aria-hidden="true" class="w-14 h-8 rounded-full bg-linestrong transition-colors peer-checked:bg-brand peer-focus-visible:ring-[3px] peer-focus-visible:ring-brand peer-focus-visible:ring-offset-2 peer-focus-visible:ring-offset-surface"></span><span aria-hidden="true" class="absolute top-1 start-1 w-6 h-6 rounded-full bg-surface shadow transition-transform peer-checked:translate-x-6 rtl:peer-checked:-translate-x-6"></span></span></div>
+        <fieldset class="mt-4">
+          <legend class="font-semibold" data-i18n="pVideo">Who can watch my SkillShow video?</legend>
+          <div class="mt-2 space-y-1">
+            <label class="flex items-center gap-3 min-h-12 rounded-xl px-2 hover:bg-surface2 cursor-pointer"><input type="radio" name="p-video" value="verified" checked class="w-6 h-6 accent-brand"><span data-i18n="pvVerified">Verified employers</span></label>
+            <label class="flex items-center gap-3 min-h-12 rounded-xl px-2 hover:bg-surface2 cursor-pointer"><input type="radio" name="p-video" value="applied" class="w-6 h-6 accent-brand"><span data-i18n="pvApplied">Only jobs I apply to</span></label>
+            <label class="flex items-center gap-3 min-h-12 rounded-xl px-2 hover:bg-surface2 cursor-pointer"><input type="radio" name="p-video" value="none" class="w-6 h-6 accent-brand"><span data-i18n="pvNobody">Nobody</span></label>
+          </div>
+        </fieldset>
+        <fieldset class="mt-4">
+          <legend class="font-semibold" data-i18n="pName">How my name is shown in search</legend>
+          <div class="mt-2 space-y-1">
+            <label class="flex items-center gap-3 min-h-12 rounded-xl px-2 hover:bg-surface2 cursor-pointer"><input type="radio" name="p-name" value="full" class="w-6 h-6 accent-brand"><bdi>Md Rahim Uddin</bdi></label>
+            <label class="flex items-center gap-3 min-h-12 rounded-xl px-2 hover:bg-surface2 cursor-pointer"><input type="radio" name="p-name" value="short" checked class="w-6 h-6 accent-brand"><bdi>Rahim U.</bdi></label>
+          </div>
+        </fieldset>
+      </section>
+
+      <!-- Document sharing -->
+      <section id="sharing" aria-labelledby="s-share" class="scroll-mt-20 rounded-2xl border border-line bg-surface p-4 sm:p-5">
+        <h2 id="s-share" class="flex items-center gap-2 text-lg font-bold"><svg class="w-6 h-6 text-brand" aria-hidden="true"><use href="#i-file"/></svg><span data-i18n="docSharing">Who has my documents</span></h2>
+        <ul id="shares" class="mt-3 space-y-2">
+          <li class="rounded-xl border border-line p-3">
+            <div class="flex flex-wrap items-start gap-3">
+              <span class="grid place-items-center w-11 h-11 shrink-0 rounded-xl bg-surface2 text-muted"><svg class="w-6 h-6" aria-hidden="true"><use href="#i-building"/></svg></span>
+              <div class="min-w-0 flex-1 basis-48"><p class="font-semibold">ABC Contracting LLC</p><p class="text-sm text-muted">NSDA certificate · SkillShow video</p><p class="text-sm text-muted"><span data-i18n="forJob">For job</span>: Building Electrician · <span data-i18n="sinceD" data-i18n-vars='{"d":"2 Oct 2026"}'>since 2 Oct 2026</span></p></div>
+              <button type="button" data-stop class="inline-flex items-center gap-1.5 min-h-11 px-3 rounded-xl font-semibold text-bad hover:bg-badsoft"><svg class="w-5 h-5" aria-hidden="true"><use href="#i-x-circle"/></svg><span data-i18n="stopSharing">Stop sharing</span></button>
+            </div>
+          </li>
+          <li class="rounded-xl border border-line p-3">
+            <div class="flex flex-wrap items-start gap-3">
+              <span class="grid place-items-center w-11 h-11 shrink-0 rounded-xl bg-surface2 text-muted"><svg class="w-6 h-6" aria-hidden="true"><use href="#i-briefcase"/></svg></span>
+              <div class="min-w-0 flex-1 basis-48"><p class="font-semibold">Northstar Manpower</p><p class="text-sm text-muted">SkillShow video</p><p class="text-sm text-muted"><span data-i18n="forJob">For job</span>: Building Electrician · <span data-i18n="sinceD" data-i18n-vars='{"d":"2 Oct 2026"}'>since 2 Oct 2026</span></p></div>
+              <button type="button" data-stop class="inline-flex items-center gap-1.5 min-h-11 px-3 rounded-xl font-semibold text-bad hover:bg-badsoft"><svg class="w-5 h-5" aria-hidden="true"><use href="#i-x-circle"/></svg><span data-i18n="stopSharing">Stop sharing</span></button>
+            </div>
+          </li>
+        </ul>
+        <p id="shares-empty" hidden class="mt-3 rounded-xl bg-surface2 p-4 text-center text-muted" data-i18n="noShares">Nobody has your documents.</p>
+      </section>
+
+      <!-- Your data -->
+      <section aria-labelledby="s-data" class="rounded-2xl border border-line bg-surface p-4 sm:p-5">
+        <h2 id="s-data" class="flex items-center gap-2 text-lg font-bold"><svg class="w-6 h-6 text-brand" aria-hidden="true"><use href="#i-download"/></svg><span data-i18n="yourData">Your data</span></h2>
+        <div class="mt-3 grid gap-2 sm:grid-cols-2">
+          <button type="button" data-toast="We will send a download link by SMS" data-toast-key="downloadSms" class="flex items-center justify-center gap-2 min-h-12 px-4 rounded-xl border border-linestrong bg-surface font-semibold hover:bg-surface2"><svg class="w-5 h-5" aria-hidden="true"><use href="#i-download"/></svg><span data-i18n="downloadData">Download my data</span></button>
+          <button type="button" data-open="delete-dlg" class="flex items-center justify-center gap-2 min-h-12 px-4 rounded-xl border border-bad/50 bg-surface font-semibold text-bad hover:bg-badsoft"><svg class="w-5 h-5" aria-hidden="true"><use href="#i-trash"/></svg><span data-i18n="deleteAccount">Delete my account</span></button>
+        </div>
+      </section>
+    </form>
+
+    <!-- Unsaved-changes bar: appears after any change, sits above the bottom tabs on phones -->
+    <div id="save-bar" class="hidden fixed inset-x-0 bottom-[calc(4rem+env(safe-area-inset-bottom))] lg:bottom-0 lg:start-64 z-30 border-t border-line bg-surface/95 backdrop-blur p-3">
+      <div class="mx-auto max-w-3xl flex items-center gap-2">
+        <p class="flex items-center gap-2 font-semibold me-auto"><span class="w-2.5 h-2.5 rounded-full bg-warn" aria-hidden="true"></span><span data-i18n="unsaved">Not saved yet</span></p>
+        <button type="button" id="undo" class="inline-flex items-center min-h-12 px-4 rounded-xl font-semibold text-brand hover:bg-brandsoft" data-i18n="undo">Undo</button>
+        <button type="button" id="save" class="inline-flex items-center gap-2 min-h-12 px-5 rounded-xl bg-brand text-onbrand font-bold hover:bg-brand/90"><svg class="w-5 h-5" aria-hidden="true"><use href="#i-check"/></svg><span data-i18n="saveChanges">Save</span></button>
+      </div>
+    </div>
+
+  </main>
+</div>
+
+<nav id="bottom-tabs" aria-label="Main" class="lg:hidden fixed bottom-0 inset-x-0 z-30 border-t border-line bg-surface pb-[env(safe-area-inset-bottom)]">
+  <ul class="grid grid-cols-5"><li><a href="../layouts/worker.html" class="relative flex flex-col items-center justify-center gap-0.5 min-h-16 px-1 text-muted hover:text-ink"><svg class="w-6 h-6" aria-hidden="true"><use href="#i-home"/></svg><span class="text-[13px] font-semibold leading-tight text-center" data-i18n="home">Home</span></a></li><li><a href="02-jobs.html" class="relative flex flex-col items-center justify-center gap-0.5 min-h-16 px-1 text-muted hover:text-ink"><svg class="w-6 h-6" aria-hidden="true"><use href="#i-search"/></svg><span class="text-[13px] font-semibold leading-tight text-center" data-i18n="jobs">Jobs</span></a></li><li><a href="05-apply.html#tracker" class="relative flex flex-col items-center justify-center gap-0.5 min-h-16 px-1 text-muted hover:text-ink"><svg class="w-6 h-6" aria-hidden="true"><use href="#i-list"/></svg><span class="text-[13px] font-semibold leading-tight text-center" data-i18n="tabApps">Applied</span></a></li><li><a href="#" class="relative flex flex-col items-center justify-center gap-0.5 min-h-16 px-1 text-muted hover:text-ink"><svg class="w-6 h-6" aria-hidden="true"><use href="#i-chat"/></svg><span class="text-[13px] font-semibold leading-tight text-center" data-i18n="messages">Messages</span></a></li><li><a href="04-passport.html" class="relative flex flex-col items-center justify-center gap-0.5 min-h-16 px-1 text-muted hover:text-ink"><svg class="w-6 h-6" aria-hidden="true"><use href="#i-passport"/></svg><span class="text-[13px] font-semibold leading-tight text-center" data-i18n="passport">Passport</span></a></li></ul>
+</nav>
+<!-- Language sheet -->
+<dialog id="lang-sheet" class="sheet" aria-labelledby="lang-sheet-t">
+  <div class="rounded-t-3xl sm:rounded-2xl bg-surface sm:w-[28rem] max-h-[85vh] overflow-y-auto p-5 pb-[max(1.25rem,env(safe-area-inset-bottom))]">
+    <div class="mx-auto mb-3 h-1.5 w-12 rounded-full bg-line sm:hidden" aria-hidden="true"></div>
+    <div class="flex items-center justify-between gap-2">
+      <h2 id="lang-sheet-t" class="text-xl font-bold" data-i18n="chooseLang">Choose your language</h2>
+      <button type="button" data-close aria-label="Close" class="grid place-items-center w-11 h-11 rounded-full hover:bg-surface2"><svg class="w-5 h-5" aria-hidden="true"><use href="#i-x"/></svg></button>
+    </div>
+    <fieldset class="mt-3 grid grid-cols-2 gap-2">
+      <legend class="sr-only" data-i18n="language">Language</legend>
+      <label class="flex flex-col items-center justify-center min-h-20 rounded-2xl border-2 border-line p-2 cursor-pointer has-[:checked]:border-brand has-[:checked]:bg-brandsoft has-[:focus-visible]:ring-[3px] has-[:focus-visible]:ring-brand/50"><input type="radio" name="lang" data-lang-option="bn" class="sr-only"><span lang="bn" class="text-xl font-bold">বাংলা</span><span class="text-sm text-muted">Bangla</span></label>
+      <label class="flex flex-col items-center justify-center min-h-20 rounded-2xl border-2 border-line p-2 cursor-pointer has-[:checked]:border-brand has-[:checked]:bg-brandsoft has-[:focus-visible]:ring-[3px] has-[:focus-visible]:ring-brand/50"><input type="radio" name="lang" data-lang-option="hi" class="sr-only"><span lang="hi" class="text-xl font-bold">हिन्दी</span><span class="text-sm text-muted">Hindi</span></label>
+      <label class="flex flex-col items-center justify-center min-h-20 rounded-2xl border-2 border-line p-2 cursor-pointer has-[:checked]:border-brand has-[:checked]:bg-brandsoft has-[:focus-visible]:ring-[3px] has-[:focus-visible]:ring-brand/50"><input type="radio" name="lang" data-lang-option="ur" class="sr-only"><span lang="ur" class="text-xl font-bold">اردو</span><span class="text-sm text-muted">Urdu</span></label>
+      <label class="flex flex-col items-center justify-center min-h-20 rounded-2xl border-2 border-line p-2 cursor-pointer has-[:checked]:border-brand has-[:checked]:bg-brandsoft has-[:focus-visible]:ring-[3px] has-[:focus-visible]:ring-brand/50"><input type="radio" name="lang" data-lang-option="ne" class="sr-only"><span lang="ne" class="text-xl font-bold">नेपाली</span><span class="text-sm text-muted">Nepali</span></label>
+      <label class="col-span-2 flex flex-col items-center justify-center min-h-20 rounded-2xl border-2 border-line p-2 cursor-pointer has-[:checked]:border-brand has-[:checked]:bg-brandsoft has-[:focus-visible]:ring-[3px] has-[:focus-visible]:ring-brand/50"><input type="radio" name="lang" data-lang-option="en" class="sr-only"><span lang="en" class="text-xl font-bold">English</span></label>
+    </fieldset>
+    <button type="button" data-close class="mt-4 flex w-full items-center justify-center min-h-14 rounded-2xl bg-brand text-onbrand text-lg font-bold hover:bg-brand/90" data-i18n="cont">Continue</button>
+  </div>
+</dialog>
+
+<dialog id="delete-dlg" aria-labelledby="del-t" class="w-[min(92vw,28rem)] rounded-2xl">
+  <div class="rounded-2xl bg-surface p-5">
+    <div class="flex items-start gap-3">
+      <span class="grid place-items-center w-11 h-11 shrink-0 rounded-full bg-badsoft text-bad"><svg class="w-6 h-6" aria-hidden="true"><use href="#i-trash"/></svg></span>
+      <div><h2 id="del-t" class="text-xl font-bold" data-i18n="deleteQ">Delete your account?</h2><p class="mt-1 text-muted" data-i18n="deleteSub">Your Skill Passport, video and documents will be deleted in 30 days. Employers lose access now.</p></div>
+    </div>
+    <div class="mt-6 flex flex-col-reverse sm:flex-row sm:justify-end gap-2">
+      <button type="button" data-close class="inline-flex items-center justify-center min-h-12 px-5 rounded-xl border border-linestrong bg-surface font-semibold hover:bg-surface2" data-i18n="keepAccount">Keep my account</button>
+      <button type="button" data-close data-toast="Account will be deleted in 30 days" data-toast-key="accountDeleted" class="inline-flex items-center justify-center min-h-12 px-5 rounded-xl bg-bad text-onbrand font-semibold hover:bg-bad/90" data-i18n="deleteBtn">Delete</button>
+    </div>
+  </div>
+</dialog>
+<script>
+  (function () {
+    const form = document.getElementById('settings'), bar = document.getElementById('save-bar');
+    const snap = () => [...form.querySelectorAll('input:not([data-lang-option])')].map(i => i.checked);
+    let saved = snap();
+    const dirty = () => snap().some((v, i) => v !== saved[i]);
+    form.addEventListener('change', e => { if (!e.target.dataset.langOption) bar.classList.toggle('hidden', !dirty()); });
+    document.getElementById('save').addEventListener('click', () => { saved = snap(); bar.classList.add('hidden'); BS.toast(BS.t('savedAns') || 'Saved', 'ok'); });
+    document.getElementById('undo').addEventListener('click', () => { form.querySelectorAll('input:not([data-lang-option])').forEach((i, k) => { i.checked = saved[k]; }); bar.classList.add('hidden'); });
+    document.getElementById('shares').addEventListener('click', e => {
+      const b = e.target.closest('[data-stop]'); if (!b) return;
+      b.closest('li').remove(); BS.toast(BS.t('sharingStopped') || 'Sharing stopped', 'ok');
+      document.getElementById('shares-empty').hidden = !!document.querySelector('#shares li');
+    });
+  })();
+</script>
+
+</body>
+</html>
