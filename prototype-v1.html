@@ -1,0 +1,1340 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>BLUESKILLS Prototype</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=Figtree:wght@400;500;600;700&family=JetBrains+Mono:wght@500;700&family=Noto+Sans+Bengali:wght@400;600;700&family=Noto+Sans+Devanagari:wght@400;600;700&family=Noto+Naskh+Arabic:wght@400;600;700&family=Noto+Sans+Sinhala:wght@400;600&family=Noto+Sans+Tamil:wght@400;600&display=swap">
+<script src="https://cdn.tailwindcss.com/3.4.17"></script>
+<script>
+  const V = n => `rgb(var(--${n}) / <alpha-value>)`;
+  tailwind.config = {
+    theme: {
+      extend: {
+        colors: {
+          bg: V('bg'), surface: V('surface'), surface2: V('surface-2'), line: V('line'),
+          ink: V('ink'), muted: V('muted'), brand: V('brand'), brandsoft: V('brand-soft'),
+          onbrand: V('on-brand'), stamp: V('stamp'), stampsoft: V('stamp-soft'),
+          ok: V('ok'), oksoft: V('ok-soft'), warn: V('warn'), warnsoft: V('warn-soft'),
+          bad: V('bad'), badsoft: V('bad-soft'), bezel: V('bezel'), screen: V('screen'), onscreen: V('on-screen')
+        },
+        fontFamily: {
+          display: ['"Bricolage Grotesque"', 'Figtree', 'system-ui', 'sans-serif'],
+          sans: ['Figtree', '"Noto Sans Bengali"', '"Noto Sans Devanagari"', '"Noto Naskh Arabic"', '"Noto Sans Sinhala"', '"Noto Sans Tamil"', 'system-ui', 'sans-serif'],
+          mono: ['"JetBrains Mono"', 'ui-monospace', 'SFMono-Regular', 'monospace']
+        }
+      }
+    }
+  };
+</script>
+<style>
+  /* Layout: sticky prototype bar → role nav rail → canvas (phone frame for workers, desktop workspace for organisations).
+     Palette: passport-cover blue + customs-stamp amber on blue-tinted neutrals. */
+  :root {
+    --bg: 243 245 250; --surface: 255 255 255; --surface-2: 234 238 246; --line: 214 220 233;
+    --ink: 14 22 46; --muted: 86 97 124; --brand: 21 62 158; --brand-soft: 226 234 252; --on-brand: 255 255 255;
+    --stamp: 178 104 12; --stamp-soft: 252 239 215; --ok: 20 122 72; --ok-soft: 222 245 232;
+    --warn: 166 98 0; --warn-soft: 253 241 214; --bad: 186 40 48; --bad-soft: 252 228 229; --bezel: 22 28 48;
+    --screen: 14 18 32; --on-screen: 240 243 250;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --bg: 9 13 26; --surface: 16 22 40; --surface-2: 24 32 56; --line: 40 50 80;
+      --ink: 230 235 247; --muted: 150 161 189; --brand: 122 160 255; --brand-soft: 28 42 86; --on-brand: 8 14 34;
+      --stamp: 240 172 74; --stamp-soft: 60 42 14; --ok: 84 205 140; --ok-soft: 16 52 36;
+      --warn: 240 186 70; --warn-soft: 58 44 12; --bad: 245 120 120; --bad-soft: 64 22 26; --bezel: 52 62 92;
+      color-scheme: dark;
+    }
+  }
+  :root[data-theme="dark"] {
+    --bg: 9 13 26; --surface: 16 22 40; --surface-2: 24 32 56; --line: 40 50 80;
+    --ink: 230 235 247; --muted: 150 161 189; --brand: 122 160 255; --brand-soft: 28 42 86; --on-brand: 8 14 34;
+    --stamp: 240 172 74; --stamp-soft: 60 42 14; --ok: 84 205 140; --ok-soft: 16 52 36;
+    --warn: 240 186 70; --warn-soft: 58 44 12; --bad: 245 120 120; --bad-soft: 64 22 26; --bezel: 52 62 92;
+    color-scheme: dark;
+  }
+  body { background: rgb(var(--bg)); color: rgb(var(--ink)); font-size: 15px; line-height: 1.5;
+    font-family: Figtree, "Noto Sans Bengali", "Noto Sans Devanagari", "Noto Naskh Arabic", "Noto Sans Sinhala", "Noto Sans Tamil", system-ui, sans-serif; }
+  body::before { content: ""; position: fixed; inset: 0 0 auto; height: env(safe-area-inset-top, 0px); z-index: 60; background: rgb(var(--surface)); }
+  .gutter { padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); }
+  .topbar { top: env(safe-area-inset-top, 0px); }
+  h1, h2, h3 { text-wrap: balance; }
+  .tnum { font-variant-numeric: tabular-nums; }
+  .eyebrow { letter-spacing: .08em; text-transform: uppercase; font-size: 11px; font-weight: 700; }
+  :focus-visible { outline: 2px solid rgb(var(--brand)); outline-offset: 2px; border-radius: 6px; }
+  .scroll-x { overflow-x: auto; -webkit-overflow-scrolling: touch; scrollbar-width: thin; }
+
+  /* Phone frame */
+  .phone { width: 100%; max-width: 420px; border: 1px solid rgb(var(--line)); border-radius: 24px; background: rgb(var(--surface)); overflow: hidden; display: flex; flex-direction: column; }
+  .phone-body { flex: 1; }
+  @media (min-width: 768px) {
+    .phone { width: 390px; height: 780px; border: 10px solid rgb(var(--bezel)); border-radius: 46px; box-shadow: 0 30px 60px -30px rgb(var(--ink) / .45); }
+    .phone-body { overflow-y: auto; }
+  }
+  .status-bar { font-size: 12px; font-weight: 600; }
+
+  /* Skill Passport cover */
+  .passport-cover { background:
+      radial-gradient(circle at 85% 15%, rgb(var(--on-brand) / .10) 0 18%, transparent 19%),
+      repeating-radial-gradient(circle at 85% 15%, rgb(var(--on-brand) / .07) 0 1px, transparent 1px 9px),
+      rgb(var(--brand)); color: rgb(var(--on-brand)); }
+  .mrz { font-family: "JetBrains Mono", ui-monospace, monospace; font-size: 10.5px; letter-spacing: .12em; word-break: break-all; line-height: 1.6; }
+  .stamp { border: 2px solid rgb(var(--stamp)); color: rgb(var(--stamp)); transform: rotate(-6deg); border-radius: 8px; font-family: "JetBrains Mono", monospace; font-weight: 700; letter-spacing: .1em; font-size: 10px; padding: 3px 8px; display: inline-block; }
+
+  /* Voice waveform */
+  .wave { display: flex; align-items: center; justify-content: center; gap: 5px; height: 56px; }
+  .wave span { width: 5px; border-radius: 4px; background: rgb(var(--brand)); animation: wave 0.9s ease-in-out infinite; }
+  .wave span:nth-child(2n) { animation-delay: .15s } .wave span:nth-child(3n) { animation-delay: .3s } .wave span:nth-child(4n) { animation-delay: .45s }
+  @keyframes wave { 0%, 100% { height: 10px } 50% { height: 48px } }
+  .mic-pulse { box-shadow: 0 0 0 0 rgb(var(--brand) / .45); animation: pulse 1.6s infinite; }
+  @keyframes pulse { 0% { box-shadow: 0 0 0 0 rgb(var(--brand) / .45) } 70% { box-shadow: 0 0 0 22px rgb(var(--brand) / 0) } 100% { box-shadow: 0 0 0 0 rgb(var(--brand) / 0) } }
+  @media (prefers-reduced-motion: reduce) { .wave span, .mic-pulse { animation: none } .wave span { height: 28px } }
+
+  .toast { position: fixed; left: 50%; bottom: calc(20px + env(safe-area-inset-bottom, 0px)); transform: translateX(-50%); z-index: 80; max-width: calc(100% - 32px); }
+  input, select, textarea { background: rgb(var(--surface)); color: rgb(var(--ink)); }
+  .field { width: 100%; border: 1px solid rgb(var(--line)); border-radius: 10px; padding: 9px 12px; font-size: 14px; }
+  .field:focus { outline: 2px solid rgb(var(--brand) / .6); outline-offset: 0; border-color: rgb(var(--brand)); }
+</style>
+</head>
+<body>
+
+<div id="app"></div>
+<div id="toast" class="toast" aria-live="polite"></div>
+
+<script>
+(() => {
+  /* ---------- helpers ---------- */
+  const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+  const fmt = n => Number(n).toLocaleString('en-US');
+  const IC = {
+    mic: '<rect x="9" y="2" width="6" height="12" rx="3"/><path d="M5 10a7 7 0 0 0 14 0M12 17v5M8 22h8"/>',
+    check: '<path d="M20 6 9 17l-5-5"/>',
+    play: '<path d="M8 5v14l11-7z"/>',
+    shield: '<path d="M12 3 4 6v6c0 5 3.5 8 8 9 4.5-1 8-4 8-9V6z"/><path d="m9 12 2 2 4-4"/>',
+    flag: '<path d="M5 21V4M5 4h11l-2 4 2 4H5"/>',
+    upload: '<path d="M12 16V4M7 9l5-5 5 5M4 20h16"/>',
+    search: '<circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/>',
+    home: '<path d="M3 11 12 4l9 7v9h-6v-6H9v6H3z"/>',
+    brief: '<rect x="3" y="7" width="18" height="13" rx="2"/><path d="M9 7V5h6v2M3 13h18"/>',
+    list: '<path d="M8 6h13M8 12h13M8 18h13M3 6h.01M3 12h.01M3 18h.01"/>',
+    chat: '<path d="M4 5h16v11H9l-5 4z"/>',
+    id: '<rect x="3" y="4" width="18" height="16" rx="2"/><circle cx="9" cy="11" r="2.5"/><path d="M5.5 17c.8-2 2-3 3.5-3s2.7 1 3.5 3M14 9h4M14 13h4"/>',
+    lock: '<rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/>',
+    globe: '<circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3a14 14 0 0 1 0 18M12 3a14 14 0 0 0 0 18"/>',
+    plane: '<path d="M10.5 13.5 3 11l18-7-7 18-2.5-7.5z"/>',
+    x: '<path d="M6 6l12 12M18 6 6 18"/>',
+    back: '<path d="M15 18l-6-6 6-6"/>',
+    next: '<path d="M9 18l6-6-6-6"/>',
+    sun: '<circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M2 12h2M20 12h2M5 5l1.4 1.4M17.6 17.6 19 19M5 19l1.4-1.4M17.6 6.4 19 5"/>',
+    moon: '<path d="M20 14A8 8 0 1 1 10 4a6 6 0 0 0 10 10z"/>',
+    doc: '<path d="M6 3h8l4 4v14H6z"/><path d="M14 3v4h4M9 13h6M9 17h6"/>',
+    users: '<circle cx="9" cy="8" r="3.5"/><path d="M2.5 20c.8-3.5 3.3-5.5 6.5-5.5s5.7 2 6.5 5.5M16 4.5a3.5 3.5 0 0 1 0 7M18 14.8c1.8.8 3 2.6 3.5 5.2"/>',
+    clock: '<circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/>',
+    alert: '<path d="M12 3 2 21h20z"/><path d="M12 10v5M12 18h.01"/>',
+    plus: '<path d="M12 5v14M5 12h14"/>',
+    video: '<rect x="3" y="6" width="13" height="12" rx="2"/><path d="m16 10 5-3v10l-5-3"/>',
+    copy: '<rect x="8" y="8" width="12" height="12" rx="2"/><path d="M16 8V5a1 1 0 0 0-1-1H5a1 1 0 0 0-1 1v10a1 1 0 0 0 1 1h3"/>',
+    keyboard: '<rect x="2" y="6" width="20" height="12" rx="2"/><path d="M6 10h.01M10 10h.01M14 10h.01M18 10h.01M7 14h10"/>',
+    edit: '<path d="M4 20h4L19 9l-4-4L4 16z"/>',
+    building: '<path d="M4 21V5l8-2v18M12 8h8v13M8 9h.01M8 13h.01M8 17h.01M16 12h.01M16 16h.01M2 21h20"/>',
+    school: '<path d="M2 9l10-5 10 5-10 5z"/><path d="M6 11v5c3 2 9 2 12 0v-5"/>',
+    gear: '<circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3M4.9 4.9l2.1 2.1M17 17l2.1 2.1M4.9 19.1 7 17M17 7l2.1-2.1"/>',
+    map: '<path d="M9 4 3 6v14l6-2 6 2 6-2V4l-6 2z"/><path d="M9 4v14M15 6v14"/>',
+    star: '<path d="m12 3 2.7 5.6 6.1.9-4.4 4.3 1 6.1L12 17l-5.4 2.9 1-6.1-4.4-4.3 6.1-.9z"/>'
+  };
+  const ic = (n, c = 'w-4 h-4') => `<svg class="${c} shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${IC[n] || ''}</svg>`;
+  const TONES = { ok: 'bg-oksoft text-ok', warn: 'bg-warnsoft text-warn', bad: 'bg-badsoft text-bad', brand: 'bg-brandsoft text-brand', stamp: 'bg-stampsoft text-stamp', neutral: 'bg-surface2 text-muted' };
+  const chip = (t, tone = 'neutral', icon = '') => `<span class="inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-[11px] font-semibold whitespace-nowrap ${TONES[tone]}">${icon ? ic(icon, 'w-3 h-3') : ''}${t}</span>`;
+  const B = {
+    primary: 'bg-brand text-onbrand hover:bg-brand/90',
+    secondary: 'bg-surface border border-line text-ink hover:bg-surface2',
+    ghost: 'text-brand hover:bg-brandsoft',
+    danger: 'bg-surface border border-bad/40 text-bad hover:bg-badsoft',
+    stamp: 'bg-stamp text-onbrand hover:bg-stamp/90'
+  };
+  const btn = (label, act, kind = 'primary', arg = '', cls = '') =>
+    `<button type="button" data-act="${act}" ${arg !== '' ? `data-arg="${esc(arg)}"` : ''} class="inline-flex items-center justify-center gap-2 rounded-xl px-4 py-2.5 text-sm font-semibold transition ${B[kind]} ${cls}">${label}</button>`;
+  const link = (label, route, kind = 'primary', cls = '') => btn(label, 'go', kind, route, cls);
+
+  /* ---------- languages ---------- */
+  const LANGS = [
+    { code: 'bn', name: 'বাংলা', en: 'Bangla' },
+    { code: 'hi', name: 'हिन्दी', en: 'Hindi' },
+    { code: 'ur', name: 'اردو', en: 'Urdu', rtl: true },
+    { code: 'ne', name: 'नेपाली', en: 'Nepali' },
+    { code: 'si', name: 'සිංහල', en: 'Sinhala' },
+    { code: 'ta', name: 'தமிழ்', en: 'Tamil' },
+    { code: 'en', name: 'English', en: 'English' }
+  ];
+  const I18N = {
+    en: {
+      welcome: 'Welcome to BLUESKILLS', chooseLang: 'Choose your language', mobile: 'Your mobile number', sendOtp: 'Send OTP',
+      noPassword: 'No complicated password required', enterCode: 'Enter the 6-digit code', verify: 'Verify',
+      q: ['What work do you do?', 'How many years of experience do you have?', 'Which countries have you worked in?', 'What are your main skills?', 'Do you have a passport?', 'When can you start work?', 'Which countries do you want to work in?'],
+      tapSpeak: 'Tap and speak', listening: 'Listening…', weUnderstood: 'We understood:', isCorrect: 'Is this correct?',
+      yes: 'Yes, continue', edit: 'Edit answer', typeInstead: 'Type instead', createProfile: 'Create my profile',
+      home: 'Home', jobs: 'Jobs', applications: 'Applications', messages: 'Messages', passport: 'Passport',
+      iCanDo: 'I can do this job', confirmApp: 'Confirm application', findJobs: 'Find jobs', showWhat: 'Show what you can do',
+      cont: 'Continue', questionOf: 'Question {n} of {t}'
+    },
+    bn: {
+      welcome: 'BLUESKILLS-এ স্বাগতম', chooseLang: 'আপনার ভাষা বেছে নিন', mobile: 'আপনার মোবাইল নম্বর', sendOtp: 'OTP পাঠান',
+      noPassword: 'কোনো জটিল পাসওয়ার্ড লাগবে না', enterCode: '৬ সংখ্যার কোডটি লিখুন', verify: 'যাচাই করুন',
+      q: ['আপনি কী কাজ করেন?', 'আপনার কত বছরের অভিজ্ঞতা আছে?', 'আপনি কোন কোন দেশে কাজ করেছেন?', 'আপনার প্রধান দক্ষতাগুলো কী?', 'আপনার কি পাসপোর্ট আছে?', 'আপনি কবে থেকে কাজ শুরু করতে পারবেন?', 'আপনি কোন দেশে কাজ করতে চান?'],
+      tapSpeak: 'ট্যাপ করে বলুন', listening: 'শুনছি…', weUnderstood: 'আমরা বুঝেছি:', isCorrect: 'এটা কি ঠিক আছে?',
+      yes: 'হ্যাঁ, এগিয়ে যান', edit: 'উত্তর সম্পাদনা করুন', typeInstead: 'টাইপ করে লিখুন', createProfile: 'আমার প্রোফাইল তৈরি করুন',
+      home: 'হোম', jobs: 'চাকরি', applications: 'আবেদন', messages: 'বার্তা', passport: 'পাসপোর্ট',
+      iCanDo: 'আমি এই কাজ পারি', confirmApp: 'আবেদন নিশ্চিত করুন', findJobs: 'চাকরি খুঁজুন', showWhat: 'আপনি কী পারেন দেখান',
+      cont: 'এগিয়ে যান', questionOf: 'প্রশ্ন {n} / {t}'
+    },
+    hi: {
+      welcome: 'BLUESKILLS में आपका स्वागत है', chooseLang: 'अपनी भाषा चुनें', mobile: 'आपका मोबाइल नंबर', sendOtp: 'OTP भेजें',
+      noPassword: 'कोई जटिल पासवर्ड नहीं चाहिए', enterCode: '6 अंकों का कोड डालें', verify: 'सत्यापित करें',
+      q: ['आप क्या काम करते हैं?', 'आपको कितने साल का अनुभव है?', 'आपने किन देशों में काम किया है?', 'आपके मुख्य कौशल क्या हैं?', 'क्या आपके पास पासपोर्ट है?', 'आप कब से काम शुरू कर सकते हैं?', 'आप किन देशों में काम करना चाहते हैं?'],
+      tapSpeak: 'टैप करें और बोलें', listening: 'सुन रहे हैं…', weUnderstood: 'हमने समझा:', isCorrect: 'क्या यह सही है?',
+      yes: 'हाँ, आगे बढ़ें', edit: 'उत्तर बदलें', typeInstead: 'टाइप करें', createProfile: 'मेरी प्रोफ़ाइल बनाएँ',
+      home: 'होम', jobs: 'नौकरियाँ', applications: 'आवेदन', messages: 'संदेश', passport: 'पासपोर्ट',
+      iCanDo: 'मैं यह काम कर सकता/सकती हूँ', confirmApp: 'आवेदन की पुष्टि करें', findJobs: 'नौकरी खोजें', showWhat: 'दिखाइए आप क्या कर सकते हैं',
+      cont: 'आगे बढ़ें', questionOf: 'प्रश्न {n} / {t}'
+    },
+    ur: {
+      welcome: 'BLUESKILLS میں خوش آمدید', chooseLang: 'اپنی زبان منتخب کریں', mobile: 'آپ کا موبائل نمبر', sendOtp: 'OTP بھیجیں',
+      noPassword: 'کسی مشکل پاس ورڈ کی ضرورت نہیں', enterCode: '6 ہندسوں کا کوڈ درج کریں', verify: 'تصدیق کریں',
+      q: ['آپ کیا کام کرتے ہیں؟', 'آپ کو کتنے سال کا تجربہ ہے؟', 'آپ نے کن ممالک میں کام کیا ہے؟', 'آپ کی اہم مہارتیں کیا ہیں؟', 'کیا آپ کے پاس پاسپورٹ ہے؟', 'آپ کب سے کام شروع کر سکتے ہیں؟', 'آپ کن ممالک میں کام کرنا چاہتے ہیں؟'],
+      tapSpeak: 'ٹیپ کریں اور بولیں', listening: 'سن رہے ہیں…', weUnderstood: 'ہم نے سمجھا:', isCorrect: 'کیا یہ درست ہے؟',
+      yes: 'جی ہاں، آگے بڑھیں', edit: 'جواب میں ترمیم کریں', typeInstead: 'ٹائپ کریں', createProfile: 'میری پروفائل بنائیں',
+      home: 'ہوم', jobs: 'ملازمتیں', applications: 'درخواستیں', messages: 'پیغامات', passport: 'پاسپورٹ',
+      iCanDo: 'میں یہ کام کر سکتا ہوں', confirmApp: 'درخواست کی تصدیق کریں', findJobs: 'ملازمت تلاش کریں', showWhat: 'دکھائیں آپ کیا کر سکتے ہیں',
+      cont: 'آگے بڑھیں', questionOf: 'سوال {n} / {t}'
+    },
+    ne: {
+      welcome: 'BLUESKILLS मा स्वागत छ', chooseLang: 'आफ्नो भाषा छान्नुहोस्', mobile: 'तपाईंको मोबाइल नम्बर', sendOtp: 'OTP पठाउनुहोस्',
+      noPassword: 'कुनै जटिल पासवर्ड चाहिँदैन', enterCode: '६ अङ्कको कोड लेख्नुहोस्', verify: 'प्रमाणित गर्नुहोस्',
+      q: ['तपाईं के काम गर्नुहुन्छ?', 'तपाईंसँग कति वर्षको अनुभव छ?', 'तपाईंले कुन-कुन देशमा काम गर्नुभएको छ?', 'तपाईंका मुख्य सीपहरू के हुन्?', 'के तपाईंसँग राहदानी छ?', 'तपाईं कहिलेदेखि काम सुरु गर्न सक्नुहुन्छ?', 'तपाईं कुन देशमा काम गर्न चाहनुहुन्छ?'],
+      tapSpeak: 'थिच्नुहोस् र बोल्नुहोस्', listening: 'सुन्दैछौं…', weUnderstood: 'हामीले बुझ्यौं:', isCorrect: 'के यो सही हो?',
+      yes: 'हो, अगाडि बढ्नुहोस्', edit: 'उत्तर सम्पादन गर्नुहोस्', typeInstead: 'टाइप गर्नुहोस्', createProfile: 'मेरो प्रोफाइल बनाउनुहोस्',
+      home: 'गृह', jobs: 'जागिर', applications: 'आवेदन', messages: 'सन्देश', passport: 'पासपोर्ट',
+      iCanDo: 'म यो काम गर्न सक्छु', confirmApp: 'आवेदन पुष्टि गर्नुहोस्', findJobs: 'जागिर खोज्नुहोस्', showWhat: 'तपाईं के गर्न सक्नुहुन्छ देखाउनुहोस्',
+      cont: 'अगाडि बढ्नुहोस्', questionOf: 'प्रश्न {n} / {t}'
+    }
+  };
+  const T = (k, vars) => {
+    let s = (I18N[S.lang] && I18N[S.lang][k]) ?? I18N.en[k];
+    if (vars && typeof s === 'string') for (const v in vars) s = s.replace(`{${v}}`, vars[v]);
+    return s;
+  };
+
+  /* ---------- sample data ---------- */
+  const COUNTRY = {
+    'United Arab Emirates': { short: 'UAE', cur: 'AED' }, 'Saudi Arabia': { short: 'Saudi Arabia', cur: 'SAR' },
+    'Poland': { short: 'Poland', cur: 'PLN' }, 'Japan': { short: 'Japan', cur: 'JPY' }, 'Czechia': { short: 'Czechia', cur: 'CZK' }
+  };
+  const JOBS = [
+    { id: 'UAE-EL-0001', title: 'Building Electrician', occ: 'Electrician', city: 'Dubai', country: 'United Arab Emirates',
+      employer: 'ABC Contracting LLC', postedBy: 'Northstar Manpower (licensed agency)', agencyLicence: 'Licence RA-2026-0418 · valid to Mar 2027', mandate: 'Mandate MD-1107 · 200 workers · verified',
+      salary: 2200, cur: 'AED', freq: 'month', hours: 8, days: 6, overtime: 'Paid at 1.25× basic hourly rate', contract: 24,
+      accommodation: 'Provided · shared, 4 per room', food: 'AED 300 monthly allowance', transport: 'Provided to site', medical: 'Provided · employer health insurance', airfare: 'Employer pays (both ways)',
+      permitPayer: 'Employer', visaPayer: 'Employer', costs: [], headcount: 200, deadline: '30 Nov 2026', exp: 5,
+      skills: ['Industrial wiring', 'DB installation', 'Cable termination'], lang: 'Basic English or Hindi/Urdu',
+      checks: [['Employer verified', 'ok'], ['Agency licence verified', 'ok'], ['Mandate verified', 'ok'], ['Salary employer-declared', 'neutral']],
+      match: [['Electrician occupation', 1], ['5+ years experience', 1], ['GCC experience', 1], ['Passport ready', 1], ['Industrial wiring', 1], ['DB installation', 1], ['Cable termination', 0], ['Basic English', 1], ['Available within 60 days', 1], ['Trade assessment passed', 0]] },
+    { id: 'PL-WH-0014', title: 'Warehouse Professional', occ: 'Warehouse operative', city: 'Poznań', country: 'Poland',
+      employer: 'XYZ Logistics Sp. z o.o.', postedBy: 'XYZ Logistics (direct employer)', agencyLicence: '', mandate: 'Direct hire · no agency',
+      salary: 5200, cur: 'PLN', freq: 'month', hours: 8, days: 5, overtime: 'Paid per Polish labour code', contract: 12,
+      accommodation: '', food: '', transport: 'Shift bus from city centre', medical: 'National health insurance', airfare: '',
+      permitPayer: 'Employer', visaPayer: 'Worker', costs: [{ item: 'Visa application fee', amount: 80, payer: 'Worker', cur: 'EUR' }, { item: 'Medical check', amount: 60, payer: 'Worker', cur: 'EUR' }],
+      headcount: 75, deadline: '15 Dec 2026', exp: 1, skills: ['Forklift (UDT)', 'Picking & packing', 'Scanner use'], lang: 'Basic English',
+      checks: [['Employer verified', 'ok'], ['Job under re-review after change', 'warn']],
+      match: [['Warehouse or logistics role', 0], ['1+ year experience', 1], ['Forklift licence', 0], ['Basic English', 1], ['Passport ready', 1], ['Available within 60 days', 1], ['EU work history', 0], ['Picking & packing', 0]] },
+    { id: 'JP-IT-0007', title: 'Industrial Technician', occ: 'Electrical technician', city: 'Toyota, Aichi', country: 'Japan',
+      employer: 'Global Facilities KK', postedBy: 'Global Facilities KK (direct employer)', agencyLicence: '', mandate: 'Direct hire · Specified Skilled Worker (i) route',
+      salary: 230000, cur: 'JPY', freq: 'month', hours: 8, days: 5, overtime: 'Paid at 1.25× per Japanese labour law', contract: 36,
+      accommodation: 'Company dormitory · JPY 25,000 / month deducted', food: 'Not provided', transport: 'Commuting allowance', medical: 'Japanese social insurance', airfare: 'Employer pays (arrival)',
+      permitPayer: 'Employer', visaPayer: 'Employer', costs: [{ item: 'Skills test fee (prometric)', amount: 3000, payer: 'Worker', cur: 'BDT' }],
+      headcount: 40, deadline: '20 Jan 2027', exp: 3, skills: ['Panel wiring', 'PLC basics', 'Maintenance'], lang: 'Japanese JLPT N4',
+      checks: [['Employer verified', 'ok'], ['Route documents verified', 'ok']],
+      match: [['Electrical occupation', 1], ['3+ years experience', 1], ['Panel wiring', 1], ['Maintenance', 1], ['Passport ready', 1], ['JLPT N4', 0], ['Skills test passed', 0], ['Available within 90 days', 1]] },
+    { id: 'SA-HV-0021', title: 'HVAC Technician', occ: 'HVAC technician', city: 'Riyadh', country: 'Saudi Arabia',
+      employer: 'Al Noor Facilities Co.', postedBy: 'Northstar Manpower (licensed agency)', agencyLicence: 'Licence RA-2026-0418 · valid to Mar 2027', mandate: 'Mandate MD-1121 · under review',
+      salary: 2500, cur: 'SAR', freq: 'month', hours: 8, days: 6, overtime: 'Paid at 1.5× basic hourly rate', contract: 24,
+      accommodation: 'Provided', food: 'Provided (3 meals)', transport: 'Provided', medical: 'Provided', airfare: 'Employer pays (both ways)',
+      permitPayer: 'Employer', visaPayer: 'Employer', costs: [], headcount: 40, deadline: '10 Dec 2026', exp: 4,
+      skills: ['Split AC installation', 'Chiller maintenance', 'Refrigerant handling'], lang: 'Basic English or Arabic',
+      checks: [['Employer verified', 'ok'], ['Mandate pending review', 'warn']],
+      match: [['HVAC occupation', 0], ['4+ years experience', 1], ['GCC experience', 1], ['Passport ready', 1], ['Refrigerant handling', 0], ['Basic English', 1]] },
+    { id: 'CZ-WE-0003', title: 'MIG/MAG Welder', occ: 'Welder', city: 'Ostrava', country: 'Czechia',
+      employer: 'Moravia Steelworks s.r.o.', postedBy: 'Moravia Steelworks (direct employer)', agencyLicence: '', mandate: 'Direct hire',
+      salary: 42000, cur: 'CZK', freq: 'month', hours: 8, days: 5, overtime: 'Paid per Czech labour code', contract: 12,
+      accommodation: 'Hostel arranged · CZK 5,000 / month deducted', food: '', transport: '', medical: 'Public health insurance', airfare: 'Not provided',
+      permitPayer: 'Employer', visaPayer: 'Worker', costs: [{ item: 'Visa application fee', amount: 2500, payer: 'Worker', cur: 'CZK' }],
+      headcount: 25, deadline: '31 Dec 2026', exp: 3, skills: ['MIG/MAG 135/136', 'Blueprint reading', 'Fillet welds'], lang: 'Basic English',
+      checks: [['Employer verified', 'ok']],
+      match: [['Welder occupation', 0], ['3+ years experience', 1], ['ISO 9606 certificate', 0], ['Passport ready', 1], ['Basic English', 1]] }
+  ];
+  const job = id => JOBS.find(j => j.id === id) || JOBS[0];
+  const STAGES = ['Applied', 'Profile reviewed', 'Qualified', 'Shortlisted', 'Interview', 'Trade assessment', 'Selected', 'Offer', 'Accepted'];
+  const CANDS = [
+    { id: 'c1', name: 'Rahim Uddin', occ: 'Electrician', exp: 8, from: 'Bangladesh', worked: 'Bangladesh 5y · UAE 3y', gcc: true, passport: true, ss: true, idv: true, avail: 'Immediately', langs: 'Bangla, Hindi, basic English', skills: ['Industrial wiring', 'DB installation', 'Maintenance'] },
+    { id: 'c2', name: 'Karim Ahmed', occ: 'Industrial Electrician', exp: 6, from: 'Bangladesh', worked: 'Bangladesh 6y', gcc: false, passport: true, ss: true, idv: true, avail: 'In 30 days', langs: 'Bangla, basic English', skills: ['Industrial wiring', 'Cable termination'] },
+    { id: 'c3', name: 'Hasan Ali', occ: 'Electrical Technician', exp: 10, from: 'Pakistan', worked: 'Pakistan 6y · Saudi Arabia 4y', gcc: true, passport: true, ss: true, idv: false, avail: 'In 60 days', langs: 'Urdu, English', skills: ['DB installation', 'Troubleshooting', 'Cable termination'] },
+    { id: 'c4', name: 'Sunil Thapa', occ: 'Electrician', exp: 5, from: 'Nepal', worked: 'Nepal 3y · Qatar 2y', gcc: true, passport: false, ss: false, idv: true, avail: 'Immediately', langs: 'Nepali, Hindi', skills: ['Industrial wiring', 'Conduit bending'] },
+    { id: 'c5', name: 'Arjun Kumar', occ: 'Electrician', exp: 7, from: 'India', worked: 'India 4y · Oman 3y', gcc: true, passport: true, ss: false, idv: true, avail: 'In 30 days', langs: 'Hindi, Tamil, English', skills: ['DB installation', 'Maintenance', 'Cable termination'] },
+    { id: 'c6', name: 'Nimal Perera', occ: 'Electrician', exp: 4, from: 'Sri Lanka', worked: 'Sri Lanka 4y', gcc: false, passport: true, ss: true, idv: true, avail: 'In 60 days', langs: 'Sinhala, English', skills: ['Industrial wiring', 'Troubleshooting'] }
+  ];
+  const EXTRACT = i => ([
+    { label: 'Occupation', value: S.trade, sub: S.trade === 'Electrician' ? 'Construction & MEP › Electrical › Industrial electrician' : 'Mapped to occupation taxonomy' },
+    { label: 'Experience', value: '8 years' },
+    { label: 'Countries worked', value: 'Bangladesh (5 y), UAE (3 y)' },
+    { label: 'Skills', value: 'Industrial wiring, DB installation, Maintenance' },
+    { label: 'Passport', value: 'Ready · valid to 2030' },
+    { label: 'Availability', value: 'Immediately' },
+    { label: 'Preferred countries', value: 'UAE, Poland' }
+  ])[i];
+  const SPOKEN = {
+    en: ['I am an electrician. I mostly do industrial wiring.', 'Eight years.', 'Five years in Bangladesh and three years in Dubai.', 'Industrial wiring, DB installation and maintenance.', 'Yes, I have a passport. It is valid until 2030.', 'I can start immediately.', 'Dubai, or Poland.'],
+    bn: ['আমি ইলেকট্রিশিয়ান, বেশিরভাগ ইন্ডাস্ট্রিয়াল ওয়্যারিং করি।', 'আট বছর।', 'বাংলাদেশে পাঁচ বছর, দুবাইতে তিন বছর।', 'ইন্ডাস্ট্রিয়াল ওয়্যারিং, ডিবি ইনস্টলেশন আর মেইনটেন্যান্স।', 'হ্যাঁ, পাসপোর্ট আছে, মেয়াদ ২০৩০ পর্যন্ত।', 'এখনই শুরু করতে পারব।', 'দুবাই, না হলে পোল্যান্ড।'],
+    hi: ['मैं इलेक्ट्रीशियन हूँ, ज़्यादातर इंडस्ट्रियल वायरिंग करता हूँ।', 'आठ साल।', 'पाँच साल बांग्लादेश में और तीन साल दुबई में।', 'इंडस्ट्रियल वायरिंग, डीबी इंस्टॉलेशन और मेंटेनेंस।', 'हाँ, पासपोर्ट है, 2030 तक वैध है।', 'मैं अभी शुरू कर सकता हूँ।', 'दुबई या पोलैंड।'],
+    ur: ['میں الیکٹریشن ہوں، زیادہ تر انڈسٹریل وائرنگ کرتا ہوں۔', 'آٹھ سال۔', 'پانچ سال بنگلہ دیش میں اور تین سال دبئی میں۔', 'انڈسٹریل وائرنگ، ڈی بی انسٹالیشن اور مینٹیننس۔', 'جی ہاں، پاسپورٹ ہے، 2030 تک کارآمد ہے۔', 'میں فوراً شروع کر سکتا ہوں۔', 'دبئی یا پولینڈ۔'],
+    ne: ['म इलेक्ट्रिसियन हुँ, प्रायः इन्डस्ट्रियल वायरिङ गर्छु।', 'आठ वर्ष।', 'बंगलादेशमा पाँच वर्ष र दुबईमा तीन वर्ष।', 'इन्डस्ट्रियल वायरिङ, डीबी इन्स्टलेसन र मर्मत।', 'हो, राहदानी छ, २०३० सम्म मान्य छ।', 'म तुरुन्तै सुरु गर्न सक्छु।', 'दुबई वा पोल्यान्ड।']
+  };
+
+  /* ---------- state ---------- */
+  const S = {
+    lang: 'bn', cc: '+880', phone: '', otpSent: false, verified: false, otpErr: '', phoneErr: '',
+    name: 'Md Rahim Uddin', country: 'Bangladesh', trade: 'Electrician',
+    qi: 0, v: 'idle', answers: {}, confirmed: {}, fromReview: false, profile: false,
+    ss: { status: 'none', url: null, dur: null, err: '', tags: ['Industrial wiring', 'DB installation'], vis: 'employers' },
+    visibility: 'employers',
+    jobId: 'UAE-EL-0001', jf: 'All', jq: '', saved: [],
+    consent: { passport: true, skillshow: true, experience: true, certs: true, scan: false, phone: false },
+    apps: [
+      { jobId: 'UAE-EL-0001', date: '2 Sep 2026', stage: 8, handler: 'Imran H. · Northstar Manpower (licensed agency)', next: 'Book your medical test at an approved centre by 24 Oct', caseOpen: true },
+      { jobId: 'JP-IT-0007', date: '5 Oct 2026', stage: 3, handler: 'Aiko M. · Global Facilities KK', next: 'Wait for interview invitation. You will get a WhatsApp alert.' }
+    ],
+    openApp: 'UAE-EL-0001',
+    msgs: [
+      { me: false, who: 'Imran H. · Northstar Manpower', t: 'Your contract is accepted. Next step is the medical test. I have shared the list of approved centres in Dhaka.', at: '14 Oct, 10:12' },
+      { me: true, t: 'Thank you. I will book this week.', at: '14 Oct, 10:40' },
+      { me: false, who: 'Imran H. · Northstar Manpower', t: 'Good. Upload the receipt in Documents after the test. Your passport stays with us only until visa stamping, as agreed.', at: '14 Oct, 10:43' }
+    ],
+    org: { status: 'verified' }, reg: { name: 'ABC Contracting LLC', country: 'United Arab Emirates', email: 'hr@abc-contracting.example', submitted: false },
+    step: 0,
+    draft: { title: 'Building Electrician', occ: 'Electrician', headcount: 200, country: 'United Arab Emirates', city: 'Dubai', joining: 'Jan – Feb 2027',
+      skills: ['Industrial wiring', 'DB installation'], exp: 5, lang: 'Basic English or Hindi/Urdu',
+      salary: '', cur: 'AED', freq: 'month', hours: 8, days: 6, overtime: 'Paid at 1.25× basic hourly rate', contract: 24,
+      accommodation: 'Provided · shared, 4 per room', food: '', transport: 'Provided to site', medical: 'Provided · employer health insurance', airfare: 'Employer pays (both ways)',
+      permitPayer: 'Employer', visaPayer: 'Employer', costs: [], deadline: '30 Nov 2026' },
+    empJobs: [
+      { title: 'Building Electrician', id: 'UAE-EL-0001', status: 'Published', apps: 1240 },
+      { title: 'HVAC Technician', id: 'UAE-HV-0009', status: 'Under review', apps: 0 },
+      { title: 'Steel Fixer', id: 'UAE-SF-0004', status: 'More information requested', apps: 0, note: 'Itemize worker costs for medical and visa' }
+    ],
+    tf: { q: '', minExp: 5, gcc: false, passport: false, ss: false, idv: false }, short: new Set(['c1']),
+    pipeSel: new Set(),
+    pipe: [
+      { id: 'p1', name: 'Rahim Uddin', stage: 'Interview' }, { id: 'p2', name: 'Arjun Kumar', stage: 'Interview' }, { id: 'p3', name: 'Hasan Ali', stage: 'Qualified' },
+      { id: 'p4', name: 'Sunil Thapa', stage: 'Qualified' }, { id: 'p5', name: 'Karim Ahmed', stage: 'Selected' }, { id: 'p6', name: 'Nimal Perera', stage: 'Applied' },
+      { id: 'p7', name: 'Abdul Karim', stage: 'Applied' }, { id: 'p8', name: 'Ravi Shankar', stage: 'Permit' }, { id: 'p9', name: 'Mohammad Saiful', stage: 'Joined' }
+    ],
+    mandateSel: 0,
+    mandates: [
+      { emp: 'ABC Contracting LLC', country: 'UAE', roles: '200 electricians', status: 'Under review', id: 'MD-1107', fee: 'Employer pays recruitment fee', wfee: 'AED 0', evidence: ['Signed demand letter', 'Power of attorney', 'Employer trade licence'] },
+      { emp: 'XYZ Logistics Sp. z o.o.', country: 'Poland', roles: '75 warehouse roles', status: 'Verified', id: 'MD-1093', fee: 'Employer pays recruitment fee', wfee: 'Visa fee EUR 80 (lawful, disclosed)', evidence: ['Signed service agreement', 'KRS registry extract'] },
+      { emp: 'Al Noor Facilities Co.', country: 'Saudi Arabia', roles: '40 HVAC technicians', status: 'Verified', id: 'MD-1121', fee: 'Employer pays recruitment fee', wfee: 'SAR 0', evidence: ['Demand letter', 'Commercial registration'] }
+    ],
+    grads: [
+      { name: 'Shafiqul Islam', inv: 'Accepted', prof: true, ss: true, assess: 'Passed', att: 'Issuer verified' },
+      { name: 'Mizanur Rahman', inv: 'Accepted', prof: true, ss: false, assess: 'Passed', att: 'Pending' },
+      { name: 'Tania Akter', inv: 'Accepted', prof: true, ss: true, assess: 'Scheduled', att: 'Pending' },
+      { name: 'Rafiq Hossain', inv: 'Invited', prof: false, ss: false, assess: '—', att: '—' },
+      { name: 'Jahid Hasan', inv: 'Declined', prof: false, ss: false, assess: '—', att: '—' }
+    ],
+    qTab: 'employer', qSel: 'V-2301',
+    queue: [
+      { id: 'V-2301', type: 'employer', what: 'ABC Contracting LLC', sub: 'Trade licence · UAE', at: '16 Oct', status: 'Pending', evidence: ['Trade licence PDF (expires Aug 2027)', 'Business email domain verified', 'Owner ID — redacted copy'] },
+      { id: 'V-2298', type: 'employer', what: 'Moravia Steelworks s.r.o.', sub: 'Business registry · Czechia', at: '15 Oct', status: 'Pending', evidence: ['Commercial register extract', 'Business email verified'] },
+      { id: 'V-2290', type: 'agency', what: 'Northstar Manpower', sub: 'Recruiting licence + mandate MD-1121', at: '14 Oct', status: 'Pending', evidence: ['Recruiting licence RA-2026-0418', 'Mandate letter from Al Noor Facilities', 'Licence scope: GCC construction & facilities'] },
+      { id: 'V-2287', type: 'job', what: 'PL-WH-0014 · Warehouse Professional', sub: 'Material change: worker visa fee added', at: '14 Oct', status: 'Pending', evidence: ['Previous: worker costs PLN 0', 'New: visa fee EUR 80 + medical EUR 60 paid by worker', '312 applicants will be notified'] },
+      { id: 'V-2281', type: 'document', what: 'Tania Akter · Training certificate', sub: 'Meghna Technical Training Centre', at: '13 Oct', status: 'Pending', evidence: ['Certificate upload', 'Institute attestation requested'] },
+      { id: 'V-2279', type: 'trust', what: 'TR-1042 · Unauthorized payment request', sub: 'Reported on job PL-WH-0014', at: '13 Oct', status: 'Investigating', evidence: ['Worker report with WhatsApp screenshot', 'Caller claimed to represent XYZ Logistics', 'Asked worker for BDT 150,000 "processing fee"'] }
+    ],
+    audit: [
+      { at: '16 Oct 09:14', who: 'Verification Officer · S. Rahman', what: 'Approved agency licence RA-2026-0418 (reason: LIC-OK)' },
+      { at: '15 Oct 17:02', who: 'Trust Officer · M. Khan', what: 'Suspended job AE-DR-0099 pending investigation (reason: FEE-UNLAWFUL)' }
+    ],
+    reports: [
+      { id: 'TR-1042', cat: 'Unauthorized payment', target: 'PL-WH-0014', by: 'Worker', status: 'Investigating', at: '13 Oct' },
+      { id: 'TR-1039', cat: 'Misleading salary', target: 'AE-DR-0099', by: 'Worker', status: 'Job suspended', at: '11 Oct' },
+      { id: 'TR-1031', cat: 'Employer impersonation', target: 'External WhatsApp group', by: 'Employer', status: 'Resolved', at: '6 Oct' }
+    ],
+    cfg: 'United Arab Emirates',
+    modal: null
+  };
+
+  /* ---------- routes ---------- */
+  const R = {
+    'home': { role: 'public', label: 'Marketplace home', note: 'Two clear entry points: find work and hire talent. The homepage is a marketplace, not a corporate brochure. (Deck slide 4)' },
+    'p-jobs': { role: 'public', label: 'Browse jobs', note: 'Every listing renders the same Job Truth Card. Missing fields say "Not disclosed" instead of guessed values. (Spec §5)' },
+    'map': { role: 'public', label: 'Portal map', note: 'One design system: mobile worker UX and desktop organisation workspaces. (Deck slide 22, spec §14)' },
+    'w-lang': { role: 'worker', label: 'Language', note: 'Language first → mobile → OTP → basic profile. Email is optional for workers. Urdu switches the phone to right-to-left. (Spec §2, deck slide 5)' },
+    'w-otp': { role: 'worker', label: 'Phone & OTP', note: 'OTP-first, no password. Production: rate-limit per number, IP and country to stop SMS-pumping fraud; offer WhatsApp OTP.' },
+    'w-basics': { role: 'worker', label: 'Basic details', note: 'Phase A of progressive onboarding: name, country and trade. Never require full documents before the worker understands the portal. (Spec §3)' },
+    'w-voice': { role: 'worker', label: 'Voice-to-CV', note: 'Question → microphone → speech-to-text → structured fields → worker confirms or edits. Inferred claims are never published silently. Speech is simulated in this prototype. (Spec §3)' },
+    'w-review': { role: 'worker', label: 'Review profile', note: 'Phase C: worker reviews and corrects every generated field before the Skill Passport is created. (Spec §3, deck slide 7)' },
+    'w-skillshow': { role: 'worker', label: 'SkillShow', note: 'Record or upload → max 30 s check → preview → tag skills → moderation → publish. Labelled as a worker-provided demonstration, not certification. Uploads here are checked for length in your browser. (Spec §3)' },
+    'w-passport': { role: 'worker', label: 'Skill Passport', note: 'One worker-owned profile reused everywhere. Evidence is verified item by item; no blanket "verified skills" claim. Passport scans never appear in search. (Spec §3–4, deck slide 9)' },
+    'w-home': { role: 'worker', label: 'Worker home', note: 'Dashboard after onboarding: profile strength, next actions and application status.' },
+    'w-jobs': { role: 'worker', label: 'Find jobs', note: 'Browse by destination, trade, salary and conditions. Matching is rules-based with explanations, e.g. "8 of 10 requirements met". (Spec §8)' },
+    'w-job': { role: 'worker', label: 'Job Truth Card', note: 'Employer and recruiting parties, pay, accommodation, visa/permit payer, itemised worker costs, verification indicators, job ID and a report control. (Spec §5, deck slide 11)' },
+    'w-apply': { role: 'worker', label: 'Apply', note: 'An application preserves a dated profile snapshot and explicit per-item document consent. Duplicate applications are prevented. (Spec §6, deck slide 12)' },
+    'w-apps': { role: 'worker', label: 'Applications', note: 'Applied → Reviewed → Qualified → Shortlisted → Interview → Trade assessment → Selected → Offer → Accepted. Worker sees status, next action and who is handling the case. (Spec §6)' },
+    'w-case': { role: 'worker', label: 'Mobility case', note: 'Created only after an offer milestone. Separate from the application. Country-specific stage template for the UAE corridor. (Spec §6, deck slide 13)' },
+    'w-msgs': { role: 'worker', label: 'Messages', note: 'Application-linked secure conversation between authorised parties. Worker phone number stays hidden. (Spec §9)' },
+    'e-register': { role: 'employer', label: 'Register organisation', note: 'Business email + MFA → company details → registration evidence → review. Employer badges and talent access unlock only after verification. (Spec §1, deck slide 14)' },
+    'e-dash': { role: 'employer', label: 'Dashboard', note: 'Recruitment control centre: jobs and approvals, candidates, project stages and next actions. Figures are illustrative. (Deck slide 15)' },
+    'e-post': { role: 'employer', label: 'Post a job', note: 'Wizard: requirement → skills → terms → mobility & costs → preview. One structured job object powers the Truth Card, search filters and compliance review — edit the form and watch the card update. (Spec §5, deck slide 16)' },
+    'e-talent': { role: 'employer', label: 'Talent search', note: 'Structured filters, SkillShow previews and controlled contact. Workers are not ranked by video alone; contact details are never in search results. (Spec §4, §8, deck slide 17)' },
+    'e-pipe': { role: 'employer', label: 'Recruitment pipeline', note: 'Bulk hiring project: target headcount, stage counts, bulk actions and per-project reporting. (Spec §6, deck slide 18)' },
+    'a-mandates': { role: 'agency', label: 'Licence & mandates', note: 'Agency cannot claim employer authority without evidence. Licence and each job mandate are reviewed independently, and fees are disclosed. (Spec §2, deck slide 19)' },
+    'a-cases': { role: 'agency', label: 'Mobility cases', note: 'Authorised documents, permits, visa, travel and deployment per worker, using country-specific stage templates. (Spec §6)' },
+    'i-cohort': { role: 'institute', label: 'Cohort dashboard', note: 'Courses and cohorts; invite graduates by link, QR or WhatsApp. Graduates opt in and keep control of their profiles. (Spec §7, deck slide 20)' },
+    'i-grads': { role: 'institute', label: 'Graduates & attestation', note: 'Institutes attest completion but cannot overwrite career history or expose documents without permission. (Spec §7)' },
+    'x-queue': { role: 'admin', label: 'Verification queue', note: 'Approvals and disputes need audit trails, reason codes, role permissions and safe document handling. (Spec §10, deck slide 21)' },
+    'x-trust': { role: 'admin', label: 'Trust reports', note: 'Reports for fake jobs, unauthorised payments, misleading salaries, impersonation, harassment and fake credentials, with case review and appeals. (Spec §10)' },
+    'x-config': { role: 'admin', label: 'Countries & taxonomy', note: 'Country configs hold currency, agency eligibility, worker-cost restrictions, mandatory disclosures and permit/visa milestones. Taxonomy is Sector → Occupation → Specialization → Skill. (Spec §12)' }
+  };
+  const ROLES = [
+    { id: 'public', label: 'Public', icon: 'globe', start: 'home' },
+    { id: 'worker', label: 'Worker', icon: 'id', start: 'w-lang' },
+    { id: 'employer', label: 'Employer', icon: 'building', start: 'e-dash' },
+    { id: 'agency', label: 'Agency', icon: 'brief', start: 'a-mandates' },
+    { id: 'institute', label: 'Institute', icon: 'school', start: 'i-cohort' },
+    { id: 'admin', label: 'Admin', icon: 'shield', start: 'x-queue' }
+  ];
+  const ORG = {
+    employer: { name: 'ABC Contracting LLC', user: 'Sara K. · HR Admin', country: 'Dubai, UAE' },
+    agency: { name: 'Northstar Manpower', user: 'Imran H. · Case Officer', country: 'Dhaka, Bangladesh' },
+    institute: { name: 'Meghna Technical Training Centre', user: 'Nusrat J. · Placement Officer', country: 'Narayanganj, Bangladesh' },
+    admin: { name: 'BLUESKILLS Operations', user: 'S. Rahman · Verification Officer', country: 'Dubai, UAE' }
+  };
+  const routeIds = role => Object.keys(R).filter(k => R[k].role === role);
+  const current = () => { const h = location.hash.slice(1); return R[h] ? h : 'home'; };
+  const go = id => { if (location.hash.slice(1) === id) render(); else location.hash = id; };
+
+  /* ---------- shared components ---------- */
+  const nd = v => (v === undefined || v === null || v === '') ? `<span class="italic font-medium text-warn">Not disclosed</span>` : esc(v);
+  const money = (amt, cur, freq) => (amt === '' || amt === null || amt === undefined) ? nd('') : `${esc(cur)} ${fmt(amt)}${freq ? ` / ${esc(freq)}` : ''}`;
+  const workerCost = j => {
+    const w = (j.costs || []).filter(c => c.payer === 'Worker' && c.item);
+    if (!w.length) return { label: 'No worker-paid costs', tone: 'ok' };
+    return { label: `${w.length} worker cost${w.length > 1 ? 's' : ''} itemised`, tone: 'warn' };
+  };
+  const row = (k, v) => `<div class="grid grid-cols-[minmax(0,40%)_minmax(0,1fr)] gap-3 py-2 border-b border-line/70 last:border-0"><dt class="text-muted text-[13px]">${k}</dt><dd class="text-[13px] font-medium min-w-0 break-words">${v}</dd></div>`;
+  const section = (title, icon, body) => `<section class="px-4 py-3"><h4 class="eyebrow text-muted flex items-center gap-1.5 mb-1">${ic(icon, 'w-3.5 h-3.5')}${title}</h4><dl>${body}</dl></section>`;
+
+  function truthCard(j, { preview = false } = {}) {
+    const wc = (j.costs || []).filter(c => c.item);
+    const costRows = wc.length ? wc.map(c => row(esc(c.item), `${c.amount !== '' && c.amount !== undefined ? `${esc(c.cur || j.cur)} ${fmt(c.amount || 0)}` : nd('')} · ${esc(c.payer)} pays`)).join('') : row('Worker pays', '<span class="text-ok font-semibold">Nothing — no worker-paid costs</span>');
+    const checks = (j.checks || []).map(([t, tone]) => chip(t, tone, tone === 'ok' ? 'check' : tone === 'warn' ? 'clock' : '')).join(' ');
+    const country = COUNTRY[j.country]?.short || j.country;
+    return `<article class="rounded-2xl border border-line bg-surface overflow-hidden">
+      <header class="bg-brandsoft px-4 py-4">
+        <div class="flex items-start justify-between gap-3">
+          <div class="min-w-0"><p class="eyebrow text-brand">Job Truth Card</p>
+            <h3 class="font-display text-xl font-bold leading-tight mt-1">${nd(j.title)}</h3>
+            <p class="text-[13px] text-muted mt-0.5">${nd(j.city)}${j.city && country ? ', ' : ''}${esc(country)} · ${nd(j.employer)}</p></div>
+          <span class="font-mono text-[11px] font-bold bg-surface px-2 py-1 rounded-md border border-line whitespace-nowrap">${esc(j.id || 'DRAFT')}</span>
+        </div>
+        ${checks ? `<div class="flex flex-wrap gap-1.5 mt-3">${checks}</div>` : ''}
+      </header>
+      <div class="divide-y divide-line">
+        ${section('Employer & recruiting parties', 'building', row('Actual employer', nd(j.employer)) + row('Posted by', nd(j.postedBy)) + (j.agencyLicence ? row('Agency licence', esc(j.agencyLicence)) : '') + row('Mandate', nd(j.mandate)))}
+        ${section('Work & pay', 'brief', row('Salary', money(j.salary, j.cur, j.freq)) + row('Hours', j.hours ? `${esc(j.hours)} h/day · ${esc(j.days)} days/week` : nd('')) + row('Overtime', nd(j.overtime)) + row('Contract', j.contract ? `${esc(j.contract)} months` : nd('')) + row('Openings', j.headcount ? fmt(j.headcount) : nd('')))}
+        ${section('Accommodation & benefits', 'home', row('Accommodation', nd(j.accommodation)) + row('Food', nd(j.food)) + row('Transport', nd(j.transport)) + row('Medical / insurance', nd(j.medical)) + row('Airfare', nd(j.airfare)))}
+        ${section('Visa & work permit', 'plane', row('Work permit paid by', nd(j.permitPayer)) + row('Visa paid by', nd(j.visaPayer)))}
+        ${section('Worker-paid costs', 'alert', costRows)}
+      </div>
+      <footer class="flex flex-wrap items-center justify-between gap-2 px-4 py-3 bg-surface2/60 text-[12px] text-muted">
+        <span>Apply by ${nd(j.deadline)}</span>
+        ${preview ? '<span>Preview · what workers will see</span>' : `<button type="button" data-act="report" class="inline-flex items-center gap-1 font-semibold text-bad hover:underline">${ic('flag', 'w-3.5 h-3.5')}Report this job</button>`}
+      </footer>
+    </article>`;
+  }
+
+  function metCount(j) { const m = j.match || []; return { met: m.filter(x => x[1]).length, total: m.length }; }
+
+  /* ---------- shell ---------- */
+  function shell(id) {
+    const r = R[id];
+    const role = r.role;
+    const roleTabs = ROLES.map(x => `<button type="button" data-act="go" data-arg="${x.start}" class="inline-flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-[13px] font-semibold whitespace-nowrap ${x.id === role ? 'bg-brand text-onbrand' : 'text-muted hover:text-ink hover:bg-surface2'}">${ic(x.icon, 'w-3.5 h-3.5')}${x.label}</button>`).join('');
+    const ids = routeIds(role);
+    const isSeq = role === 'worker';
+    const navList = ids.map((k, i) => `<a href="#${k}" class="flex items-center gap-2.5 rounded-lg px-3 py-2 text-[13px] ${k === id ? 'bg-brandsoft text-brand font-semibold' : 'text-muted hover:bg-surface2 hover:text-ink'}">${isSeq ? `<span class="font-mono text-[10px] w-5 text-center ${k === id ? 'text-brand' : 'text-muted/70'}">${String(i + 1).padStart(2, '0')}</span>` : ''}${esc(R[k].label)}</a>`).join('');
+    const theme = document.documentElement.getAttribute('data-theme');
+    return `
+    <header class="topbar sticky z-40 bg-surface/95 backdrop-blur border-b border-line">
+      <div class="gutter py-2.5 flex flex-wrap items-center gap-x-4 gap-y-2">
+        <a href="#home" class="flex items-center gap-2 shrink-0">
+          <span class="grid place-items-center w-8 h-8 rounded-lg bg-brand text-onbrand">${ic('id', 'w-4 h-4')}</span>
+          <span class="font-display font-extrabold tracking-tight text-[17px]">BLUESKILLS<span class="text-stamp">.AE</span></span>
+          <span class="hidden sm:inline-block stamp ms-1">PROTOTYPE</span>
+        </a>
+        <nav class="scroll-x order-3 w-full lg:order-none lg:w-auto lg:flex-1 min-w-0" aria-label="Roles"><div class="flex gap-1">${roleTabs}</div></nav>
+        <button type="button" data-act="theme" class="ms-auto lg:ms-0 inline-flex items-center gap-1.5 rounded-lg border border-line px-2.5 py-1.5 text-[12px] font-semibold text-muted hover:text-ink" aria-label="Switch theme">${ic(theme === 'dark' ? 'sun' : 'moon', 'w-3.5 h-3.5')}${theme === 'dark' ? 'Light' : theme === 'light' ? 'Dark' : 'Theme'}</button>
+      </div>
+    </header>
+    <div class="gutter py-5">
+      <div class="mx-auto max-w-[1400px] grid gap-5 lg:grid-cols-[220px_minmax(0,1fr)]">
+        <aside class="hidden lg:block">
+          <div class="sticky top-[76px]">
+            <p class="eyebrow text-muted px-3 mb-2">${esc(ROLES.find(x => x.id === role).label)} ${isSeq ? 'journey' : 'screens'}</p>
+            <nav class="flex flex-col gap-0.5" aria-label="Screens">${navList}</nav>
+          </div>
+        </aside>
+        <main class="min-w-0">
+          <label class="lg:hidden block mb-4"><span class="sr-only">Screen</span>
+            <select id="screen-select" data-nav class="field font-semibold">${ids.map((k, i) => `<option value="${k}" ${k === id ? 'selected' : ''}>${isSeq ? (i + 1) + '. ' : ''}${esc(R[k].label)}</option>`).join('')}</select>
+          </label>
+          ${role === 'worker' ? workerFrame(id) : role === 'public' ? publicFrame(id) : orgFrame(id)}
+        </main>
+      </div>
+    </div>
+    ${S.modal ? modal() : ''}`;
+  }
+
+  const noteBox = id => `<div class="rounded-xl border border-dashed border-line bg-surface/60 p-3.5 text-[13px] text-muted flex gap-2.5"><span class="text-stamp mt-0.5">${ic('doc', 'w-4 h-4')}</span><p><span class="font-semibold text-ink">Spec note · </span>${esc(R[id].note)}</p></div>`;
+
+  function publicFrame(id) {
+    const body = { 'home': rHome, 'p-jobs': rPublicJobs, 'map': rMap }[id]();
+    return `<div class="flex flex-col gap-5">${body}${noteBox(id)}<p class="text-[12px] text-muted">Prototype. Organisations, people, salaries and vacancies are samples, not live listings.</p></div>`;
+  }
+
+  function orgFrame(id) {
+    const r = R[id], o = ORG[r.role];
+    const fn = { 'e-register': rReg, 'e-dash': rEDash, 'e-post': rPost, 'e-talent': rTalent, 'e-pipe': rPipe, 'a-mandates': rMandates, 'a-cases': rCases, 'i-cohort': rCohort, 'i-grads': rGrads, 'x-queue': rQueue, 'x-trust': rTrust, 'x-config': rConfig }[id];
+    const verified = r.role === 'employer' ? (S.org.status === 'verified' ? chip('Verified organisation', 'ok', 'check') : chip('Verification under review', 'warn', 'clock')) : r.role === 'admin' ? chip('MFA · staff', 'brand', 'lock') : chip('Verified organisation', 'ok', 'check');
+    return `<div class="flex flex-col gap-4">
+      <div class="rounded-2xl border border-line bg-surface">
+        <div class="flex flex-wrap items-center gap-3 px-4 py-3 border-b border-line">
+          <span class="grid place-items-center w-9 h-9 rounded-lg bg-surface2 text-brand">${ic(ROLES.find(x => x.id === r.role).icon, 'w-4 h-4')}</span>
+          <div class="min-w-0"><p class="font-semibold leading-tight">${esc(o.name)}</p><p class="text-[12px] text-muted">${esc(o.country)} · sample organisation</p></div>
+          <div class="flex flex-wrap items-center gap-2 ms-auto">${verified}<span class="text-[12px] text-muted hidden sm:inline">${esc(o.user)}</span></div>
+        </div>
+        <div class="p-4 sm:p-5">${fn()}</div>
+      </div>
+      ${noteBox(id)}
+    </div>`;
+  }
+
+  function workerFrame(id) {
+    const fn = { 'w-lang': rLang, 'w-otp': rOtp, 'w-basics': rBasics, 'w-voice': rVoice, 'w-review': rReview, 'w-skillshow': rSkillShow, 'w-passport': rPassport, 'w-home': rWHome, 'w-jobs': rJobs, 'w-job': rJob, 'w-apply': rApply, 'w-apps': rApps, 'w-case': rCase, 'w-msgs': rMsgs }[id];
+    const res = fn();
+    const l = LANGS.find(x => x.code === S.lang) || LANGS[6];
+    const navTabs = [['w-home', 'home', T('home'), ['w-home']], ['w-jobs', 'search', T('jobs'), ['w-jobs', 'w-job', 'w-apply']], ['w-apps', 'list', T('applications'), ['w-apps', 'w-case']], ['w-msgs', 'chat', T('messages'), ['w-msgs']], ['w-passport', 'id', T('passport'), ['w-passport', 'w-skillshow']]];
+    const bottom = res.nav ? `<nav class="grid grid-cols-5 border-t border-line bg-surface">${navTabs.map(([r, icn, lab, act]) => `<a href="#${r}" class="flex flex-col items-center gap-0.5 py-2 text-[10.5px] font-semibold ${act.includes(id) ? 'text-brand' : 'text-muted'}">${ic(icn, 'w-5 h-5')}<span class="truncate max-w-full px-1">${esc(lab)}</span></a>`).join('')}</nav>` : '';
+    const pending = (S.lang === 'si' || S.lang === 'ta') ? `<div class="bg-stampsoft text-stamp text-[11.5px] px-4 py-1.5">${esc(l.en)} interface strings are pending translation review. Showing English.</div>` : '';
+    const top = res.title ? `<div class="flex items-center gap-2 px-3 py-2.5 border-b border-line">${res.back ? `<a href="#${res.back}" class="grid place-items-center w-8 h-8 rounded-full hover:bg-surface2" aria-label="Back">${ic('back', `w-4 h-4 ${l.rtl ? 'rotate-180' : ''}`)}</a>` : '<span class="w-2"></span>'}<p class="font-semibold text-[15px] truncate">${res.title}</p></div>` : '';
+    return `<div class="grid gap-6 xl:grid-cols-[auto_minmax(0,1fr)] items-start">
+      <div class="flex justify-center">
+        <div class="phone" dir="${l.rtl ? 'rtl' : 'ltr'}" lang="${S.lang}">
+          <div class="status-bar flex justify-between px-6 pt-2.5 pb-1 text-ink" dir="ltr"><span>9:41</span><span class="text-muted">4G · 82%</span></div>
+          ${pending}${top}
+          <div class="phone-body">${res.html}</div>
+          ${bottom}
+        </div>
+      </div>
+      <div class="flex flex-col gap-3 xl:max-w-md xl:sticky xl:top-[76px]">
+        ${noteBox(id)}
+        ${res.side || ''}
+        <div class="flex flex-wrap gap-2">${prevNext(id)}</div>
+      </div>
+    </div>`;
+  }
+  function prevNext(id) {
+    const ids = routeIds(R[id].role); const i = ids.indexOf(id);
+    return (i > 0 ? `<a href="#${ids[i - 1]}" class="inline-flex items-center gap-1 rounded-lg border border-line px-3 py-1.5 text-[12px] font-semibold text-muted hover:text-ink">${ic('back', 'w-3.5 h-3.5')}${esc(R[ids[i - 1]].label)}</a>` : '') +
+      (i < ids.length - 1 ? `<a href="#${ids[i + 1]}" class="inline-flex items-center gap-1 rounded-lg border border-line px-3 py-1.5 text-[12px] font-semibold text-muted hover:text-ink">${esc(R[ids[i + 1]].label)}${ic('next', 'w-3.5 h-3.5')}</a>` : '');
+  }
+
+  /* ---------- PUBLIC ---------- */
+  function rHome() {
+    const skills = ['Electrician', 'Welder', 'Driver', 'HVAC', 'Warehouse', 'Plumber', 'Mason'];
+    const dest = [['United Arab Emirates', 'AED'], ['Saudi Arabia', 'SAR'], ['Poland', 'PLN'], ['Japan', 'JPY'], ['Czechia', 'CZK']];
+    return `
+    <section class="rounded-3xl border border-line bg-surface overflow-hidden">
+      <div class="grid lg:grid-cols-[minmax(0,1.15fr)_minmax(0,1fr)]">
+        <div class="p-6 sm:p-10 flex flex-col gap-6">
+          <p class="eyebrow text-stamp">Global skilled-workforce marketplace</p>
+          <h1 class="font-display text-4xl sm:text-5xl font-extrabold tracking-tight leading-[1.02]">Your skill is your passport.</h1>
+          <p class="text-muted text-[16px] max-w-[52ch]">Find overseas work and build your profile by speaking in your own language. Employers hire from verified profiles, and every job shows its full terms before you apply.</p>
+          <div class="grid sm:grid-cols-2 gap-3">
+            <button type="button" data-act="go" data-arg="w-lang" class="text-start rounded-2xl bg-brand text-onbrand p-5 hover:bg-brand/90">
+              <span class="flex items-center gap-2 eyebrow opacity-80">${ic('mic', 'w-3.5 h-3.5')}For workers · free</span>
+              <span class="block font-display text-2xl font-bold mt-2">Find work</span>
+              <span class="block text-[13px] opacity-85 mt-1">Speak your profile in বাংলা, हिन्दी, اردو, नेपाली and more</span>
+            </button>
+            <button type="button" data-act="go" data-arg="e-register" class="text-start rounded-2xl border border-line bg-surface2 p-5 hover:border-brand">
+              <span class="flex items-center gap-2 eyebrow text-muted">${ic('building', 'w-3.5 h-3.5')}For employers & agencies</span>
+              <span class="block font-display text-2xl font-bold mt-2">Hire talent</span>
+              <span class="block text-[13px] text-muted mt-1">Search practical skills, shortlist and hire in bulk</span>
+            </button>
+          </div>
+        </div>
+        <div class="bg-surface2 p-6 sm:p-8 flex flex-col gap-4 justify-center border-t lg:border-t-0 lg:border-s border-line">
+          ${miniPassport()}
+          <div class="rounded-xl border border-line bg-surface p-4 flex items-center gap-3">
+            <span class="grid place-items-center w-10 h-10 rounded-lg bg-brandsoft text-brand">${ic('shield', 'w-5 h-5')}</span>
+            <div class="min-w-0"><p class="font-semibold text-[14px]">Building Electrician · Dubai</p><p class="text-[12px] text-muted">AED 2,200 / month · No worker-paid costs · <span class="font-mono">UAE-EL-0001</span></p></div>
+            <a href="#p-jobs" class="ms-auto text-brand text-[13px] font-semibold whitespace-nowrap">View card</a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="grid gap-4 md:grid-cols-3">
+      ${[['01', 'Speak', 'mic', 'Answer seven simple questions by voice. You check every answer before anything is saved.'], ['02', 'Show', 'video', 'Record a 30-second SkillShow of your real work. It is a demonstration, not a certificate.'], ['03', 'Work', 'plane', 'Apply with one tap, then follow every stage from interview to visa, travel and joining.']].map(([n, t, i, d]) => `
+      <div class="rounded-2xl border border-line bg-surface p-5">
+        <div class="flex items-center justify-between"><span class="grid place-items-center w-10 h-10 rounded-xl bg-brandsoft text-brand">${ic(i, 'w-5 h-5')}</span><span class="font-mono text-[12px] text-muted">${n}</span></div>
+        <h3 class="font-display text-xl font-bold mt-3">${t}</h3><p class="text-[14px] text-muted mt-1">${d}</p>
+      </div>`).join('')}
+    </section>
+
+    <section class="grid gap-4 lg:grid-cols-2">
+      <div class="rounded-2xl border border-line bg-surface p-5">
+        <h2 class="font-display text-lg font-bold">Explore by skill</h2>
+        <div class="flex flex-wrap gap-2 mt-3">${skills.map(s => `<button type="button" data-act="pubSkill" data-arg="${s}" class="rounded-full border border-line px-3.5 py-1.5 text-[13px] font-semibold hover:border-brand hover:text-brand">${s}</button>`).join('')}</div>
+        <h2 class="font-display text-lg font-bold mt-6">Popular destinations</h2>
+        <div class="grid grid-cols-2 sm:grid-cols-3 gap-2 mt-3">${dest.map(([c, cur]) => `<button type="button" data-act="pubCountry" data-arg="${c}" class="text-start rounded-xl border border-line px-3 py-2.5 hover:border-brand"><span class="block text-[14px] font-semibold">${COUNTRY[c].short}</span><span class="block text-[12px] text-muted">Pay in ${cur}</span></button>`).join('')}</div>
+      </div>
+      <div class="rounded-2xl border border-line bg-surface p-5">
+        <h2 class="font-display text-lg font-bold">Safe by design</h2>
+        <ul class="mt-3 flex flex-col gap-3 text-[14px]">
+          ${[['shield', 'Every job shows a Job Truth Card', 'Employer, recruiter, pay, housing, visa payer and every cost you pay, in one standard layout.'], ['lock', 'You control your documents', 'Passport scans and phone numbers never appear in search. You choose what each employer sees.'], ['check', 'Verified means checked', 'Badges show only checks we actually performed. Missing information says "Not disclosed".'], ['flag', 'Report anything suspicious', 'Fake jobs, payment requests or impersonation go to a trust team with case tracking.']].map(([i, t, d]) => `<li class="flex gap-3"><span class="text-ok mt-0.5">${ic(i, 'w-4 h-4')}</span><span><span class="font-semibold">${t}.</span> <span class="text-muted">${d}</span></span></li>`).join('')}
+        </ul>
+        <p class="mt-4 rounded-lg bg-oksoft text-ok text-[13px] font-semibold px-3 py-2">Worker registration and applying are free. Employers and job posters pay.</p>
+      </div>
+    </section>
+
+    <section class="grid gap-3 sm:grid-cols-3">
+      ${[['building', 'Employers', 'Post structured jobs, search talent, run bulk hiring projects.', 'e-dash'], ['brief', 'Licensed agencies', 'Manage authorised mandates, candidates and deployment.', 'a-mandates'], ['school', 'Training institutes', 'Invite graduates, attest training, build talent pools.', 'i-cohort']].map(([i, t, d, r]) => `<a href="#${r}" class="rounded-2xl border border-line bg-surface p-4 hover:border-brand flex gap-3"><span class="text-brand mt-0.5">${ic(i, 'w-5 h-5')}</span><span><span class="block font-semibold">${t}</span><span class="block text-[13px] text-muted">${d}</span></span></a>`).join('')}
+    </section>`;
+  }
+  function miniPassport() {
+    return `<div class="passport-cover rounded-2xl p-5 shadow-lg">
+      <div class="flex items-start justify-between"><p class="eyebrow opacity-80">Global Skill Passport</p><span class="font-mono text-[10px] opacity-80">BSK-0004182</span></div>
+      <p class="font-display text-2xl font-bold mt-3">${esc(S.name.toUpperCase())}</p>
+      <p class="text-[13px] opacity-85">${esc(S.trade)} · 8 years · Bangladesh 5y · UAE 3y</p>
+      <div class="flex flex-wrap gap-1.5 mt-3 text-[11px] font-semibold"><span class="rounded-full bg-onbrand/15 px-2 py-0.5">Identity verified</span><span class="rounded-full bg-onbrand/15 px-2 py-0.5">SkillShow</span><span class="rounded-full bg-onbrand/15 px-2 py-0.5">Passport ready</span></div>
+      <p class="mrz mt-4 opacity-75">SKP&lt;BGD&lt;${esc(S.name.split(' ').slice(-1)[0].toUpperCase())}&lt;&lt;${esc(S.name.split(' ').slice(0, -1).join('<').toUpperCase())}&lt;&lt;&lt;&lt;&lt;&lt;&lt;</p>
+    </div>`;
+  }
+  function jobListItem(j, active, actName = 'pubJob') {
+    const wc = workerCost(j); const m = metCount(j);
+    return `<button type="button" data-act="${actName}" data-arg="${j.id}" class="w-full text-start rounded-xl border ${active ? 'border-brand bg-brandsoft/50' : 'border-line bg-surface hover:border-brand/60'} p-3.5">
+      <div class="flex items-start justify-between gap-2"><p class="font-semibold text-[14px]">${esc(j.title)}</p><span class="font-mono text-[10px] text-muted">${j.id}</span></div>
+      <p class="text-[12.5px] text-muted">${esc(j.city)}, ${esc(COUNTRY[j.country].short)} · ${esc(j.employer)}</p>
+      <p class="text-[13px] font-semibold mt-1.5 tnum">${money(j.salary, j.cur, j.freq)}</p>
+      <div class="flex flex-wrap gap-1.5 mt-2">${chip(wc.label, wc.tone)}${j.checks[0] && j.checks[0][1] === 'ok' ? chip('Employer verified', 'ok', 'check') : ''}${S.profile ? chip(`${m.met} of ${m.total} requirements met`, 'brand') : ''}</div>
+    </button>`;
+  }
+  function filteredJobs() {
+    const q = S.jq.trim().toLowerCase();
+    return JOBS.filter(j => (S.jf === 'All' || j.country === S.jf) && (!q || [j.title, j.occ, j.city, j.country, j.employer, ...j.skills].join(' ').toLowerCase().includes(q)));
+  }
+  function countryChips(act) {
+    return ['All', ...Object.keys(COUNTRY)].map(c => `<button type="button" data-act="${act}" data-arg="${c}" class="rounded-full px-3 py-1 text-[12.5px] font-semibold whitespace-nowrap ${S.jf === c ? 'bg-brand text-onbrand' : 'border border-line text-muted hover:text-ink'}">${c === 'All' ? 'All countries' : COUNTRY[c].short}</button>`).join('');
+  }
+  function rPublicJobs() {
+    const list = filteredJobs();
+    if (!list.find(j => j.id === S.jobId) && list.length) S.jobId = list[0].id;
+    return `<div class="rounded-2xl border border-line bg-surface p-4 sm:p-5">
+      <div class="flex flex-col sm:flex-row gap-3 sm:items-center">
+        <h1 class="font-display text-2xl font-bold">Find jobs</h1>
+        <label class="relative sm:ms-auto sm:w-80"><span class="absolute start-3 top-1/2 -translate-y-1/2 text-muted">${ic('search')}</span><input id="pub-search" data-search="pub" value="${esc(S.jq)}" class="field ps-9" placeholder="Trade, city or skill"></label>
+      </div>
+      <div class="scroll-x mt-3"><div class="flex gap-1.5">${countryChips('jfPub')}</div></div>
+      <div class="grid gap-4 lg:grid-cols-[minmax(0,340px)_minmax(0,1fr)] mt-4">
+        <div id="pub-list" class="flex flex-col gap-2">${list.length ? list.map(j => jobListItem(j, j.id === S.jobId)).join('') : '<p class="text-muted text-[14px] p-4">No sample jobs match. Clear the search or pick another country.</p>'}</div>
+        <div class="min-w-0">${list.length ? truthCard(job(S.jobId)) + `<div class="mt-3 flex flex-wrap gap-2">${btn(ic('check') + 'I can do this job', 'pubApply')}${link('How Truth Cards work', 'home', 'secondary')}</div>` : ''}</div>
+      </div>
+    </div>`;
+  }
+  function rMap() {
+    return `<div class="rounded-2xl border border-line bg-surface p-5">
+      <h1 class="font-display text-2xl font-bold">Portal map</h1>
+      <p class="text-muted text-[14px] mt-1">Worker profile at the centre; every other role connects to it with permission.</p>
+      <div class="grid gap-3 sm:grid-cols-2 xl:grid-cols-3 mt-4">
+        ${ROLES.map(x => `<div class="rounded-xl border border-line p-4"><p class="flex items-center gap-2 font-semibold">${ic(x.icon, 'w-4 h-4 text-brand')}${x.label}</p>
+          <ul class="mt-2 flex flex-col gap-1">${routeIds(x.id).map(k => `<li><a href="#${k}" class="text-[13px] text-muted hover:text-brand">${esc(R[k].label)}</a></li>`).join('')}</ul></div>`).join('')}
+      </div></div>`;
+  }
+
+  /* ---------- WORKER ---------- */
+  function rLang() {
+    return { html: `<div class="px-5 py-6 flex flex-col gap-5">
+      <div class="flex flex-col items-center text-center gap-2 pt-4">
+        <span class="grid place-items-center w-14 h-14 rounded-2xl bg-brand text-onbrand">${ic('globe', 'w-7 h-7')}</span>
+        <h2 class="font-display text-2xl font-bold mt-2">${esc(T('welcome'))}</h2>
+        <p class="text-muted">${esc(T('chooseLang'))}</p>
+      </div>
+      <div class="flex flex-col gap-2">${LANGS.map(l => `<button type="button" data-act="lang" data-arg="${l.code}" class="flex items-center justify-between rounded-xl border px-4 py-3.5 ${S.lang === l.code ? 'border-brand bg-brandsoft' : 'border-line'}"><span class="text-[17px] font-semibold" lang="${l.code}">${l.name}</span><span class="flex items-center gap-2 text-[12px] text-muted">${l.en}${S.lang === l.code ? `<span class="text-brand">${ic('check', 'w-4 h-4')}</span>` : ''}</span></button>`).join('')}</div>
+      ${link(esc(T('cont')), 'w-otp', 'primary', 'w-full py-3.5 text-[15px]')}
+    </div>` };
+  }
+  function rOtp() {
+    const ccs = [['+880', 'BD'], ['+977', 'NP'], ['+91', 'IN'], ['+92', 'PK'], ['+94', 'LK']];
+    return { title: esc(T('mobile')), back: 'w-lang', html: `<div class="px-5 py-6 flex flex-col gap-4">
+      <p class="text-muted text-[14px]">${esc(T('noPassword'))}</p>
+      <div class="flex gap-2" dir="ltr">
+        <select id="cc" data-bind="cc" class="field !w-28 font-semibold" aria-label="Country code">${ccs.map(([c, n]) => `<option value="${c}" ${S.cc === c ? 'selected' : ''}>${n} ${c}</option>`).join('')}</select>
+        <input id="phone" data-bind="phone" value="${esc(S.phone)}" inputmode="numeric" autocomplete="tel-national" class="field text-[16px] tnum" placeholder="1XXXXXXXXX" aria-label="${esc(T('mobile'))}">
+      </div>
+      ${S.phoneErr ? `<p class="text-bad text-[13px]">${esc(S.phoneErr)}</p>` : ''}
+      ${!S.otpSent ? `<div class="grid grid-cols-2 gap-2">${btn('WhatsApp', 'sendOtp', 'secondary', 'WhatsApp')}${btn('SMS', 'sendOtp', 'secondary', 'SMS')}</div>${btn(esc(T('sendOtp')), 'sendOtp', 'primary', 'WhatsApp', 'w-full py-3.5')}` : `
+        <div class="rounded-xl bg-oksoft text-ok text-[13px] px-3 py-2">Code sent by ${esc(S.otpVia)} to ${esc(S.cc)} ${esc(S.phone)}</div>
+        <label class="flex flex-col gap-1.5"><span class="text-[14px] font-semibold">${esc(T('enterCode'))}</span>
+          <input id="otp" inputmode="numeric" maxlength="6" dir="ltr" class="field text-center text-2xl tracking-[.5em] font-mono" placeholder="••••••"></label>
+        ${S.otpErr ? `<p class="text-bad text-[13px]">${esc(S.otpErr)}</p>` : ''}
+        <p class="text-[12px] text-muted">Prototype: any 6 digits work.</p>
+        ${btn(esc(T('verify')), 'verifyOtp', 'primary', '', 'w-full py-3.5')}
+        <button type="button" data-act="resetOtp" class="text-[13px] text-brand font-semibold">Change number</button>`}
+    </div>` };
+  }
+  function rBasics() {
+    const trades = ['Electrician', 'Welder', 'Plumber', 'Driver', 'HVAC technician', 'Mason', 'Carpenter', 'Warehouse operative', 'Painter', 'Steel fixer'];
+    return { title: 'About you', back: 'w-otp', html: `<div class="px-5 py-5 flex flex-col gap-4">
+      <div class="flex gap-1">${[1, 2, 3].map(i => `<span class="h-1 flex-1 rounded-full ${i === 1 ? 'bg-brand' : 'bg-surface2'}"></span>`).join('')}</div>
+      <label class="flex flex-col gap-1.5"><span class="text-[13px] font-semibold">Full name</span><input id="b-name" data-bind="name" value="${esc(S.name)}" class="field text-[15px]"></label>
+      <label class="flex flex-col gap-1.5"><span class="text-[13px] font-semibold">Country you live in now</span>
+        <select id="b-country" data-bind="country" class="field">${['Bangladesh', 'Nepal', 'India', 'Pakistan', 'Sri Lanka', 'United Arab Emirates'].map(c => `<option ${S.country === c ? 'selected' : ''}>${c}</option>`).join('')}</select></label>
+      <div><p class="text-[13px] font-semibold mb-2">Your trade</p>
+        <div class="grid grid-cols-2 gap-2">${trades.map(t => `<button type="button" data-act="trade" data-arg="${t}" class="rounded-xl border px-3 py-3 text-[13.5px] font-semibold text-start ${S.trade === t ? 'border-brand bg-brandsoft text-brand' : 'border-line'}">${t}</button>`).join('')}</div></div>
+      ${link(ic('mic') + 'Build my profile by voice', 'w-voice', 'primary', 'w-full py-3.5')}
+      <button type="button" data-act="toast" data-arg="Saved. You can continue later from the same phone number." class="text-[13px] text-muted font-semibold">Save and continue later</button>
+    </div>` };
+  }
+  function rVoice() {
+    const i = S.qi, q = T('q'), ex = EXTRACT(i);
+    const val = S.answers[i] ?? ex.value;
+    const spoken = (SPOKEN[S.lang] || SPOKEN.en)[i];
+    const prog = `<div class="flex gap-1">${q.map((_, k) => `<span class="h-1.5 flex-1 rounded-full ${k < i || S.confirmed[k] ? 'bg-brand' : k === i ? 'bg-brand/40' : 'bg-surface2'}"></span>`).join('')}</div>`;
+    let body = '';
+    if (S.v === 'idle') {
+      body = `<div class="flex flex-col items-center gap-4 py-6">
+        <button type="button" data-act="listen" class="mic-pulse grid place-items-center w-28 h-28 rounded-full bg-brand text-onbrand" aria-label="${esc(T('tapSpeak'))}">${ic('mic', 'w-12 h-12')}</button>
+        <p class="font-semibold">${esc(T('tapSpeak'))}</p>
+        <button type="button" data-act="typeQ" class="inline-flex items-center gap-1.5 text-[13px] font-semibold text-brand">${ic('keyboard')}${esc(T('typeInstead'))}</button>
+      </div>`;
+    } else if (S.v === 'listening') {
+      body = `<div class="flex flex-col items-center gap-4 py-6">
+        <div class="wave" aria-hidden="true">${'<span></span>'.repeat(11)}</div>
+        <p class="font-semibold text-brand">${esc(T('listening'))}</p>
+        ${btn('Stop', 'stopListen', 'secondary')}
+      </div>`;
+    } else if (S.v === 'heard') {
+      body = `<div class="flex flex-col gap-3 py-2">
+        <div class="rounded-xl bg-surface2 p-3"><p class="eyebrow text-muted mb-1">${S.answers[i] !== undefined ? 'Your typed answer' : 'Transcript'}</p><p class="text-[15px]">“${esc(S.answers[i] ?? spoken)}”</p></div>
+        <p class="text-[13px] font-semibold text-muted">${esc(T('weUnderstood'))}</p>
+        <div class="rounded-xl border-2 border-brand/50 bg-brandsoft/40 p-4"><p class="text-[12px] text-muted">${ex.label}</p><p class="font-display text-xl font-bold">${esc(val)}</p>${ex.sub && S.answers[i] === undefined ? `<p class="text-[11.5px] text-muted mt-1">${esc(ex.sub)}</p>` : ''}</div>
+        <p class="text-center font-semibold mt-1">${esc(T('isCorrect'))}</p>
+        ${btn(ic('check') + esc(T('yes')), 'confirmQ', 'primary', '', 'w-full py-3.5')}
+        <div class="grid grid-cols-2 gap-2">${btn(ic('edit') + esc(T('edit')), 'editQ', 'secondary')}${btn(ic('mic') + 'Speak again', 'retryQ', 'secondary')}</div>
+      </div>`;
+    } else {
+      body = `<div class="flex flex-col gap-3 py-2">
+        <label class="flex flex-col gap-1.5"><span class="text-[13px] font-semibold">${ex.label}</span>
+          <input id="q-edit" value="${esc(S.answers[i] ?? (S.typing ? '' : val))}" class="field text-[16px]" placeholder="${esc(ex.value)}"></label>
+        ${S.qErr ? `<p class="text-bad text-[13px]">${esc(S.qErr)}</p>` : ''}
+        ${btn('Save answer', 'saveQ', 'primary', '', 'w-full py-3')}
+        <button type="button" data-act="retryQ" class="text-[13px] font-semibold text-brand inline-flex items-center justify-center gap-1.5">${ic('mic')}Use voice instead</button>
+      </div>`;
+    }
+    return { title: 'Voice-to-CV', back: 'w-basics', html: `<div class="px-5 py-5 flex flex-col gap-4">
+      ${prog}
+      <p class="eyebrow text-brand">${esc(T('questionOf', { n: i + 1, t: 7 }))}</p>
+      <h2 class="font-display text-[26px] font-bold leading-tight">${esc(q[i])}</h2>
+      ${body}
+    </div>`,
+      side: `<div class="rounded-xl border border-line bg-surface p-3.5 text-[13px]"><p class="font-semibold mb-1">Production pipeline</p><p class="text-muted">Browser records ~10–30 s → upload → queue job converts audio with FFmpeg → speech-to-text in the chosen language → LLM extracts fields into the occupation taxonomy → result pushed back → worker confirms.</p></div>` };
+  }
+  function rReview() {
+    const rows = [0, 1, 2, 3, 4, 5, 6].map(i => { const ex = EXTRACT(i); return `<div class="flex items-center gap-3 py-3 border-b border-line last:border-0"><div class="min-w-0 flex-1"><p class="text-[12px] text-muted">${ex.label}</p><p class="font-semibold text-[14.5px]">${esc(S.answers[i] ?? ex.value)}</p></div>${S.confirmed[i] ? `<span class="text-ok">${ic('check', 'w-4 h-4')}</span>` : chip('Not confirmed', 'warn')}<button type="button" data-act="reviewEdit" data-arg="${i}" class="text-brand p-1" aria-label="Edit ${ex.label}">${ic('edit')}</button></div>`; }).join('');
+    const allOk = [0, 1, 2, 3, 4, 5, 6].every(i => S.confirmed[i]);
+    return { title: 'Your voice-built profile', back: 'w-voice', html: `<div class="px-5 py-5 flex flex-col gap-4">
+      <p class="text-[13px] text-muted">Check each answer. Only confirmed information goes on your Skill Passport.</p>
+      <div class="rounded-xl border border-line px-4">${rows}</div>
+      ${!allOk ? `<p class="text-[12.5px] text-warn">Confirm all seven answers to continue. Tap the pencil to fix any answer.</p>` : ''}
+      ${btn(esc(T('createProfile')), allOk ? 'createProfile' : 'confirmAll', 'primary', '', 'w-full py-3.5')}
+      ${!allOk ? `<button type="button" data-act="confirmAll" class="text-[12px] text-muted">Prototype shortcut: mark all as confirmed</button>` : ''}
+    </div>` };
+  }
+  function rSkillShow() {
+    const ss = S.ss;
+    const tags = ['Industrial wiring', 'DB installation', 'Cable termination', 'Troubleshooting', 'Maintenance', 'Conduit bending'];
+    const media = ss.url ? `<video src="${ss.url}" controls playsinline class="w-full h-full object-cover bg-black"></video>` :
+      ss.status === 'sample' ? `<div class="w-full h-full grid place-items-center bg-screen text-onscreen"><div class="text-center"><span class="inline-grid place-items-center w-14 h-14 rounded-full bg-onbrand/20">${ic('play', 'w-6 h-6')}</span><p class="text-[12px] mt-2 opacity-80">Sample clip · 00:27</p></div></div>` :
+        `<div class="w-full h-full grid place-items-center bg-surface2 text-muted"><div class="text-center">${ic('video', 'w-10 h-10 mx-auto')}<p class="text-[12px] mt-2 font-mono">00:00 / 00:30</p></div></div>`;
+    const statusChip = ss.status === 'moderation' ? chip('In moderation', 'warn', 'clock') : ss.status === 'published' ? chip('Published', 'ok', 'check') : (ss.url || ss.status === 'sample') ? chip(`Ready · ${ss.dur ? Math.round(ss.dur) + ' s' : '27 s'}`, 'brand') : '';
+    return { title: esc(T('showWhat')), back: 'w-review', nav: S.profile, html: `<div class="px-5 py-5 flex flex-col gap-4">
+      <div class="aspect-[9/12] max-w-full rounded-2xl overflow-hidden border border-line">${media}</div>
+      <div class="flex items-center justify-between gap-2"><p class="text-[13px] font-semibold">30-second SkillShow</p>${statusChip}</div>
+      ${ss.err ? `<p class="rounded-lg bg-badsoft text-bad text-[13px] px-3 py-2">${esc(ss.err)}</p>` : ''}
+      <div class="grid grid-cols-2 gap-2">
+        <label class="inline-flex items-center justify-center gap-2 rounded-xl px-4 py-2.5 text-sm font-semibold bg-brand text-onbrand cursor-pointer">${ic('video')}Record or upload<input id="ss-file" type="file" accept="video/*" class="sr-only"></label>
+        ${btn('Use sample clip', 'ssSample', 'secondary')}
+      </div>
+      <div><p class="text-[13px] font-semibold mb-2">Tag the skills you show</p>
+        <div class="flex flex-wrap gap-2">${tags.map(t => `<button type="button" data-act="ssTag" data-arg="${t}" class="inline-flex items-center gap-1 rounded-full px-3 py-1.5 text-[12.5px] font-semibold ${ss.tags.includes(t) ? 'bg-brand text-onbrand' : 'border border-line text-muted'}">${ss.tags.includes(t) ? ic('check', 'w-3 h-3') : ''}${t}</button>`).join('')}</div></div>
+      <label class="flex flex-col gap-1.5"><span class="text-[13px] font-semibold">Who can see it</span>
+        <select id="ss-vis" data-ssvis class="field"><option value="employers" ${ss.vis === 'employers' ? 'selected' : ''}>Verified employers and agencies</option><option value="apps" ${ss.vis === 'apps' ? 'selected' : ''}>Only jobs I apply to</option><option value="me" ${ss.vis === 'me' ? 'selected' : ''}>Only me</option></select></label>
+      <p class="text-[12px] text-muted rounded-lg bg-surface2 px-3 py-2">Shown to employers as a worker-provided demonstration. It is not a skill certificate; trade assessments are recorded separately.</p>
+      ${btn('Publish SkillShow', 'ssPublish', 'primary', '', 'w-full py-3.5')}
+      <a href="#w-passport" class="text-center text-[13px] text-muted font-semibold">Skip for now</a>
+    </div>` };
+  }
+  function rPassport() {
+    const ssState = S.ss.status === 'moderation' ? chip('In moderation', 'warn', 'clock') : S.ss.status === 'published' ? chip('Published', 'ok', 'check') : chip('Not added', 'neutral');
+    const ev = [['Mobile number', S.verified ? 'Verified' : 'Pending', S.verified ? 'ok' : 'warn'], ['Identity', 'Verified', 'ok'], ['Passport', 'Uploaded · unreviewed', 'neutral'], ['UAE work reference', 'Verification pending', 'warn'], ['Electrical training certificate', 'Issuer verified', 'ok'], ['Trade assessment', 'Not taken', 'neutral']];
+    const vis = [['employers', 'Employers & agencies'], ['apps', 'Only jobs I apply to'], ['hidden', 'Hidden']];
+    return { title: esc(T('passport')), nav: true, html: `<div class="px-4 py-4 flex flex-col gap-4">
+      <div class="passport-cover rounded-2xl p-5 relative overflow-hidden">
+        <div class="flex items-start justify-between"><p class="eyebrow opacity-80">Global Skill Passport</p><span class="font-mono text-[10px] opacity-80">BSK-0004182</span></div>
+        <div class="flex items-center gap-3 mt-4">
+          <span class="grid place-items-center w-14 h-14 rounded-xl bg-onbrand/15 font-display text-xl font-bold">${esc(S.name.split(' ').slice(-2).map(x => x[0]).join(''))}</span>
+          <div class="min-w-0"><p class="font-display text-xl font-bold leading-tight">${esc(S.name.toUpperCase())}</p><p class="text-[13px] opacity-85">${esc(S.trade)} trade professional</p></div>
+        </div>
+        <div class="grid grid-cols-3 gap-2 mt-4 text-[12px]"><div><p class="opacity-70">Experience</p><p class="font-semibold">${esc(S.answers[1] ?? '8 years')}</p></div><div><p class="opacity-70">Passport</p><p class="font-semibold">Ready</p></div><div><p class="opacity-70">Available</p><p class="font-semibold">${esc(S.answers[5] ?? 'Immediately')}</p></div></div>
+        <p class="mrz mt-4 opacity-75" dir="ltr">SKP&lt;BGD&lt;${esc(S.name.split(' ').slice(-1)[0].toUpperCase())}&lt;&lt;${esc(S.name.split(' ').slice(0, -1).join('<').toUpperCase())}&lt;&lt;&lt;&lt;<br>BSK0004182&lt;${esc(S.trade.slice(0, 4).toUpperCase())}&lt;08Y&lt;UAE03&lt;&lt;&lt;&lt;&lt;&lt;</p>
+      </div>
+      <div class="rounded-xl border border-line p-4"><p class="eyebrow text-muted mb-2">Countries worked</p><p class="text-[14px] font-semibold">${esc(S.answers[2] ?? 'Bangladesh (5 y), UAE (3 y)')}</p>
+        <p class="eyebrow text-muted mt-3 mb-2">Skills</p><div class="flex flex-wrap gap-1.5">${(S.answers[3] ?? 'Industrial wiring, DB installation, Maintenance').split(',').map(s => chip(esc(s.trim()), 'brand')).join('')}</div></div>
+      <div class="rounded-xl border border-line p-4 flex items-center gap-3"><span class="grid place-items-center w-10 h-10 rounded-lg bg-surface2 text-brand">${ic('play', 'w-5 h-5')}</span><div class="flex-1"><p class="font-semibold text-[14px]">30-sec SkillShow</p><p class="text-[12px] text-muted">${S.ss.tags.join(' · ')}</p></div>${ssState}</div>
+      <div class="rounded-xl border border-line p-4"><p class="eyebrow text-muted mb-1">Evidence · verified item by item</p>${ev.map(([k, v, t]) => `<div class="flex items-center justify-between gap-2 py-1.5"><span class="text-[13px]">${k}</span>${chip(v, t, t === 'ok' ? 'check' : '')}</div>`).join('')}</div>
+      <div class="rounded-xl border border-line p-4"><p class="eyebrow text-muted mb-2">Who can find my profile</p>
+        <div class="grid grid-cols-3 gap-1 rounded-xl bg-surface2 p-1">${vis.map(([k, l]) => `<button type="button" data-act="vis" data-arg="${k}" class="rounded-lg px-2 py-2 text-[11.5px] font-semibold ${S.visibility === k ? 'bg-surface text-brand shadow-sm' : 'text-muted'}">${l}</button>`).join('')}</div>
+        <p class="flex items-center gap-1.5 text-[12px] text-muted mt-3">${ic('lock', 'w-3.5 h-3.5')}Passport scans and your phone number are never shown in search.</p></div>
+      ${link(ic('edit') + 'Edit my passport', 'w-review', 'secondary', 'w-full')}
+    </div>` };
+  }
+  function strength() {
+    const parts = [S.verified, S.profile, S.ss.status === 'moderation' || S.ss.status === 'published', true, false];
+    return Math.round(parts.filter(Boolean).length / parts.length * 100);
+  }
+  function rWHome() {
+    const st = strength();
+    const first = S.name.split(' ').slice(-2)[0];
+    return { nav: true, html: `<div class="px-4 py-4 flex flex-col gap-4">
+      <div><p class="text-muted text-[13px]">Good morning</p><h2 class="font-display text-2xl font-bold">${esc(first)}</h2></div>
+      <div class="rounded-2xl bg-brandsoft p-4"><div class="flex justify-between text-[13px] font-semibold"><span>Profile strength</span><span class="tnum">${st}%</span></div>
+        <div class="h-2 rounded-full bg-surface mt-2 overflow-hidden"><div class="h-full bg-brand rounded-full" style="width:${st}%"></div></div>
+        <p class="text-[12px] text-muted mt-2">Add a trade assessment to reach 100%.</p></div>
+      <div><p class="eyebrow text-muted mb-2">Next actions</p>
+        <div class="flex flex-col gap-2">
+          <a href="#w-case" class="rounded-xl border border-stamp/50 bg-stampsoft/50 p-3 flex items-center gap-3"><span class="text-stamp">${ic('clock', 'w-5 h-5')}</span><span class="flex-1 text-[13.5px]"><span class="font-semibold block">Medical test due 24 Oct</span><span class="text-muted text-[12px]">Building Electrician · Dubai</span></span>${ic('next', 'w-4 h-4 text-muted')}</a>
+          ${S.ss.status === 'none' ? `<a href="#w-skillshow" class="rounded-xl border border-line p-3 flex items-center gap-3"><span class="text-brand">${ic('video', 'w-5 h-5')}</span><span class="flex-1 text-[13.5px] font-semibold">Add your 30-second SkillShow</span>${ic('next', 'w-4 h-4 text-muted')}</a>` : ''}
+          <a href="#w-apps" class="rounded-xl border border-line p-3 flex items-center gap-3"><span class="text-brand">${ic('list', 'w-5 h-5')}</span><span class="flex-1 text-[13.5px]"><span class="font-semibold block">Shortlisted · Industrial Technician</span><span class="text-muted text-[12px]">Japan · waiting for interview</span></span>${ic('next', 'w-4 h-4 text-muted')}</a>
+        </div></div>
+      <div><div class="flex justify-between items-center mb-2"><p class="eyebrow text-muted">Jobs for you</p><a href="#w-jobs" class="text-[12px] font-semibold text-brand">See all</a></div>
+        <div class="flex flex-col gap-2">${JOBS.slice(0, 2).map(j => jobListItem(j, false, 'openJob')).join('')}</div></div>
+    </div>` };
+  }
+  function rJobs() {
+    const list = filteredJobs();
+    return { title: esc(T('findJobs')), nav: true, html: `<div class="px-4 py-4 flex flex-col gap-3">
+      <label class="relative"><span class="absolute start-3 top-1/2 -translate-y-1/2 text-muted">${ic('search')}</span><input id="w-search" data-search="worker" value="${esc(S.jq)}" class="field ps-9" placeholder="Search jobs or countries…"></label>
+      <div class="scroll-x -mx-4 px-4"><div class="flex gap-1.5">${countryChips('jfWorker')}</div></div>
+      <p class="text-[11.5px] text-muted">Sample listings, not live vacancies.</p>
+      <div id="worker-list" class="flex flex-col gap-2">${list.length ? list.map(j => jobListItem(j, false, 'openJob')).join('') : '<p class="text-muted text-[13px] py-6 text-center">No jobs match. Try another country.</p>'}</div>
+    </div>` };
+  }
+  function rJob() {
+    const j = job(S.jobId), m = metCount(j);
+    const applied = S.apps.find(a => a.jobId === j.id);
+    return { title: esc(j.title), back: 'w-jobs', nav: true, html: `<div class="px-3 py-3 flex flex-col gap-3">
+      ${truthCard(j)}
+      <details class="rounded-xl border border-line p-3"><summary class="cursor-pointer text-[13.5px] font-semibold">${m.met} of ${m.total} requirements met</summary>
+        <ul class="mt-2 flex flex-col gap-1">${j.match.map(([t, ok]) => `<li class="flex items-center gap-2 text-[13px]">${ok ? `<span class="text-ok">${ic('check', 'w-4 h-4')}</span>` : `<span class="text-muted">${ic('x', 'w-4 h-4')}</span>`}${esc(t)}</li>`).join('')}</ul>
+        <p class="text-[11.5px] text-muted mt-2">Rules-based match from your confirmed profile. It is a guide, not a decision.</p></details>
+      <div class="sticky bottom-0 bg-surface/95 backdrop-blur pt-2 pb-1 flex gap-2">
+        ${applied ? `<a href="#w-apps" class="flex-1 inline-flex justify-center items-center rounded-xl px-4 py-3 text-sm font-semibold bg-oksoft text-ok">${ic('check')}Applied on ${esc(applied.date)}</a>` : btn(ic('check') + esc(T('iCanDo')), 'go', 'primary', 'w-apply', 'flex-1 py-3')}
+        <button type="button" data-act="saveJob" class="rounded-xl border border-line px-3 ${S.saved.includes(j.id) ? 'text-stamp' : 'text-muted'}" aria-label="Save job">${ic('star', 'w-5 h-5')}</button>
+      </div>
+    </div>` };
+  }
+  function rApply() {
+    const j = job(S.jobId);
+    const items = [['passport', 'Skill Passport', 'Required for every application', true], ['skillshow', 'SkillShow video', S.ss.status === 'none' ? 'Not added yet' : '30-second demonstration'], ['experience', 'Work experience', 'Bangladesh 5y · UAE 3y'], ['certs', 'Training certificates', '1 issuer-verified certificate'], ['scan', 'Passport scan', 'Sensitive. Share only when the employer asks after selection.'], ['phone', 'Phone number', 'Hidden by default. Recruiter messages you here.']];
+    return { title: 'Share with employer?', back: 'w-job', nav: true, html: `<div class="px-4 py-4 flex flex-col gap-4">
+      <div class="rounded-xl bg-surface2 p-3"><p class="font-semibold text-[14px]">${esc(j.title)} · ${esc(j.city)}</p><p class="text-[12px] text-muted">${esc(j.employer)} · <span class="font-mono">${j.id}</span></p></div>
+      <div class="flex flex-col gap-1">${items.map(([k, t, d, locked]) => `<label class="flex items-start gap-3 rounded-xl px-3 py-3 ${S.consent[k] ? 'bg-brandsoft/50' : ''}">
+        <input id="c-${k}" type="checkbox" data-consent="${k}" class="mt-1 w-4 h-4 accent-[rgb(var(--brand))]" ${S.consent[k] ? 'checked' : ''} ${locked ? 'disabled' : ''}>
+        <span class="flex-1"><span class="block text-[14px] font-semibold">${t}${(k === 'scan' || k === 'phone') ? ` ${ic('lock', 'w-3.5 h-3.5 inline text-muted')}` : ''}</span><span class="block text-[12px] text-muted">${d}</span></span></label>`).join('')}</div>
+      <p class="text-[12px] text-muted rounded-lg border border-line px-3 py-2">A snapshot of your profile dated today is shared with this application. Later edits to your passport do not change it.</p>
+      ${btn(esc(T('confirmApp')), 'confirmApply', 'primary', '', 'w-full py-3.5')}
+    </div>` };
+  }
+  function rApps() {
+    return { title: esc(T('applications')), nav: true, html: `<div class="px-4 py-4 flex flex-col gap-3">${S.apps.map(a => {
+      const j = job(a.jobId), open = S.openApp === a.jobId;
+      return `<div class="rounded-2xl border ${open ? 'border-brand' : 'border-line'} overflow-hidden">
+        <button type="button" data-act="openApp" data-arg="${a.jobId}" class="w-full text-start p-4 flex items-start gap-3"><span class="flex-1 min-w-0"><span class="block font-semibold text-[14.5px]">${esc(j.title)}</span><span class="block text-[12px] text-muted">${esc(j.city)}, ${esc(COUNTRY[j.country].short)} · applied ${esc(a.date)}</span></span>${chip(STAGES[a.stage], a.stage >= 8 ? 'ok' : 'brand')}</button>
+        ${open ? `<div class="px-4 pb-4">
+          <ol class="relative ms-2 border-s-2 border-line">${STAGES.map((s, k) => `<li class="ps-5 pb-2.5 relative"><span class="absolute -start-[9px] top-0.5 grid place-items-center w-4 h-4 rounded-full ${k < a.stage ? 'bg-brand text-onbrand' : k === a.stage ? 'bg-stamp text-onbrand ring-4 ring-stampsoft' : 'bg-surface border-2 border-line'}">${k < a.stage ? ic('check', 'w-2.5 h-2.5') : ''}</span><span class="text-[13px] ${k === a.stage ? 'font-bold' : k < a.stage ? '' : 'text-muted'}">${s}</span></li>`).join('')}</ol>
+          <div class="rounded-xl bg-surface2 p-3 mt-2 text-[12.5px]"><p><span class="text-muted">Handled by </span><span class="font-semibold">${esc(a.handler)}</span></p><p class="mt-1"><span class="text-muted">Next: </span>${esc(a.next)}</p></div>
+          ${a.caseOpen ? link(ic('plane') + 'Open mobility case', 'w-case', 'primary', 'w-full mt-3') : ''}
+        </div>` : ''}
+      </div>`;
+    }).join('')}</div>` };
+  }
+  function rCase() {
+    const st = [['Job selected', 'done', '12 Sep'], ['Contract accepted', 'done', '20 Sep'], ['Passport received by agency', 'done', '28 Sep'], ['Medical test', 'now', 'Due 24 Oct'], ['Police clearance', 'todo', ''], ['Work permit', 'todo', ''], ['Visa', 'todo', ''], ['Flight & departure', 'todo', ''], ['Arrival & joining', 'todo', '']];
+    const docs = [['Signed contract', 'Employer, agency', 'ok', 'Shared'], ['Passport copy', 'Agency only', 'ok', 'Shared 28 Sep'], ['Medical certificate', '—', 'warn', 'Needed'], ['Police clearance', '—', 'neutral', 'Later']];
+    return { title: 'Your journey to UAE', back: 'w-apps', nav: true, html: `<div class="px-4 py-4 flex flex-col gap-4">
+      <div class="rounded-xl bg-surface2 p-3 text-[12.5px]"><p class="font-semibold text-[14px]">Building Electrician · ABC Contracting LLC</p><p class="text-muted">Case MC-UAE-2026-0188 · Northstar Manpower</p></div>
+      <ol class="relative ms-2 border-s-2 border-line">${st.map(([n, s, d]) => `<li class="ps-5 pb-3 relative"><span class="absolute -start-[9px] top-0.5 grid place-items-center w-4 h-4 rounded-full ${s === 'done' ? 'bg-ok text-onbrand' : s === 'now' ? 'bg-stamp ring-4 ring-stampsoft' : 'bg-surface border-2 border-line'}">${s === 'done' ? ic('check', 'w-2.5 h-2.5') : ''}</span><div class="flex justify-between gap-2"><span class="text-[13.5px] ${s === 'now' ? 'font-bold' : s === 'todo' ? 'text-muted' : ''}">${n}</span><span class="text-[11.5px] ${s === 'now' ? 'text-stamp font-semibold' : 'text-muted'}">${d}</span></div></li>`).join('')}</ol>
+      ${btn('View next action', 'toast', 'primary', 'Next action: book a medical test at an approved centre in Dhaka, then upload the receipt.', 'w-full py-3')}
+      <div class="rounded-xl border border-line p-4"><p class="eyebrow text-muted mb-2">Documents & who can see them</p>${docs.map(([d, who, t, s]) => `<div class="flex items-center gap-2 py-1.5"><span class="flex-1 min-w-0"><span class="block text-[13px] font-semibold">${d}</span><span class="block text-[11.5px] text-muted">Visible to: ${who}</span></span>${chip(s, t)}</div>`).join('')}
+        <label class="mt-2 inline-flex items-center gap-2 text-[13px] font-semibold text-brand cursor-pointer">${ic('upload')}Upload medical receipt<input id="case-file" type="file" class="sr-only" data-casefile></label></div>
+    </div>` };
+  }
+  function rMsgs() {
+    return { title: 'Imran H. · Northstar Manpower', nav: true, html: `<div class="px-4 py-4 flex flex-col gap-3">
+      <p class="text-center text-[11.5px] text-muted">Linked to application UAE-EL-0001 · your phone number stays hidden</p>
+      ${S.msgs.map(m => `<div class="flex ${m.me ? 'justify-end' : ''}"><div class="max-w-[85%] rounded-2xl px-3.5 py-2.5 ${m.me ? 'bg-brand text-onbrand rounded-ee-sm' : 'bg-surface2 rounded-es-sm'}">${!m.me ? `<p class="text-[11px] font-semibold text-brand mb-0.5">${esc(m.who)}</p>` : ''}<p class="text-[13.5px]">${esc(m.t)}</p><p class="text-[10.5px] opacity-70 mt-1 text-end">${esc(m.at)}</p></div></div>`).join('')}
+      <form data-form="msg" class="flex gap-2 sticky bottom-0 bg-surface pt-2"><input id="msg-input" class="field" placeholder="Write a message" autocomplete="off"><button class="rounded-xl bg-brand text-onbrand px-4 text-sm font-semibold">Send</button></form>
+    </div>` };
+  }
+
+  /* ---------- EMPLOYER ---------- */
+  function rReg() {
+    const steps = ['Business email & MFA', 'Company details', 'Registration evidence', 'Review'];
+    if (S.reg.submitted) return `<div class="max-w-xl flex flex-col gap-4">
+      <span class="stamp self-start text-[12px]">SUBMITTED · UNDER REVIEW</span>
+      <h2 class="font-display text-2xl font-bold">We are checking ${esc(S.reg.name)}</h2>
+      <p class="text-muted text-[14px]">A verification officer reviews your trade licence and business email domain. Until then you can draft jobs, but posting, the employer badge and talent search stay locked.</p>
+      <ol class="flex flex-col gap-2 text-[14px]">${[['Business email verified', 'ok'], ['MFA enabled', 'ok'], ['Trade licence uploaded', 'ok'], ['Verification officer review · usually 1–2 working days', 'warn']].map(([t, s]) => `<li class="flex items-center gap-2">${s === 'ok' ? `<span class="text-ok">${ic('check')}</span>` : `<span class="text-warn">${ic('clock')}</span>`}${t}</li>`).join('')}</ol>
+      <div class="flex flex-wrap gap-2">${link('Open verified sample workspace', 'e-dash')}${btn('Start over', 'regReset', 'secondary')}</div></div>`;
+    return `<div class="grid gap-6 lg:grid-cols-[minmax(0,1fr)_minmax(0,300px)]">
+      <form data-form="reg" class="flex flex-col gap-4 max-w-xl">
+        <div><h2 class="font-display text-2xl font-bold">Create employer account</h2><p class="text-muted text-[14px]">Business identity is verified before employer badges and talent access are enabled.</p></div>
+        <ol class="flex flex-wrap gap-2">${steps.map((s, i) => `<li class="inline-flex items-center gap-1.5 text-[12px] font-semibold ${i < 3 ? 'text-brand' : 'text-muted'}"><span class="grid place-items-center w-5 h-5 rounded-full ${i < 3 ? 'bg-brand text-onbrand' : 'bg-surface2'} text-[10px]">${i + 1}</span>${s}</li>`).join('')}</ol>
+        <label class="flex flex-col gap-1.5"><span class="text-[13px] font-semibold">Company legal name</span><input id="r-name" data-reg="name" value="${esc(S.reg.name)}" class="field" required></label>
+        <div class="grid sm:grid-cols-2 gap-3">
+          <label class="flex flex-col gap-1.5"><span class="text-[13px] font-semibold">Country of registration</span><select id="r-country" data-reg="country" class="field">${Object.keys(COUNTRY).map(c => `<option ${S.reg.country === c ? 'selected' : ''}>${c}</option>`).join('')}</select></label>
+          <label class="flex flex-col gap-1.5"><span class="text-[13px] font-semibold">Business email</span><input id="r-email" data-reg="email" type="email" value="${esc(S.reg.email)}" class="field" required></label>
+        </div>
+        <label class="flex flex-col gap-1.5"><span class="text-[13px] font-semibold">Registration / trade licence</span>
+          <span class="flex items-center gap-3 rounded-xl border-2 border-dashed border-line px-4 py-4"><span class="text-brand">${ic('upload', 'w-5 h-5')}</span><span class="text-[13px] text-muted flex-1">${S.reg.file ? esc(S.reg.file) : 'PDF or image, up to 10 MB'}</span><span class="text-[13px] font-semibold text-brand">Choose file</span><input id="r-file" type="file" data-regfile class="sr-only"></span></label>
+        <label class="flex items-start gap-2 text-[13px]"><input id="r-auth" type="checkbox" required class="mt-1"> I am authorised to register this organisation and agree to the employer code of conduct, including itemised disclosure of worker costs.</label>
+        <div><button class="rounded-xl bg-brand text-onbrand px-5 py-2.5 text-sm font-semibold">Submit for verification</button></div>
+      </form>
+      <aside class="rounded-xl bg-surface2 p-4 text-[13px] flex flex-col gap-2 self-start"><p class="font-semibold">What unlocks after verification</p>${['Publish jobs (each job is also reviewed)', 'Verified employer badge on Truth Cards', 'Talent search with SkillShow previews', 'Hiring team seats and roles: Owner, HR Admin, Recruiter, Hiring Manager, Viewer'].map(t => `<p class="flex gap-2 text-muted"><span class="text-ok mt-0.5">${ic('check', 'w-3.5 h-3.5')}</span>${t}</p>`).join('')}</aside>
+    </div>`;
+  }
+  function kpi(label, value, sub) { return `<div class="rounded-xl border border-line p-4"><p class="text-[12px] text-muted">${label}</p><p class="font-display text-3xl font-bold tnum mt-1">${value}</p>${sub ? `<p class="text-[11.5px] text-muted mt-0.5">${sub}</p>` : ''}</div>`; }
+  const statusTone = s => /Published|Verified|Approved|Accepted|Issuer verified|Resolved|Passed/.test(s) ? 'ok' : /More information|Rejected|Suspended|Declined/.test(s) ? 'bad' : /review|Submitted|Pending|Investigating|Invited|Scheduled/i.test(s) ? 'warn' : 'neutral';
+  function rEDash() {
+    return `<div class="flex flex-col gap-5">
+      <div class="flex flex-wrap items-center gap-3"><h2 class="font-display text-2xl font-bold me-auto">Overview</h2>${link(ic('plus') + 'Post a job', 'e-post')}${link(ic('search') + 'Search talent', 'e-talent', 'secondary')}</div>
+      <div class="grid grid-cols-2 lg:grid-cols-4 gap-3">${kpi('Open jobs', S.empJobs.filter(j => j.status === 'Published').length + 11, 'Illustrative')}${kpi('Applicants', '3,450', 'All projects')}${kpi('Shortlisted', '620', '18% of applicants')}${kpi('Joined', '98', 'Since Jan 2026')}</div>
+      <div class="grid gap-4 lg:grid-cols-[minmax(0,1.4fr)_minmax(0,1fr)]">
+        <div class="rounded-xl border border-line"><p class="font-semibold px-4 py-3 border-b border-line">Jobs & approvals</p>
+          <div class="scroll-x"><table class="w-full text-[13px] min-w-[480px]"><thead class="text-muted text-start"><tr><th class="text-start font-medium px-4 py-2">Job</th><th class="text-start font-medium px-4 py-2">Status</th><th class="text-end font-medium px-4 py-2">Applicants</th></tr></thead>
+          <tbody>${S.empJobs.map(j => `<tr class="border-t border-line"><td class="px-4 py-2.5"><p class="font-semibold">${esc(j.title)}</p><p class="font-mono text-[11px] text-muted">${esc(j.id)}</p>${j.note ? `<p class="text-[11.5px] text-bad">${esc(j.note)}</p>` : ''}</td><td class="px-4 py-2.5">${chip(esc(j.status), statusTone(j.status))}</td><td class="px-4 py-2.5 text-end tnum">${fmt(j.apps)}</td></tr>`).join('')}</tbody></table></div></div>
+        <div class="rounded-xl border border-line p-4 flex flex-col gap-3"><p class="font-semibold">Next actions</p>
+          ${[['clock', '12 interviews tomorrow · 200 Electricians — Dubai', 'e-pipe'], ['alert', 'Steel Fixer job needs itemised worker costs', 'e-post'], ['users', '45 new applicants match 8+ requirements', 'e-talent']].map(([i, t, r]) => `<a href="#${r}" class="flex gap-3 text-[13px] rounded-lg p-2 -m-2 hover:bg-surface2"><span class="text-stamp mt-0.5">${ic(i)}</span><span>${t}</span></a>`).join('')}</div>
+      </div></div>`;
+  }
+  function dField(label, key, opts = {}) {
+    const v = S.draft[key];
+    if (opts.options) return `<label class="flex flex-col gap-1.5"><span class="text-[13px] font-semibold">${label}</span><select id="d-${key}" data-draft="${key}" class="field">${opts.options.map(o => `<option ${String(v) === String(o) ? 'selected' : ''}>${esc(o)}</option>`).join('')}</select></label>`;
+    return `<label class="flex flex-col gap-1.5"><span class="text-[13px] font-semibold">${label}${opts.req ? ' <span class="text-bad">*</span>' : ''}</span><input id="d-${key}" data-draft="${key}" ${opts.type ? `type="${opts.type}"` : ''} value="${esc(v)}" placeholder="${esc(opts.ph || '')}" class="field">${opts.help ? `<span class="text-[11.5px] text-muted">${opts.help}</span>` : ''}</label>`;
+  }
+  function rPost() {
+    const steps = ['Requirement', 'Skills', 'Employment terms', 'Mobility & costs', 'Preview & submit'];
+    const d = S.draft;
+    const skillOpts = ['Industrial wiring', 'DB installation', 'Cable termination', 'Troubleshooting', 'Conduit bending', 'Maintenance', 'PLC basics'];
+    let body = '';
+    if (S.step === 0) body = `<div class="grid sm:grid-cols-2 gap-3">${dField('Job title', 'title', { req: 1 })}${dField('Occupation', 'occ', { options: ['Electrician', 'Welder', 'HVAC technician', 'Plumber', 'Warehouse operative', 'Driver'] })}${dField('Openings', 'headcount', { type: 'number', req: 1 })}${dField('Destination country', 'country', { options: Object.keys(COUNTRY) })}${dField('City', 'city', { req: 1 })}${dField('Joining window', 'joining')}</div>`;
+    if (S.step === 1) body = `<div class="flex flex-col gap-3"><div><p class="text-[13px] font-semibold mb-2">Required skills</p><div class="flex flex-wrap gap-2">${skillOpts.map(s => `<button type="button" data-act="draftSkill" data-arg="${s}" class="rounded-full px-3 py-1.5 text-[12.5px] font-semibold ${d.skills.includes(s) ? 'bg-brand text-onbrand' : 'border border-line text-muted'}">${s}</button>`).join('')}</div></div><div class="grid sm:grid-cols-2 gap-3">${dField('Minimum years of experience', 'exp', { type: 'number' })}${dField('Language requirement', 'lang')}</div></div>`;
+    if (S.step === 2) body = `<div class="grid sm:grid-cols-2 gap-3">${dField(`Salary amount (${esc(d.cur)})`, 'salary', { type: 'number', ph: 'Enter verified amount', help: 'Left empty, workers see "Not disclosed".' })}${dField('Pay frequency', 'freq', { options: ['month', 'week', 'hour'] })}${dField('Hours per day', 'hours', { type: 'number' })}${dField('Days per week', 'days', { type: 'number' })}${dField('Overtime terms', 'overtime')}${dField('Contract length (months)', 'contract', { type: 'number' })}</div>`;
+    if (S.step === 3) body = `<div class="flex flex-col gap-4"><div class="grid sm:grid-cols-2 gap-3">${dField('Accommodation', 'accommodation')}${dField('Food', 'food', { ph: 'e.g. AED 300 allowance' })}${dField('Transport', 'transport')}${dField('Medical / insurance', 'medical')}${dField('Airfare', 'airfare')}${dField('Work permit paid by', 'permitPayer', { options: ['Employer', 'Agency', 'Worker'] })}${dField('Visa paid by', 'visaPayer', { options: ['Employer', 'Agency', 'Worker'] })}${dField('Application deadline', 'deadline')}</div>
+      <div class="rounded-xl border border-line p-3"><div class="flex items-center justify-between mb-2"><p class="text-[13px] font-semibold">Itemise every cost category</p>${btn(ic('plus') + 'Add cost', 'addCost', 'ghost', '', '!px-2 !py-1')}</div>
+        ${d.costs.length ? d.costs.map((c, i) => `<div class="grid grid-cols-[minmax(0,1fr)_90px_110px_auto] gap-2 mb-2"><input id="cost-item-${i}" data-cost="${i}" data-cf="item" value="${esc(c.item)}" class="field" placeholder="e.g. Medical test"><input id="cost-amt-${i}" data-cost="${i}" data-cf="amount" type="number" value="${esc(c.amount)}" class="field" placeholder="Amount"><select id="cost-payer-${i}" data-cost="${i}" data-cf="payer" class="field">${['Employer', 'Agency', 'Worker'].map(p => `<option ${c.payer === p ? 'selected' : ''}>${p}</option>`).join('')}</select><button type="button" data-act="rmCost" data-arg="${i}" class="text-muted hover:text-bad px-1" aria-label="Remove cost">${ic('x')}</button></div>`).join('') : '<p class="text-[12.5px] text-muted">No costs added. Workers will see "No worker-paid costs".</p>'}
+        <p class="text-[11.5px] text-muted mt-1">Allowed worker costs differ by corridor. UAE country rules flag any recruitment fee charged to workers.</p></div></div>`;
+    if (S.step === 4) {
+      const missing = [['salary', 'Salary'], ['food', 'Food'], ['accommodation', 'Accommodation'], ['airfare', 'Airfare']].filter(([k]) => d[k] === '' || d[k] === undefined);
+      const fee = d.costs.some(c => c.payer === 'Worker' && /recruit|agency|placement/i.test(c.item));
+      body = `<div class="flex flex-col gap-3">
+        <p class="text-[14px]">The card on the right is exactly what workers see. Check it before submitting.</p>
+        ${missing.length ? `<div class="rounded-xl bg-warnsoft text-warn p-3 text-[13px]"><p class="font-semibold">${missing.length} field${missing.length > 1 ? 's' : ''} will show "Not disclosed"</p><p>${missing.map(m => m[1]).join(', ')}. Jobs with undisclosed pay are reviewed more strictly.</p></div>` : `<div class="rounded-xl bg-oksoft text-ok p-3 text-[13px] font-semibold">All key terms disclosed.</div>`}
+        ${fee ? `<div class="rounded-xl bg-badsoft text-bad p-3 text-[13px]"><p class="font-semibold">Country rule: UAE</p><p>Recruitment fees charged to workers are not allowed on this corridor. Remove the fee or change who pays.</p></div>` : ''}
+        <ul class="text-[13px] text-muted flex flex-col gap-1"><li>• Submitted → Under review → Published</li><li>• Later changes to pay, employer, worker costs or conditions trigger re-review and notify applicants.</li></ul>
+        <div>${btn('Submit job for approval', 'submitJob', 'primary', '', fee ? 'opacity-50 pointer-events-none' : '')}</div></div>`;
+    }
+    const preview = { ...d, id: 'DRAFT', employer: 'ABC Contracting LLC', postedBy: 'ABC Contracting LLC (direct employer)', mandate: 'Direct hire', checks: [['Employer verified', 'ok'], ['Job not yet reviewed', 'warn']], costs: d.costs.map(c => ({ ...c, cur: d.cur })) };
+    return `<div class="flex flex-col gap-4">
+      <div class="scroll-x"><ol class="flex gap-2 min-w-max">${steps.map((s, i) => `<li><button type="button" data-act="step" data-arg="${i}" class="inline-flex items-center gap-2 rounded-lg px-3 py-1.5 text-[12.5px] font-semibold ${i === S.step ? 'bg-brand text-onbrand' : i < S.step ? 'bg-brandsoft text-brand' : 'bg-surface2 text-muted'}"><span class="font-mono text-[11px]">${i + 1}</span>${s}</button></li>`).join('')}</ol></div>
+      <div class="grid gap-5 xl:grid-cols-[minmax(0,1fr)_minmax(0,400px)]">
+        <div class="flex flex-col gap-4 min-w-0"><p class="eyebrow text-muted">Step ${S.step + 1} of 5 · ${steps[S.step]}</p>${body}
+          <div class="flex gap-2 pt-2 border-t border-line">${S.step > 0 ? btn('Back', 'step', 'secondary', S.step - 1) : ''}${S.step < 4 ? btn(S.step === 3 ? 'Preview Job Truth Card' : 'Next', 'step', 'primary', S.step + 1) : ''}</div></div>
+        <div class="min-w-0"><p class="eyebrow text-muted mb-2">Live worker view</p><div id="tc-preview">${truthCard(preview, { preview: true })}</div></div>
+      </div></div>`;
+  }
+  function draftPreviewRefresh() {
+    const el = document.getElementById('tc-preview'); if (!el) return;
+    const d = S.draft;
+    el.innerHTML = truthCard({ ...d, id: 'DRAFT', employer: 'ABC Contracting LLC', postedBy: 'ABC Contracting LLC (direct employer)', mandate: 'Direct hire', checks: [['Employer verified', 'ok'], ['Job not yet reviewed', 'warn']], costs: d.costs.map(c => ({ ...c, cur: d.cur })) }, { preview: true });
+  }
+  function talentResults() {
+    const f = S.tf, q = f.q.trim().toLowerCase();
+    const req = ['Electrician occupation', `${f.minExp}+ years`, 'GCC experience', 'Passport ready', 'SkillShow', 'Identity verified'];
+    const list = CANDS.filter(c => c.exp >= f.minExp && (!f.gcc || c.gcc) && (!f.passport || c.passport) && (!f.ss || c.ss) && (!f.idv || c.idv) && (!q || [c.name, c.occ, c.from, c.worked, ...c.skills].join(' ').toLowerCase().includes(q)));
+    if (!list.length) return '<p class="text-muted text-[14px] p-6 text-center rounded-xl border border-dashed border-line">No profiles match these filters. Lower the experience or turn off a filter.</p>';
+    return list.map(c => {
+      const hits = [/electric/i.test(c.occ), c.exp >= f.minExp, c.gcc, c.passport, c.ss, c.idv];
+      const met = hits.filter(Boolean).length;
+      return `<div class="rounded-xl border border-line p-4 flex flex-col sm:flex-row gap-4">
+        <button type="button" data-act="ssPreview" data-arg="${c.id}" class="shrink-0 w-full sm:w-28 aspect-video sm:aspect-[3/4] rounded-lg ${c.ss ? 'bg-screen text-onscreen' : 'bg-surface2 text-muted'} grid place-items-center" ${c.ss ? '' : 'disabled'} aria-label="Play SkillShow">${c.ss ? `<span class="text-center">${ic('play', 'w-6 h-6 mx-auto')}<span class="block text-[11px] mt-1">SkillShow</span></span>` : '<span class="text-[11px]">No SkillShow</span>'}</button>
+        <div class="flex-1 min-w-0">
+          <div class="flex flex-wrap items-center gap-2"><p class="font-semibold">${esc(c.name)}</p>${c.idv ? chip('Identity verified', 'ok', 'check') : chip('ID not verified', 'neutral')}</div>
+          <p class="text-[13px] text-muted">${esc(c.occ)} · ${c.exp} years · ${esc(c.worked)}</p>
+          <div class="flex flex-wrap gap-1.5 mt-2">${c.skills.map(s => chip(esc(s), 'brand')).join('')}${c.passport ? chip('Passport ready', 'neutral') : ''}${chip('Available ' + esc(c.avail.toLowerCase()), 'neutral')}</div>
+          <p class="text-[12px] mt-2"><span class="font-semibold">${met} of ${req.length} requirements met</span> <span class="text-muted">· ${req.filter((_, i) => !hits[i]).map(x => 'missing ' + x).join(', ') || 'all filters satisfied'}</span></p>
+        </div>
+        <div class="flex sm:flex-col gap-2 shrink-0">${btn(S.short.has(c.id) ? ic('check') + 'Shortlisted' : ic('plus') + 'Shortlist', 'shortlist', S.short.has(c.id) ? 'secondary' : 'primary', c.id)}${btn('View profile', 'candProfile', 'ghost', c.id)}</div>
+      </div>`;
+    }).join('');
+  }
+  function rTalent() {
+    const f = S.tf;
+    const cb = (k, l) => `<label class="flex items-center gap-2 text-[13px]"><input id="tf-${k}" type="checkbox" data-tf="${k}" ${f[k] ? 'checked' : ''}> ${l}</label>`;
+    return `<div class="grid gap-5 lg:grid-cols-[230px_minmax(0,1fr)]">
+      <aside class="flex flex-col gap-4 rounded-xl bg-surface2 p-4 self-start">
+        <p class="font-semibold">Filters</p>
+        <label class="flex flex-col gap-1.5"><span class="text-[12px] font-semibold text-muted">Trade</span><select id="tf-trade" class="field"><option>Electrician</option></select></label>
+        <label class="flex flex-col gap-1.5"><span class="text-[12px] font-semibold text-muted">Minimum experience: <span id="minexp-val" class="tnum">${f.minExp}</span> years</span><input id="tf-minExp" type="range" min="0" max="10" value="${f.minExp}" data-tf="minExp"></label>
+        <div class="flex flex-col gap-2">${cb('gcc', 'GCC experience')}${cb('passport', 'Passport ready')}${cb('ss', 'Has SkillShow')}${cb('idv', 'Identity verified')}</div>
+        <p class="text-[11.5px] text-muted">Only workers whose visibility allows employer discovery appear. Contact details are shared through applications.</p>
+      </aside>
+      <div class="flex flex-col gap-3 min-w-0">
+        <div class="flex flex-wrap gap-3 items-center"><h2 class="font-display text-2xl font-bold me-auto">Search skilled professionals</h2><span class="text-[13px] text-muted">${S.short.size} shortlisted for <span class="font-semibold text-ink">200 Electricians — Dubai</span></span></div>
+        <label class="relative"><span class="absolute start-3 top-1/2 -translate-y-1/2 text-muted">${ic('search')}</span><input id="tf-q" data-tfq value="${esc(f.q)}" class="field ps-9" placeholder="Name, skill or country"></label>
+        <div id="talent-results" class="flex flex-col gap-3">${talentResults()}</div>
+      </div></div>`;
+  }
+  function rPipe() {
+    const funnel = [['Applied', 1240], ['Qualified', 620], ['Interview', 270], ['Selected', 205], ['Permit', 170], ['Joined', 98]];
+    const cols = ['Applied', 'Qualified', 'Interview', 'Selected', 'Permit', 'Joined'];
+    return `<div class="flex flex-col gap-5">
+      <div class="flex flex-wrap items-end gap-3"><div class="me-auto"><p class="eyebrow text-muted">Recruitment project · RP-0042</p><h2 class="font-display text-2xl font-bold">200 Electricians — Dubai</h2></div><span class="text-[13px] text-muted">Target 200 · source: Bangladesh, Nepal, India</span></div>
+      <div class="rounded-xl border border-line p-4"><div class="flex flex-col gap-2">${funnel.map(([s, n]) => `<div class="grid grid-cols-[80px_minmax(0,1fr)_56px] items-center gap-3 text-[13px]"><span class="text-muted">${s}</span><span class="h-6 rounded-md bg-surface2 overflow-hidden"><span class="block h-full rounded-md ${s === 'Joined' ? 'bg-ok' : 'bg-brand'}" style="width:${(n / 1240 * 100).toFixed(1)}%"></span></span><span class="text-end font-semibold tnum">${fmt(n)}</span></div>`).join('')}</div><p class="text-[11.5px] text-muted mt-3">Illustrative figures.</p></div>
+      <div class="flex flex-wrap items-center gap-2 rounded-xl bg-surface2 px-3 py-2"><span class="text-[13px] font-semibold me-auto">${S.pipeSel.size} selected</span>${btn('Move to Interview', 'pipeMove', 'secondary', 'Interview', '!py-1.5')}${btn('Move to Selected', 'pipeMove', 'secondary', 'Selected', '!py-1.5')}${btn('Schedule interviews', 'toast', 'primary', 'Interview invitations sent by WhatsApp and in-app message.', '!py-1.5')}</div>
+      <div class="scroll-x"><div class="grid grid-cols-6 gap-3 min-w-[900px]">${cols.map(c => `<div class="rounded-xl bg-surface2/70 p-2.5"><p class="text-[12px] font-semibold text-muted px-1 mb-2">${c} · <span class="tnum">${funnel.find(f => f[0] === c)[1]}</span></p>
+        <div class="flex flex-col gap-2">${S.pipe.filter(p => p.stage === c).map(p => `<label class="rounded-lg bg-surface border ${S.pipeSel.has(p.id) ? 'border-brand' : 'border-line'} p-2.5 flex items-start gap-2 cursor-pointer"><input id="pp-${p.id}" type="checkbox" data-pipe="${p.id}" ${S.pipeSel.has(p.id) ? 'checked' : ''} class="mt-0.5"><span class="min-w-0"><span class="block text-[13px] font-semibold truncate">${esc(p.name)}</span><span class="block text-[11px] text-muted">Electrician</span></span></label>`).join('') || '<p class="text-[11.5px] text-muted px-1">Sample cards hidden</p>'}</div></div>`).join('')}</div></div>
+    </div>`;
+  }
+
+  /* ---------- AGENCY ---------- */
+  function rMandates() {
+    const m = S.mandates[S.mandateSel];
+    return `<div class="flex flex-col gap-5">
+      <div class="grid gap-3 md:grid-cols-3">
+        <div class="rounded-xl border border-line p-4 md:col-span-1"><p class="eyebrow text-muted">Recruiting licence</p><p class="font-mono font-bold mt-1">RA-2026-0418</p><p class="text-[13px] text-muted">Valid to 31 Mar 2027 · scope: GCC construction & facilities</p><div class="mt-2">${chip('Licence verified', 'ok', 'check')}</div></div>
+        ${kpi('Active job orders', '3', '315 workers requested')}${kpi('Candidates in process', '412', 'Across 3 mandates')}
+      </div>
+      <div class="grid gap-4 lg:grid-cols-[minmax(0,1.3fr)_minmax(0,1fr)]">
+        <div class="rounded-xl border border-line"><div class="flex items-center justify-between px-4 py-3 border-b border-line"><p class="font-semibold">Employer mandates</p>${btn(ic('plus') + 'Submit mandate', 'toast', 'ghost', 'New mandate form opens here: employer, job order, evidence upload, disclosed fees.', '!py-1')}</div>
+          ${S.mandates.map((x, i) => `<button type="button" data-act="mandate" data-arg="${i}" class="w-full text-start flex items-center gap-3 px-4 py-3 border-b border-line last:border-0 ${i === S.mandateSel ? 'bg-brandsoft/50' : 'hover:bg-surface2'}"><span class="flex-1 min-w-0"><span class="block font-semibold text-[14px]">${esc(x.emp)}</span><span class="block text-[12px] text-muted">${esc(x.roles)} · ${esc(x.country)} · <span class="font-mono">${x.id}</span></span></span>${chip(x.status, statusTone(x.status))}</button>`).join('')}</div>
+        <div class="rounded-xl border border-line p-4 flex flex-col gap-3"><p class="font-semibold">${esc(m.emp)}</p>
+          <dl>${row('Mandate', `<span class="font-mono">${m.id}</span>`)}${row('Job order', esc(m.roles))}${row('Recruitment fee', esc(m.fee))}${row('Worker-paid', esc(m.wfee))}${row('Status', chip(m.status, statusTone(m.status)))}</dl>
+          <div><p class="eyebrow text-muted mb-1">Evidence submitted</p>${m.evidence.map(e => `<p class="flex items-center gap-2 text-[13px] py-0.5"><span class="text-muted">${ic('doc', 'w-3.5 h-3.5')}</span>${esc(e)}</p>`).join('')}</div>
+          ${m.status === 'Verified' ? btn('Create linked job', 'toast', 'primary', 'Linked job created as draft. It inherits employer identity and disclosed fees from this mandate.') : `<p class="text-[12.5px] text-warn">Jobs can be published under this mandate after BLUESKILLS verifies it.</p>`}
+        </div></div></div>`;
+  }
+  function rCases() {
+    const cases = [['Md Rahim Uddin', 'UAE-EL-0001', 'Medical', 3, '24 Oct'], ['Karim Ahmed', 'UAE-EL-0001', 'Work permit', 5, '2 Nov'], ['Ravi Shankar', 'UAE-EL-0001', 'Visa', 6, '9 Nov'], ['Mohammad Saiful', 'UAE-EL-0001', 'Joined', 8, 'Done'], ['Tek Bahadur', 'SA-HV-0021', 'Contract', 1, '28 Oct']];
+    const tpl = ['Contract', 'Passport', 'Medical', 'Police', 'Permit', 'Visa', 'Flight', 'Joined'];
+    return `<div class="flex flex-col gap-4">
+      <div class="flex flex-wrap items-center gap-2"><h2 class="font-display text-2xl font-bold me-auto">Mobility cases</h2>${chip('UAE corridor template', 'brand')}${chip('Saudi Arabia corridor template', 'neutral')}</div>
+      <div class="scroll-x rounded-xl border border-line"><table class="w-full text-[13px] min-w-[720px]"><thead><tr class="text-muted"><th class="text-start font-medium px-4 py-2">Worker</th><th class="text-start font-medium px-4 py-2">Job</th><th class="text-start font-medium px-4 py-2">Stage</th><th class="text-start font-medium px-4 py-2 w-[280px]">Progress</th><th class="text-end font-medium px-4 py-2">Due</th></tr></thead>
+        <tbody>${cases.map(([n, j, s, k, due]) => `<tr class="border-t border-line"><td class="px-4 py-3 font-semibold">${n}</td><td class="px-4 py-3 font-mono text-[12px]">${j}</td><td class="px-4 py-3">${chip(s, s === 'Joined' ? 'ok' : 'warn')}</td><td class="px-4 py-3"><div class="flex gap-0.5">${tpl.map((t, i) => `<span title="${t}" class="h-2 flex-1 rounded-sm ${i < k ? 'bg-ok' : i === k ? 'bg-stamp' : 'bg-surface2'}"></span>`).join('')}</div></td><td class="px-4 py-3 text-end tnum">${due}</td></tr>`).join('')}</tbody></table></div>
+      <p class="text-[12.5px] text-muted">Stages: ${tpl.join(' → ')}. Each document is visible only to the parties the worker authorised.</p></div>`;
+  }
+
+  /* ---------- INSTITUTE ---------- */
+  function rCohort() {
+    const inviteText = 'Meghna Technical Training Centre invites you to create your free BLUESKILLS Skill Passport: https://blueskills.ae/i/MTTC-EL26';
+    return `<div class="flex flex-col gap-5">
+      <div><p class="eyebrow text-muted">Course · Electrical Installation</p><h2 class="font-display text-2xl font-bold">2026 Cohort</h2></div>
+      <div class="grid grid-cols-2 lg:grid-cols-4 gap-3">${kpi('Graduates', '120')}${kpi('Profiles created', '104', '87% opted in')}${kpi('SkillShows', '86')}${kpi('Assessments passed', '91')}</div>
+      <div class="grid gap-4 lg:grid-cols-[minmax(0,1fr)_220px]">
+        <div class="rounded-xl border border-line p-4 flex flex-col gap-3"><p class="font-semibold">Invite graduates</p>
+          <p class="text-[13px] text-muted">Graduates join only if they accept. They own their profile; you can attest training but not edit their career history.</p>
+          <div class="flex gap-2"><input id="inv-link" readonly value="https://blueskills.ae/i/MTTC-EL26" class="field font-mono text-[12.5px]">${btn(ic('copy') + 'Copy', 'copy', 'secondary', 'https://blueskills.ae/i/MTTC-EL26')}</div>
+          <label class="flex flex-col gap-1.5"><span class="text-[12px] font-semibold text-muted">WhatsApp message</span><textarea id="inv-wa" rows="3" class="field text-[13px]">${esc(inviteText)}</textarea></label>
+          <div>${btn('Copy WhatsApp message', 'copyWa', 'primary')}</div>
+        </div>
+        <div class="rounded-xl border border-line p-4 flex flex-col items-center gap-2"><canvas id="qr" width="168" height="168" class="w-[168px] h-[168px] max-w-full" aria-label="Sample QR code"></canvas><p class="text-[11.5px] text-muted text-center">Sample QR for posters and classrooms (not scannable in prototype)</p></div>
+      </div></div>`;
+  }
+  function rGrads() {
+    return `<div class="flex flex-col gap-4">
+      <div class="flex flex-wrap items-center gap-2"><h2 class="font-display text-2xl font-bold me-auto">Graduates & attestation</h2>${chip('Accreditation verified', 'ok', 'check')}</div>
+      <div class="scroll-x rounded-xl border border-line"><table class="w-full text-[13px] min-w-[700px]"><thead><tr class="text-muted"><th class="text-start font-medium px-4 py-2">Graduate</th><th class="text-start font-medium px-4 py-2">Invitation</th><th class="text-start font-medium px-4 py-2">Profile</th><th class="text-start font-medium px-4 py-2">SkillShow</th><th class="text-start font-medium px-4 py-2">Assessment</th><th class="text-start font-medium px-4 py-2">Training claim</th></tr></thead>
+        <tbody>${S.grads.map((g, i) => `<tr class="border-t border-line"><td class="px-4 py-3 font-semibold">${esc(g.name)}</td><td class="px-4 py-3">${chip(g.inv, statusTone(g.inv))}</td><td class="px-4 py-3">${g.prof ? 'Created' : '—'}</td><td class="px-4 py-3">${g.ss ? 'Yes' : '—'}</td><td class="px-4 py-3">${g.assess === '—' ? '—' : chip(g.assess, statusTone(g.assess))}</td><td class="px-4 py-3">${g.att === 'Pending' ? btn('Attest completion', 'attest', 'primary', i, '!py-1 !px-3 !text-[12px]') : g.att === '—' ? '<span class="text-muted">Needs opt-in</span>' : chip(g.att, 'ok', 'check')}</td></tr>`).join('')}</tbody></table></div>
+      <p class="text-[12.5px] text-muted">Evidence states stay separate: self-declared · uploaded/unreviewed · verification pending · issuer verified · expired · rejected.</p></div>`;
+  }
+
+  /* ---------- ADMIN ---------- */
+  function rQueue() {
+    const tabs = [['employer', 'Employer licences', 18], ['agency', 'Agency licences', 9], ['job', 'Job Truth Cards', 54], ['document', 'Worker documents', 380], ['trust', 'Trust reports', 17]];
+    const list = S.queue.filter(q => q.type === S.qTab);
+    const sel = S.queue.find(q => q.id === S.qSel && q.type === S.qTab) || list[0];
+    return `<div class="flex flex-col gap-4">
+      <div class="grid grid-cols-2 sm:grid-cols-3 xl:grid-cols-5 gap-2">${tabs.map(([k, l, n]) => `<button type="button" data-act="qTab" data-arg="${k}" class="text-start rounded-xl border p-3 ${S.qTab === k ? 'border-brand bg-brandsoft/50' : 'border-line hover:bg-surface2'}"><span class="block text-[12px] text-muted">${l}</span><span class="block font-display text-2xl font-bold tnum">${n}</span></button>`).join('')}</div>
+      <div class="grid gap-4 lg:grid-cols-[minmax(0,1fr)_minmax(0,1.1fr)]">
+        <div class="rounded-xl border border-line">${list.map(q => `<button type="button" data-act="qSel" data-arg="${q.id}" class="w-full text-start flex items-center gap-3 px-4 py-3 border-b border-line last:border-0 ${sel && sel.id === q.id ? 'bg-brandsoft/50' : 'hover:bg-surface2'}"><span class="flex-1 min-w-0"><span class="block font-semibold text-[13.5px]">${esc(q.what)}</span><span class="block text-[12px] text-muted">${esc(q.sub)} · ${q.at}</span></span>${chip(q.status, statusTone(q.status))}</button>`).join('')}<p class="text-[11.5px] text-muted px-4 py-2">Showing sample items from this queue.</p></div>
+        ${sel ? `<div class="rounded-xl border border-line p-4 flex flex-col gap-3">
+          <div class="flex items-start justify-between gap-2"><div><p class="font-mono text-[11px] text-muted">${sel.id}</p><p class="font-semibold">${esc(sel.what)}</p><p class="text-[12.5px] text-muted">${esc(sel.sub)}</p></div>${chip(sel.status, statusTone(sel.status))}</div>
+          <div><p class="eyebrow text-muted mb-1">Evidence</p>${sel.evidence.map(e => `<p class="flex items-center gap-2 text-[13px] py-0.5"><span class="text-muted">${ic('doc', 'w-3.5 h-3.5')}</span>${esc(e)}</p>`).join('')}</div>
+          <label class="flex flex-col gap-1.5"><span class="text-[12px] font-semibold text-muted">Reason code</span><select id="reason" class="field"><option>LIC-OK · Licence valid and in scope</option><option>DOC-UNREADABLE · Document unreadable</option><option>DOC-EXPIRED · Document expired</option><option>MANDATE-MISSING · No employer authority</option><option>FEE-UNLAWFUL · Worker fee not allowed on corridor</option><option>INFO-NEEDED · More information requested</option></select></label>
+          <label class="flex flex-col gap-1.5"><span class="text-[12px] font-semibold text-muted">Note (kept in audit log)</span><input id="q-note" class="field" placeholder="Optional"></label>
+          <div class="flex flex-wrap gap-2">${btn(ic('check') + 'Approve', 'decide', 'primary', 'Approved')}${btn('Request info', 'decide', 'secondary', 'More information requested')}${btn('Reject', 'decide', 'danger', 'Rejected')}</div>
+        </div>` : '<p class="text-muted p-4">Queue is empty.</p>'}
+      </div>
+      <div class="rounded-xl border border-line"><p class="font-semibold px-4 py-3 border-b border-line">Audit log</p>${S.audit.slice(0, 6).map(a => `<div class="grid sm:grid-cols-[120px_220px_minmax(0,1fr)] gap-1 sm:gap-3 px-4 py-2 border-b border-line last:border-0 text-[12.5px]"><span class="font-mono text-muted">${esc(a.at)}</span><span class="text-muted">${esc(a.who)}</span><span>${esc(a.what)}</span></div>`).join('')}</div>
+    </div>`;
+  }
+  function rTrust() {
+    return `<div class="flex flex-col gap-4">
+      <div class="flex flex-wrap items-center gap-2"><h2 class="font-display text-2xl font-bold me-auto">Trust reports</h2>${chip(S.reports.filter(r => r.status !== 'Resolved').length + ' open', 'warn')}</div>
+      <div class="scroll-x rounded-xl border border-line"><table class="w-full text-[13px] min-w-[680px]"><thead><tr class="text-muted"><th class="text-start font-medium px-4 py-2">Case</th><th class="text-start font-medium px-4 py-2">Category</th><th class="text-start font-medium px-4 py-2">About</th><th class="text-start font-medium px-4 py-2">Reported by</th><th class="text-start font-medium px-4 py-2">Status</th><th class="px-4 py-2"></th></tr></thead>
+        <tbody>${S.reports.map((r, i) => `<tr class="border-t border-line"><td class="px-4 py-3 font-mono text-[12px]">${r.id}</td><td class="px-4 py-3 font-semibold">${esc(r.cat)}</td><td class="px-4 py-3 font-mono text-[12px]">${esc(r.target)}</td><td class="px-4 py-3">${esc(r.by)} · ${r.at}</td><td class="px-4 py-3">${chip(r.status, statusTone(r.status))}</td><td class="px-4 py-3 text-end whitespace-nowrap">${r.status !== 'Resolved' ? btn('Suspend job', 'suspend', 'danger', i, '!py-1 !px-2.5 !text-[12px]') + ' ' + btn('Resolve', 'resolve', 'secondary', i, '!py-1 !px-2.5 !text-[12px]') : ''}</td></tr>`).join('')}</tbody></table></div>
+      <div class="grid sm:grid-cols-3 gap-3 text-[13px]">${[['Evidence collection', 'Screenshots, call logs and payment records attach to the case.'], ['Suspension & appeals', 'Suspended organisations can appeal; every action keeps a reason code.'], ['Worker protection', 'Affected applicants are notified when a job is suspended.']].map(([t, d]) => `<div class="rounded-xl bg-surface2 p-3"><p class="font-semibold">${t}</p><p class="text-muted">${d}</p></div>`).join('')}</div></div>`;
+  }
+  function rConfig() {
+    const C = {
+      'United Arab Emirates': { cur: 'AED', langs: 'Arabic, English', agency: 'Licensed agencies with employer mandate', cost: 'No recruitment fees charged to workers', disc: 'Salary, accommodation, working hours, contract length', docs: 'Passport, photo, medical certificate, signed offer', ms: 'Offer → Work permit → Entry visa → Medical (in-country) → Emirates ID → Joined' },
+      'Saudi Arabia': { cur: 'SAR', langs: 'Arabic, English', agency: 'Licensed agencies with employer mandate', cost: 'No recruitment fees charged to workers', disc: 'Salary, housing, food, overtime', docs: 'Passport, medical, police clearance, attested certificates', ms: 'Contract → Medical → Visa → Flight → Iqama → Joined' },
+      'Poland': { cur: 'PLN', langs: 'Polish, English', agency: 'Registered employment agencies (KRAZ)', cost: 'Lawful visa and consular fees may be worker-paid if disclosed', disc: 'Gross pay, hours, accommodation cost, contract type', docs: 'Passport, work permit, national visa', ms: 'Work permit → Visa appointment → National visa → Travel → Joined' },
+      'Japan': { cur: 'JPY', langs: 'Japanese, English', agency: 'Registered support organisations', cost: 'Skills test fees may be worker-paid; brokerage fees not allowed', disc: 'Monthly pay, deductions, dormitory cost', docs: 'Passport, skills test, Japanese test, CoE', ms: 'Skills test → JLPT → CoE → Visa → Travel → Joined' },
+      'Czechia': { cur: 'CZK', langs: 'Czech, English', agency: 'Licensed employment agencies', cost: 'Visa fees may be worker-paid if disclosed', disc: 'Gross pay, hostel deduction, shift pattern', docs: 'Passport, employee card application', ms: 'Job registration → Employee card → Visa → Travel → Joined' }
+    }[S.cfg];
+    const tree = [['Construction & MEP', [['Electrician', ['Industrial electrician', 'Building electrician'], ['Industrial wiring', 'DB installation', 'Cable termination']], ['HVAC technician', ['Split systems', 'Chillers'], ['Refrigerant handling']]]], ['Logistics', [['Warehouse operative', ['Forklift operator'], ['Picking & packing']]]], ['Manufacturing', [['Welder', ['MIG/MAG', 'TIG'], ['Fillet welds', 'Blueprint reading']]]]];
+    const langs = [['বাংলা Bangla', 'Live'], ['हिन्दी Hindi', 'Live'], ['اردو Urdu', 'Live · RTL'], ['नेपाली Nepali', 'Live'], ['සිංහල Sinhala', 'In review'], ['தமிழ் Tamil', 'In review'], ['English', 'Live'], ['العربية Arabic', 'Expansion'], ['Français', 'Expansion'], ['Kiswahili', 'Expansion']];
+    return `<div class="grid gap-4 lg:grid-cols-[minmax(0,1.3fr)_minmax(0,1fr)]">
+      <div class="rounded-xl border border-line p-4 flex flex-col gap-3"><div class="flex flex-wrap items-center gap-2"><p class="font-semibold me-auto">Country configuration</p><select id="cfg" data-cfg class="field !w-auto">${Object.keys(COUNTRY).map(c => `<option ${S.cfg === c ? 'selected' : ''}>${c}</option>`).join('')}</select></div>
+        <dl>${row('Currency', esc(C.cur))}${row('Languages', esc(C.langs))}${row('Agency eligibility', esc(C.agency))}${row('Worker cost rule', esc(C.cost))}${row('Mandatory disclosures', esc(C.disc))}${row('Document types', esc(C.docs))}${row('Permit / visa milestones', esc(C.ms))}</dl>
+        <p class="text-[11.5px] text-muted">Sample rules for the prototype. Each corridor needs legal review before launch.</p></div>
+      <div class="flex flex-col gap-4">
+        <div class="rounded-xl border border-line p-4"><p class="font-semibold mb-2">Occupation taxonomy</p><p class="text-[11.5px] text-muted mb-2">Sector → Occupation → Specialization → Skill</p>
+          ${tree.map(([s, occs]) => `<details open class="mb-1"><summary class="cursor-pointer text-[13px] font-semibold">${s}</summary><div class="ms-4 border-s border-line ps-3 mt-1">${occs.map(([o, sp, sk]) => `<p class="text-[13px]">${o}</p><p class="text-[11.5px] text-muted mb-1.5">${sp.join(', ')} · ${sk.join(', ')}</p>`).join('')}</div></details>`).join('')}</div>
+        <div class="rounded-xl border border-line p-4"><p class="font-semibold mb-2">Languages</p><div class="grid grid-cols-2 gap-1.5">${langs.map(([l, s]) => `<div class="flex items-center justify-between gap-2 text-[12.5px]"><span>${l}</span>${chip(s, s.startsWith('Live') ? 'ok' : s === 'In review' ? 'warn' : 'neutral')}</div>`).join('')}</div></div>
+      </div></div>`;
+  }
+
+  /* ---------- modal ---------- */
+  function modal() {
+    const m = S.modal;
+    let inner = '';
+    if (m.type === 'report') inner = `<h3 class="font-display text-xl font-bold">Report this job</h3><p class="text-[13px] text-muted">Your report goes to the BLUESKILLS trust team. The employer does not see who reported.</p>
+      <div class="flex flex-col gap-1.5 mt-3">${['Fake job or employer', 'Someone asked me for money', 'Salary or conditions are misleading', 'Someone is pretending to be this employer', 'Harassment', 'Other'].map((r, i) => `<label class="flex items-center gap-2 rounded-lg border border-line px-3 py-2 text-[13.5px]"><input id="rep-${i}" type="radio" name="rep" value="${r}" ${i === 1 ? 'checked' : ''}>${r}</label>`).join('')}</div>
+      <textarea id="rep-text" rows="2" class="field mt-2 text-[13px]" placeholder="What happened? (optional)"></textarea>
+      <div class="flex gap-2 mt-3">${btn('Send report', 'sendReport', 'danger')}${btn('Cancel', 'closeModal', 'secondary')}</div>`;
+    if (m.type === 'cand') { const c = CANDS.find(x => x.id === m.id); inner = `<p class="eyebrow text-muted">Professional profile · employer view</p><h3 class="font-display text-xl font-bold mt-1">${esc(c.name)}</h3><p class="text-[13px] text-muted">${esc(c.occ)} · ${c.exp} years · from ${esc(c.from)}</p>
+      <dl class="mt-3">${row('Countries worked', esc(c.worked))}${row('Languages', esc(c.langs))}${row('Availability', esc(c.avail))}${row('Passport', c.passport ? 'Ready (scan not shared)' : 'Not ready')}${row('Identity', c.idv ? 'Verified' : 'Not verified')}${row('Contact', '<span class="inline-flex items-center gap-1 text-muted">' + ic('lock', 'w-3.5 h-3.5') + 'Shared after the worker applies or accepts an invitation</span>')}</dl>
+      <div class="flex gap-2 mt-3">${btn('Invite to apply', 'inviteCand', 'primary', c.id)}${btn('Close', 'closeModal', 'secondary')}</div>`; }
+    if (m.type === 'ss') { const c = CANDS.find(x => x.id === m.id); inner = `<div class="aspect-video rounded-xl bg-screen text-onscreen grid place-items-center"><span class="text-center">${ic('play', 'w-10 h-10 mx-auto')}<span class="block text-[12px] mt-2 opacity-80">Sample SkillShow · 00:28</span></span></div><p class="font-semibold mt-3">${esc(c.name)} · ${esc(c.skills.join(', '))}</p><p class="text-[12px] text-muted">Worker-provided demonstration, not certified skill.</p><div class="mt-3">${btn('Close', 'closeModal', 'secondary')}</div>`; }
+    return `<div class="fixed inset-0 z-50 bg-screen/60 grid place-items-center gutter" data-act="closeModal" data-backdrop="1"><div role="dialog" aria-modal="true" class="w-full max-w-md rounded-2xl bg-surface border border-line p-5 max-h-[90vh] overflow-y-auto">${inner}</div></div>`;
+  }
+
+  /* ---------- toast ---------- */
+  let toastT;
+  function toast(msg) {
+    const el = document.getElementById('toast');
+    el.innerHTML = `<div class="rounded-xl bg-ink text-bg px-4 py-3 text-[13.5px] font-medium shadow-lg">${esc(msg)}</div>`;
+    clearTimeout(toastT); toastT = setTimeout(() => el.innerHTML = '', 3600);
+  }
+
+  /* ---------- actions ---------- */
+  const A = {
+    go: el => go(el.dataset.arg),
+    theme: () => { const r = document.documentElement; const t = r.getAttribute('data-theme'); const dark = t ? t === 'dark' : matchMedia('(prefers-color-scheme: dark)').matches; r.setAttribute('data-theme', dark ? 'light' : 'dark'); render(); },
+    toast: el => toast(el.dataset.arg),
+    lang: el => { S.lang = el.dataset.arg; render(); },
+    sendOtp: el => {
+      const digits = (S.phone || '').replace(/\D/g, '');
+      if (digits.length < 7) { S.phoneErr = 'Enter your mobile number without the country code, for example 1712345678.'; render(); return; }
+      S.phoneErr = ''; S.otpSent = true; S.otpVia = el.dataset.arg || 'WhatsApp'; render();
+      setTimeout(() => document.getElementById('otp')?.focus(), 50);
+    },
+    resetOtp: () => { S.otpSent = false; S.otpErr = ''; render(); },
+    verifyOtp: () => { const v = (document.getElementById('otp')?.value || '').replace(/\D/g, ''); if (v.length !== 6) { S.otpErr = 'The code has 6 digits. Check the message and try again.'; render(); return; } S.otpErr = ''; S.verified = true; toast('Phone number verified'); go('w-basics'); },
+    trade: el => { S.trade = el.dataset.arg; render(); },
+    listen: () => { S.v = 'listening'; render(); clearTimeout(S._t); S._t = setTimeout(() => { if (S.v === 'listening') { S.v = 'heard'; if (current() === 'w-voice') render(); } }, 2000); },
+    stopListen: () => { clearTimeout(S._t); S.v = 'heard'; render(); },
+    retryQ: () => { delete S.answers[S.qi]; S.qErr = ''; S.typing = false; S.v = 'idle'; render(); },
+    editQ: () => { S.typing = false; S.v = 'edit'; render(); },
+    typeQ: () => { S.typing = true; S.v = 'edit'; render(); setTimeout(() => document.getElementById('q-edit')?.focus(), 30); },
+    saveQ: () => { const v = (document.getElementById('q-edit')?.value || '').trim(); if (!v) { S.qErr = 'Write an answer, or use voice instead.'; render(); return; } S.qErr = ''; S.answers[S.qi] = v; S.v = 'heard'; render(); },
+    confirmQ: () => {
+      S.confirmed[S.qi] = true;
+      if (S.fromReview) { S.fromReview = false; S.v = 'idle'; go('w-review'); return; }
+      if (S.qi < 6) { S.qi++; S.v = 'idle'; render(); } else { S.v = 'idle'; go('w-review'); }
+    },
+    reviewEdit: el => { S.qi = +el.dataset.arg; S.v = 'edit'; S.typing = false; S.fromReview = true; go('w-voice'); },
+    confirmAll: () => { for (let i = 0; i < 7; i++) S.confirmed[i] = true; render(); },
+    createProfile: () => { S.profile = true; toast('Skill Passport created'); go('w-skillshow'); },
+    ssTag: el => { const t = el.dataset.arg; S.ss.tags = S.ss.tags.includes(t) ? S.ss.tags.filter(x => x !== t) : [...S.ss.tags, t]; render(); },
+    ssSample: () => { S.ss.url = null; S.ss.dur = 27; S.ss.status = 'sample'; S.ss.err = ''; render(); },
+    ssPublish: () => {
+      if (!S.ss.url && S.ss.status !== 'sample') { S.ss.err = 'Record or upload a video first, or use the sample clip.'; render(); return; }
+      if (!S.ss.tags.length) { S.ss.err = 'Tag at least one skill you show in the video.'; render(); return; }
+      S.ss.err = ''; S.ss.status = 'moderation'; S.profile = true; toast('SkillShow sent for moderation. Usually reviewed within 24 hours.'); go('w-passport');
+    },
+    vis: el => { S.visibility = el.dataset.arg; render(); toast('Visibility updated'); },
+    jfPub: el => { S.jf = el.dataset.arg; render(); },
+    jfWorker: el => { S.jf = el.dataset.arg; render(); },
+    pubJob: el => { S.jobId = el.dataset.arg; render(); },
+    pubSkill: el => { S.jq = el.dataset.arg; S.jf = 'All'; go('p-jobs'); },
+    pubCountry: el => { S.jf = el.dataset.arg; S.jq = ''; go('p-jobs'); },
+    pubApply: () => { if (S.verified) go('w-apply'); else { toast('Create your free profile first. It takes a few minutes by voice.'); go('w-lang'); } },
+    openJob: el => { S.jobId = el.dataset.arg; go('w-job'); },
+    saveJob: () => { const id = S.jobId; S.saved = S.saved.includes(id) ? S.saved.filter(x => x !== id) : [...S.saved, id]; render(); toast(S.saved.includes(id) ? 'Job saved' : 'Removed from saved'); },
+    report: () => { S.modal = { type: 'report' }; render(); },
+    sendReport: () => {
+      const reason = document.querySelector('input[name="rep"]:checked')?.value || 'Other';
+      const id = 'TR-' + (1043 + S.reports.length);
+      S.reports.unshift({ id, cat: reason, target: S.jobId, by: 'Worker', status: 'Investigating', at: '18 Oct' });
+      S.modal = null; render(); toast(`Report sent. Case ${id} is open; you'll get updates in Messages.`);
+    },
+    closeModal: (el, e) => { if (el.dataset.backdrop && e.target !== el) return; S.modal = null; render(); },
+    confirmApply: () => {
+      if (S.apps.find(a => a.jobId === S.jobId)) { toast('You already applied to this job. Your existing application is unchanged.'); go('w-apps'); return; }
+      S.apps.unshift({ jobId: S.jobId, date: '18 Oct 2026', stage: 0, handler: job(S.jobId).postedBy, next: 'The employer reviews applications within 7 days.' });
+      S.openApp = S.jobId; toast('Application sent with a profile snapshot dated 18 Oct 2026'); go('w-apps');
+    },
+    openApp: el => { S.openApp = S.openApp === el.dataset.arg ? null : el.dataset.arg; render(); },
+    regReset: () => { S.reg.submitted = false; S.reg.file = ''; render(); },
+    step: el => { S.step = +el.dataset.arg; render(); },
+    draftSkill: el => { const s = el.dataset.arg; S.draft.skills = S.draft.skills.includes(s) ? S.draft.skills.filter(x => x !== s) : [...S.draft.skills, s]; render(); },
+    addCost: () => { S.draft.costs.push({ item: '', amount: '', payer: 'Worker' }); render(); },
+    rmCost: el => { S.draft.costs.splice(+el.dataset.arg, 1); render(); },
+    submitJob: () => {
+      const d = S.draft;
+      if (!d.title || !d.city || !d.headcount) { toast('Add a job title, city and number of openings first.'); S.step = 0; render(); return; }
+      const pre = { 'United Arab Emirates': 'UAE', 'Saudi Arabia': 'SA', 'Poland': 'PL', 'Japan': 'JP', 'Czechia': 'CZ' }[d.country];
+      const id = `${pre}-${d.occ.slice(0, 2).toUpperCase()}-${String(10 + S.empJobs.length).padStart(4, '0')}`;
+      S.empJobs.unshift({ title: d.title, id, status: 'Submitted', apps: 0 });
+      S.queue.unshift({ id: 'V-' + (2302 + S.queue.length), type: 'job', what: `${id} · ${d.title}`, sub: 'New job from ABC Contracting LLC', at: '18 Oct', status: 'Pending', evidence: ['Structured Truth Card', d.salary ? `Salary ${d.cur} ${d.salary}` : 'Salary not disclosed', `${d.costs.filter(c => c.payer === 'Worker').length} worker-paid costs`] });
+      S.step = 0; toast(`${id} submitted. It appears in the admin Job Truth Card queue.`); go('e-dash');
+    },
+    shortlist: el => { const id = el.dataset.arg; S.short.has(id) ? S.short.delete(id) : S.short.add(id); render(); },
+    candProfile: el => { S.modal = { type: 'cand', id: el.dataset.arg }; render(); },
+    ssPreview: el => { S.modal = { type: 'ss', id: el.dataset.arg }; render(); },
+    inviteCand: () => { S.modal = null; render(); toast('Invitation sent. The worker decides whether to apply and share details.'); },
+    pipeMove: el => { if (!S.pipeSel.size) { toast('Select candidates first.'); return; } S.pipe.forEach(p => { if (S.pipeSel.has(p.id)) p.stage = el.dataset.arg; }); toast(`${S.pipeSel.size} moved to ${el.dataset.arg}. Workers are notified.`); S.pipeSel.clear(); render(); },
+    mandate: el => { S.mandateSel = +el.dataset.arg; render(); },
+    copy: el => copyText(el.dataset.arg, 'inv-link'),
+    copyWa: () => copyText(document.getElementById('inv-wa').value, 'inv-wa'),
+    attest: el => { const g = S.grads[+el.dataset.arg]; g.att = 'Issuer verified'; render(); toast(`Training completion attested for ${g.name}. It shows on their passport as issuer verified.`); },
+    qTab: el => { S.qTab = el.dataset.arg; S.qSel = (S.queue.find(q => q.type === S.qTab) || {}).id; render(); },
+    qSel: el => { S.qSel = el.dataset.arg; render(); },
+    decide: el => {
+      const sel = S.queue.find(q => q.id === S.qSel && q.type === S.qTab) || S.queue.find(q => q.type === S.qTab); if (!sel) return;
+      const reason = (document.getElementById('reason')?.value || '').split(' · ')[0];
+      const note = document.getElementById('q-note')?.value || '';
+      sel.status = el.dataset.arg;
+      S.audit.unshift({ at: '18 Oct ' + new Date().toTimeString().slice(0, 5), who: 'Verification Officer · S. Rahman', what: `${el.dataset.arg}: ${sel.what} (reason: ${reason})${note ? ' — ' + note : ''}` });
+      const ej = S.empJobs.find(j => sel.what.startsWith(j.id)); if (ej) ej.status = el.dataset.arg === 'Approved' ? 'Published' : el.dataset.arg;
+      render(); toast(`${sel.id} ${el.dataset.arg.toLowerCase()}. Logged with reason ${reason}.`);
+    },
+    suspend: el => { const r = S.reports[+el.dataset.arg]; r.status = 'Job suspended'; S.audit.unshift({ at: '18 Oct', who: 'Trust Officer · M. Khan', what: `Suspended ${r.target} for case ${r.id}` }); render(); toast(`${r.target} suspended. Applicants notified.`); },
+    resolve: el => { S.reports[+el.dataset.arg].status = 'Resolved'; render(); }
+  };
+  function copyText(text, fallbackId) {
+    const sel = () => { const f = document.getElementById(fallbackId); if (f) { f.focus(); f.select(); } toast('Press Ctrl+C or long-press to copy'); };
+    try { navigator.clipboard.writeText(text).then(() => toast('Copied'), sel); } catch (e) { sel(); }
+  }
+
+  document.addEventListener('click', e => {
+    const el = e.target.closest('[data-act]'); if (!el) return;
+    const fn = A[el.dataset.act]; if (fn) { fn(el, e); }
+  });
+  document.addEventListener('input', e => {
+    const t = e.target;
+    if (t.dataset.bind) { S[t.dataset.bind] = t.value; return; }
+    if (t.dataset.draft) { const k = t.dataset.draft; S.draft[k] = t.type === 'number' ? (t.value === '' ? '' : +t.value) : t.value; if (t.tagName !== 'SELECT') draftPreviewRefresh(); return; }
+    if (t.dataset.cost !== undefined) { const c = S.draft.costs[+t.dataset.cost]; if (c) { c[t.dataset.cf] = t.dataset.cf === 'amount' ? (t.value === '' ? '' : +t.value) : t.value; draftPreviewRefresh(); } return; }
+    if (t.dataset.search === 'pub') { S.jq = t.value; const list = filteredJobs(); document.getElementById('pub-list').innerHTML = list.length ? list.map(j => jobListItem(j, j.id === S.jobId)).join('') : '<p class="text-muted text-[14px] p-4">No sample jobs match. Clear the search or pick another country.</p>'; return; }
+    if (t.dataset.search === 'worker') { S.jq = t.value; const list = filteredJobs(); document.getElementById('worker-list').innerHTML = list.length ? list.map(j => jobListItem(j, false, 'openJob')).join('') : '<p class="text-muted text-[13px] py-6 text-center">No jobs match. Try another country.</p>'; return; }
+    if (t.dataset.tfq !== undefined) { S.tf.q = t.value; document.getElementById('talent-results').innerHTML = talentResults(); return; }
+    if (t.dataset.tf === 'minExp') { S.tf.minExp = +t.value; document.getElementById('minexp-val').textContent = t.value; document.getElementById('talent-results').innerHTML = talentResults(); return; }
+    if (t.dataset.reg) { S.reg[t.dataset.reg] = t.value; }
+  });
+  document.addEventListener('change', e => {
+    const t = e.target;
+    if (t.dataset.nav !== undefined) { go(t.value); return; }
+    if (t.dataset.draft && t.tagName === 'SELECT') { if (t.dataset.draft === 'country') { S.draft.cur = COUNTRY[t.value].cur; } render(); return; }
+    if (t.dataset.cost !== undefined && t.tagName === 'SELECT') { draftPreviewRefresh(); return; }
+    if (t.dataset.consent) { S.consent[t.dataset.consent] = t.checked; render(); return; }
+    if (t.dataset.tf && t.type === 'checkbox') { S.tf[t.dataset.tf] = t.checked; render(); return; }
+    if (t.dataset.pipe) { t.checked ? S.pipeSel.add(t.dataset.pipe) : S.pipeSel.delete(t.dataset.pipe); render(); return; }
+    if (t.dataset.ssvis !== undefined) { S.ss.vis = t.value; return; }
+    if (t.dataset.cfg !== undefined) { S.cfg = t.value; render(); return; }
+    if (t.dataset.regfile !== undefined) { S.reg.file = t.files[0]?.name || ''; render(); return; }
+    if (t.dataset.casefile !== undefined) { if (t.files[0]) toast(`Uploaded ${t.files[0].name}. Your agency case officer can see it.`); return; }
+    if (t.id === 'ss-file' && t.files[0]) {
+      const f = t.files[0];
+      if (!/^video\//.test(f.type)) { S.ss.err = 'That file is not a video. Choose an MP4, MOV or WebM file.'; render(); return; }
+      const url = URL.createObjectURL(f); const v = document.createElement('video'); v.preload = 'metadata';
+      v.onloadedmetadata = () => {
+        if (v.duration > 30.5) { URL.revokeObjectURL(url); S.ss.err = `This video is ${Math.round(v.duration)} seconds. A SkillShow must be 30 seconds or less. Trim it or record again.`; S.ss.url = null; }
+        else { if (S.ss.url) URL.revokeObjectURL(S.ss.url); S.ss.url = url; S.ss.dur = v.duration; S.ss.status = 'ready'; S.ss.err = ''; }
+        render();
+      };
+      v.onerror = () => { S.ss.err = 'This video format cannot be previewed here. In production the server converts it.'; render(); };
+      v.src = url;
+    }
+  });
+  document.addEventListener('submit', e => {
+    e.preventDefault();
+    const f = e.target.dataset.form;
+    if (f === 'msg') { const i = document.getElementById('msg-input'); const t = i.value.trim(); if (!t) return; S.msgs.push({ me: true, t, at: '18 Oct, ' + new Date().toTimeString().slice(0, 5) }); render(); setTimeout(() => document.getElementById('msg-input')?.focus(), 20); }
+    if (f === 'reg') { S.reg.submitted = true; S.org.status = 'review'; S.queue.unshift({ id: 'V-' + (2302 + S.queue.length), type: 'employer', what: S.reg.name, sub: `Trade licence · ${COUNTRY[S.reg.country].short}`, at: '18 Oct', status: 'Pending', evidence: [S.reg.file || 'Licence file (not attached in prototype)', `Business email ${S.reg.email}`] }); render(); toast('Submitted for verification'); }
+  });
+  document.addEventListener('keydown', e => { if (e.key === 'Escape' && S.modal) { S.modal = null; render(); } });
+
+  /* ---------- QR (decorative sample) ---------- */
+  function drawQR() {
+    const c = document.getElementById('qr'); if (!c) return;
+    const ctx = c.getContext('2d'); const cs = getComputedStyle(document.documentElement);
+    const col = v => `rgb(${cs.getPropertyValue(v).trim().split(/\s+/).join(',')})`;
+    const n = 25, s = c.width / n; let seed = 42; const rnd = () => (seed = (seed * 9301 + 49297) % 233280) / 233280;
+    ctx.fillStyle = col('--surface'); ctx.fillRect(0, 0, c.width, c.height); ctx.fillStyle = col('--ink');
+    for (let y = 0; y < n; y++) for (let x = 0; x < n; x++) if (rnd() > .52) ctx.fillRect(x * s, y * s, s, s);
+    [[0, 0], [n - 7, 0], [0, n - 7]].forEach(([x, y]) => { ctx.fillStyle = col('--ink'); ctx.fillRect(x * s, y * s, 7 * s, 7 * s); ctx.fillStyle = col('--surface'); ctx.fillRect((x + 1) * s, (y + 1) * s, 5 * s, 5 * s); ctx.fillStyle = col('--brand'); ctx.fillRect((x + 2) * s, (y + 2) * s, 3 * s, 3 * s); });
+  }
+
+  /* ---------- render ---------- */
+  let last = null;
+  function render() {
+    const id = current();
+    const sy = window.scrollY;
+    document.getElementById('app').innerHTML = shell(id);
+    document.title = 'BLUESKILLS Prototype';
+    if (id !== last) { window.scrollTo(0, 0); document.querySelector('.phone-body')?.scrollTo(0, 0); last = id; } else window.scrollTo(0, sy);
+    if (id === 'i-cohort') drawQR();
+  }
+  window.addEventListener('hashchange', () => { S.modal = null; render(); });
+  matchMedia('(prefers-color-scheme: dark)').addEventListener?.('change', () => { if (current() === 'i-cohort') drawQR(); });
+  render();
+})();
+</script>
+</body>
+</html>

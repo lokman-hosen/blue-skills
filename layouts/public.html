@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en" data-i18n-page>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Public Layout · BLUESKILLS</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,700;12..96,800&family=Figtree:wght@400;500;600;700&family=JetBrains+Mono:wght@500;700&family=Noto+Sans+Bengali:wght@400;600;700&family=Noto+Sans+Devanagari:wght@400;600;700&family=Noto+Naskh+Arabic:wght@400;600;700&display=swap">
+<link rel="stylesheet" href="../assets/tokens.css">
+<script src="https://cdn.tailwindcss.com/3.4.17"></script>
+<script src="../assets/tailwind.config.js"></script>
+<script src="../assets/i18n.js"></script>
+<script src="../assets/app.js"></script>
+</head>
+<body class="font-sans">
+<a href="#main" class="skip-link inline-flex items-center min-h-11 rounded-lg bg-brand text-onbrand px-4 font-semibold">Skip to content</a>
+
+<header class="sticky top-0 z-30 border-b border-line bg-surface/95 backdrop-blur pt-[env(safe-area-inset-top)]">
+  <div class="mx-auto max-w-6xl flex items-center gap-2 h-16 px-4">
+    <a href="../index.html" class="flex items-center gap-2 min-h-11 min-w-11" aria-label="BLUESKILLS home">
+      <span class="grid place-items-center w-9 h-9 rounded-lg bg-brand text-onbrand"><svg class="w-5 h-5" aria-hidden="true"><use href="#i-passport"/></svg></span>
+      <span class="font-display text-lg font-extrabold tracking-tight hidden min-[400px]:inline">BLUESKILLS</span>
+    </a>
+    <nav aria-label="Main" class="hidden md:block ms-6">
+      <ul class="flex items-center gap-1">
+        <li><a href="#" aria-current="page" class="inline-flex items-center min-h-11 px-3 rounded-lg font-semibold text-brand" data-i18n="findJobs">Find jobs</a></li>
+        <li><a href="#" class="inline-flex items-center min-h-11 px-3 rounded-lg font-semibold text-muted hover:text-ink hover:bg-surface2">For employers</a></li>
+        <li><a href="#" class="inline-flex items-center min-h-11 px-3 rounded-lg font-semibold text-muted hover:text-ink hover:bg-surface2">How it works</a></li>
+        <li><a href="#" class="inline-flex items-center min-h-11 px-3 rounded-lg font-semibold text-muted hover:text-ink hover:bg-surface2" data-i18n="help">Help</a></li>
+      </ul>
+    </nav>
+    <div class="ms-auto flex items-center gap-1">
+      <button type="button" data-open="lang-sheet" class="inline-flex items-center gap-2 min-h-11 px-3 rounded-full border border-linestrong bg-surface font-semibold hover:bg-surface2">
+        <svg class="w-5 h-5 text-muted" aria-hidden="true"><use href="#i-globe"/></svg><span data-lang-current>English</span><span class="sr-only" data-i18n="language">Language</span>
+      </button>
+      <button type="button" data-theme-toggle aria-label="Dark theme" class="hidden sm:grid place-items-center w-11 h-11 rounded-full hover:bg-surface2"><svg class="w-5 h-5" aria-hidden="true"><use href="#i-moon"/></svg></button>
+      <a href="auth.html" class="hidden sm:inline-flex items-center min-h-11 px-4 rounded-xl bg-brand text-onbrand font-semibold hover:bg-brand/90" data-i18n="signIn">Sign in</a>
+      <button type="button" data-open="pub-menu" class="md:hidden grid place-items-center w-11 h-11 rounded-full hover:bg-surface2" aria-label="Menu" data-i18n-aria-label="menu"><svg class="w-6 h-6" aria-hidden="true"><use href="#i-menu"/></svg></button>
+    </div>
+  </div>
+</header>
+
+<main id="main">
+  <!-- Hero: two clear doors, find work / hire -->
+  <section class="bg-brandsoft border-b border-line">
+    <div class="mx-auto max-w-6xl px-4 py-10 sm:py-14">
+      <h1 class="font-display text-3xl sm:text-5xl font-extrabold tracking-tight max-w-2xl">Real jobs abroad. <span class="text-brand">Clear pay. No hidden fees.</span></h1>
+      <p class="mt-3 text-lg text-muted max-w-xl">Every job shows salary, housing, visa costs and who is hiring, checked by BLUESKILLS.</p>
+      <form class="mt-6 max-w-3xl rounded-2xl bg-surface border border-line p-2 grid gap-2 sm:grid-cols-[minmax(0,1fr)_minmax(0,14rem)_auto]" role="search" onsubmit="return false">
+        <label class="relative block">
+          <span class="sr-only">Job or skill</span>
+          <svg class="pointer-events-none absolute start-4 top-1/2 -translate-y-1/2 w-5 h-5 text-muted" aria-hidden="true"><use href="#i-search"/></svg>
+          <input type="search" placeholder="Electrician, welder, driver…" class="block w-full min-h-14 rounded-xl border border-linestrong bg-surface ps-12 pe-4 text-lg text-ink placeholder:text-muted focus:outline-none focus:border-brand focus:ring-[3px] focus:ring-brand/40">
+        </label>
+        <label class="relative block">
+          <span class="sr-only">Country</span>
+          <svg class="pointer-events-none absolute start-4 top-1/2 -translate-y-1/2 w-5 h-5 text-muted" aria-hidden="true"><use href="#i-pin"/></svg>
+          <select class="appearance-none block w-full min-h-14 rounded-xl border border-linestrong bg-surface ps-12 pe-10 text-lg text-ink focus:outline-none focus:border-brand focus:ring-[3px] focus:ring-brand/40">
+            <option>Any country</option><option>United Arab Emirates</option><option>Saudi Arabia</option><option>Poland</option><option>Japan</option><option>Czechia</option>
+          </select>
+          <svg class="pointer-events-none absolute end-4 top-1/2 -translate-y-1/2 w-5 h-5 text-muted" aria-hidden="true"><use href="#i-down"/></svg>
+        </label>
+        <button class="inline-flex items-center justify-center gap-2 min-h-14 px-6 rounded-xl bg-brand text-onbrand text-lg font-bold hover:bg-brand/90"><svg class="w-6 h-6" aria-hidden="true"><use href="#i-search"/></svg><span data-i18n="findJobs">Find jobs</span></button>
+      </form>
+      <p class="mt-4 text-[15px]">Hiring workers? <a href="#" class="font-semibold text-brand underline underline-offset-4 inline-flex items-center min-h-11">Post a job for free</a></p>
+    </div>
+  </section>
+
+  <div class="mx-auto max-w-6xl px-4 py-10 space-y-12">
+    <section aria-labelledby="trade-h">
+      <h2 id="trade-h" class="text-xl font-bold">Jobs by trade</h2>
+      <ul class="mt-4 grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3">
+        <li><a href="#" class="flex flex-col items-center justify-center gap-2 min-h-28 rounded-2xl border border-line bg-surface p-3 hover:border-brand/60"><span class="grid place-items-center w-12 h-12 rounded-xl bg-stampsoft text-stamp"><svg class="w-7 h-7" aria-hidden="true"><use href="#i-zap"/></svg></span><span class="font-semibold">Electrician</span><span class="text-sm text-muted tabular-nums">312 jobs</span></a></li>
+        <li><a href="#" class="flex flex-col items-center justify-center gap-2 min-h-28 rounded-2xl border border-line bg-surface p-3 hover:border-brand/60"><span class="grid place-items-center w-12 h-12 rounded-xl bg-stampsoft text-stamp"><svg class="w-7 h-7" aria-hidden="true"><use href="#i-flame"/></svg></span><span class="font-semibold">Welder</span><span class="text-sm text-muted tabular-nums">148 jobs</span></a></li>
+        <li><a href="#" class="flex flex-col items-center justify-center gap-2 min-h-28 rounded-2xl border border-line bg-surface p-3 hover:border-brand/60"><span class="grid place-items-center w-12 h-12 rounded-xl bg-stampsoft text-stamp"><svg class="w-7 h-7" aria-hidden="true"><use href="#i-car"/></svg></span><span class="font-semibold">Driver</span><span class="text-sm text-muted tabular-nums">205 jobs</span></a></li>
+        <li><a href="#" class="flex flex-col items-center justify-center gap-2 min-h-28 rounded-2xl border border-line bg-surface p-3 hover:border-brand/60"><span class="grid place-items-center w-12 h-12 rounded-xl bg-stampsoft text-stamp"><svg class="w-7 h-7" aria-hidden="true"><use href="#i-fan"/></svg></span><span class="font-semibold">HVAC</span><span class="text-sm text-muted tabular-nums">96 jobs</span></a></li>
+        <li><a href="#" class="flex flex-col items-center justify-center gap-2 min-h-28 rounded-2xl border border-line bg-surface p-3 hover:border-brand/60"><span class="grid place-items-center w-12 h-12 rounded-xl bg-stampsoft text-stamp"><svg class="w-7 h-7" aria-hidden="true"><use href="#i-box"/></svg></span><span class="font-semibold">Warehouse</span><span class="text-sm text-muted tabular-nums">174 jobs</span></a></li>
+        <li><a href="#" class="flex flex-col items-center justify-center gap-2 min-h-28 rounded-2xl border border-line bg-surface p-3 hover:border-brand/60"><span class="grid place-items-center w-12 h-12 rounded-xl bg-stampsoft text-stamp"><svg class="w-7 h-7" aria-hidden="true"><use href="#i-brick"/></svg></span><span class="font-semibold">Mason</span><span class="text-sm text-muted tabular-nums">88 jobs</span></a></li>
+      </ul>
+    </section>
+
+    <section aria-labelledby="latest-h">
+      <div class="flex flex-wrap items-center gap-2">
+        <h2 id="latest-h" class="text-xl font-bold me-auto">Latest jobs</h2>
+        <span class="inline-flex items-center gap-1 rounded-md border border-dashed border-linestrong px-2 py-0.5 text-[13px] font-semibold text-muted" data-i18n="sample">Sample data</span>
+      </div>
+      <ul class="mt-4 grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+        <li><article class="relative h-full rounded-2xl border border-line bg-surface p-4 hover:border-brand/60 focus-within:ring-[3px] focus-within:ring-brand/50">
+          <div class="flex items-start gap-3"><span class="grid place-items-center w-12 h-12 shrink-0 rounded-xl bg-stampsoft text-stamp"><svg class="w-7 h-7" aria-hidden="true"><use href="#i-zap"/></svg></span><div class="min-w-0 flex-1"><h3 class="text-lg font-bold leading-snug"><a href="#" class="after:absolute after:inset-0 focus:outline-none">Building Electrician</a></h3><p class="text-muted truncate">ABC Contracting LLC</p></div></div>
+          <p class="mt-3"><span class="text-2xl font-bold tabular-nums">AED 2,200</span> <span class="text-muted" data-i18n="perMonth">per month</span></p>
+          <p class="mt-1 flex items-center gap-1.5 text-[15px]"><svg class="w-5 h-5 text-muted" aria-hidden="true"><use href="#i-pin"/></svg>Dubai, UAE</p>
+          <div class="mt-3 flex flex-wrap gap-2"><span class="inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-sm font-semibold bg-oksoft text-ok"><svg class="w-4 h-4" aria-hidden="true"><use href="#i-money"/></svg>You pay: Nothing</span><span class="inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-sm font-semibold bg-oksoft text-ok"><svg class="w-4 h-4" aria-hidden="true"><use href="#i-shield-check"/></svg>Employer verified</span></div>
+        </article></li>
+        <li><article class="relative h-full rounded-2xl border border-line bg-surface p-4 hover:border-brand/60 focus-within:ring-[3px] focus-within:ring-brand/50">
+          <div class="flex items-start gap-3"><span class="grid place-items-center w-12 h-12 shrink-0 rounded-xl bg-stampsoft text-stamp"><svg class="w-7 h-7" aria-hidden="true"><use href="#i-wrench"/></svg></span><div class="min-w-0 flex-1"><h3 class="text-lg font-bold leading-snug"><a href="#" class="after:absolute after:inset-0 focus:outline-none">Industrial Technician</a></h3><p class="text-muted truncate">Global Facilities KK</p></div></div>
+          <p class="mt-3"><span class="text-2xl font-bold tabular-nums">JPY 230,000</span> <span class="text-muted" data-i18n="perMonth">per month</span></p>
+          <p class="mt-1 flex items-center gap-1.5 text-[15px]"><svg class="w-5 h-5 text-muted" aria-hidden="true"><use href="#i-pin"/></svg>Toyota, Aichi, Japan</p>
+          <div class="mt-3 flex flex-wrap gap-2"><span class="inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-sm font-semibold bg-warnsoft text-warn"><svg class="w-4 h-4" aria-hidden="true"><use href="#i-money"/></svg>You pay: BDT 3,000</span><span class="inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-sm font-semibold bg-oksoft text-ok"><svg class="w-4 h-4" aria-hidden="true"><use href="#i-shield-check"/></svg>Employer verified</span></div>
+        </article></li>
+        <li><article class="relative h-full rounded-2xl border border-line bg-surface p-4 hover:border-brand/60 focus-within:ring-[3px] focus-within:ring-brand/50">
+          <div class="flex items-start gap-3"><span class="grid place-items-center w-12 h-12 shrink-0 rounded-xl bg-stampsoft text-stamp"><svg class="w-7 h-7" aria-hidden="true"><use href="#i-box"/></svg></span><div class="min-w-0 flex-1"><h3 class="text-lg font-bold leading-snug"><a href="#" class="after:absolute after:inset-0 focus:outline-none">Warehouse Professional</a></h3><p class="text-muted truncate">XYZ Logistics Sp. z o.o.</p></div></div>
+          <p class="mt-3"><span class="text-2xl font-bold tabular-nums">PLN 5,200</span> <span class="text-muted" data-i18n="perMonth">per month</span></p>
+          <p class="mt-1 flex items-center gap-1.5 text-[15px]"><svg class="w-5 h-5 text-muted" aria-hidden="true"><use href="#i-pin"/></svg>Poznań, Poland</p>
+          <div class="mt-3 flex flex-wrap gap-2"><span class="inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-sm font-semibold bg-warnsoft text-warn"><svg class="w-4 h-4" aria-hidden="true"><use href="#i-money"/></svg>You pay: EUR 140</span><span class="inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-sm font-semibold bg-warnsoft text-warn"><svg class="w-4 h-4" aria-hidden="true"><use href="#i-refresh"/></svg>Being checked again</span></div>
+        </article></li>
+      </ul>
+    </section>
+
+    <section aria-labelledby="safe-h" class="rounded-3xl border border-line bg-surface p-5 sm:p-8">
+      <h2 id="safe-h" class="text-xl font-bold">Safe by design</h2>
+      <ul class="mt-4 grid gap-5 md:grid-cols-3">
+        <li class="flex gap-3"><span class="grid place-items-center w-12 h-12 shrink-0 rounded-xl bg-oksoft text-ok"><svg class="w-6 h-6" aria-hidden="true"><use href="#i-shield-check"/></svg></span><div><p class="font-semibold">Checked employers</p><p class="text-muted">Companies and agencies show their licence before they can post.</p></div></li>
+        <li class="flex gap-3"><span class="grid place-items-center w-12 h-12 shrink-0 rounded-xl bg-oksoft text-ok"><svg class="w-6 h-6" aria-hidden="true"><use href="#i-money"/></svg></span><div><p class="font-semibold">Every cost shown</p><p class="text-muted">If a job asks you to pay, you see exactly what and how much.</p></div></li>
+        <li class="flex gap-3"><span class="grid place-items-center w-12 h-12 shrink-0 rounded-xl bg-oksoft text-ok"><svg class="w-6 h-6" aria-hidden="true"><use href="#i-eye-off"/></svg></span><div><p class="font-semibold">Your number stays private</p><p class="text-muted">Employers message you inside BLUESKILLS. Your documents are shared only when you agree.</p></div></li>
+      </ul>
+    </section>
+  </div>
+</main>
+
+<footer class="border-t border-line bg-surface">
+  <div class="mx-auto max-w-6xl px-4 py-8 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
+    <div>
+      <p class="font-display text-lg font-extrabold">BLUESKILLS</p>
+      <p class="mt-1 text-[15px] text-muted">Free for workers. Always.</p>
+    </div>
+    <nav aria-label="Workers"><p class="font-semibold">Workers</p><ul class="mt-1 text-[15px]"><li><a href="#" class="inline-flex items-center min-h-11 text-muted hover:text-ink">Find jobs</a></li><li><a href="#" class="inline-flex items-center min-h-11 text-muted hover:text-ink">Make your Skill Passport</a></li></ul></nav>
+    <nav aria-label="Organisations"><p class="font-semibold">Organisations</p><ul class="mt-1 text-[15px]"><li><a href="#" class="inline-flex items-center min-h-11 text-muted hover:text-ink">Post a job</a></li><li><a href="#" class="inline-flex items-center min-h-11 text-muted hover:text-ink">Agencies &amp; institutes</a></li></ul></nav>
+    <nav aria-label="Safety"><p class="font-semibold">Safety</p><ul class="mt-1 text-[15px]"><li><a href="#" class="inline-flex items-center gap-1.5 min-h-11 text-bad font-semibold"><svg class="w-4 h-4" aria-hidden="true"><use href="#i-flag"/></svg>Report a problem</a></li><li><a href="#" class="inline-flex items-center min-h-11 text-muted hover:text-ink">Privacy</a></li></ul></nav>
+  </div>
+</footer>
+
+<!-- Mobile menu drawer -->
+<dialog id="pub-menu" class="drawer" aria-labelledby="pub-menu-t">
+  <nav class="h-full bg-surface p-4 flex flex-col" aria-label="Main">
+    <div class="flex items-center justify-between"><h2 id="pub-menu-t" class="text-lg font-bold" data-i18n="menu">Menu</h2><button type="button" data-close aria-label="Close menu" class="grid place-items-center w-11 h-11 rounded-full hover:bg-surface2"><svg class="w-5 h-5" aria-hidden="true"><use href="#i-x"/></svg></button></div>
+    <ul class="mt-4 space-y-1">
+      <li><a href="#" aria-current="page" class="flex items-center gap-3 min-h-12 px-3 rounded-xl bg-brandsoft text-brand font-semibold"><svg class="w-6 h-6" aria-hidden="true"><use href="#i-search"/></svg><span data-i18n="findJobs">Find jobs</span></a></li>
+      <li><a href="#" class="flex items-center gap-3 min-h-12 px-3 rounded-xl font-semibold hover:bg-surface2"><svg class="w-6 h-6 text-muted" aria-hidden="true"><use href="#i-building"/></svg>For employers</a></li>
+      <li><a href="#" class="flex items-center gap-3 min-h-12 px-3 rounded-xl font-semibold hover:bg-surface2"><svg class="w-6 h-6 text-muted" aria-hidden="true"><use href="#i-info"/></svg>How it works</a></li>
+      <li><a href="#" class="flex items-center gap-3 min-h-12 px-3 rounded-xl font-semibold hover:bg-surface2"><svg class="w-6 h-6 text-muted" aria-hidden="true"><use href="#i-help"/></svg><span data-i18n="help">Help</span></a></li>
+    </ul>
+    <div class="mt-auto space-y-2">
+      <button type="button" data-theme-toggle aria-label="Dark theme" class="flex w-full items-center gap-3 min-h-12 px-3 rounded-xl font-semibold hover:bg-surface2"><svg class="w-6 h-6 text-muted" aria-hidden="true"><use href="#i-moon"/></svg>Theme</button>
+      <a href="auth.html" class="flex w-full items-center justify-center min-h-14 rounded-2xl bg-brand text-onbrand text-lg font-bold" data-i18n="signIn">Sign in</a>
+    </div>
+  </nav>
+</dialog>
+
+<!-- Language sheet -->
+<dialog id="lang-sheet" class="sheet" aria-labelledby="lang-sheet-t">
+  <div class="rounded-t-3xl sm:rounded-2xl bg-surface sm:w-[28rem] max-h-[85vh] overflow-y-auto p-5 pb-[max(1.25rem,env(safe-area-inset-bottom))]">
+    <div class="mx-auto mb-3 h-1.5 w-12 rounded-full bg-line sm:hidden" aria-hidden="true"></div>
+    <div class="flex items-center justify-between gap-2"><h2 id="lang-sheet-t" class="text-xl font-bold" data-i18n="chooseLang">Choose your language</h2><button type="button" data-close aria-label="Close" class="grid place-items-center w-11 h-11 rounded-full hover:bg-surface2"><svg class="w-5 h-5" aria-hidden="true"><use href="#i-x"/></svg></button></div>
+    <fieldset class="mt-3 grid grid-cols-2 gap-2">
+      <legend class="sr-only" data-i18n="language">Language</legend>
+      <label class="flex flex-col items-center justify-center min-h-20 rounded-2xl border-2 border-line p-2 cursor-pointer has-[:checked]:border-brand has-[:checked]:bg-brandsoft has-[:focus-visible]:ring-[3px] has-[:focus-visible]:ring-brand/50"><input type="radio" name="lang" data-lang-option="bn" class="sr-only"><span lang="bn" class="text-xl font-bold">বাংলা</span><span class="text-sm text-muted">Bangla</span></label>
+      <label class="flex flex-col items-center justify-center min-h-20 rounded-2xl border-2 border-line p-2 cursor-pointer has-[:checked]:border-brand has-[:checked]:bg-brandsoft has-[:focus-visible]:ring-[3px] has-[:focus-visible]:ring-brand/50"><input type="radio" name="lang" data-lang-option="hi" class="sr-only"><span lang="hi" class="text-xl font-bold">हिन्दी</span><span class="text-sm text-muted">Hindi</span></label>
+      <label class="flex flex-col items-center justify-center min-h-20 rounded-2xl border-2 border-line p-2 cursor-pointer has-[:checked]:border-brand has-[:checked]:bg-brandsoft has-[:focus-visible]:ring-[3px] has-[:focus-visible]:ring-brand/50"><input type="radio" name="lang" data-lang-option="ur" class="sr-only"><span lang="ur" class="text-xl font-bold">اردو</span><span class="text-sm text-muted">Urdu</span></label>
+      <label class="flex flex-col items-center justify-center min-h-20 rounded-2xl border-2 border-line p-2 cursor-pointer has-[:checked]:border-brand has-[:checked]:bg-brandsoft has-[:focus-visible]:ring-[3px] has-[:focus-visible]:ring-brand/50"><input type="radio" name="lang" data-lang-option="ne" class="sr-only"><span lang="ne" class="text-xl font-bold">नेपाली</span><span class="text-sm text-muted">Nepali</span></label>
+      <label class="col-span-2 flex flex-col items-center justify-center min-h-20 rounded-2xl border-2 border-line p-2 cursor-pointer has-[:checked]:border-brand has-[:checked]:bg-brandsoft has-[:focus-visible]:ring-[3px] has-[:focus-visible]:ring-brand/50"><input type="radio" name="lang" data-lang-option="en" class="sr-only"><span lang="en" class="text-xl font-bold">English</span></label>
+    </fieldset>
+    <button type="button" data-close class="mt-4 flex w-full items-center justify-center min-h-14 rounded-2xl bg-brand text-onbrand text-lg font-bold hover:bg-brand/90" data-i18n="cont">Continue</button>
+  </div>
+</dialog>
+</body>
+</html>

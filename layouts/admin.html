@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Admin Workspace · BLUESKILLS</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,700;12..96,800&family=Figtree:wght@400;500;600;700&family=JetBrains+Mono:wght@500;700&display=swap">
+<link rel="stylesheet" href="../assets/tokens.css">
+<script src="https://cdn.tailwindcss.com/3.4.17"></script>
+<script src="../assets/tailwind.config.js"></script>
+<script src="../assets/app.js"></script>
+</head>
+<body class="font-sans">
+<a href="#main" class="skip-link inline-flex items-center min-h-11 rounded-lg bg-brand text-onbrand px-4 font-semibold">Skip to content</a>
+
+<!-- Staff strip: always visible so nobody forgets this is the admin area -->
+<div class="bg-stampsoft text-stamp border-b border-stamp/30">
+  <p class="flex items-center gap-2 px-4 lg:px-6 min-h-9 text-sm font-semibold"><svg class="w-4 h-4 shrink-0" aria-hidden="true"><use href="#i-lock"/></svg>Staff area · every action is recorded in the audit log</p>
+</div>
+
+<div data-collapsed="false" class="lg:flex">
+  <aside class="sidebar hidden lg:flex sticky top-0 h-screen w-64 shrink-0 flex-col border-e border-line bg-surface transition-[width] duration-200 overflow-hidden">
+    <div class="flex items-center gap-2 h-16 px-4 border-b border-line">
+      <a href="../index.html" class="grid place-items-center w-11 h-11 shrink-0 rounded-lg bg-ink text-bg" aria-label="BLUESKILLS home"><svg class="w-5 h-5" aria-hidden="true"><use href="#i-shield"/></svg></a>
+      <div class="nav-label min-w-0"><p class="font-bold truncate leading-tight">BLUESKILLS Ops</p><p class="text-[13px] text-muted truncate">Admin console</p></div>
+    </div>
+    <nav aria-label="Admin" class="flex-1 overflow-y-auto p-3">
+      <p class="nav-section px-3 pt-1 pb-2 text-[13px] font-bold uppercase tracking-wider text-muted">Verification</p>
+      <ul class="space-y-0.5">
+        <li><a href="#" aria-current="page" title="Queue" class="flex items-center gap-3 min-h-11 px-3 rounded-lg bg-brandsoft text-brand font-semibold"><svg class="w-5 h-5 shrink-0" aria-hidden="true"><use href="#i-list"/></svg><span class="nav-label">Queue</span><span class="nav-label ms-auto rounded-full bg-brand text-onbrand text-[13px] font-bold px-2 tabular-nums">27</span></a></li>
+        <li><a href="#" title="Organisations" class="flex items-center gap-3 min-h-11 px-3 rounded-lg font-medium hover:bg-surface2"><svg class="w-5 h-5 shrink-0 text-muted" aria-hidden="true"><use href="#i-building"/></svg><span class="nav-label">Organisations</span></a></li>
+        <li><a href="#" title="Agencies and mandates" class="flex items-center gap-3 min-h-11 px-3 rounded-lg font-medium hover:bg-surface2"><svg class="w-5 h-5 shrink-0 text-muted" aria-hidden="true"><use href="#i-briefcase"/></svg><span class="nav-label">Agencies &amp; mandates</span></a></li>
+        <li><a href="#" title="Jobs review" class="flex items-center gap-3 min-h-11 px-3 rounded-lg font-medium hover:bg-surface2"><svg class="w-5 h-5 shrink-0 text-muted" aria-hidden="true"><use href="#i-file"/></svg><span class="nav-label">Jobs review</span></a></li>
+        <li><a href="#" title="SkillShow moderation" class="flex items-center gap-3 min-h-11 px-3 rounded-lg font-medium hover:bg-surface2"><svg class="w-5 h-5 shrink-0 text-muted" aria-hidden="true"><use href="#i-video"/></svg><span class="nav-label">SkillShow moderation</span></a></li>
+      </ul>
+      <p class="nav-section px-3 pt-5 pb-2 text-[13px] font-bold uppercase tracking-wider text-muted">Trust &amp; safety</p>
+      <ul class="space-y-0.5">
+        <li><a href="#" title="Reports" class="flex items-center gap-3 min-h-11 px-3 rounded-lg font-medium hover:bg-surface2"><svg class="w-5 h-5 shrink-0 text-muted" aria-hidden="true"><use href="#i-flag"/></svg><span class="nav-label">Reports</span><span class="nav-label ms-auto rounded-full bg-bad text-onbrand text-[13px] font-bold px-2 tabular-nums">5</span></a></li>
+        <li><a href="#" title="Appeals" class="flex items-center gap-3 min-h-11 px-3 rounded-lg font-medium hover:bg-surface2"><svg class="w-5 h-5 shrink-0 text-muted" aria-hidden="true"><use href="#i-refresh"/></svg><span class="nav-label">Appeals</span></a></li>
+        <li><a href="#" title="Audit log" class="flex items-center gap-3 min-h-11 px-3 rounded-lg font-medium hover:bg-surface2"><svg class="w-5 h-5 shrink-0 text-muted" aria-hidden="true"><use href="#i-history"/></svg><span class="nav-label">Audit log</span></a></li>
+      </ul>
+      <p class="nav-section px-3 pt-5 pb-2 text-[13px] font-bold uppercase tracking-wider text-muted">Configuration</p>
+      <ul class="space-y-0.5">
+        <li><a href="#" title="Countries" class="flex items-center gap-3 min-h-11 px-3 rounded-lg font-medium hover:bg-surface2"><svg class="w-5 h-5 shrink-0 text-muted" aria-hidden="true"><use href="#i-globe"/></svg><span class="nav-label">Countries</span></a></li>
+        <li><a href="#" title="Skills taxonomy" class="flex items-center gap-3 min-h-11 px-3 rounded-lg font-medium hover:bg-surface2"><svg class="w-5 h-5 shrink-0 text-muted" aria-hidden="true"><use href="#i-grid"/></svg><span class="nav-label">Skills taxonomy</span></a></li>
+        <li><a href="#" title="Staff and roles" class="flex items-center gap-3 min-h-11 px-3 rounded-lg font-medium hover:bg-surface2"><svg class="w-5 h-5 shrink-0 text-muted" aria-hidden="true"><use href="#i-users"/></svg><span class="nav-label">Staff &amp; roles</span></a></li>
+      </ul>
+    </nav>
+    <div class="p-3 border-t border-line">
+      <button type="button" data-sidebar-toggle aria-expanded="true" title="Collapse sidebar" class="flex w-full items-center gap-3 min-h-11 px-3 rounded-lg text-muted font-medium hover:bg-surface2 hover:text-ink"><svg class="w-5 h-5 shrink-0" aria-hidden="true"><use href="#i-panel"/></svg><span class="nav-label">Collapse</span></button>
+    </div>
+  </aside>
+
+  <div class="flex-1 min-w-0">
+    <header class="sticky top-0 z-20 border-b border-line bg-surface/95 backdrop-blur">
+      <div class="flex items-center gap-2 h-16 px-4 lg:px-6">
+        <button type="button" data-open="admin-drawer" class="lg:hidden grid place-items-center w-11 h-11 shrink-0 -ms-2 rounded-lg hover:bg-surface2" aria-label="Open menu"><svg class="w-6 h-6" aria-hidden="true"><use href="#i-menu"/></svg></button>
+        <p class="lg:hidden font-bold truncate">Admin console</p>
+        <label class="relative hidden md:block w-full max-w-sm">
+          <span class="sr-only">Search by ID, organisation or worker</span>
+          <svg class="pointer-events-none absolute start-3 top-1/2 -translate-y-1/2 w-5 h-5 text-muted" aria-hidden="true"><use href="#i-search"/></svg>
+          <input type="search" placeholder="Search ID, organisation, worker…" class="block w-full min-h-11 rounded-lg border border-linestrong bg-surface ps-10 pe-3 text-[15px] text-ink placeholder:text-muted focus:outline-none focus:border-brand focus:ring-[3px] focus:ring-brand/40">
+        </label>
+        <div class="ms-auto flex items-center gap-1">
+          <span class="hidden sm:inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-sm font-semibold bg-brandsoft text-brand"><svg class="w-4 h-4" aria-hidden="true"><use href="#i-lock"/></svg>MFA · Verification officer</span>
+          <button type="button" data-theme-toggle aria-label="Dark theme" class="grid place-items-center w-11 h-11 rounded-lg hover:bg-surface2"><svg class="w-5 h-5" aria-hidden="true"><use href="#i-moon"/></svg></button>
+          <button type="button" class="flex items-center gap-2 min-h-11 ps-1 pe-2 rounded-lg hover:bg-surface2" aria-label="Account: S. Rahman"><span class="grid place-items-center w-9 h-9 rounded-full bg-surface2 font-bold text-sm">SR</span><span class="hidden xl:block text-[15px] font-semibold">S. Rahman</span></button>
+        </div>
+      </div>
+    </header>
+
+    <main id="main" class="px-4 lg:px-6 py-6 max-w-[90rem]">
+      <div class="flex flex-wrap items-center gap-3">
+        <h1 class="font-display text-2xl sm:text-3xl font-bold me-auto">Verification queue</h1>
+        <span class="inline-flex items-center gap-1 rounded-md border border-dashed border-linestrong px-2 py-0.5 text-[13px] font-semibold text-muted">Sample data</span>
+      </div>
+
+      <ul class="mt-5 grid grid-cols-2 xl:grid-cols-4 gap-3">
+        <li class="rounded-xl border border-line bg-surface p-4"><p class="text-sm text-muted">Waiting</p><p class="text-3xl font-bold tabular-nums">27</p></li>
+        <li class="rounded-xl border border-bad/40 bg-badsoft p-4"><p class="text-sm text-bad font-semibold flex items-center gap-1"><svg class="w-4 h-4" aria-hidden="true"><use href="#i-clock"/></svg>Past 48h SLA</p><p class="text-3xl font-bold tabular-nums">4</p></li>
+        <li class="rounded-xl border border-line bg-surface p-4"><p class="text-sm text-muted">Approved today</p><p class="text-3xl font-bold tabular-nums">18</p></li>
+        <li class="rounded-xl border border-line bg-surface p-4"><p class="text-sm text-muted">Rejected today</p><p class="text-3xl font-bold tabular-nums">3</p></li>
+      </ul>
+
+      <div class="mt-5 flex gap-2 overflow-x-auto pb-1" role="group" aria-label="Filter by type">
+        <button type="button" aria-pressed="true" class="shrink-0 inline-flex items-center min-h-11 rounded-full border border-brand bg-brandsoft px-4 text-[15px] font-semibold text-brand">All <span class="ms-1.5 tabular-nums">27</span></button>
+        <button type="button" aria-pressed="false" class="shrink-0 inline-flex items-center min-h-11 rounded-full border border-linestrong bg-surface px-4 text-[15px] font-semibold hover:bg-surface2">Organisations <span class="ms-1.5 tabular-nums text-muted">9</span></button>
+        <button type="button" aria-pressed="false" class="shrink-0 inline-flex items-center min-h-11 rounded-full border border-linestrong bg-surface px-4 text-[15px] font-semibold hover:bg-surface2">Agency licences <span class="ms-1.5 tabular-nums text-muted">6</span></button>
+        <button type="button" aria-pressed="false" class="shrink-0 inline-flex items-center min-h-11 rounded-full border border-linestrong bg-surface px-4 text-[15px] font-semibold hover:bg-surface2">Mandates <span class="ms-1.5 tabular-nums text-muted">8</span></button>
+        <button type="button" aria-pressed="false" class="shrink-0 inline-flex items-center min-h-11 rounded-full border border-linestrong bg-surface px-4 text-[15px] font-semibold hover:bg-surface2">Jobs <span class="ms-1.5 tabular-nums text-muted">4</span></button>
+      </div>
+
+      <section aria-label="Queue" class="mt-4 rounded-xl border border-line bg-surface overflow-hidden">
+        <table class="hidden md:table w-full text-[15px]">
+          <thead class="bg-surface2/60 text-sm text-muted"><tr><th scope="col" class="px-4 py-2.5 text-start font-semibold">Item</th><th scope="col" class="px-3 py-2.5 text-start font-semibold">Type</th><th scope="col" class="px-3 py-2.5 text-start font-semibold">Waiting</th><th scope="col" class="px-3 py-2.5 text-start font-semibold">Assigned</th><th scope="col" class="px-3 py-2.5 text-start font-semibold">Status</th><th scope="col" class="px-4 py-2.5"><span class="sr-only">Actions</span></th></tr></thead>
+          <tbody class="divide-y divide-line">
+            <tr class="hover:bg-surface2/50"><td class="px-4 py-3"><p class="font-semibold">Al Noor Facilities Co.</p><p class="text-sm text-muted font-mono">MD-1121</p></td><td class="px-3 py-3">Job mandate</td><td class="px-3 py-3"><span class="inline-flex items-center gap-1 font-semibold text-bad"><svg class="w-4 h-4" aria-hidden="true"><use href="#i-clock"/></svg>52h</span></td><td class="px-3 py-3">S. Rahman</td><td class="px-3 py-3"><span class="inline-flex items-center gap-1.5 rounded-full whitespace-nowrap px-2.5 py-1 text-sm font-semibold bg-warnsoft text-warn"><svg class="w-4 h-4" aria-hidden="true"><use href="#i-clock"/></svg>Under review</span></td><td class="px-4 py-3 text-end"><a href="#" class="inline-flex items-center min-h-11 px-3 rounded-lg font-semibold text-brand hover:bg-brandsoft">Review</a></td></tr>
+            <tr class="hover:bg-surface2/50"><td class="px-4 py-3"><p class="font-semibold">Gulf Star Recruiters</p><p class="text-sm text-muted font-mono">ORG-2291</p></td><td class="px-3 py-3">Agency licence</td><td class="px-3 py-3 tabular-nums">20h</td><td class="px-3 py-3 text-muted">Unassigned</td><td class="px-3 py-3"><span class="inline-flex items-center gap-1.5 rounded-full whitespace-nowrap px-2.5 py-1 text-sm font-semibold bg-warnsoft text-warn"><svg class="w-4 h-4" aria-hidden="true"><use href="#i-alert"/></svg>More information needed</span></td><td class="px-4 py-3 text-end"><a href="#" class="inline-flex items-center min-h-11 px-3 rounded-lg font-semibold text-brand hover:bg-brandsoft">Review</a></td></tr>
+            <tr class="hover:bg-surface2/50"><td class="px-4 py-3"><p class="font-semibold">XYZ Logistics Sp. z o.o.</p><p class="text-sm text-muted font-mono">PL-WH-0014</p></td><td class="px-3 py-3">Job change (salary)</td><td class="px-3 py-3 tabular-nums">3h</td><td class="px-3 py-3">A. Novak</td><td class="px-3 py-3"><span class="inline-flex items-center gap-1.5 rounded-full whitespace-nowrap px-2.5 py-1 text-sm font-semibold bg-warnsoft text-warn"><svg class="w-4 h-4" aria-hidden="true"><use href="#i-refresh"/></svg>Re-review after change</span></td><td class="px-4 py-3 text-end"><a href="#" class="inline-flex items-center min-h-11 px-3 rounded-lg font-semibold text-brand hover:bg-brandsoft">Review</a></td></tr>
+          </tbody>
+        </table>
+        <ul class="md:hidden divide-y divide-line">
+          <li class="p-4"><div class="flex items-start gap-2"><div class="min-w-0 flex-1"><p class="font-semibold">Al Noor Facilities Co.</p><p class="text-sm text-muted">Job mandate · <span class="font-mono">MD-1121</span></p></div><span class="inline-flex items-center gap-1 font-semibold text-bad text-sm"><svg class="w-4 h-4" aria-hidden="true"><use href="#i-clock"/></svg>52h</span></div><div class="mt-2 flex flex-wrap items-center gap-2"><span class="inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-sm font-semibold bg-warnsoft text-warn"><svg class="w-4 h-4" aria-hidden="true"><use href="#i-clock"/></svg>Under review</span><span class="text-sm text-muted">S. Rahman</span><a href="#" class="ms-auto inline-flex items-center min-h-11 px-3 rounded-lg font-semibold text-brand hover:bg-brandsoft">Review</a></div></li>
+          <li class="p-4"><div class="flex items-start gap-2"><div class="min-w-0 flex-1"><p class="font-semibold">Gulf Star Recruiters</p><p class="text-sm text-muted">Agency licence · <span class="font-mono">ORG-2291</span></p></div><span class="text-sm tabular-nums text-muted">20h</span></div><div class="mt-2 flex flex-wrap items-center gap-2"><span class="inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-sm font-semibold bg-warnsoft text-warn"><svg class="w-4 h-4" aria-hidden="true"><use href="#i-alert"/></svg>More info needed</span><span class="text-sm text-muted">Unassigned</span><a href="#" class="ms-auto inline-flex items-center min-h-11 px-3 rounded-lg font-semibold text-brand hover:bg-brandsoft">Review</a></div></li>
+          <li class="p-4"><div class="flex items-start gap-2"><div class="min-w-0 flex-1"><p class="font-semibold">XYZ Logistics Sp. z o.o.</p><p class="text-sm text-muted">Job change (salary) · <span class="font-mono">PL-WH-0014</span></p></div><span class="text-sm tabular-nums text-muted">3h</span></div><div class="mt-2 flex flex-wrap items-center gap-2"><span class="inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-sm font-semibold bg-warnsoft text-warn"><svg class="w-4 h-4" aria-hidden="true"><use href="#i-refresh"/></svg>Re-review</span><span class="text-sm text-muted">A. Novak</span><a href="#" class="ms-auto inline-flex items-center min-h-11 px-3 rounded-lg font-semibold text-brand hover:bg-brandsoft">Review</a></div></li>
+        </ul>
+      </section>
+    </main>
+  </div>
+</div>
+
+<dialog id="admin-drawer" class="drawer" aria-labelledby="admin-drawer-t">
+  <nav class="h-full bg-surface flex flex-col" aria-label="Admin">
+    <div class="flex items-center gap-2 h-16 px-4 border-b border-line">
+      <span class="grid place-items-center w-10 h-10 shrink-0 rounded-lg bg-ink text-bg"><svg class="w-5 h-5" aria-hidden="true"><use href="#i-shield"/></svg></span>
+      <p id="admin-drawer-t" class="font-bold flex-1">Admin console</p>
+      <button type="button" data-close aria-label="Close menu" class="grid place-items-center w-11 h-11 rounded-lg hover:bg-surface2"><svg class="w-5 h-5" aria-hidden="true"><use href="#i-x"/></svg></button>
+    </div>
+    <div class="flex-1 overflow-y-auto p-3">
+      <p class="px-3 pt-1 pb-2 text-[13px] font-bold uppercase tracking-wider text-muted">Verification</p>
+      <ul class="space-y-0.5">
+        <li><a href="#" aria-current="page" class="flex items-center gap-3 min-h-12 px-3 rounded-lg bg-brandsoft text-brand font-semibold"><svg class="w-5 h-5" aria-hidden="true"><use href="#i-list"/></svg>Queue<span class="ms-auto rounded-full bg-brand text-onbrand text-[13px] font-bold px-2">27</span></a></li>
+        <li><a href="#" class="flex items-center gap-3 min-h-12 px-3 rounded-lg font-medium hover:bg-surface2"><svg class="w-5 h-5 text-muted" aria-hidden="true"><use href="#i-building"/></svg>Organisations</a></li>
+        <li><a href="#" class="flex items-center gap-3 min-h-12 px-3 rounded-lg font-medium hover:bg-surface2"><svg class="w-5 h-5 text-muted" aria-hidden="true"><use href="#i-briefcase"/></svg>Agencies &amp; mandates</a></li>
+        <li><a href="#" class="flex items-center gap-3 min-h-12 px-3 rounded-lg font-medium hover:bg-surface2"><svg class="w-5 h-5 text-muted" aria-hidden="true"><use href="#i-file"/></svg>Jobs review</a></li>
+        <li><a href="#" class="flex items-center gap-3 min-h-12 px-3 rounded-lg font-medium hover:bg-surface2"><svg class="w-5 h-5 text-muted" aria-hidden="true"><use href="#i-video"/></svg>SkillShow moderation</a></li>
+      </ul>
+      <p class="px-3 pt-5 pb-2 text-[13px] font-bold uppercase tracking-wider text-muted">Trust &amp; safety</p>
+      <ul class="space-y-0.5">
+        <li><a href="#" class="flex items-center gap-3 min-h-12 px-3 rounded-lg font-medium hover:bg-surface2"><svg class="w-5 h-5 text-muted" aria-hidden="true"><use href="#i-flag"/></svg>Reports</a></li>
+        <li><a href="#" class="flex items-center gap-3 min-h-12 px-3 rounded-lg font-medium hover:bg-surface2"><svg class="w-5 h-5 text-muted" aria-hidden="true"><use href="#i-refresh"/></svg>Appeals</a></li>
+        <li><a href="#" class="flex items-center gap-3 min-h-12 px-3 rounded-lg font-medium hover:bg-surface2"><svg class="w-5 h-5 text-muted" aria-hidden="true"><use href="#i-history"/></svg>Audit log</a></li>
+      </ul>
+      <p class="px-3 pt-5 pb-2 text-[13px] font-bold uppercase tracking-wider text-muted">Configuration</p>
+      <ul class="space-y-0.5">
+        <li><a href="#" class="flex items-center gap-3 min-h-12 px-3 rounded-lg font-medium hover:bg-surface2"><svg class="w-5 h-5 text-muted" aria-hidden="true"><use href="#i-globe"/></svg>Countries</a></li>
+        <li><a href="#" class="flex items-center gap-3 min-h-12 px-3 rounded-lg font-medium hover:bg-surface2"><svg class="w-5 h-5 text-muted" aria-hidden="true"><use href="#i-grid"/></svg>Skills taxonomy</a></li>
+        <li><a href="#" class="flex items-center gap-3 min-h-12 px-3 rounded-lg font-medium hover:bg-surface2"><svg class="w-5 h-5 text-muted" aria-hidden="true"><use href="#i-users"/></svg>Staff &amp; roles</a></li>
+      </ul>
+    </div>
+  </nav>
+</dialog>
+</body>
+</html>

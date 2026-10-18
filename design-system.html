@@ -1,0 +1,942 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Design System · BLUESKILLS</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,700;12..96,800&family=Figtree:wght@400;500;600;700&family=JetBrains+Mono:wght@500;700&family=Noto+Sans+Bengali:wght@400;600;700&family=Noto+Sans+Devanagari:wght@400;600;700&family=Noto+Naskh+Arabic:wght@400;600;700&display=swap">
+<link rel="stylesheet" href="assets/tokens.css">
+<script src="https://cdn.tailwindcss.com/3.4.17"></script>
+<script src="assets/tailwind.config.js"></script>
+<script src="assets/i18n.js"></script>
+<script src="assets/app.js"></script>
+</head>
+<body class="font-sans text-ink bg-bg">
+<a href="#main" class="skip-link inline-flex items-center min-h-11 rounded-lg bg-brand text-onbrand px-4 font-semibold">Skip to content</a>
+
+<header class="sticky top-0 z-40 border-b border-line bg-surface/95 backdrop-blur">
+  <div class="mx-auto max-w-7xl flex items-center gap-3 px-4 h-16">
+    <a href="index.html" class="flex items-center gap-2 min-h-11 rounded-lg" aria-label="BLUESKILLS design pack home">
+      <span class="grid place-items-center w-9 h-9 rounded-lg bg-brand text-onbrand"><svg class="w-5 h-5" aria-hidden="true"><use href="#i-passport"/></svg></span>
+      <span class="font-display text-lg font-extrabold tracking-tight">BLUESKILLS</span>
+    </a>
+    <span class="hidden sm:inline text-muted border-s border-line ps-3">Design system</span>
+    <div class="ms-auto flex items-center gap-1">
+      <button type="button" data-dir-toggle aria-pressed="false" class="inline-flex items-center gap-2 min-h-11 px-3 rounded-xl text-sm font-semibold text-muted hover:bg-surface2 hover:text-ink">
+        <svg class="w-5 h-5" aria-hidden="true"><use href="#i-arrow"/></svg><span>RTL test</span>
+      </button>
+      <button type="button" data-theme-toggle aria-pressed="false" aria-label="Dark theme" class="grid place-items-center w-11 h-11 rounded-xl text-muted hover:bg-surface2 hover:text-ink">
+        <svg class="w-5 h-5" aria-hidden="true"><use href="#i-moon"/></svg>
+      </button>
+    </div>
+  </div>
+</header>
+
+<div class="mx-auto max-w-7xl px-4 lg:grid lg:grid-cols-[12rem_minmax(0,1fr)] lg:gap-10">
+  <!-- Section index: sticky list on desktop, collapsible on mobile -->
+  <nav aria-label="Sections" class="lg:sticky lg:top-16 lg:self-start lg:max-h-[calc(100vh-4rem)] lg:overflow-y-auto py-4 lg:py-8">
+    <details class="lg:hidden rounded-xl border border-line bg-surface">
+      <summary class="flex items-center justify-between min-h-12 px-4 font-semibold cursor-pointer">Jump to section <svg class="w-5 h-5" aria-hidden="true"><use href="#i-down"/></svg></summary>
+      <ul class="px-2 pb-2 grid grid-cols-2 gap-1 text-[15px]" id="toc-mobile"></ul>
+    </details>
+    <ul class="hidden lg:block space-y-0.5 text-[15px]" id="toc"></ul>
+  </nav>
+
+  <main id="main" class="min-w-0 py-6 lg:py-8 space-y-16">
+
+    <!-- ===== Intro ===== -->
+    <section aria-labelledby="intro-h">
+      <p class="text-sm font-bold uppercase tracking-wider text-stamp">Design-lock pack · Part 1</p>
+      <h1 id="intro-h" class="font-display text-3xl sm:text-4xl font-extrabold tracking-tight mt-1">BLUESKILLS design system</h1>
+      <p class="mt-3 max-w-2xl text-lg text-muted">One set of parts for the worker web app (phones first) and the organisation and admin workspaces. Every class here is a standard Tailwind utility using the token colour names, so it copies straight into React.</p>
+      <div class="mt-4 flex flex-wrap gap-2">
+        <span class="inline-flex items-center gap-1 rounded-md border border-dashed border-linestrong px-2 py-0.5 text-[13px] font-semibold text-muted">All names, jobs and figures are sample data</span>
+      </div>
+    </section>
+
+    <!-- ===== Principles ===== -->
+    <section id="principles" data-toc="Simple-UI rules" aria-labelledby="principles-h" class="scroll-mt-20">
+      <h2 id="principles-h" class="font-display text-2xl font-bold">Rules for workers who read little</h2>
+      <p class="mt-1 text-muted max-w-2xl">Many workers read slowly or not at all. These six rules apply to every worker screen. Organisation screens can be denser, but they use the same parts.</p>
+      <ul class="mt-5 grid gap-3 sm:grid-cols-2 xl:grid-cols-3">
+        <li class="rounded-2xl border border-line bg-surface p-4 flex gap-3"><span class="grid place-items-center w-11 h-11 shrink-0 rounded-xl bg-brandsoft text-brand"><svg class="w-6 h-6" aria-hidden="true"><use href="#i-briefcase"/></svg></span><div><p class="font-semibold">Icon + word, always</p><p class="text-muted">Every button and tab has a picture and a short word. No icon-only actions for workers.</p></div></li>
+        <li class="rounded-2xl border border-line bg-surface p-4 flex gap-3"><span class="grid place-items-center w-11 h-11 shrink-0 rounded-xl bg-brandsoft text-brand"><svg class="w-6 h-6" aria-hidden="true"><use href="#i-check"/></svg></span><div><p class="font-semibold">One main action per screen</p><p class="text-muted">One big blue button at the bottom. Everything else is quieter.</p></div></li>
+        <li class="rounded-2xl border border-line bg-surface p-4 flex gap-3"><span class="grid place-items-center w-11 h-11 shrink-0 rounded-xl bg-brandsoft text-brand"><svg class="w-6 h-6" aria-hidden="true"><use href="#i-speaker"/></svg></span><div><p class="font-semibold">Listen and speak</p><p class="text-muted">Key text has a <b>Listen</b> button. Long answers can be spoken instead of typed.</p></div></li>
+        <li class="rounded-2xl border border-line bg-surface p-4 flex gap-3"><span class="grid place-items-center w-11 h-11 shrink-0 rounded-xl bg-brandsoft text-brand"><svg class="w-6 h-6" aria-hidden="true"><use href="#i-grid"/></svg></span><div><p class="font-semibold">Big targets, big text</p><p class="text-muted">Worker buttons are 48–56px tall. Body text is 16px or larger.</p></div></li>
+        <li class="rounded-2xl border border-line bg-surface p-4 flex gap-3"><span class="grid place-items-center w-11 h-11 shrink-0 rounded-xl bg-brandsoft text-brand"><svg class="w-6 h-6" aria-hidden="true"><use href="#i-shield-check"/></svg></span><div><p class="font-semibold">Colour is never alone</p><p class="text-muted">Status = colour + icon + word, so it works for colour-blind users and in dark mode.</p></div></li>
+        <li class="rounded-2xl border border-line bg-surface p-4 flex gap-3"><span class="grid place-items-center w-11 h-11 shrink-0 rounded-xl bg-brandsoft text-brand"><svg class="w-6 h-6" aria-hidden="true"><use href="#i-chat"/></svg></span><div><p class="font-semibold">Plain, short words</p><p class="text-muted">"You pay: Nothing", not "Zero recruitment-fee policy applies". Numbers before words.</p></div></li>
+      </ul>
+    </section>
+
+    <!-- ===== Colour ===== -->
+    <section id="colour" data-toc="Colour" aria-labelledby="colour-h" class="scroll-mt-20">
+      <h2 id="colour-h" class="font-display text-2xl font-bold">Colour tokens</h2>
+      <p class="mt-1 text-muted max-w-2xl">Same names in both themes. Use the name (<code class="font-mono text-[14px]">bg-surface</code>, <code class="font-mono text-[14px]">text-muted</code>), never a raw hex. Every text pairing below passes WCAG AA (4.5:1). <code class="font-mono text-[14px]">linestrong</code> is for form-control borders (3:1).</p>
+      <div class="mt-5 grid gap-4 xl:grid-cols-2">
+        <div data-theme="light" class="rounded-2xl border border-line p-4">
+          <p class="font-semibold mb-3">Light</p>
+          <div class="swatches grid grid-cols-2 sm:grid-cols-3 gap-2"></div>
+        </div>
+        <div data-theme="dark" class="rounded-2xl border border-line p-4">
+          <p class="font-semibold mb-3">Dark</p>
+          <div class="swatches grid grid-cols-2 sm:grid-cols-3 gap-2"></div>
+        </div>
+      </div>
+      <div class="mt-4 rounded-2xl border border-line bg-surface p-4 text-[15px]">
+        <p class="font-semibold">Meaning</p>
+        <ul class="mt-2 grid gap-2 sm:grid-cols-2">
+          <li class="flex gap-2"><span class="mt-1 w-3 h-3 rounded-full bg-brand shrink-0"></span><span><b>brand</b> – main actions, links, selected state</span></li>
+          <li class="flex gap-2"><span class="mt-1 w-3 h-3 rounded-full bg-stamp shrink-0"></span><span><b>stamp</b> – progress in hiring (shortlist, interview), passport stamps</span></li>
+          <li class="flex gap-2"><span class="mt-1 w-3 h-3 rounded-full bg-ok shrink-0"></span><span><b>ok</b> – a real check passed, money you don't pay, done</span></li>
+          <li class="flex gap-2"><span class="mt-1 w-3 h-3 rounded-full bg-warn shrink-0"></span><span><b>warn</b> – under review, "Not disclosed", costs you pay</span></li>
+          <li class="flex gap-2"><span class="mt-1 w-3 h-3 rounded-full bg-bad shrink-0"></span><span><b>bad</b> – errors, rejected, report a job, delete</span></li>
+          <li class="flex gap-2"><span class="mt-1 w-3 h-3 rounded-full bg-muted shrink-0"></span><span><b>muted</b> – secondary text, worker-declared (unchecked) facts</span></li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- ===== Type ===== -->
+    <section id="type" data-toc="Typography" aria-labelledby="type-h" class="scroll-mt-20">
+      <h2 id="type-h" class="font-display text-2xl font-bold">Typography</h2>
+      <p class="mt-1 text-muted max-w-2xl">Bricolage Grotesque for Latin headings, Figtree for text. Bangla, Devanagari and Urdu use Noto fonts with taller line height. Nothing is smaller than 13px; worker body text is 16–18px.</p>
+      <div class="mt-5 rounded-2xl border border-line bg-surface divide-y divide-line">
+        <div class="p-4 grid gap-1 sm:grid-cols-[10rem_minmax(0,1fr)] sm:items-baseline"><code class="font-mono text-[13px] text-muted">text-4xl · 36/40 · 800</code><p class="font-display text-4xl font-extrabold tracking-tight">Your skill is your passport</p></div>
+        <div class="p-4 grid gap-1 sm:grid-cols-[10rem_minmax(0,1fr)] sm:items-baseline"><code class="font-mono text-[13px] text-muted">text-3xl · 30/36 · 700</code><p class="font-display text-3xl font-bold">Find jobs abroad</p></div>
+        <div class="p-4 grid gap-1 sm:grid-cols-[10rem_minmax(0,1fr)] sm:items-baseline"><code class="font-mono text-[13px] text-muted">text-2xl · 24/32 · 700</code><p class="font-display text-2xl font-bold">Building Electrician</p></div>
+        <div class="p-4 grid gap-1 sm:grid-cols-[10rem_minmax(0,1fr)] sm:items-baseline"><code class="font-mono text-[13px] text-muted">text-xl · 20/28 · 700</code><p class="text-xl font-bold">AED 2,200 per month</p></div>
+        <div class="p-4 grid gap-1 sm:grid-cols-[10rem_minmax(0,1fr)] sm:items-baseline"><code class="font-mono text-[13px] text-muted">text-lg · 18/28 · worker body</code><p class="text-lg">Housing is free. You share a room with 3 people.</p></div>
+        <div class="p-4 grid gap-1 sm:grid-cols-[10rem_minmax(0,1fr)] sm:items-baseline"><code class="font-mono text-[13px] text-muted">text-base · 16/24 · body</code><p class="text-base">Employer pays the visa and the work permit.</p></div>
+        <div class="p-4 grid gap-1 sm:grid-cols-[10rem_minmax(0,1fr)] sm:items-baseline"><code class="font-mono text-[13px] text-muted">text-sm · 14/20 · meta</code><p class="text-sm text-muted">Posted by Northstar Manpower · Updated 2 days ago</p></div>
+        <div class="p-4 grid gap-1 sm:grid-cols-[10rem_minmax(0,1fr)] sm:items-baseline"><code class="font-mono text-[13px] text-muted">font-mono · IDs only</code><p class="font-mono text-[15px]">UAE-EL-0001</p></div>
+      </div>
+      <div class="mt-4 grid gap-3 sm:grid-cols-2">
+        <p lang="bn" class="rounded-2xl border border-line bg-surface p-4 text-lg">আপনার দক্ষতাই আপনার পাসপোর্ট। <span class="block text-sm text-muted">Bangla · Noto Sans Bengali</span></p>
+        <p lang="hi" class="rounded-2xl border border-line bg-surface p-4 text-lg">आपका कौशल ही आपका पासपोर्ट है। <span class="block text-sm text-muted">Hindi · Noto Sans Devanagari</span></p>
+        <p lang="ne" class="rounded-2xl border border-line bg-surface p-4 text-lg">तपाईंको सीप नै तपाईंको राहदानी हो। <span class="block text-sm text-muted">Nepali · Noto Sans Devanagari</span></p>
+        <p lang="ur" dir="rtl" class="rounded-2xl border border-line bg-surface p-4 text-lg" style="font-family:'Noto Naskh Arabic',sans-serif;line-height:1.9">آپ کی مہارت ہی آپ کا پاسپورٹ ہے۔ <span class="block text-sm text-muted">Urdu · Noto Naskh Arabic · right-to-left</span></p>
+      </div>
+    </section>
+
+    <!-- ===== Icons ===== -->
+    <section id="icons" data-toc="Icons" aria-labelledby="icons-h" class="scroll-mt-20">
+      <h2 id="icons-h" class="font-display text-2xl font-bold">Icons</h2>
+      <p class="mt-1 text-muted max-w-2xl">24px line icons, 2px stroke (Lucide style; use <code class="font-mono text-[14px]">lucide-react</code> in the app). Arrows and "back" mirror in Urdu (<code class="font-mono text-[14px]">.flip-rtl</code>). Trade icons sit on a soft tile.</p>
+      <ul id="icon-grid" class="mt-5 grid grid-cols-3 sm:grid-cols-6 lg:grid-cols-8 gap-2"></ul>
+    </section>
+
+    <!-- ===== Buttons ===== -->
+    <section id="buttons" data-toc="Buttons" aria-labelledby="buttons-h" class="scroll-mt-20">
+      <h2 id="buttons-h" class="font-display text-2xl font-bold">Buttons</h2>
+      <p class="mt-1 text-muted max-w-2xl"><code class="font-mono text-[14px]">&lt;Button variant size icon loading&gt;</code>. <b>lg</b> (56px) is the worker's main action, full width on phones. <b>md</b> (48px) is the default. <b>sm</b> (44px) is for dense organisation tables only.</p>
+      <div class="mt-5 rounded-2xl border border-line bg-surface p-4 sm:p-6 space-y-6">
+        <div>
+          <p class="text-sm font-semibold text-muted mb-2">Variants · md</p>
+          <div class="flex flex-wrap gap-3">
+            <button type="button" class="inline-flex items-center justify-center gap-2 min-h-12 px-5 rounded-xl bg-brand text-onbrand text-base font-semibold hover:bg-brand/90 disabled:opacity-50 disabled:pointer-events-none">Primary</button>
+            <button type="button" class="inline-flex items-center justify-center gap-2 min-h-12 px-5 rounded-xl border border-linestrong bg-surface text-ink text-base font-semibold hover:bg-surface2">Secondary</button>
+            <button type="button" class="inline-flex items-center justify-center gap-2 min-h-12 px-5 rounded-xl bg-brandsoft text-brand text-base font-semibold hover:bg-brandsoft/70">Soft</button>
+            <button type="button" class="inline-flex items-center justify-center gap-2 min-h-12 px-4 rounded-xl text-brand text-base font-semibold hover:bg-brandsoft">Ghost</button>
+            <button type="button" class="inline-flex items-center justify-center gap-2 min-h-12 px-5 rounded-xl bg-bad text-onbrand text-base font-semibold hover:bg-bad/90">Danger</button>
+            <button type="button" disabled class="inline-flex items-center justify-center gap-2 min-h-12 px-5 rounded-xl bg-brand text-onbrand text-base font-semibold disabled:opacity-50 disabled:pointer-events-none">Disabled</button>
+          </div>
+        </div>
+        <div>
+          <p class="text-sm font-semibold text-muted mb-2">With icon · loading · icon-only (organisation tables only, always with aria-label + tooltip)</p>
+          <div class="flex flex-wrap items-center gap-3">
+            <button type="button" class="inline-flex items-center justify-center gap-2 min-h-12 px-5 rounded-xl bg-brand text-onbrand text-base font-semibold hover:bg-brand/90"><svg class="w-5 h-5" aria-hidden="true"><use href="#i-search"/></svg>Find jobs</button>
+            <button type="button" class="inline-flex items-center justify-center gap-2 min-h-12 px-5 rounded-xl border border-linestrong bg-surface text-ink text-base font-semibold hover:bg-surface2">Next<svg class="w-5 h-5 flip-rtl" aria-hidden="true"><use href="#i-arrow"/></svg></button>
+            <button type="button" aria-busy="true" disabled class="inline-flex items-center justify-center gap-2 min-h-12 px-5 rounded-xl bg-brand text-onbrand text-base font-semibold disabled:opacity-80"><svg class="w-5 h-5 animate-spin" viewBox="0 0 24 24" fill="none" aria-hidden="true"><circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="3" opacity=".3"/><path d="M21 12a9 9 0 0 0-9-9" stroke="currentColor" stroke-width="3" stroke-linecap="round"/></svg>Sending…</button>
+            <button type="button" aria-label="More actions" title="More actions" class="grid place-items-center w-11 h-11 rounded-xl border border-linestrong bg-surface text-ink hover:bg-surface2"><svg class="w-5 h-5" aria-hidden="true"><use href="#i-more"/></svg></button>
+            <button type="button" data-speak="#listen-demo" class="inline-flex items-center gap-2 min-h-11 px-4 rounded-full bg-brandsoft text-brand font-semibold hover:bg-brandsoft/70"><svg class="w-5 h-5" aria-hidden="true"><use href="#i-speaker"/></svg>Listen</button>
+            <span id="listen-demo" class="sr-only">Building Electrician in Dubai. Salary 2,200 dirhams per month. You pay nothing.</span>
+          </div>
+        </div>
+        <div>
+          <p class="text-sm font-semibold text-muted mb-2">Sizes · lg (worker main action) · md · sm</p>
+          <div class="flex flex-wrap items-center gap-3">
+            <button type="button" class="inline-flex items-center justify-center gap-2 min-h-14 px-6 rounded-2xl bg-brand text-onbrand text-lg font-bold hover:bg-brand/90"><svg class="w-6 h-6" aria-hidden="true"><use href="#i-check"/></svg>I can do this job</button>
+            <button type="button" class="inline-flex items-center justify-center gap-2 min-h-12 px-5 rounded-xl bg-brand text-onbrand text-base font-semibold hover:bg-brand/90">Apply</button>
+            <button type="button" class="inline-flex items-center justify-center gap-1.5 min-h-11 px-4 rounded-lg bg-brand text-onbrand text-[15px] font-semibold hover:bg-brand/90">Shortlist</button>
+          </div>
+        </div>
+        <div class="max-w-sm">
+          <p class="text-sm font-semibold text-muted mb-2">Worker phone pattern · full width, main action last</p>
+          <div class="space-y-2">
+            <button type="button" class="flex w-full items-center justify-center gap-2 min-h-14 px-6 rounded-2xl bg-brand text-onbrand text-lg font-bold hover:bg-brand/90">Continue<svg class="w-6 h-6 flip-rtl" aria-hidden="true"><use href="#i-arrow"/></svg></button>
+            <button type="button" class="flex w-full items-center justify-center gap-2 min-h-12 px-5 rounded-xl text-brand text-base font-semibold hover:bg-brandsoft"><svg class="w-5 h-5" aria-hidden="true"><use href="#i-keyboard"/></svg>Type instead</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== Forms ===== -->
+    <section id="forms" data-toc="Form controls" aria-labelledby="forms-h" class="scroll-mt-20">
+      <h2 id="forms-h" class="font-display text-2xl font-bold">Form controls</h2>
+      <p class="mt-1 text-muted max-w-2xl">Label above, hint under the label, error under the field with an icon. Never use a placeholder as the label. Phone numbers and codes stay left-to-right in Urdu.</p>
+      <div class="mt-5 grid grid-cols-1 gap-4 lg:grid-cols-2">
+        <div class="rounded-2xl border border-line bg-surface p-4 sm:p-6 space-y-5">
+          <div>
+            <label for="f-name" class="block font-semibold">Full name</label>
+            <p id="f-name-hint" class="text-sm text-muted">As written in your passport</p>
+            <input id="f-name" type="text" value="Md Rahim Uddin" aria-describedby="f-name-hint" class="mt-1.5 block w-full min-h-12 rounded-xl border border-linestrong bg-surface px-4 text-base text-ink placeholder:text-muted focus:outline-none focus:border-brand focus:ring-[3px] focus:ring-brand/40">
+          </div>
+          <div>
+            <label for="f-phone" class="block font-semibold">Your mobile number</label>
+            <div class="mt-1.5 flex gap-2" dir="ltr">
+              <div class="relative">
+                <label for="f-cc" class="sr-only">Country code</label>
+                <select id="f-cc" class="appearance-none min-h-12 rounded-xl border border-linestrong bg-surface ps-3 pe-9 text-base font-semibold text-ink focus:outline-none focus:border-brand focus:ring-[3px] focus:ring-brand/40">
+                  <option>+880</option><option>+91</option><option>+92</option><option>+977</option><option>+94</option>
+                </select>
+                <svg class="pointer-events-none absolute end-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted" aria-hidden="true"><use href="#i-down"/></svg>
+              </div>
+              <input id="f-phone" type="tel" inputmode="tel" autocomplete="tel-national" placeholder="1712 345678" class="min-w-0 flex-1 min-h-12 rounded-xl border border-linestrong bg-surface px-4 text-lg tracking-wide text-ink placeholder:text-muted focus:outline-none focus:border-brand focus:ring-[3px] focus:ring-brand/40">
+            </div>
+          </div>
+          <div>
+            <label for="f-err" class="block font-semibold">Years of experience</label>
+            <input id="f-err" type="text" inputmode="numeric" value="eight" aria-invalid="true" aria-describedby="f-err-msg" class="mt-1.5 block w-full min-h-12 rounded-xl border-2 border-bad bg-surface px-4 text-base text-ink focus:outline-none focus:ring-[3px] focus:ring-bad/40">
+            <p id="f-err-msg" class="mt-1.5 flex items-center gap-1.5 text-[15px] font-medium text-bad"><svg class="w-4 h-4 shrink-0" aria-hidden="true"><use href="#i-alert"/></svg>Write a number, for example 8</p>
+          </div>
+          <div>
+            <label for="f-select" class="block font-semibold">Country you want to work in</label>
+            <div class="relative mt-1.5">
+              <select id="f-select" class="appearance-none block w-full min-h-12 rounded-xl border border-linestrong bg-surface ps-4 pe-10 text-base text-ink focus:outline-none focus:border-brand focus:ring-[3px] focus:ring-brand/40">
+                <option>United Arab Emirates</option><option>Saudi Arabia</option><option>Poland</option><option>Japan</option><option>Czechia</option>
+              </select>
+              <svg class="pointer-events-none absolute end-4 top-1/2 -translate-y-1/2 w-5 h-5 text-muted" aria-hidden="true"><use href="#i-down"/></svg>
+            </div>
+          </div>
+          <div>
+            <label for="f-search" class="sr-only">Search jobs</label>
+            <div class="relative">
+              <svg class="pointer-events-none absolute start-4 top-1/2 -translate-y-1/2 w-5 h-5 text-muted" aria-hidden="true"><use href="#i-search"/></svg>
+              <input id="f-search" type="search" placeholder="Search: electrician, Dubai…" class="block w-full min-h-12 rounded-full border border-linestrong bg-surface ps-12 pe-4 text-base text-ink placeholder:text-muted focus:outline-none focus:border-brand focus:ring-[3px] focus:ring-brand/40">
+            </div>
+          </div>
+          <div>
+            <label for="f-area" class="block font-semibold">Message <span class="font-normal text-muted">(optional)</span></label>
+            <textarea id="f-area" rows="3" class="mt-1.5 block w-full rounded-xl border border-linestrong bg-surface px-4 py-3 text-base text-ink placeholder:text-muted focus:outline-none focus:border-brand focus:ring-[3px] focus:ring-brand/40" placeholder="Write here…"></textarea>
+          </div>
+        </div>
+
+        <div class="rounded-2xl border border-line bg-surface p-4 sm:p-6 space-y-6">
+          <fieldset>
+            <legend class="font-semibold">Enter the 6-digit code</legend>
+            <p class="text-sm text-muted">Sent by SMS to +880 1712 •••678</p>
+            <div class="mt-2 flex gap-2" dir="ltr">
+              <input aria-label="Digit 1" inputmode="numeric" maxlength="1" value="4" class="w-11 h-14 rounded-xl border border-linestrong bg-surface text-center font-mono text-2xl font-bold focus:outline-none focus:border-brand focus:ring-[3px] focus:ring-brand/40">
+              <input aria-label="Digit 2" inputmode="numeric" maxlength="1" value="8" class="w-11 h-14 rounded-xl border border-linestrong bg-surface text-center font-mono text-2xl font-bold focus:outline-none focus:border-brand focus:ring-[3px] focus:ring-brand/40">
+              <input aria-label="Digit 3" inputmode="numeric" maxlength="1" value="1" class="w-11 h-14 rounded-xl border border-linestrong bg-surface text-center font-mono text-2xl font-bold focus:outline-none focus:border-brand focus:ring-[3px] focus:ring-brand/40">
+              <input aria-label="Digit 4" inputmode="numeric" maxlength="1" class="w-11 h-14 rounded-xl border-2 border-brand bg-surface text-center font-mono text-2xl font-bold focus:outline-none focus:ring-[3px] focus:ring-brand/40">
+              <input aria-label="Digit 5" inputmode="numeric" maxlength="1" class="w-11 h-14 rounded-xl border border-linestrong bg-surface text-center font-mono text-2xl font-bold focus:outline-none focus:border-brand focus:ring-[3px] focus:ring-brand/40">
+              <input aria-label="Digit 6" inputmode="numeric" maxlength="1" class="w-11 h-14 rounded-xl border border-linestrong bg-surface text-center font-mono text-2xl font-bold focus:outline-none focus:border-brand focus:ring-[3px] focus:ring-brand/40">
+            </div>
+            <p class="mt-2 text-sm text-muted">Send again in <span class="font-semibold text-ink tabular-nums">0:42</span></p>
+          </fieldset>
+
+          <fieldset>
+            <legend class="font-semibold">Checkbox · per-item consent</legend>
+            <div class="mt-2 space-y-1">
+              <label class="flex items-start gap-3 min-h-12 rounded-xl px-2 py-2 hover:bg-surface2 cursor-pointer"><input type="checkbox" checked class="mt-0.5 w-6 h-6 shrink-0 rounded accent-brand"><span><span class="font-medium">Share my Skill Passport</span><span class="block text-sm text-muted">Name, trade, experience, skills</span></span></label>
+              <label class="flex items-start gap-3 min-h-12 rounded-xl px-2 py-2 hover:bg-surface2 cursor-pointer"><input type="checkbox" class="mt-0.5 w-6 h-6 shrink-0 rounded accent-brand"><span><span class="font-medium">Share my passport copy</span><span class="block text-sm text-muted">Only with ABC Contracting LLC, for this job</span></span></label>
+            </div>
+          </fieldset>
+
+          <fieldset>
+            <legend class="font-semibold">Radio</legend>
+            <div class="mt-2 space-y-1">
+              <label class="flex items-center gap-3 min-h-12 rounded-xl px-2 hover:bg-surface2 cursor-pointer"><input type="radio" name="avail" checked class="w-6 h-6 accent-brand">Immediately</label>
+              <label class="flex items-center gap-3 min-h-12 rounded-xl px-2 hover:bg-surface2 cursor-pointer"><input type="radio" name="avail" class="w-6 h-6 accent-brand">In 30 days</label>
+              <label class="flex items-center gap-3 min-h-12 rounded-xl px-2 hover:bg-surface2 cursor-pointer"><input type="radio" name="avail" class="w-6 h-6 accent-brand">In 60 days or more</label>
+            </div>
+          </fieldset>
+
+          <div class="flex items-center justify-between gap-4 min-h-12">
+            <label for="f-switch" class="min-w-0"><span class="font-semibold block">Show my profile to employers</span><span class="text-sm text-muted">Your phone number stays hidden</span></label>
+            <span class="relative inline-flex shrink-0">
+              <input id="f-switch" type="checkbox" role="switch" checked class="peer sr-only">
+              <span aria-hidden="true" class="w-14 h-8 rounded-full bg-linestrong transition-colors peer-checked:bg-brand peer-focus-visible:ring-[3px] peer-focus-visible:ring-brand peer-focus-visible:ring-offset-2 peer-focus-visible:ring-offset-surface"></span>
+              <span aria-hidden="true" class="absolute top-1 start-1 w-6 h-6 rounded-full bg-surface shadow transition-transform peer-checked:translate-x-6 rtl:peer-checked:-translate-x-6"></span>
+            </span>
+          </div>
+        </div>
+
+        <div class="lg:col-span-2 rounded-2xl border border-line bg-surface p-4 sm:p-6">
+          <fieldset>
+            <legend class="font-semibold">Choice tiles · picture + word (trade, language, yes/no)</legend>
+            <p class="text-sm text-muted">The worker's main way to answer. Radio inputs underneath, so keyboard and screen readers work.</p>
+            <div class="mt-3 grid grid-cols-2 sm:grid-cols-4 gap-3">
+              <label class="relative flex flex-col items-center justify-center gap-2 min-h-28 rounded-2xl border-2 border-line bg-surface p-3 text-center cursor-pointer hover:border-linestrong has-[:checked]:border-brand has-[:checked]:bg-brandsoft has-[:focus-visible]:ring-[3px] has-[:focus-visible]:ring-brand/50">
+                <input type="radio" name="trade" checked class="sr-only peer">
+                <span class="grid place-items-center w-12 h-12 rounded-xl bg-stampsoft text-stamp"><svg class="w-7 h-7" aria-hidden="true"><use href="#i-zap"/></svg></span>
+                <span class="font-semibold">Electrician</span>
+                <svg class="absolute top-2 end-2 w-6 h-6 text-brand hidden peer-checked:block" aria-hidden="true"><use href="#i-check-circle"/></svg>
+              </label>
+              <label class="relative flex flex-col items-center justify-center gap-2 min-h-28 rounded-2xl border-2 border-line bg-surface p-3 text-center cursor-pointer hover:border-linestrong has-[:checked]:border-brand has-[:checked]:bg-brandsoft has-[:focus-visible]:ring-[3px] has-[:focus-visible]:ring-brand/50">
+                <input type="radio" name="trade" class="sr-only peer">
+                <span class="grid place-items-center w-12 h-12 rounded-xl bg-stampsoft text-stamp"><svg class="w-7 h-7" aria-hidden="true"><use href="#i-flame"/></svg></span>
+                <span class="font-semibold">Welder</span>
+                <svg class="absolute top-2 end-2 w-6 h-6 text-brand hidden peer-checked:block" aria-hidden="true"><use href="#i-check-circle"/></svg>
+              </label>
+              <label class="relative flex flex-col items-center justify-center gap-2 min-h-28 rounded-2xl border-2 border-line bg-surface p-3 text-center cursor-pointer hover:border-linestrong has-[:checked]:border-brand has-[:checked]:bg-brandsoft has-[:focus-visible]:ring-[3px] has-[:focus-visible]:ring-brand/50">
+                <input type="radio" name="trade" class="sr-only peer">
+                <span class="grid place-items-center w-12 h-12 rounded-xl bg-stampsoft text-stamp"><svg class="w-7 h-7" aria-hidden="true"><use href="#i-car"/></svg></span>
+                <span class="font-semibold">Driver</span>
+                <svg class="absolute top-2 end-2 w-6 h-6 text-brand hidden peer-checked:block" aria-hidden="true"><use href="#i-check-circle"/></svg>
+              </label>
+              <label class="relative flex flex-col items-center justify-center gap-2 min-h-28 rounded-2xl border-2 border-line bg-surface p-3 text-center cursor-pointer hover:border-linestrong has-[:checked]:border-brand has-[:checked]:bg-brandsoft has-[:focus-visible]:ring-[3px] has-[:focus-visible]:ring-brand/50">
+                <input type="radio" name="trade" class="sr-only peer">
+                <span class="grid place-items-center w-12 h-12 rounded-xl bg-stampsoft text-stamp"><svg class="w-7 h-7" aria-hidden="true"><use href="#i-box"/></svg></span>
+                <span class="font-semibold">Warehouse</span>
+                <svg class="absolute top-2 end-2 w-6 h-6 text-brand hidden peer-checked:block" aria-hidden="true"><use href="#i-check-circle"/></svg>
+              </label>
+            </div>
+          </fieldset>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== Chips ===== -->
+    <section id="chips" data-toc="Chips & status" aria-labelledby="chips-h" class="scroll-mt-20">
+      <h2 id="chips-h" class="font-display text-2xl font-bold">Chips and status chips</h2>
+      <p class="mt-1 text-muted max-w-2xl"><code class="font-mono text-[14px]">&lt;StatusChip status="shortlisted" /&gt;</code> picks tone, icon and label from one map, so a status always looks the same. A green <b>verified</b> chip only ever comes from a real check, and it names what was checked.</p>
+      <div class="mt-5 rounded-2xl border border-line bg-surface divide-y divide-line">
+        <div class="p-4 sm:p-5">
+          <p class="font-semibold">Application stages <span class="text-sm font-normal text-muted">· spec §6</span></p>
+          <div class="mt-3 flex flex-wrap gap-2">
+            <span class="inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-sm font-semibold bg-brandsoft text-brand"><svg class="w-4 h-4" aria-hidden="true"><use href="#i-send"/></svg>Applied</span>
+            <span class="inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-sm font-semibold bg-brandsoft text-brand"><svg class="w-4 h-4" aria-hidden="true"><use href="#i-eye"/></svg>Profile reviewed</span>
+            <span class="inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-sm font-semibold bg-brandsoft text-brand"><svg class="w-4 h-4" aria-hidden="true"><use href="#i-check"/></svg>Qualified</span>
+            <span class="inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-sm font-semibold bg-stampsoft text-stamp"><svg class="w-4 h-4" aria-hidden="true"><use href="#i-star"/></svg>Shortlisted</span>
+            <span class="inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-sm font-semibold bg-stampsoft text-stamp"><svg class="w-4 h-4" aria-hidden="true"><use href="#i-calendar"/></svg>Interview</span>
+            <span class="inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-sm font-semibold bg-stampsoft text-stamp"><svg class="w-4 h-4" aria-hidden="true"><use href="#i-wrench"/></svg>Trade assessment</span>
+            <span class="inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-sm font-semibold bg-oksoft text-ok"><svg class="w-4 h-4" aria-hidden="true"><use href="#i-award"/></svg>Selected</span>
+            <span class="inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-sm font-semibold bg-oksoft text-ok"><svg class="w-4 h-4" aria-hidden="true"><use href="#i-file"/></svg>Offer</span>
+            <span class="inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-sm font-semibold bg-oksoft text-ok"><svg class="w-4 h-4" aria-hidden="true"><use href="#i-check-circle"/></svg>Accepted</span>
+            <span class="inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-sm font-semibold bg-surface2 text-muted"><svg class="w-4 h-4" aria-hidden="true"><use href="#i-x-circle"/></svg>Not selected</span>
+            <span class="inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-sm font-semibold bg-surface2 text-muted"><svg class="w-4 h-4 flip-rtl" aria-hidden="true"><use href="#i-back"/></svg>Withdrawn</span>
+          </div>
+        </div>
+        <div class="p-4 sm:p-5">
+          <p class="font-semibold">Verification <span class="text-sm font-normal text-muted">· organisation, licence, mandate, document, identity</span></p>
+          <div class="mt-3 flex flex-wrap gap-2">
+            <span class="inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-sm font-semibold bg-oksoft text-ok"><svg class="w-4 h-4" aria-hidden="true"><use href="#i-shield-check"/></svg>Employer verified</span>
+            <span class="inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-sm font-semibold bg-oksoft text-ok"><svg class="w-4 h-4" aria-hidden="true"><use href="#i-shield-check"/></svg>Agency licence verified</span>
+            <span class="inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-sm font-semibold bg-oksoft text-ok"><svg class="w-4 h-4" aria-hidden="true"><use href="#i-shield-check"/></svg>ID checked</span>
+            <span class="inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-sm font-semibold bg-warnsoft text-warn"><svg class="w-4 h-4" aria-hidden="true"><use href="#i-clock"/></svg>Under review</span>
+            <span class="inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-sm font-semibold bg-warnsoft text-warn"><svg class="w-4 h-4" aria-hidden="true"><use href="#i-alert"/></svg>More information needed</span>
+            <span class="inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-sm font-semibold bg-badsoft text-bad"><svg class="w-4 h-4" aria-hidden="true"><use href="#i-x-circle"/></svg>Rejected</span>
+            <span class="inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-sm font-semibold bg-badsoft text-bad"><svg class="w-4 h-4" aria-hidden="true"><use href="#i-clock"/></svg>Expired</span>
+            <span class="inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-sm font-semibold bg-surface2 text-muted"><svg class="w-4 h-4" aria-hidden="true"><use href="#i-info"/></svg>Not checked</span>
+          </div>
+        </div>
+        <div class="p-4 sm:p-5">
+          <p class="font-semibold">Evidence source <span class="text-sm font-normal text-muted">· who says this is true</span></p>
+          <div class="mt-3 flex flex-wrap gap-2">
+            <span class="inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-sm font-semibold bg-oksoft text-ok"><svg class="w-4 h-4" aria-hidden="true"><use href="#i-shield-check"/></svg>Checked by BLUESKILLS</span>
+            <span class="inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-sm font-semibold bg-brandsoft text-brand"><svg class="w-4 h-4" aria-hidden="true"><use href="#i-school"/></svg>Attested by institute</span>
+            <span class="inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-sm font-semibold bg-surface2 text-muted"><svg class="w-4 h-4" aria-hidden="true"><use href="#i-user"/></svg>Said by worker</span>
+            <span class="inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-sm font-semibold bg-surface2 text-muted"><svg class="w-4 h-4" aria-hidden="true"><use href="#i-building"/></svg>Declared by employer</span>
+          </div>
+        </div>
+        <div class="p-4 sm:p-5">
+          <p class="font-semibold">Job listing</p>
+          <div class="mt-3 flex flex-wrap gap-2">
+            <span class="inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-sm font-semibold bg-surface2 text-muted"><svg class="w-4 h-4" aria-hidden="true"><use href="#i-edit"/></svg>Draft</span>
+            <span class="inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-sm font-semibold bg-warnsoft text-warn"><svg class="w-4 h-4" aria-hidden="true"><use href="#i-clock"/></svg>In compliance review</span>
+            <span class="inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-sm font-semibold bg-oksoft text-ok"><span class="w-2 h-2 rounded-full bg-ok" aria-hidden="true"></span>Live</span>
+            <span class="inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-sm font-semibold bg-warnsoft text-warn"><svg class="w-4 h-4" aria-hidden="true"><use href="#i-refresh"/></svg>Re-review after change</span>
+            <span class="inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-sm font-semibold bg-surface2 text-muted"><svg class="w-4 h-4" aria-hidden="true"><use href="#i-clock"/></svg>Paused</span>
+            <span class="inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-sm font-semibold bg-surface2 text-muted"><svg class="w-4 h-4" aria-hidden="true"><use href="#i-lock"/></svg>Closed</span>
+            <span class="inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-sm font-semibold bg-badsoft text-bad"><svg class="w-4 h-4" aria-hidden="true"><use href="#i-flag"/></svg>Removed after report</span>
+          </div>
+        </div>
+        <div class="p-4 sm:p-5">
+          <p class="font-semibold">SkillShow video</p>
+          <div class="mt-3 flex flex-wrap gap-2">
+            <span class="inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-sm font-semibold bg-warnsoft text-warn"><svg class="w-4 h-4" aria-hidden="true"><use href="#i-clock"/></svg>Being checked</span>
+            <span class="inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-sm font-semibold bg-oksoft text-ok"><svg class="w-4 h-4" aria-hidden="true"><use href="#i-eye"/></svg>Published</span>
+            <span class="inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-sm font-semibold bg-surface2 text-muted"><svg class="w-4 h-4" aria-hidden="true"><use href="#i-video"/></svg>Worker demonstration · not certification</span>
+            <span class="inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-sm font-semibold bg-badsoft text-bad"><svg class="w-4 h-4" aria-hidden="true"><use href="#i-x-circle"/></svg>Not published · see reason</span>
+          </div>
+        </div>
+        <div class="p-4 sm:p-5">
+          <p class="font-semibold">Mobility case · trust reports</p>
+          <div class="mt-3 flex flex-wrap gap-2">
+            <span class="inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-sm font-semibold bg-brandsoft text-brand"><svg class="w-4 h-4" aria-hidden="true"><use href="#i-file"/></svg>Documents</span>
+            <span class="inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-sm font-semibold bg-brandsoft text-brand"><svg class="w-4 h-4" aria-hidden="true"><use href="#i-passport"/></svg>Work permit</span>
+            <span class="inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-sm font-semibold bg-brandsoft text-brand"><svg class="w-4 h-4" aria-hidden="true"><use href="#i-medical"/></svg>Medical</span>
+            <span class="inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-sm font-semibold bg-brandsoft text-brand"><svg class="w-4 h-4" aria-hidden="true"><use href="#i-plane"/></svg>Travel booked</span>
+            <span class="inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-sm font-semibold bg-oksoft text-ok"><svg class="w-4 h-4" aria-hidden="true"><use href="#i-check-circle"/></svg>Deployed</span>
+            <span class="inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-sm font-semibold bg-badsoft text-bad"><svg class="w-4 h-4" aria-hidden="true"><use href="#i-flag"/></svg>Report open</span>
+            <span class="inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-sm font-semibold bg-warnsoft text-warn"><svg class="w-4 h-4" aria-hidden="true"><use href="#i-search"/></svg>Investigating</span>
+            <span class="inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-sm font-semibold bg-oksoft text-ok"><svg class="w-4 h-4" aria-hidden="true"><use href="#i-check"/></svg>Resolved</span>
+          </div>
+        </div>
+        <div class="p-4 sm:p-5">
+          <p class="font-semibold">Filter chips · removable</p>
+          <div class="mt-3 flex flex-wrap gap-2">
+            <button type="button" aria-pressed="true" class="inline-flex items-center gap-1.5 min-h-11 rounded-full border border-brand bg-brandsoft px-4 text-[15px] font-semibold text-brand"><svg class="w-4 h-4" aria-hidden="true"><use href="#i-check"/></svg>UAE</button>
+            <button type="button" aria-pressed="false" class="inline-flex items-center gap-1.5 min-h-11 rounded-full border border-linestrong bg-surface px-4 text-[15px] font-semibold text-ink hover:bg-surface2">Saudi Arabia</button>
+            <button type="button" aria-pressed="false" class="inline-flex items-center gap-1.5 min-h-11 rounded-full border border-linestrong bg-surface px-4 text-[15px] font-semibold text-ink hover:bg-surface2">Free housing</button>
+            <span class="inline-flex items-center gap-1 min-h-11 rounded-full bg-surface2 ps-4 pe-1 text-[15px] font-semibold">Electrician<button type="button" aria-label="Remove filter: Electrician" class="grid place-items-center w-11 h-11 -my-1 rounded-full hover:bg-line"><svg class="w-4 h-4" aria-hidden="true"><use href="#i-x"/></svg></button></span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== Cards ===== -->
+    <section id="cards" data-toc="Cards & feedback" aria-labelledby="cards-h" class="scroll-mt-20">
+      <h2 id="cards-h" class="font-display text-2xl font-bold">Cards, alerts and progress</h2>
+      <p class="mt-1 text-muted max-w-2xl">The job card is the standard job-portal list item. The whole card is one link. The money and "you pay" appear first, in big text.</p>
+      <div class="mt-5 grid gap-4 lg:grid-cols-2">
+        <article class="relative rounded-2xl border border-line bg-surface p-4 hover:border-brand/60 focus-within:ring-[3px] focus-within:ring-brand/50">
+          <div class="flex items-start gap-3">
+            <span class="grid place-items-center w-12 h-12 shrink-0 rounded-xl bg-stampsoft text-stamp"><svg class="w-7 h-7" aria-hidden="true"><use href="#i-zap"/></svg></span>
+            <div class="min-w-0 flex-1">
+              <h3 class="text-lg font-bold leading-snug"><a href="#" class="after:absolute after:inset-0 focus:outline-none">Building Electrician</a></h3>
+              <p class="text-muted truncate">ABC Contracting LLC</p>
+            </div>
+            <span class="inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-[13px] font-semibold bg-oksoft text-ok"><svg class="w-4 h-4" aria-hidden="true"><use href="#i-shield-check"/></svg>Verified</span>
+          </div>
+          <p class="mt-3"><span class="text-2xl font-bold tabular-nums">AED 2,200</span> <span class="text-muted">per month</span></p>
+          <ul class="mt-2 flex flex-wrap gap-x-4 gap-y-1 text-[15px]">
+            <li class="flex items-center gap-1.5"><svg class="w-5 h-5 text-muted" aria-hidden="true"><use href="#i-pin"/></svg>Dubai, UAE</li>
+            <li class="flex items-center gap-1.5"><svg class="w-5 h-5 text-muted" aria-hidden="true"><use href="#i-bed"/></svg>Free housing</li>
+            <li class="flex items-center gap-1.5"><svg class="w-5 h-5 text-muted" aria-hidden="true"><use href="#i-plane"/></svg>Free ticket</li>
+          </ul>
+          <div class="mt-3 flex flex-wrap items-center gap-2">
+            <span class="inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-sm font-semibold bg-oksoft text-ok"><svg class="w-4 h-4" aria-hidden="true"><use href="#i-money"/></svg>You pay: Nothing</span>
+            <span class="inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-sm font-semibold bg-brandsoft text-brand"><svg class="w-4 h-4" aria-hidden="true"><use href="#i-check"/></svg>8 of 10 requirements met</span>
+          </div>
+        </article>
+
+        <article class="relative rounded-2xl border border-line bg-surface p-4 hover:border-brand/60 focus-within:ring-[3px] focus-within:ring-brand/50">
+          <div class="flex items-start gap-3">
+            <span class="grid place-items-center w-12 h-12 shrink-0 rounded-xl bg-stampsoft text-stamp"><svg class="w-7 h-7" aria-hidden="true"><use href="#i-box"/></svg></span>
+            <div class="min-w-0 flex-1">
+              <h3 class="text-lg font-bold leading-snug"><a href="#" class="after:absolute after:inset-0 focus:outline-none">Warehouse Professional</a></h3>
+              <p class="text-muted truncate">XYZ Logistics Sp. z o.o.</p>
+            </div>
+            <span class="inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-[13px] font-semibold bg-warnsoft text-warn"><svg class="w-4 h-4" aria-hidden="true"><use href="#i-refresh"/></svg>Re-review</span>
+          </div>
+          <p class="mt-3"><span class="text-2xl font-bold tabular-nums">PLN 5,200</span> <span class="text-muted">per month</span></p>
+          <ul class="mt-2 flex flex-wrap gap-x-4 gap-y-1 text-[15px]">
+            <li class="flex items-center gap-1.5"><svg class="w-5 h-5 text-muted" aria-hidden="true"><use href="#i-pin"/></svg>Poznań, Poland</li>
+            <li class="flex items-center gap-1.5"><svg class="w-5 h-5 text-muted" aria-hidden="true"><use href="#i-bed"/></svg><span class="italic font-medium text-warn">Housing not disclosed</span></li>
+          </ul>
+          <div class="mt-3 flex flex-wrap items-center gap-2">
+            <span class="inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-sm font-semibold bg-warnsoft text-warn"><svg class="w-4 h-4" aria-hidden="true"><use href="#i-money"/></svg>You pay: EUR 140</span>
+            <span class="inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-sm font-semibold bg-surface2 text-muted"><svg class="w-4 h-4" aria-hidden="true"><use href="#i-info"/></svg>4 of 8 requirements met</span>
+          </div>
+        </article>
+
+        <div class="rounded-2xl border border-line bg-surface p-4">
+          <p class="text-sm font-semibold text-muted">Stat card · organisation dashboards</p>
+          <div class="mt-3 grid grid-cols-2 gap-3">
+            <div class="rounded-xl bg-surface2 p-3"><p class="text-sm text-muted">Applicants</p><p class="text-3xl font-bold tabular-nums">1,284</p><p class="text-sm text-ok font-semibold">+86 this week</p></div>
+            <div class="rounded-xl bg-surface2 p-3"><p class="text-sm text-muted">Selected</p><p class="text-3xl font-bold tabular-nums">142<span class="text-lg text-muted font-semibold"> / 200</span></p><p class="text-sm text-muted">Target 200</p></div>
+          </div>
+          <div class="mt-4">
+            <div class="flex items-center justify-between text-[15px]"><span class="font-semibold">Your profile</span><span class="tabular-nums text-muted">70% complete</span></div>
+            <div class="mt-1.5 h-3 rounded-full bg-surface2 overflow-hidden" role="progressbar" aria-label="Profile complete" aria-valuemin="0" aria-valuemax="100" aria-valuenow="70"><div class="h-full rounded-full bg-brand" style="width:70%"></div></div>
+          </div>
+          <div class="mt-4 flex items-center gap-3">
+            <span class="grid place-items-center w-11 h-11 rounded-full bg-brandsoft text-brand font-bold">RU</span>
+            <span class="grid place-items-center w-11 h-11 rounded-full bg-stampsoft text-stamp font-bold">KA</span>
+            <span class="grid place-items-center w-11 h-11 rounded-full bg-oksoft text-ok font-bold">HA</span>
+            <span class="text-sm text-muted">Avatar · initials, never a passport photo</span>
+          </div>
+        </div>
+
+        <div class="space-y-3">
+          <div class="flex gap-3 rounded-xl border border-brand/30 bg-brandsoft p-4"><svg class="w-6 h-6 shrink-0 text-brand" aria-hidden="true"><use href="#i-info"/></svg><div><p class="font-semibold">BLUESKILLS is free for workers</p><p class="text-[15px]">Never pay anyone to apply. If someone asks for money, report it.</p></div></div>
+          <div class="flex gap-3 rounded-xl border border-ok/30 bg-oksoft p-4"><svg class="w-6 h-6 shrink-0 text-ok" aria-hidden="true"><use href="#i-check-circle"/></svg><div><p class="font-semibold">Application sent</p><p class="text-[15px]">ABC Contracting will reply within 7 days.</p></div></div>
+          <div class="flex gap-3 rounded-xl border border-warn/30 bg-warnsoft p-4"><svg class="w-6 h-6 shrink-0 text-warn" aria-hidden="true"><use href="#i-alert"/></svg><div><p class="font-semibold">This job changed</p><p class="text-[15px]">The salary was edited. It is being checked again.</p></div></div>
+          <div role="alert" class="flex gap-3 rounded-xl border border-bad/30 bg-badsoft p-4"><svg class="w-6 h-6 shrink-0 text-bad" aria-hidden="true"><use href="#i-x-circle"/></svg><div><p class="font-semibold">Code is wrong</p><p class="text-[15px]">Check the SMS and try again. 2 tries left.</p></div></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== Truth Card ===== -->
+    <section id="truth-card" data-toc="Truth Card" aria-labelledby="tc-h" class="scroll-mt-20">
+      <h2 id="tc-h" class="font-display text-2xl font-bold">Job Truth Card</h2>
+      <p class="mt-1 text-muted max-w-2xl">One structured job object always renders the same card (spec §5). The top shows three facts in big text: pay, what you pay, and how long. A missing field says <span class="italic font-medium text-warn">Not disclosed</span>. It never guesses. Checks name what was checked.</p>
+      <div class="mt-5 grid gap-6 xl:grid-cols-2 items-start">
+
+        <!-- Truth Card: complete -->
+        <article class="rounded-2xl border border-line bg-surface overflow-hidden" aria-labelledby="tc1-t">
+          <header class="bg-brandsoft px-4 sm:px-5 pt-4 pb-4">
+            <div class="flex items-center gap-2">
+              <span class="text-[13px] font-bold uppercase tracking-wider text-brand">Job Truth Card</span>
+              <span class="ms-auto font-mono text-[13px] text-muted">UAE-EL-0001</span>
+            </div>
+            <h3 id="tc1-t" class="mt-1 text-2xl font-bold leading-tight">Building Electrician</h3>
+            <p class="mt-0.5 flex items-center gap-1.5 text-muted"><svg class="w-5 h-5" aria-hidden="true"><use href="#i-pin"/></svg>Dubai, United Arab Emirates</p>
+            <ul class="mt-3 flex flex-wrap gap-2" aria-label="Checks">
+              <li class="inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-sm font-semibold bg-oksoft text-ok"><svg class="w-4 h-4" aria-hidden="true"><use href="#i-shield-check"/></svg>Employer verified</li>
+              <li class="inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-sm font-semibold bg-oksoft text-ok"><svg class="w-4 h-4" aria-hidden="true"><use href="#i-shield-check"/></svg>Agency licence verified</li>
+              <li class="inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-sm font-semibold bg-oksoft text-ok"><svg class="w-4 h-4" aria-hidden="true"><use href="#i-shield-check"/></svg>Mandate verified</li>
+              <li class="inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-sm font-semibold bg-surface text-muted"><svg class="w-4 h-4" aria-hidden="true"><use href="#i-building"/></svg>Salary declared by employer</li>
+            </ul>
+          </header>
+          <div class="grid grid-cols-1 sm:grid-cols-3 border-b border-line">
+            <div class="p-4 border-b sm:border-b-0 sm:border-e border-line"><p class="flex items-center gap-1.5 text-sm text-muted"><svg class="w-5 h-5" aria-hidden="true"><use href="#i-money"/></svg>Salary</p><p class="text-2xl font-bold tabular-nums">AED 2,200</p><p class="text-sm text-muted">per month</p></div>
+            <div class="p-4 border-b sm:border-b-0 sm:border-e border-line bg-oksoft/60"><p class="flex items-center gap-1.5 text-sm text-ok font-semibold"><svg class="w-5 h-5" aria-hidden="true"><use href="#i-check-circle"/></svg>You pay</p><p class="text-2xl font-bold text-ok">Nothing</p><p class="text-sm text-muted">No worker costs</p></div>
+            <div class="p-4"><p class="flex items-center gap-1.5 text-sm text-muted"><svg class="w-5 h-5" aria-hidden="true"><use href="#i-calendar"/></svg>Contract</p><p class="text-2xl font-bold tabular-nums">24 months</p><p class="text-sm text-muted">Apply by 30 Nov 2026</p></div>
+          </div>
+          <div class="divide-y divide-line">
+            <section class="px-4 sm:px-5 py-3" aria-labelledby="tc1-s1">
+              <h4 id="tc1-s1" class="text-[13px] font-bold uppercase tracking-wider text-muted">Work</h4>
+              <dl class="mt-1 divide-y divide-line/70">
+                <div class="grid grid-cols-[1.5rem_minmax(0,7.5rem)_minmax(0,1fr)] sm:grid-cols-[1.5rem_minmax(0,9rem)_minmax(0,1fr)] gap-x-2 py-2"><svg class="w-5 h-5 mt-0.5 text-muted" aria-hidden="true"><use href="#i-clock"/></svg><dt class="text-muted">Hours</dt><dd class="font-medium">8 hours a day · 6 days a week</dd></div>
+                <div class="grid grid-cols-[1.5rem_minmax(0,7.5rem)_minmax(0,1fr)] sm:grid-cols-[1.5rem_minmax(0,9rem)_minmax(0,1fr)] gap-x-2 py-2"><svg class="w-5 h-5 mt-0.5 text-muted" aria-hidden="true"><use href="#i-plus"/></svg><dt class="text-muted">Overtime</dt><dd class="font-medium">Paid at 1.25× hourly rate</dd></div>
+                <div class="grid grid-cols-[1.5rem_minmax(0,7.5rem)_minmax(0,1fr)] sm:grid-cols-[1.5rem_minmax(0,9rem)_minmax(0,1fr)] gap-x-2 py-2"><svg class="w-5 h-5 mt-0.5 text-muted" aria-hidden="true"><use href="#i-users"/></svg><dt class="text-muted">Workers needed</dt><dd class="font-medium tabular-nums">200</dd></div>
+              </dl>
+            </section>
+            <section class="px-4 sm:px-5 py-3" aria-labelledby="tc1-s2">
+              <h4 id="tc1-s2" class="text-[13px] font-bold uppercase tracking-wider text-muted">Food, housing, travel</h4>
+              <dl class="mt-1 divide-y divide-line/70">
+                <div class="grid grid-cols-[1.5rem_minmax(0,7.5rem)_minmax(0,1fr)] sm:grid-cols-[1.5rem_minmax(0,9rem)_minmax(0,1fr)] gap-x-2 py-2"><svg class="w-5 h-5 mt-0.5 text-muted" aria-hidden="true"><use href="#i-bed"/></svg><dt class="text-muted">Housing</dt><dd class="font-medium">Free · shared, 4 per room</dd></div>
+                <div class="grid grid-cols-[1.5rem_minmax(0,7.5rem)_minmax(0,1fr)] sm:grid-cols-[1.5rem_minmax(0,9rem)_minmax(0,1fr)] gap-x-2 py-2"><svg class="w-5 h-5 mt-0.5 text-muted" aria-hidden="true"><use href="#i-food"/></svg><dt class="text-muted">Food</dt><dd class="font-medium">AED 300 monthly allowance</dd></div>
+                <div class="grid grid-cols-[1.5rem_minmax(0,7.5rem)_minmax(0,1fr)] sm:grid-cols-[1.5rem_minmax(0,9rem)_minmax(0,1fr)] gap-x-2 py-2"><svg class="w-5 h-5 mt-0.5 text-muted" aria-hidden="true"><use href="#i-bus"/></svg><dt class="text-muted">Transport</dt><dd class="font-medium">Free to work site</dd></div>
+                <div class="grid grid-cols-[1.5rem_minmax(0,7.5rem)_minmax(0,1fr)] sm:grid-cols-[1.5rem_minmax(0,9rem)_minmax(0,1fr)] gap-x-2 py-2"><svg class="w-5 h-5 mt-0.5 text-muted" aria-hidden="true"><use href="#i-medical"/></svg><dt class="text-muted">Medical</dt><dd class="font-medium">Employer health insurance</dd></div>
+                <div class="grid grid-cols-[1.5rem_minmax(0,7.5rem)_minmax(0,1fr)] sm:grid-cols-[1.5rem_minmax(0,9rem)_minmax(0,1fr)] gap-x-2 py-2"><svg class="w-5 h-5 mt-0.5 text-muted" aria-hidden="true"><use href="#i-plane"/></svg><dt class="text-muted">Air ticket</dt><dd class="font-medium">Employer pays, both ways</dd></div>
+              </dl>
+            </section>
+            <section class="px-4 sm:px-5 py-3" aria-labelledby="tc1-s3">
+              <h4 id="tc1-s3" class="text-[13px] font-bold uppercase tracking-wider text-muted">Visa and costs</h4>
+              <dl class="mt-1 divide-y divide-line/70">
+                <div class="grid grid-cols-[1.5rem_minmax(0,7.5rem)_minmax(0,1fr)] sm:grid-cols-[1.5rem_minmax(0,9rem)_minmax(0,1fr)] gap-x-2 py-2"><svg class="w-5 h-5 mt-0.5 text-muted" aria-hidden="true"><use href="#i-passport"/></svg><dt class="text-muted">Work permit</dt><dd class="font-medium">Employer pays</dd></div>
+                <div class="grid grid-cols-[1.5rem_minmax(0,7.5rem)_minmax(0,1fr)] sm:grid-cols-[1.5rem_minmax(0,9rem)_minmax(0,1fr)] gap-x-2 py-2"><svg class="w-5 h-5 mt-0.5 text-muted" aria-hidden="true"><use href="#i-file"/></svg><dt class="text-muted">Visa</dt><dd class="font-medium">Employer pays</dd></div>
+                <div class="grid grid-cols-[1.5rem_minmax(0,7.5rem)_minmax(0,1fr)] sm:grid-cols-[1.5rem_minmax(0,9rem)_minmax(0,1fr)] gap-x-2 py-2"><svg class="w-5 h-5 mt-0.5 text-ok" aria-hidden="true"><use href="#i-money"/></svg><dt class="text-muted">Costs you pay</dt><dd class="font-semibold text-ok">Nothing</dd></div>
+              </dl>
+            </section>
+            <section class="px-4 sm:px-5 py-3" aria-labelledby="tc1-s4">
+              <h4 id="tc1-s4" class="text-[13px] font-bold uppercase tracking-wider text-muted">Who is hiring</h4>
+              <dl class="mt-1 divide-y divide-line/70">
+                <div class="grid grid-cols-[1.5rem_minmax(0,7.5rem)_minmax(0,1fr)] sm:grid-cols-[1.5rem_minmax(0,9rem)_minmax(0,1fr)] gap-x-2 py-2"><svg class="w-5 h-5 mt-0.5 text-muted" aria-hidden="true"><use href="#i-building"/></svg><dt class="text-muted">Employer</dt><dd class="font-medium">ABC Contracting LLC</dd></div>
+                <div class="grid grid-cols-[1.5rem_minmax(0,7.5rem)_minmax(0,1fr)] sm:grid-cols-[1.5rem_minmax(0,9rem)_minmax(0,1fr)] gap-x-2 py-2"><svg class="w-5 h-5 mt-0.5 text-muted" aria-hidden="true"><use href="#i-briefcase"/></svg><dt class="text-muted">Recruiter</dt><dd class="font-medium">Northstar Manpower <span class="block text-sm font-normal text-muted">Licence RA-2026-0418 · valid to Mar 2027</span></dd></div>
+                <div class="grid grid-cols-[1.5rem_minmax(0,7.5rem)_minmax(0,1fr)] sm:grid-cols-[1.5rem_minmax(0,9rem)_minmax(0,1fr)] gap-x-2 py-2"><svg class="w-5 h-5 mt-0.5 text-muted" aria-hidden="true"><use href="#i-file"/></svg><dt class="text-muted">Mandate</dt><dd class="font-medium">MD-1107 · 200 workers</dd></div>
+              </dl>
+            </section>
+            <section class="px-4 sm:px-5 py-3" aria-labelledby="tc1-s5">
+              <h4 id="tc1-s5" class="text-[13px] font-bold uppercase tracking-wider text-muted">You and this job</h4>
+              <div class="mt-2 flex items-center justify-between gap-3"><p class="font-semibold">8 of 10 requirements met</p><span class="text-sm text-muted">Rules-based</span></div>
+              <div class="mt-1.5 h-3 rounded-full bg-surface2 overflow-hidden" role="progressbar" aria-label="Requirements met" aria-valuemin="0" aria-valuemax="10" aria-valuenow="8"><div class="h-full rounded-full bg-ok" style="width:80%"></div></div>
+              <details class="mt-2 group">
+                <summary class="inline-flex items-center gap-1 min-h-11 font-semibold text-brand cursor-pointer">See all 10<svg class="w-4 h-4 group-open:rotate-180 transition-transform" aria-hidden="true"><use href="#i-down"/></svg></summary>
+                <ul class="grid gap-1 sm:grid-cols-2 pb-2">
+                  <li class="flex items-center gap-2"><svg class="w-5 h-5 text-ok" aria-hidden="true"><use href="#i-check-circle"/></svg>Electrician</li>
+                  <li class="flex items-center gap-2"><svg class="w-5 h-5 text-ok" aria-hidden="true"><use href="#i-check-circle"/></svg>5+ years experience</li>
+                  <li class="flex items-center gap-2"><svg class="w-5 h-5 text-ok" aria-hidden="true"><use href="#i-check-circle"/></svg>Gulf experience</li>
+                  <li class="flex items-center gap-2"><svg class="w-5 h-5 text-ok" aria-hidden="true"><use href="#i-check-circle"/></svg>Passport ready</li>
+                  <li class="flex items-center gap-2"><svg class="w-5 h-5 text-ok" aria-hidden="true"><use href="#i-check-circle"/></svg>Industrial wiring</li>
+                  <li class="flex items-center gap-2"><svg class="w-5 h-5 text-ok" aria-hidden="true"><use href="#i-check-circle"/></svg>DB installation</li>
+                  <li class="flex items-center gap-2 text-muted"><svg class="w-5 h-5" aria-hidden="true"><use href="#i-x-circle"/></svg>Cable termination</li>
+                  <li class="flex items-center gap-2"><svg class="w-5 h-5 text-ok" aria-hidden="true"><use href="#i-check-circle"/></svg>Basic English</li>
+                  <li class="flex items-center gap-2"><svg class="w-5 h-5 text-ok" aria-hidden="true"><use href="#i-check-circle"/></svg>Can start in 60 days</li>
+                  <li class="flex items-center gap-2 text-muted"><svg class="w-5 h-5" aria-hidden="true"><use href="#i-x-circle"/></svg>Trade test passed</li>
+                </ul>
+              </details>
+            </section>
+          </div>
+          <footer class="flex flex-wrap items-center gap-2 px-4 sm:px-5 py-3 bg-surface2/60 border-t border-line">
+            <button type="button" data-speak="#tc1-t" class="inline-flex items-center gap-2 min-h-11 px-4 rounded-full bg-brandsoft text-brand font-semibold hover:bg-brandsoft/70"><svg class="w-5 h-5" aria-hidden="true"><use href="#i-speaker"/></svg>Listen</button>
+            <button type="button" class="ms-auto inline-flex items-center gap-2 min-h-11 px-3 rounded-xl text-bad font-semibold hover:bg-badsoft"><svg class="w-5 h-5" aria-hidden="true"><use href="#i-flag"/></svg>Report this job</button>
+          </footer>
+        </article>
+
+        <!-- Truth Card: missing fields + worker costs -->
+        <article class="rounded-2xl border border-line bg-surface overflow-hidden" aria-labelledby="tc2-t">
+          <header class="bg-brandsoft px-4 sm:px-5 pt-4 pb-4">
+            <div class="flex items-center gap-2">
+              <span class="text-[13px] font-bold uppercase tracking-wider text-brand">Job Truth Card</span>
+              <span class="ms-auto font-mono text-[13px] text-muted">PL-WH-0014</span>
+            </div>
+            <h3 id="tc2-t" class="mt-1 text-2xl font-bold leading-tight">Warehouse Professional</h3>
+            <p class="mt-0.5 flex items-center gap-1.5 text-muted"><svg class="w-5 h-5" aria-hidden="true"><use href="#i-pin"/></svg>Poznań, Poland</p>
+            <ul class="mt-3 flex flex-wrap gap-2" aria-label="Checks">
+              <li class="inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-sm font-semibold bg-oksoft text-ok"><svg class="w-4 h-4" aria-hidden="true"><use href="#i-shield-check"/></svg>Employer verified</li>
+              <li class="inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-sm font-semibold bg-warnsoft text-warn"><svg class="w-4 h-4" aria-hidden="true"><use href="#i-refresh"/></svg>Being checked again after a change</li>
+            </ul>
+          </header>
+          <div class="grid grid-cols-1 sm:grid-cols-3 border-b border-line">
+            <div class="p-4 border-b sm:border-b-0 sm:border-e border-line"><p class="flex items-center gap-1.5 text-sm text-muted"><svg class="w-5 h-5" aria-hidden="true"><use href="#i-money"/></svg>Salary</p><p class="text-2xl font-bold tabular-nums">PLN 5,200</p><p class="text-sm text-muted">per month</p></div>
+            <div class="p-4 border-b sm:border-b-0 sm:border-e border-line bg-warnsoft/60"><p class="flex items-center gap-1.5 text-sm text-warn font-semibold"><svg class="w-5 h-5" aria-hidden="true"><use href="#i-alert"/></svg>You pay</p><p class="text-2xl font-bold text-warn tabular-nums">EUR 140</p><p class="text-sm text-muted">2 costs · see below</p></div>
+            <div class="p-4"><p class="flex items-center gap-1.5 text-sm text-muted"><svg class="w-5 h-5" aria-hidden="true"><use href="#i-calendar"/></svg>Contract</p><p class="text-2xl font-bold tabular-nums">12 months</p><p class="text-sm text-muted">Apply by 15 Dec 2026</p></div>
+          </div>
+          <div class="divide-y divide-line">
+            <section class="px-4 sm:px-5 py-3" aria-labelledby="tc2-s2">
+              <h4 id="tc2-s2" class="text-[13px] font-bold uppercase tracking-wider text-muted">Food, housing, travel</h4>
+              <dl class="mt-1 divide-y divide-line/70">
+                <div class="grid grid-cols-[1.5rem_minmax(0,7.5rem)_minmax(0,1fr)] sm:grid-cols-[1.5rem_minmax(0,9rem)_minmax(0,1fr)] gap-x-2 py-2"><svg class="w-5 h-5 mt-0.5 text-muted" aria-hidden="true"><use href="#i-bed"/></svg><dt class="text-muted">Housing</dt><dd><span class="inline-flex items-center gap-1 italic font-medium text-warn"><svg class="w-4 h-4 shrink-0" aria-hidden="true"><use href="#i-info"/></svg>Not disclosed</span></dd></div>
+                <div class="grid grid-cols-[1.5rem_minmax(0,7.5rem)_minmax(0,1fr)] sm:grid-cols-[1.5rem_minmax(0,9rem)_minmax(0,1fr)] gap-x-2 py-2"><svg class="w-5 h-5 mt-0.5 text-muted" aria-hidden="true"><use href="#i-food"/></svg><dt class="text-muted">Food</dt><dd><span class="inline-flex items-center gap-1 italic font-medium text-warn"><svg class="w-4 h-4 shrink-0" aria-hidden="true"><use href="#i-info"/></svg>Not disclosed</span></dd></div>
+                <div class="grid grid-cols-[1.5rem_minmax(0,7.5rem)_minmax(0,1fr)] sm:grid-cols-[1.5rem_minmax(0,9rem)_minmax(0,1fr)] gap-x-2 py-2"><svg class="w-5 h-5 mt-0.5 text-muted" aria-hidden="true"><use href="#i-bus"/></svg><dt class="text-muted">Transport</dt><dd class="font-medium">Shift bus from city centre</dd></div>
+                <div class="grid grid-cols-[1.5rem_minmax(0,7.5rem)_minmax(0,1fr)] sm:grid-cols-[1.5rem_minmax(0,9rem)_minmax(0,1fr)] gap-x-2 py-2"><svg class="w-5 h-5 mt-0.5 text-muted" aria-hidden="true"><use href="#i-plane"/></svg><dt class="text-muted">Air ticket</dt><dd><span class="inline-flex items-center gap-1 italic font-medium text-warn"><svg class="w-4 h-4 shrink-0" aria-hidden="true"><use href="#i-info"/></svg>Not disclosed</span></dd></div>
+              </dl>
+            </section>
+            <section class="px-4 sm:px-5 py-3" aria-labelledby="tc2-s3">
+              <h4 id="tc2-s3" class="text-[13px] font-bold uppercase tracking-wider text-muted">Visa and costs</h4>
+              <dl class="mt-1 divide-y divide-line/70">
+                <div class="grid grid-cols-[1.5rem_minmax(0,7.5rem)_minmax(0,1fr)] sm:grid-cols-[1.5rem_minmax(0,9rem)_minmax(0,1fr)] gap-x-2 py-2"><svg class="w-5 h-5 mt-0.5 text-muted" aria-hidden="true"><use href="#i-passport"/></svg><dt class="text-muted">Work permit</dt><dd class="font-medium">Employer pays</dd></div>
+                <div class="grid grid-cols-[1.5rem_minmax(0,7.5rem)_minmax(0,1fr)] sm:grid-cols-[1.5rem_minmax(0,9rem)_minmax(0,1fr)] gap-x-2 py-2"><svg class="w-5 h-5 mt-0.5 text-warn" aria-hidden="true"><use href="#i-money"/></svg><dt class="text-muted">Visa fee</dt><dd class="font-semibold text-warn tabular-nums">EUR 80 · you pay</dd></div>
+                <div class="grid grid-cols-[1.5rem_minmax(0,7.5rem)_minmax(0,1fr)] sm:grid-cols-[1.5rem_minmax(0,9rem)_minmax(0,1fr)] gap-x-2 py-2"><svg class="w-5 h-5 mt-0.5 text-warn" aria-hidden="true"><use href="#i-money"/></svg><dt class="text-muted">Medical check</dt><dd class="font-semibold text-warn tabular-nums">EUR 60 · you pay</dd></div>
+              </dl>
+            </section>
+            <section class="px-4 sm:px-5 py-3" aria-labelledby="tc2-s4">
+              <h4 id="tc2-s4" class="text-[13px] font-bold uppercase tracking-wider text-muted">Who is hiring</h4>
+              <dl class="mt-1 divide-y divide-line/70">
+                <div class="grid grid-cols-[1.5rem_minmax(0,7.5rem)_minmax(0,1fr)] sm:grid-cols-[1.5rem_minmax(0,9rem)_minmax(0,1fr)] gap-x-2 py-2"><svg class="w-5 h-5 mt-0.5 text-muted" aria-hidden="true"><use href="#i-building"/></svg><dt class="text-muted">Employer</dt><dd class="font-medium">XYZ Logistics Sp. z o.o. <span class="block text-sm font-normal text-muted">Direct hire · no agency</span></dd></div>
+              </dl>
+            </section>
+            <section class="px-4 sm:px-5 py-3" aria-labelledby="tc2-s5">
+              <h4 id="tc2-s5" class="text-[13px] font-bold uppercase tracking-wider text-muted">You and this job</h4>
+              <div class="mt-2 flex items-center justify-between gap-3"><p class="font-semibold">4 of 8 requirements met</p><span class="text-sm text-muted">Rules-based</span></div>
+              <div class="mt-1.5 h-3 rounded-full bg-surface2 overflow-hidden" role="progressbar" aria-label="Requirements met" aria-valuemin="0" aria-valuemax="8" aria-valuenow="4"><div class="h-full rounded-full bg-warn" style="width:50%"></div></div>
+              <p class="mt-2 text-[15px] text-muted">Missing: warehouse experience, forklift licence, EU work history, picking &amp; packing.</p>
+            </section>
+          </div>
+          <footer class="flex flex-wrap items-center gap-2 px-4 sm:px-5 py-3 bg-surface2/60 border-t border-line">
+            <button type="button" data-speak="#tc2-t" class="inline-flex items-center gap-2 min-h-11 px-4 rounded-full bg-brandsoft text-brand font-semibold hover:bg-brandsoft/70"><svg class="w-5 h-5" aria-hidden="true"><use href="#i-speaker"/></svg>Listen</button>
+            <button type="button" class="ms-auto inline-flex items-center gap-2 min-h-11 px-3 rounded-xl text-bad font-semibold hover:bg-badsoft"><svg class="w-5 h-5" aria-hidden="true"><use href="#i-flag"/></svg>Report this job</button>
+          </footer>
+        </article>
+      </div>
+    </section>
+
+    <!-- ===== Table ===== -->
+    <section id="table" data-toc="Table" aria-labelledby="table-h" class="scroll-mt-20">
+      <h2 id="table-h" class="font-display text-2xl font-bold">Data table and its mobile card version</h2>
+      <p class="mt-1 text-muted max-w-2xl">Above 768px it is a table with a selection column. Below that, each row becomes a card with the same fields and actions. Search results never show phone numbers or passport scans. Contact opens only after the worker agrees.</p>
+      <div class="mt-5 rounded-2xl border border-line bg-surface overflow-hidden">
+        <div class="flex flex-wrap items-center gap-2 px-4 py-3 border-b border-line">
+          <p class="font-semibold me-auto">Candidates for UAE-EL-0001 <span class="text-muted font-normal">· 4 of 186</span></p>
+          <span class="inline-flex items-center gap-1 rounded-md border border-dashed border-linestrong px-2 py-0.5 text-[13px] font-semibold text-muted">Sample data</span>
+        </div>
+        <!-- desktop table -->
+        <table class="hidden md:table w-full text-start text-[15px]">
+          <thead class="bg-surface2/60 text-muted text-sm">
+            <tr>
+              <th scope="col" class="w-12 px-4 py-3"><label class="inline-grid place-items-center w-11 h-11 -m-2.5 cursor-pointer"><input type="checkbox" aria-label="Select all" class="w-5 h-5 accent-brand"></label></th>
+              <th scope="col" class="px-3 py-3 text-start font-semibold">Candidate</th>
+              <th scope="col" class="px-3 py-3 text-start font-semibold">Experience</th>
+              <th scope="col" class="px-3 py-3 text-start font-semibold">Checks</th>
+              <th scope="col" class="px-3 py-3 text-start font-semibold">Available</th>
+              <th scope="col" class="px-3 py-3 text-start font-semibold">Match</th>
+              <th scope="col" class="px-4 py-3"><span class="sr-only">Actions</span></th>
+            </tr>
+          </thead>
+          <tbody class="divide-y divide-line">
+            <tr class="hover:bg-surface2/50">
+              <td class="px-4 py-3"><label class="inline-grid place-items-center w-11 h-11 -m-2.5 cursor-pointer"><input type="checkbox" aria-label="Select Rahim Uddin" class="w-5 h-5 accent-brand"></label></td>
+              <td class="px-3 py-3"><div class="flex items-center gap-3"><span class="grid place-items-center w-10 h-10 shrink-0 rounded-full bg-brandsoft text-brand font-bold text-sm">RU</span><div class="min-w-0"><p class="font-semibold">Rahim Uddin</p><p class="text-sm text-muted">Electrician · Bangladesh</p></div></div></td>
+              <td class="px-3 py-3">8 years<p class="text-sm text-muted">Bangladesh 5y · UAE 3y</p></td>
+              <td class="px-3 py-3"><div class="flex flex-wrap gap-1"><span class="inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-[13px] font-semibold bg-oksoft text-ok"><svg class="w-3.5 h-3.5" aria-hidden="true"><use href="#i-shield-check"/></svg>ID checked</span><span class="inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-[13px] font-semibold bg-surface2 text-muted"><svg class="w-3.5 h-3.5" aria-hidden="true"><use href="#i-video"/></svg>SkillShow</span></div></td>
+              <td class="px-3 py-3">Immediately</td>
+              <td class="px-3 py-3 font-semibold tabular-nums whitespace-nowrap">9 of 10</td>
+              <td class="px-4 py-3 text-end"><a href="#" class="inline-flex items-center min-h-11 px-3 rounded-lg font-semibold text-brand hover:bg-brandsoft">View</a></td>
+            </tr>
+            <tr class="hover:bg-surface2/50">
+              <td class="px-4 py-3"><label class="inline-grid place-items-center w-11 h-11 -m-2.5 cursor-pointer"><input type="checkbox" aria-label="Select Hasan Ali" class="w-5 h-5 accent-brand"></label></td>
+              <td class="px-3 py-3"><div class="flex items-center gap-3"><span class="grid place-items-center w-10 h-10 shrink-0 rounded-full bg-stampsoft text-stamp font-bold text-sm">HA</span><div class="min-w-0"><p class="font-semibold">Hasan Ali</p><p class="text-sm text-muted">Electrical Technician · Pakistan</p></div></div></td>
+              <td class="px-3 py-3">10 years<p class="text-sm text-muted">Pakistan 6y · Saudi Arabia 4y</p></td>
+              <td class="px-3 py-3"><div class="flex flex-wrap gap-1"><span class="inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-[13px] font-semibold bg-surface2 text-muted"><svg class="w-3.5 h-3.5" aria-hidden="true"><use href="#i-info"/></svg>ID not checked</span><span class="inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-[13px] font-semibold bg-surface2 text-muted"><svg class="w-3.5 h-3.5" aria-hidden="true"><use href="#i-video"/></svg>SkillShow</span></div></td>
+              <td class="px-3 py-3">In 60 days</td>
+              <td class="px-3 py-3 font-semibold tabular-nums whitespace-nowrap">8 of 10</td>
+              <td class="px-4 py-3 text-end"><a href="#" class="inline-flex items-center min-h-11 px-3 rounded-lg font-semibold text-brand hover:bg-brandsoft">View</a></td>
+            </tr>
+            <tr class="hover:bg-surface2/50">
+              <td class="px-4 py-3"><label class="inline-grid place-items-center w-11 h-11 -m-2.5 cursor-pointer"><input type="checkbox" aria-label="Select Sunil Thapa" class="w-5 h-5 accent-brand"></label></td>
+              <td class="px-3 py-3"><div class="flex items-center gap-3"><span class="grid place-items-center w-10 h-10 shrink-0 rounded-full bg-oksoft text-ok font-bold text-sm">ST</span><div class="min-w-0"><p class="font-semibold">Sunil Thapa</p><p class="text-sm text-muted">Electrician · Nepal</p></div></div></td>
+              <td class="px-3 py-3">5 years<p class="text-sm text-muted">Nepal 3y · Qatar 2y</p></td>
+              <td class="px-3 py-3"><div class="flex flex-wrap gap-1"><span class="inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-[13px] font-semibold bg-oksoft text-ok"><svg class="w-3.5 h-3.5" aria-hidden="true"><use href="#i-shield-check"/></svg>ID checked</span></div></td>
+              <td class="px-3 py-3">Immediately</td>
+              <td class="px-3 py-3 font-semibold tabular-nums whitespace-nowrap">6 of 10</td>
+              <td class="px-4 py-3 text-end"><a href="#" class="inline-flex items-center min-h-11 px-3 rounded-lg font-semibold text-brand hover:bg-brandsoft">View</a></td>
+            </tr>
+          </tbody>
+        </table>
+        <!-- mobile cards: same data, same actions -->
+        <ul class="md:hidden divide-y divide-line">
+          <li class="p-4">
+            <div class="flex items-start gap-3">
+              <label class="grid place-items-center w-11 h-11 -ms-2.5 shrink-0 cursor-pointer"><input type="checkbox" aria-label="Select Rahim Uddin" class="w-6 h-6 accent-brand"></label>
+              <span class="grid place-items-center w-11 h-11 shrink-0 rounded-full bg-brandsoft text-brand font-bold">RU</span>
+              <div class="min-w-0 flex-1"><p class="font-semibold">Rahim Uddin</p><p class="text-sm text-muted">Electrician · Bangladesh · 8 years</p></div>
+              <span class="font-semibold tabular-nums whitespace-nowrap">9 of 10</span>
+            </div>
+            <dl class="mt-2 ps-[5.25rem] text-[15px] space-y-0.5"><div class="flex gap-2"><dt class="text-muted">Worked in</dt><dd>Bangladesh 5y · UAE 3y</dd></div><div class="flex gap-2"><dt class="text-muted">Available</dt><dd>Immediately</dd></div></dl>
+            <div class="mt-2 ps-[5.25rem] flex flex-wrap items-center gap-1"><span class="inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-[13px] font-semibold bg-oksoft text-ok"><svg class="w-3.5 h-3.5" aria-hidden="true"><use href="#i-shield-check"/></svg>ID checked</span><span class="inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-[13px] font-semibold bg-surface2 text-muted"><svg class="w-3.5 h-3.5" aria-hidden="true"><use href="#i-video"/></svg>SkillShow</span><a href="#" class="ms-auto inline-flex items-center min-h-11 px-3 rounded-lg font-semibold text-brand hover:bg-brandsoft">View</a></div>
+          </li>
+          <li class="p-4">
+            <div class="flex items-start gap-3">
+              <label class="grid place-items-center w-11 h-11 -ms-2.5 shrink-0 cursor-pointer"><input type="checkbox" aria-label="Select Hasan Ali" class="w-6 h-6 accent-brand"></label>
+              <span class="grid place-items-center w-11 h-11 shrink-0 rounded-full bg-stampsoft text-stamp font-bold">HA</span>
+              <div class="min-w-0 flex-1"><p class="font-semibold">Hasan Ali</p><p class="text-sm text-muted">Electrical Technician · Pakistan · 10 years</p></div>
+              <span class="font-semibold tabular-nums whitespace-nowrap">8 of 10</span>
+            </div>
+            <dl class="mt-2 ps-[5.25rem] text-[15px] space-y-0.5"><div class="flex gap-2"><dt class="text-muted">Worked in</dt><dd>Pakistan 6y · Saudi Arabia 4y</dd></div><div class="flex gap-2"><dt class="text-muted">Available</dt><dd>In 60 days</dd></div></dl>
+            <div class="mt-2 ps-[5.25rem] flex flex-wrap items-center gap-1"><span class="inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-[13px] font-semibold bg-surface2 text-muted"><svg class="w-3.5 h-3.5" aria-hidden="true"><use href="#i-info"/></svg>ID not checked</span><a href="#" class="ms-auto inline-flex items-center min-h-11 px-3 rounded-lg font-semibold text-brand hover:bg-brandsoft">View</a></div>
+          </li>
+        </ul>
+        <div class="flex items-center justify-between gap-2 px-4 py-3 border-t border-line text-[15px]">
+          <span class="text-muted">Page 1 of 47</span>
+          <div class="flex gap-2">
+            <button type="button" disabled class="inline-flex items-center gap-1 min-h-11 px-3 rounded-lg border border-linestrong font-semibold disabled:opacity-50"><svg class="w-4 h-4 flip-rtl" aria-hidden="true"><use href="#i-back"/></svg>Previous</button>
+            <button type="button" class="inline-flex items-center gap-1 min-h-11 px-3 rounded-lg border border-linestrong font-semibold hover:bg-surface2">Next<svg class="w-4 h-4 flip-rtl" aria-hidden="true"><use href="#i-next"/></svg></button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== Stage tracker ===== -->
+    <section id="tracker" data-toc="Stage tracker" aria-labelledby="tracker-h" class="scroll-mt-20">
+      <h2 id="tracker-h" class="font-display text-2xl font-bold">Stage tracker</h2>
+      <p class="mt-1 text-muted max-w-2xl">Shows where an application is. Workers see the compact version on cards and the full list on the detail page. The full list runs down the page and only goes across at <code class="font-mono text-[14px]">xl</code> (1280px+), where 9 steps have room for their labels. It always says what happens next and who is handling it.</p>
+      <div class="mt-5 grid grid-cols-1 gap-4">
+        <div class="rounded-2xl border border-line bg-surface p-4 max-w-sm">
+          <p class="text-sm font-semibold text-muted">Compact</p>
+          <div class="mt-2 flex items-center justify-between gap-2"><span class="inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-sm font-semibold bg-stampsoft text-stamp"><svg class="w-4 h-4" aria-hidden="true"><use href="#i-star"/></svg>Shortlisted</span><span class="text-sm text-muted tabular-nums">Step 4 of 9</span></div>
+          <div class="mt-2 flex gap-1" aria-hidden="true"><span class="h-2 flex-1 rounded-full bg-ok"></span><span class="h-2 flex-1 rounded-full bg-ok"></span><span class="h-2 flex-1 rounded-full bg-ok"></span><span class="h-2 flex-1 rounded-full bg-stamp"></span><span class="h-2 flex-1 rounded-full bg-surface2"></span><span class="h-2 flex-1 rounded-full bg-surface2"></span><span class="h-2 flex-1 rounded-full bg-surface2"></span><span class="h-2 flex-1 rounded-full bg-surface2"></span><span class="h-2 flex-1 rounded-full bg-surface2"></span></div>
+          <p class="mt-3 font-semibold">Next: interview</p>
+          <p class="text-[15px] text-muted">Imran H. at Northstar Manpower will call you.</p>
+        </div>
+        <div class="rounded-2xl border border-line bg-surface p-4 sm:p-6">
+          <p class="text-sm font-semibold text-muted mb-4">Full</p>
+          <ol class="flex flex-col xl:flex-row">
+            <li class="relative flex xl:flex-1 xl:flex-col xl:items-center gap-3 xl:gap-2 pb-6 xl:pb-0 xl:text-center">
+              <span class="absolute start-4 top-9 bottom-0 w-0.5 bg-ok xl:top-4 xl:bottom-auto xl:start-[calc(50%+1.25rem)] xl:-end-[calc(50%-1.25rem)] xl:w-auto xl:h-0.5" aria-hidden="true"></span>
+              <span class="relative grid place-items-center w-8 h-8 shrink-0 rounded-full bg-ok text-onbrand"><svg class="w-5 h-5" aria-hidden="true"><use href="#i-check"/></svg></span>
+              <div class="min-w-0"><p class="xl:px-1 font-semibold leading-tight">Applied</p><p class="text-sm text-muted">2 Oct</p></div>
+            </li>
+            <li class="relative flex xl:flex-1 xl:flex-col xl:items-center gap-3 xl:gap-2 pb-6 xl:pb-0 xl:text-center">
+              <span class="absolute start-4 top-9 bottom-0 w-0.5 bg-ok xl:top-4 xl:bottom-auto xl:start-[calc(50%+1.25rem)] xl:-end-[calc(50%-1.25rem)] xl:w-auto xl:h-0.5" aria-hidden="true"></span>
+              <span class="relative grid place-items-center w-8 h-8 shrink-0 rounded-full bg-ok text-onbrand"><svg class="w-5 h-5" aria-hidden="true"><use href="#i-check"/></svg></span>
+              <div class="min-w-0"><p class="xl:px-1 font-semibold leading-tight">Profile reviewed</p><p class="text-sm text-muted">4 Oct</p></div>
+            </li>
+            <li class="relative flex xl:flex-1 xl:flex-col xl:items-center gap-3 xl:gap-2 pb-6 xl:pb-0 xl:text-center">
+              <span class="absolute start-4 top-9 bottom-0 w-0.5 bg-ok xl:top-4 xl:bottom-auto xl:start-[calc(50%+1.25rem)] xl:-end-[calc(50%-1.25rem)] xl:w-auto xl:h-0.5" aria-hidden="true"></span>
+              <span class="relative grid place-items-center w-8 h-8 shrink-0 rounded-full bg-ok text-onbrand"><svg class="w-5 h-5" aria-hidden="true"><use href="#i-check"/></svg></span>
+              <div class="min-w-0"><p class="xl:px-1 font-semibold leading-tight">Qualified</p><p class="text-sm text-muted">9 Oct</p></div>
+            </li>
+            <li aria-current="step" class="relative flex xl:flex-1 xl:flex-col xl:items-center gap-3 xl:gap-2 pb-6 xl:pb-0 xl:text-center">
+              <span class="absolute start-4 top-9 bottom-0 w-0.5 bg-line xl:top-4 xl:bottom-auto xl:start-[calc(50%+1.25rem)] xl:-end-[calc(50%-1.25rem)] xl:w-auto xl:h-0.5" aria-hidden="true"></span>
+              <span class="relative grid place-items-center w-8 h-8 shrink-0 rounded-full bg-stamp text-onbrand ring-4 ring-stampsoft font-bold text-sm">4</span>
+              <div class="min-w-0"><p class="xl:px-1 font-bold leading-tight text-stamp">Shortlisted</p><p class="text-sm text-muted">Now</p></div>
+            </li>
+            <li class="relative flex xl:flex-1 xl:flex-col xl:items-center gap-3 xl:gap-2 pb-6 xl:pb-0 xl:text-center">
+              <span class="absolute start-4 top-9 bottom-0 w-0.5 bg-line xl:top-4 xl:bottom-auto xl:start-[calc(50%+1.25rem)] xl:-end-[calc(50%-1.25rem)] xl:w-auto xl:h-0.5" aria-hidden="true"></span>
+              <span class="relative grid place-items-center w-8 h-8 shrink-0 rounded-full border-2 border-linestrong bg-surface text-muted font-bold text-sm">5</span>
+              <div class="min-w-0"><p class="xl:px-1 font-semibold leading-tight text-muted">Interview</p></div>
+            </li>
+            <li class="relative flex xl:flex-1 xl:flex-col xl:items-center gap-3 xl:gap-2 pb-6 xl:pb-0 xl:text-center">
+              <span class="absolute start-4 top-9 bottom-0 w-0.5 bg-line xl:top-4 xl:bottom-auto xl:start-[calc(50%+1.25rem)] xl:-end-[calc(50%-1.25rem)] xl:w-auto xl:h-0.5" aria-hidden="true"></span>
+              <span class="relative grid place-items-center w-8 h-8 shrink-0 rounded-full border-2 border-linestrong bg-surface text-muted font-bold text-sm">6</span>
+              <div class="min-w-0"><p class="xl:px-1 font-semibold leading-tight text-muted">Trade test</p></div>
+            </li>
+            <li class="relative flex xl:flex-1 xl:flex-col xl:items-center gap-3 xl:gap-2 pb-6 xl:pb-0 xl:text-center">
+              <span class="absolute start-4 top-9 bottom-0 w-0.5 bg-line xl:top-4 xl:bottom-auto xl:start-[calc(50%+1.25rem)] xl:-end-[calc(50%-1.25rem)] xl:w-auto xl:h-0.5" aria-hidden="true"></span>
+              <span class="relative grid place-items-center w-8 h-8 shrink-0 rounded-full border-2 border-linestrong bg-surface text-muted font-bold text-sm">7</span>
+              <div class="min-w-0"><p class="xl:px-1 font-semibold leading-tight text-muted">Selected</p></div>
+            </li>
+            <li class="relative flex xl:flex-1 xl:flex-col xl:items-center gap-3 xl:gap-2 pb-6 xl:pb-0 xl:text-center">
+              <span class="absolute start-4 top-9 bottom-0 w-0.5 bg-line xl:top-4 xl:bottom-auto xl:start-[calc(50%+1.25rem)] xl:-end-[calc(50%-1.25rem)] xl:w-auto xl:h-0.5" aria-hidden="true"></span>
+              <span class="relative grid place-items-center w-8 h-8 shrink-0 rounded-full border-2 border-linestrong bg-surface text-muted font-bold text-sm">8</span>
+              <div class="min-w-0"><p class="xl:px-1 font-semibold leading-tight text-muted">Offer</p></div>
+            </li>
+            <li class="relative flex xl:flex-1 xl:flex-col xl:items-center gap-3 xl:gap-2 xl:text-center">
+              <span class="relative grid place-items-center w-8 h-8 shrink-0 rounded-full border-2 border-linestrong bg-surface text-muted font-bold text-sm">9</span>
+              <div class="min-w-0"><p class="xl:px-1 font-semibold leading-tight text-muted">Accepted</p></div>
+            </li>
+          </ol>
+          <div class="mt-5 flex gap-3 rounded-xl bg-surface2 p-4">
+            <svg class="w-6 h-6 shrink-0 text-stamp" aria-hidden="true"><use href="#i-calendar"/></svg>
+            <div><p class="font-semibold">What happens next</p><p class="text-[15px]">Interview by video call. Imran H. (Northstar Manpower) will message you with a time.</p></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== Tabs ===== -->
+    <section id="tabs" data-toc="Tabs" aria-labelledby="tabs-h" class="scroll-mt-20">
+      <h2 id="tabs-h" class="font-display text-2xl font-bold">Tabs</h2>
+      <p class="mt-1 text-muted max-w-2xl">Underline tabs with arrow-key support, and the arrows follow reading direction in Urdu. If the tabs don't fit, they scroll inside their own row, never the page.</p>
+      <div class="mt-5 rounded-2xl border border-line bg-surface">
+        <div role="tablist" aria-label="Job details" class="flex gap-1 overflow-x-auto border-b border-line px-2">
+          <button role="tab" id="tab-1" aria-controls="panel-1" aria-selected="true" class="shrink-0 min-h-12 px-4 border-b-[3px] border-transparent font-semibold text-muted hover:text-ink aria-selected:border-brand aria-selected:text-brand">Job</button>
+          <button role="tab" id="tab-2" aria-controls="panel-2" aria-selected="false" tabindex="-1" class="shrink-0 min-h-12 px-4 border-b-[3px] border-transparent font-semibold text-muted hover:text-ink aria-selected:border-brand aria-selected:text-brand">Requirements</button>
+          <button role="tab" id="tab-3" aria-controls="panel-3" aria-selected="false" tabindex="-1" class="shrink-0 min-h-12 px-4 border-b-[3px] border-transparent font-semibold text-muted hover:text-ink aria-selected:border-brand aria-selected:text-brand">Company</button>
+        </div>
+        <div id="panel-1" role="tabpanel" aria-labelledby="tab-1" tabindex="0" class="p-4">Install and maintain building wiring on large construction sites in Dubai.</div>
+        <div id="panel-2" role="tabpanel" aria-labelledby="tab-2" tabindex="0" class="p-4" hidden>5+ years as an electrician. Industrial wiring, DB installation, cable termination. Basic English or Hindi/Urdu.</div>
+        <div id="panel-3" role="tabpanel" aria-labelledby="tab-3" tabindex="0" class="p-4" hidden>ABC Contracting LLC · Dubai, UAE · Employer verified.</div>
+      </div>
+      <div class="mt-3 inline-flex rounded-xl bg-surface2 p-1" role="group" aria-label="View">
+        <button type="button" aria-pressed="true" class="min-h-11 px-4 rounded-lg font-semibold aria-pressed:bg-surface aria-pressed:shadow-sm text-ink">List</button>
+        <button type="button" aria-pressed="false" class="min-h-11 px-4 rounded-lg font-semibold text-muted">Map</button>
+      </div>
+      <span class="ms-2 text-sm text-muted">Segmented control</span>
+    </section>
+
+    <!-- ===== Overlays ===== -->
+    <section id="overlays" data-toc="Modal · sheet · drawer · toast" aria-labelledby="overlays-h" class="scroll-mt-20">
+      <h2 id="overlays-h" class="font-display text-2xl font-bold">Modal, bottom sheet, drawer, toast</h2>
+      <p class="mt-1 text-muted max-w-2xl">Built on the native <code class="font-mono text-[14px]">&lt;dialog&gt;</code> element, which handles focus, Esc and the backdrop. Use a <b>modal</b> to confirm. On phones, use a <b>sheet</b> for choices and filters (it becomes a centred dialog on wide screens). Use a <b>drawer</b> for navigation. Use a <b>toast</b> to confirm an action without blocking.</p>
+      <div class="mt-5 flex flex-wrap gap-3">
+        <button type="button" data-open="dlg-modal" class="inline-flex items-center justify-center gap-2 min-h-12 px-5 rounded-xl border border-linestrong bg-surface text-ink font-semibold hover:bg-surface2">Open modal</button>
+        <button type="button" data-open="dlg-sheet" class="inline-flex items-center justify-center gap-2 min-h-12 px-5 rounded-xl border border-linestrong bg-surface text-ink font-semibold hover:bg-surface2"><svg class="w-5 h-5" aria-hidden="true"><use href="#i-globe"/></svg>Open bottom sheet</button>
+        <button type="button" data-open="dlg-drawer" class="inline-flex items-center justify-center gap-2 min-h-12 px-5 rounded-xl border border-linestrong bg-surface text-ink font-semibold hover:bg-surface2"><svg class="w-5 h-5" aria-hidden="true"><use href="#i-menu"/></svg>Open drawer</button>
+        <button type="button" data-toast="Application sent" data-toast-tone="ok" class="inline-flex items-center justify-center gap-2 min-h-12 px-5 rounded-xl border border-linestrong bg-surface text-ink font-semibold hover:bg-surface2">Toast · success</button>
+        <button type="button" data-toast="No internet. We will try again." data-toast-tone="bad" class="inline-flex items-center justify-center gap-2 min-h-12 px-5 rounded-xl border border-linestrong bg-surface text-ink font-semibold hover:bg-surface2">Toast · error</button>
+      </div>
+      <div class="mt-4 grid gap-4 md:grid-cols-3 items-start" aria-hidden="true">
+        <!-- static previews so screenshots show the look -->
+        <div class="rounded-2xl bg-ink/50 p-4 grid place-items-center min-h-56"><div class="w-full max-w-xs rounded-2xl bg-surface p-4 shadow-xl"><p class="font-bold text-lg">Withdraw application?</p><p class="text-[15px] text-muted mt-1">You can apply again later.</p><div class="mt-4 flex gap-2 justify-end"><span class="inline-flex items-center min-h-11 px-4 rounded-xl border border-linestrong font-semibold">Keep</span><span class="inline-flex items-center min-h-11 px-4 rounded-xl bg-bad text-onbrand font-semibold">Withdraw</span></div></div></div>
+        <div class="rounded-2xl bg-ink/50 pt-16 flex flex-col justify-end overflow-hidden min-h-56"><div class="rounded-t-3xl bg-surface p-4"><div class="mx-auto mb-3 h-1.5 w-12 rounded-full bg-line"></div><p class="font-bold">Choose your language</p><div class="mt-2 grid grid-cols-2 gap-2 text-sm"><span class="rounded-xl border-2 border-brand bg-brandsoft p-2 text-center font-semibold">বাংলা</span><span class="rounded-xl border-2 border-line p-2 text-center font-semibold">हिन्दी</span></div></div></div>
+        <div class="rounded-2xl bg-ink/50 flex overflow-hidden min-h-56"><div class="w-2/3 bg-surface p-4 space-y-2"><p class="font-bold">Menu</p><p class="rounded-lg bg-brandsoft text-brand font-semibold px-2 py-1.5 text-sm">Home</p><p class="px-2 py-1.5 text-sm">Jobs</p><p class="px-2 py-1.5 text-sm">Settings</p></div></div>
+      </div>
+    </section>
+
+    <!-- ===== States ===== -->
+    <section id="states" data-toc="Empty · error · loading" aria-labelledby="states-h" class="scroll-mt-20">
+      <h2 id="states-h" class="font-display text-2xl font-bold">Empty, error and loading states</h2>
+      <p class="mt-1 text-muted max-w-2xl">Every list and page has all three. Each one says what happened in one line and gives one button to fix it. Skeletons match the shape of the content they replace.</p>
+      <div class="mt-5 grid gap-4 md:grid-cols-3">
+        <div class="rounded-2xl border border-line bg-surface p-6 text-center">
+          <span class="mx-auto grid place-items-center w-16 h-16 rounded-full bg-surface2 text-muted"><svg class="w-8 h-8" aria-hidden="true"><use href="#i-search"/></svg></span>
+          <p class="mt-3 text-lg font-bold">No jobs found</p>
+          <p class="text-muted">Try fewer filters or another country.</p>
+          <button type="button" class="mt-4 inline-flex items-center justify-center gap-2 min-h-12 px-5 rounded-xl bg-brandsoft text-brand font-semibold hover:bg-brandsoft/70">Clear filters</button>
+        </div>
+        <div role="alert" class="rounded-2xl border border-line bg-surface p-6 text-center">
+          <span class="mx-auto grid place-items-center w-16 h-16 rounded-full bg-badsoft text-bad"><svg class="w-8 h-8" aria-hidden="true"><use href="#i-alert"/></svg></span>
+          <p class="mt-3 text-lg font-bold">Could not load jobs</p>
+          <p class="text-muted">Check your internet and try again.</p>
+          <button type="button" class="mt-4 inline-flex items-center justify-center gap-2 min-h-12 px-5 rounded-xl bg-brand text-onbrand font-semibold hover:bg-brand/90"><svg class="w-5 h-5" aria-hidden="true"><use href="#i-refresh"/></svg>Try again</button>
+        </div>
+        <div class="rounded-2xl border border-line bg-surface p-4" aria-busy="true" aria-label="Loading jobs">
+          <div class="flex items-start gap-3"><div class="skeleton w-12 h-12 rounded-xl"></div><div class="flex-1 space-y-2 pt-1"><div class="skeleton h-4 rounded w-3/4"></div><div class="skeleton h-3 rounded w-1/2"></div></div></div>
+          <div class="skeleton mt-4 h-6 rounded w-2/5"></div>
+          <div class="mt-3 flex gap-2"><div class="skeleton h-6 rounded-full w-24"></div><div class="skeleton h-6 rounded-full w-32"></div></div>
+          <div class="mt-5 flex items-center justify-center gap-2 text-muted"><svg class="w-5 h-5 animate-spin" viewBox="0 0 24 24" fill="none" aria-hidden="true"><circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="3" opacity=".3"/><path d="M21 12a9 9 0 0 0-9-9" stroke="currentColor" stroke-width="3" stroke-linecap="round"/></svg>Loading…</div>
+        </div>
+      </div>
+      <div class="mt-4 flex items-center gap-3 rounded-xl bg-ink text-bg px-4 py-3"><svg class="w-5 h-5 shrink-0" aria-hidden="true"><use href="#i-info"/></svg><p class="text-[15px]">You are offline. Your answers are saved on this phone.</p></div>
+    </section>
+
+    <!-- ===== Uploader ===== -->
+    <section id="uploader" data-toc="File uploader" aria-labelledby="up-h" class="scroll-mt-20">
+      <h2 id="up-h" class="font-display text-2xl font-bold">File uploader</h2>
+      <p class="mt-1 text-muted max-w-2xl">Phones get two big buttons, <b>Take photo</b> and <b>Choose file</b>. Desktops can also drag and drop. Each file shows a clear state. Documents are private by default.</p>
+      <div class="mt-5 grid gap-4 lg:grid-cols-2 items-start">
+        <div class="rounded-2xl border-2 border-dashed border-linestrong bg-surface p-5 text-center">
+          <span class="mx-auto grid place-items-center w-14 h-14 rounded-full bg-brandsoft text-brand"><svg class="w-7 h-7" aria-hidden="true"><use href="#i-upload"/></svg></span>
+          <p class="mt-3 text-lg font-bold">Add your trade certificate</p>
+          <p class="text-muted">Photo or PDF · up to 10 MB</p>
+          <div class="mt-4 grid gap-2 sm:grid-cols-2">
+            <label class="inline-flex items-center justify-center gap-2 min-h-12 px-5 rounded-xl bg-brand text-onbrand font-semibold cursor-pointer hover:bg-brand/90 has-[:focus-visible]:ring-[3px] has-[:focus-visible]:ring-brand has-[:focus-visible]:ring-offset-2">
+              <input type="file" accept="image/*" capture="environment" data-file-list="up-list" data-max-mb="10" class="sr-only"><svg class="w-5 h-5" aria-hidden="true"><use href="#i-camera"/></svg>Take photo
+            </label>
+            <label class="inline-flex items-center justify-center gap-2 min-h-12 px-5 rounded-xl border border-linestrong bg-surface text-ink font-semibold cursor-pointer hover:bg-surface2 has-[:focus-visible]:ring-[3px] has-[:focus-visible]:ring-brand">
+              <input type="file" accept="image/*,application/pdf" multiple data-file-list="up-list" data-max-mb="10" class="sr-only"><svg class="w-5 h-5" aria-hidden="true"><use href="#i-file"/></svg>Choose file
+            </label>
+          </div>
+          <p class="mt-3 flex items-center justify-center gap-1.5 text-sm text-muted"><svg class="w-4 h-4" aria-hidden="true"><use href="#i-lock"/></svg>Private. Shared only when you say yes.</p>
+        </div>
+        <ul id="up-list" class="space-y-2" aria-label="Files">
+          <li class="flex items-center gap-3 rounded-xl border border-line bg-surface p-3"><svg class="w-6 h-6 shrink-0 text-ok" aria-hidden="true"><use href="#i-check-circle"/></svg><div class="min-w-0 flex-1"><p class="font-semibold truncate">NSDA-electrician-level3.pdf</p><p class="text-sm text-muted">1.2 MB · Uploaded</p></div><button type="button" aria-label="Remove NSDA-electrician-level3.pdf" class="grid place-items-center w-11 h-11 rounded-lg text-muted hover:bg-surface2 hover:text-bad"><svg class="w-5 h-5" aria-hidden="true"><use href="#i-trash"/></svg></button></li>
+          <li class="rounded-xl border border-line bg-surface p-3"><div class="flex items-center gap-3"><svg class="w-6 h-6 shrink-0 text-brand" aria-hidden="true"><use href="#i-upload"/></svg><div class="min-w-0 flex-1"><p class="font-semibold truncate">photo-certificate.jpg</p><p class="text-sm text-muted tabular-nums">Uploading · 64%</p></div></div><div class="mt-2 h-2 rounded-full bg-surface2 overflow-hidden" role="progressbar" aria-label="Upload progress" aria-valuenow="64" aria-valuemin="0" aria-valuemax="100"><div class="h-full bg-brand rounded-full" style="width:64%"></div></div></li>
+          <li class="flex items-center gap-3 rounded-xl border border-bad/40 bg-badsoft p-3"><svg class="w-6 h-6 shrink-0 text-bad" aria-hidden="true"><use href="#i-x-circle"/></svg><div class="min-w-0 flex-1"><p class="font-semibold truncate">video-scan.mov</p><p class="text-sm text-bad">This file type is not allowed</p></div><button type="button" class="inline-flex items-center min-h-11 px-3 rounded-lg font-semibold text-bad hover:bg-bad/10">Remove</button></li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- ===== Themes side by side ===== -->
+    <section id="themes" data-toc="Both themes" aria-labelledby="themes-h" class="scroll-mt-20">
+      <h2 id="themes-h" class="font-display text-2xl font-bold">Both themes, side by side</h2>
+      <p class="mt-1 text-muted max-w-2xl">The same markup with <code class="font-mono text-[14px]">data-theme</code> on a wrapper. The theme follows the phone's setting, and the moon/sun button overrides it.</p>
+      <div class="mt-5 grid gap-4 md:grid-cols-2">
+        <div data-theme="light" class="theme-demo rounded-2xl border border-line p-4"></div>
+        <div data-theme="dark" class="theme-demo rounded-2xl border border-line p-4"></div>
+      </div>
+    </section>
+  </main>
+</div>
+
+<!-- Dialogs -->
+<dialog id="dlg-modal" aria-labelledby="dlg-modal-t" class="w-[min(92vw,28rem)] rounded-2xl">
+  <div class="rounded-2xl bg-surface p-5">
+    <div class="flex items-start gap-3">
+      <span class="grid place-items-center w-11 h-11 shrink-0 rounded-full bg-badsoft text-bad"><svg class="w-6 h-6" aria-hidden="true"><use href="#i-alert"/></svg></span>
+      <div><h2 id="dlg-modal-t" class="text-xl font-bold">Withdraw application?</h2><p class="mt-1 text-muted">ABC Contracting will no longer see your profile for this job. You can apply again later.</p></div>
+    </div>
+    <div class="mt-6 flex flex-col-reverse sm:flex-row sm:justify-end gap-2">
+      <button type="button" data-close class="inline-flex items-center justify-center min-h-12 px-5 rounded-xl border border-linestrong bg-surface font-semibold hover:bg-surface2">Keep application</button>
+      <button type="button" data-close data-toast="Application withdrawn" class="inline-flex items-center justify-center min-h-12 px-5 rounded-xl bg-bad text-onbrand font-semibold hover:bg-bad/90">Withdraw</button>
+    </div>
+  </div>
+</dialog>
+
+<dialog id="dlg-sheet" class="sheet" aria-labelledby="dlg-sheet-t">
+  <div class="rounded-t-3xl sm:rounded-2xl bg-surface sm:w-[28rem] max-h-[85vh] overflow-y-auto p-5 pb-[max(1.25rem,env(safe-area-inset-bottom))]">
+    <div class="mx-auto mb-3 h-1.5 w-12 rounded-full bg-line sm:hidden" aria-hidden="true"></div>
+    <div class="flex items-center justify-between gap-2">
+      <h2 id="dlg-sheet-t" class="text-xl font-bold">Choose your language</h2>
+      <button type="button" data-close aria-label="Close" class="grid place-items-center w-11 h-11 rounded-full hover:bg-surface2"><svg class="w-5 h-5" aria-hidden="true"><use href="#i-x"/></svg></button>
+    </div>
+    <fieldset class="mt-3 grid grid-cols-2 gap-2">
+      <legend class="sr-only">Language</legend>
+      <label class="flex flex-col items-center justify-center min-h-20 rounded-2xl border-2 border-line p-2 cursor-pointer has-[:checked]:border-brand has-[:checked]:bg-brandsoft has-[:focus-visible]:ring-[3px] has-[:focus-visible]:ring-brand/50"><input type="radio" name="sheet-lang" data-lang-option="bn" class="sr-only"><span lang="bn" class="text-xl font-bold">বাংলা</span><span class="text-sm text-muted">Bangla</span></label>
+      <label class="flex flex-col items-center justify-center min-h-20 rounded-2xl border-2 border-line p-2 cursor-pointer has-[:checked]:border-brand has-[:checked]:bg-brandsoft has-[:focus-visible]:ring-[3px] has-[:focus-visible]:ring-brand/50"><input type="radio" name="sheet-lang" data-lang-option="hi" class="sr-only"><span lang="hi" class="text-xl font-bold">हिन्दी</span><span class="text-sm text-muted">Hindi</span></label>
+      <label class="flex flex-col items-center justify-center min-h-20 rounded-2xl border-2 border-line p-2 cursor-pointer has-[:checked]:border-brand has-[:checked]:bg-brandsoft has-[:focus-visible]:ring-[3px] has-[:focus-visible]:ring-brand/50"><input type="radio" name="sheet-lang" data-lang-option="ur" class="sr-only"><span lang="ur" class="text-xl font-bold">اردو</span><span class="text-sm text-muted">Urdu</span></label>
+      <label class="flex flex-col items-center justify-center min-h-20 rounded-2xl border-2 border-line p-2 cursor-pointer has-[:checked]:border-brand has-[:checked]:bg-brandsoft has-[:focus-visible]:ring-[3px] has-[:focus-visible]:ring-brand/50"><input type="radio" name="sheet-lang" data-lang-option="ne" class="sr-only"><span lang="ne" class="text-xl font-bold">नेपाली</span><span class="text-sm text-muted">Nepali</span></label>
+      <label class="col-span-2 flex flex-col items-center justify-center min-h-20 rounded-2xl border-2 border-line p-2 cursor-pointer has-[:checked]:border-brand has-[:checked]:bg-brandsoft has-[:focus-visible]:ring-[3px] has-[:focus-visible]:ring-brand/50"><input type="radio" name="sheet-lang" data-lang-option="en" class="sr-only"><span class="text-xl font-bold">English</span></label>
+    </fieldset>
+    <button type="button" data-close class="mt-4 flex w-full items-center justify-center min-h-14 rounded-2xl bg-brand text-onbrand text-lg font-bold hover:bg-brand/90">Done</button>
+  </div>
+</dialog>
+
+<dialog id="dlg-drawer" class="drawer" aria-labelledby="dlg-drawer-t">
+  <nav class="h-full bg-surface p-4 flex flex-col" aria-label="Main">
+    <div class="flex items-center justify-between">
+      <h2 id="dlg-drawer-t" class="text-lg font-bold">Menu</h2>
+      <button type="button" data-close aria-label="Close menu" class="grid place-items-center w-11 h-11 rounded-full hover:bg-surface2"><svg class="w-5 h-5" aria-hidden="true"><use href="#i-x"/></svg></button>
+    </div>
+    <ul class="mt-4 space-y-1">
+      <li><a href="#" aria-current="page" class="flex items-center gap-3 min-h-12 px-3 rounded-xl bg-brandsoft text-brand font-semibold"><svg class="w-6 h-6" aria-hidden="true"><use href="#i-home"/></svg>Home</a></li>
+      <li><a href="#" class="flex items-center gap-3 min-h-12 px-3 rounded-xl font-semibold hover:bg-surface2"><svg class="w-6 h-6 text-muted" aria-hidden="true"><use href="#i-search"/></svg>Jobs</a></li>
+      <li><a href="#" class="flex items-center gap-3 min-h-12 px-3 rounded-xl font-semibold hover:bg-surface2"><svg class="w-6 h-6 text-muted" aria-hidden="true"><use href="#i-list"/></svg>Applications</a></li>
+      <li><a href="#" class="flex items-center gap-3 min-h-12 px-3 rounded-xl font-semibold hover:bg-surface2"><svg class="w-6 h-6 text-muted" aria-hidden="true"><use href="#i-settings"/></svg>Settings</a></li>
+    </ul>
+  </nav>
+</dialog>
+
+<script>
+  /* Documentation-only rendering: section index, colour swatches, icon grid, theme preview. */
+  (function () {
+    const toc = [...document.querySelectorAll('[data-toc]')].map(s => `<li><a href="#${s.id}" class="flex items-center min-h-11 px-3 rounded-lg text-muted hover:bg-surface2 hover:text-ink">${s.dataset.toc}</a></li>`).join('');
+    document.getElementById('toc').innerHTML = toc;
+    document.getElementById('toc-mobile').innerHTML = toc;
+
+    const SW = [['bg', 'Page'], ['surface', 'Cards'], ['surface2', 'Wells, hover'], ['line', 'Dividers'], ['linestrong', 'Input borders'], ['ink', 'Text'], ['muted', 'Secondary text'], ['brand', 'Actions'], ['brandsoft', 'Selected'], ['stamp', 'Progress'], ['stampsoft', 'Progress bg'], ['ok', 'Checked'], ['oksoft', 'Checked bg'], ['warn', 'Review'], ['warnsoft', 'Review bg'], ['bad', 'Error'], ['badsoft', 'Error bg']];
+    document.querySelectorAll('.swatches').forEach(el => {
+      el.innerHTML = SW.map(([n, u]) => `<div class="rounded-xl border border-line bg-surface overflow-hidden"><div class="h-10 bg-${n}"></div><div class="px-2 py-1.5"><p class="font-semibold text-[15px] text-ink">${n}</p><p class="text-[13px] text-muted">${u}</p></div></div>`).join('');
+    });
+
+    const IC = ['home', 'search', 'briefcase', 'list', 'chat', 'passport', 'user', 'users', 'settings', 'help', 'globe', 'bell', 'menu', 'x', 'back', 'arrow', 'check-circle', 'clock', 'alert', 'info', 'shield-check', 'lock', 'mic', 'speaker', 'upload', 'camera', 'file', 'filter', 'pin', 'money', 'calendar', 'bed', 'food', 'bus', 'medical', 'plane', 'flag', 'building', 'school', 'star', 'eye-off', 'kanban', 'zap', 'flame', 'car', 'fan', 'box', 'wrench'];
+    document.getElementById('icon-grid').innerHTML = IC.map(n => `<li class="flex flex-col items-center gap-1.5 rounded-xl border border-line bg-surface p-3"><svg class="w-6 h-6 ${n === 'back' || n === 'arrow' ? 'flip-rtl' : ''}" aria-hidden="true"><use href="#i-${n}"/></svg><span class="text-[13px] text-muted">${n}</span></li>`).join('');
+
+    const demo = `<div class="space-y-3">
+      <div class="flex flex-wrap gap-2"><span class="inline-flex items-center min-h-12 px-5 rounded-xl bg-brand text-onbrand font-semibold">Apply</span><span class="inline-flex items-center min-h-12 px-5 rounded-xl border border-linestrong bg-surface text-ink font-semibold">Save</span></div>
+      <div class="flex flex-wrap gap-2"><span class="inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-sm font-semibold bg-oksoft text-ok">Employer verified</span><span class="inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-sm font-semibold bg-warnsoft text-warn">Under review</span><span class="inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-sm font-semibold bg-stampsoft text-stamp">Shortlisted</span><span class="inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-sm font-semibold bg-badsoft text-bad">Rejected</span></div>
+      <div class="rounded-xl border border-line bg-surface p-3"><p class="font-bold text-ink">Building Electrician</p><p class="text-muted text-sm">ABC Contracting LLC · Dubai</p><p class="mt-1 text-xl font-bold text-ink">AED 2,200 <span class="text-sm font-normal text-muted">per month</span></p><p class="text-sm"><span class="italic font-medium text-warn">Not disclosed</span> <span class="text-muted">· food</span></p></div>
+      <div class="rounded-xl border border-linestrong bg-surface px-4 min-h-12 flex items-center text-muted">Search jobs…</div></div>`;
+    document.querySelectorAll('.theme-demo').forEach(el => { el.innerHTML = `<p class="font-semibold mb-3 text-ink">${el.dataset.theme === 'dark' ? 'Dark' : 'Light'}</p>` + demo; });
+  })();
+</script>
+</body>
+</html>

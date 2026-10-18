@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en" data-i18n-page>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Sign In Layout · BLUESKILLS</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,700;12..96,800&family=Figtree:wght@400;500;600;700&family=JetBrains+Mono:wght@500;700&family=Noto+Sans+Bengali:wght@400;600;700&family=Noto+Sans+Devanagari:wght@400;600;700&family=Noto+Naskh+Arabic:wght@400;600;700&display=swap">
+<link rel="stylesheet" href="../assets/tokens.css">
+<script src="https://cdn.tailwindcss.com/3.4.17"></script>
+<script src="../assets/tailwind.config.js"></script>
+<script src="../assets/i18n.js"></script>
+<script src="../assets/app.js"></script>
+</head>
+<body class="font-sans">
+<div class="min-h-screen flex flex-col bg-[radial-gradient(circle_at_top,rgb(var(--brand-soft))_0,transparent_60%)]">
+  <header class="flex items-center gap-2 px-4 h-16 max-w-5xl w-full mx-auto">
+    <a href="../index.html" class="flex items-center gap-2 min-h-11 min-w-11" aria-label="BLUESKILLS home">
+      <span class="grid place-items-center w-9 h-9 rounded-lg bg-brand text-onbrand"><svg class="w-5 h-5" aria-hidden="true"><use href="#i-passport"/></svg></span>
+      <span class="font-display text-lg font-extrabold tracking-tight">BLUESKILLS</span>
+    </a>
+    <div class="ms-auto flex items-center gap-1">
+      <label class="relative">
+        <span class="sr-only" data-i18n="language">Language</span>
+        <svg class="pointer-events-none absolute start-3 top-1/2 -translate-y-1/2 w-5 h-5 text-muted" aria-hidden="true"><use href="#i-globe"/></svg>
+        <select data-lang-select class="appearance-none min-h-11 rounded-full border border-linestrong bg-surface ps-10 pe-9 font-semibold text-ink focus:outline-none focus:border-brand focus:ring-[3px] focus:ring-brand/40">
+          <option value="bn">বাংলা</option><option value="hi">हिन्दी</option><option value="ur">اردو</option><option value="ne">नेपाली</option><option value="en">English</option>
+        </select>
+        <svg class="pointer-events-none absolute end-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted" aria-hidden="true"><use href="#i-down"/></svg>
+      </label>
+      <button type="button" data-theme-toggle aria-label="Dark theme" class="grid place-items-center w-11 h-11 rounded-full hover:bg-surface2"><svg class="w-5 h-5" aria-hidden="true"><use href="#i-moon"/></svg></button>
+    </div>
+  </header>
+
+  <main id="main" class="flex-1 grid grid-cols-1 place-items-center px-4 py-6">
+    <div class="w-full max-w-md">
+      <div class="rounded-3xl border border-line bg-surface shadow-[0_20px_50px_-30px_rgb(var(--ink)/.35)] p-5 sm:p-8">
+        <h1 class="font-display text-2xl sm:text-3xl font-bold" data-i18n="signIn">Sign in</h1>
+
+        <div role="tablist" aria-label="Who are you?" class="mt-4 grid grid-cols-2 gap-1 rounded-xl bg-surface2 p-1">
+          <button role="tab" id="t-worker" aria-controls="p-worker" aria-selected="true" class="flex items-center justify-center gap-2 min-h-12 rounded-lg font-semibold text-muted aria-selected:bg-surface aria-selected:text-ink aria-selected:shadow-sm"><svg class="w-5 h-5" aria-hidden="true"><use href="#i-user"/></svg><span data-i18n="wantJob">I want a job</span></button>
+          <button role="tab" id="t-org" aria-controls="p-org" aria-selected="false" tabindex="-1" class="flex items-center justify-center gap-2 min-h-12 rounded-lg font-semibold text-muted aria-selected:bg-surface aria-selected:text-ink aria-selected:shadow-sm"><svg class="w-5 h-5" aria-hidden="true"><use href="#i-building"/></svg><span data-i18n="hiring">I am hiring</span></button>
+        </div>
+
+        <!-- Worker: phone + OTP, no password -->
+        <form id="p-worker" role="tabpanel" aria-labelledby="t-worker" class="mt-6" onsubmit="return false">
+          <label for="a-phone" class="block text-lg font-semibold" data-i18n="mobile">Your mobile number</label>
+          <div class="mt-2 flex gap-2" dir="ltr">
+            <div class="relative">
+              <label for="a-cc" class="sr-only">Country code</label>
+              <select id="a-cc" class="appearance-none min-h-14 rounded-xl border border-linestrong bg-surface ps-3 pe-9 text-lg font-semibold text-ink focus:outline-none focus:border-brand focus:ring-[3px] focus:ring-brand/40"><option>+880</option><option>+91</option><option>+92</option><option>+977</option><option>+94</option></select>
+              <svg class="pointer-events-none absolute end-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted" aria-hidden="true"><use href="#i-down"/></svg>
+            </div>
+            <input id="a-phone" type="tel" inputmode="tel" autocomplete="tel-national" placeholder="1712 345678" class="min-w-0 flex-1 min-h-14 rounded-xl border border-linestrong bg-surface px-4 text-xl tracking-wide text-ink placeholder:text-muted focus:outline-none focus:border-brand focus:ring-[3px] focus:ring-brand/40">
+          </div>
+          <p class="mt-2 flex items-start gap-2 text-muted"><svg class="w-5 h-5 shrink-0 mt-0.5" aria-hidden="true"><use href="#i-lock"/></svg><span data-i18n="noPassword">No password needed. We send a code by SMS.</span></p>
+          <button class="mt-6 flex w-full items-center justify-center gap-2 min-h-14 rounded-2xl bg-brand text-onbrand text-lg font-bold hover:bg-brand/90"><span data-i18n="sendOtp">Send code</span><svg class="w-6 h-6 flip-rtl" aria-hidden="true"><use href="#i-arrow"/></svg></button>
+          <p class="mt-4 text-center text-[15px] text-muted"><span data-i18n="whatsappQ">Code by WhatsApp instead?</span> <a href="#" class="inline-flex items-center min-h-11 font-semibold text-brand underline underline-offset-4" data-i18n="useWhatsapp">Use WhatsApp</a></p>
+        </form>
+
+        <!-- Organisation: business email + password + MFA -->
+        <form id="p-org" role="tabpanel" aria-labelledby="t-org" class="mt-6 space-y-4" hidden onsubmit="return false">
+          <div>
+            <label for="a-email" class="block font-semibold">Business email</label>
+            <input id="a-email" type="email" autocomplete="username" placeholder="name@company.com" class="mt-1.5 block w-full min-h-12 rounded-xl border border-linestrong bg-surface px-4 text-base text-ink placeholder:text-muted focus:outline-none focus:border-brand focus:ring-[3px] focus:ring-brand/40">
+          </div>
+          <div>
+            <div class="flex items-center justify-between"><label for="a-pass" class="block font-semibold">Password</label><a href="#" class="inline-flex items-center min-h-11 text-[15px] font-semibold text-brand">Forgot?</a></div>
+            <input id="a-pass" type="password" autocomplete="current-password" class="block w-full min-h-12 rounded-xl border border-linestrong bg-surface px-4 text-base text-ink focus:outline-none focus:border-brand focus:ring-[3px] focus:ring-brand/40">
+          </div>
+          <p class="flex items-start gap-2 text-[15px] text-muted"><svg class="w-5 h-5 shrink-0 mt-0.5" aria-hidden="true"><use href="#i-shield"/></svg>Next you will enter a code from your authenticator app.</p>
+          <button class="flex w-full items-center justify-center gap-2 min-h-12 rounded-xl bg-brand text-onbrand text-base font-semibold hover:bg-brand/90">Continue</button>
+          <p class="text-center text-[15px] text-muted">New organisation? <a href="#" class="inline-flex items-center min-h-11 font-semibold text-brand underline underline-offset-4">Register and get verified</a></p>
+        </form>
+      </div>
+
+      <div class="mt-4 flex items-start gap-3 rounded-2xl border border-ok/30 bg-oksoft p-4">
+        <svg class="w-6 h-6 shrink-0 text-ok" aria-hidden="true"><use href="#i-shield-check"/></svg>
+        <p class="text-[15px] font-medium" data-i18n="freeWarn">BLUESKILLS is free for workers. Never pay anyone to apply.</p>
+      </div>
+    </div>
+  </main>
+
+  <footer class="px-4 py-4 text-center text-sm text-muted">
+    <a href="#" class="inline-flex items-center justify-center min-h-11 min-w-11 px-2 hover:text-ink" data-i18n="help">Help</a> · <a href="#" class="inline-flex items-center justify-center min-h-11 min-w-11 px-2 hover:text-ink">Privacy</a> · <a href="#" class="inline-flex items-center justify-center min-h-11 min-w-11 px-2 hover:text-ink">Terms</a>
+  </footer>
+</div>
+</body>
+</html>

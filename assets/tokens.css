@@ -1,0 +1,104 @@
+/* BLUESKILLS design tokens — passport-cover blue + customs-stamp amber on blue-tinted neutrals.
+   Values are space-separated RGB so Tailwind can apply opacity: rgb(var(--brand) / .5).
+   Theme: system by default; [data-theme="light|dark"] on <html> (or any wrapper) forces one. */
+
+:root, [data-theme="light"] {
+  --bg: 243 245 250; --surface: 255 255 255; --surface-2: 234 238 246;
+  --line: 214 220 233; --line-strong: 128 139 165;
+  --ink: 14 22 46; --muted: 86 97 124;
+  --brand: 21 62 158; --brand-soft: 226 234 252; --on-brand: 255 255 255;
+  --stamp: 150 84 6; --stamp-soft: 252 239 215;
+  --ok: 20 122 72; --ok-soft: 222 245 232;
+  --warn: 146 84 0; --warn-soft: 253 241 214;
+  --bad: 186 40 48; --bad-soft: 252 228 229;
+  color-scheme: light;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: 9 13 26; --surface: 16 22 40; --surface-2: 24 32 56;
+    --line: 40 50 80; --line-strong: 92 105 140;
+    --ink: 230 235 247; --muted: 150 161 189;
+    --brand: 122 160 255; --brand-soft: 28 42 86; --on-brand: 8 14 34;
+    --stamp: 240 172 74; --stamp-soft: 60 42 14;
+    --ok: 84 205 140; --ok-soft: 16 52 36;
+    --warn: 240 186 70; --warn-soft: 58 44 12;
+    --bad: 245 120 120; --bad-soft: 64 22 26;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"], [data-theme="dark"] {
+  --bg: 9 13 26; --surface: 16 22 40; --surface-2: 24 32 56;
+  --line: 40 50 80; --line-strong: 92 105 140;
+  --ink: 230 235 247; --muted: 150 161 189;
+  --brand: 122 160 255; --brand-soft: 28 42 86; --on-brand: 8 14 34;
+  --stamp: 240 172 74; --stamp-soft: 60 42 14;
+  --ok: 84 205 140; --ok-soft: 16 52 36;
+  --warn: 240 186 70; --warn-soft: 58 44 12;
+  --bad: 245 120 120; --bad-soft: 64 22 26;
+  color-scheme: dark;
+}
+
+/* ---------- base ---------- */
+html { -webkit-text-size-adjust: 100%; }
+body, [data-theme] { background: rgb(var(--bg)); color: rgb(var(--ink)); }
+body {
+  margin: 0; font-size: 16px; line-height: 1.55; overflow-x: hidden;
+  font-family: Figtree, "Noto Sans Bengali", "Noto Sans Devanagari", "Noto Naskh Arabic", system-ui, sans-serif;
+}
+/* Scripts with tall glyphs need more line height. Latin stays in Figtree; Urdu glyphs fall through to Naskh. */
+:lang(bn) body, :lang(hi) body, :lang(ne) body { line-height: 1.7; }
+:lang(ur) body { font-family: Figtree, "Noto Naskh Arabic", system-ui, sans-serif; line-height: 1.9; }
+:lang(ur) .font-display, :lang(bn) .font-display, :lang(hi) .font-display, :lang(ne) .font-display { font-family: inherit; }
+h1, h2, h3 { text-wrap: balance; }
+img, svg, video { max-width: 100%; }
+
+/* Visible focus everywhere (2px brand ring, offset so it shows on brand fills too). */
+:focus-visible { outline: 3px solid rgb(var(--brand)); outline-offset: 2px; }
+.skip-link { position: absolute; inset-inline-start: 8px; top: -60px; z-index: 100; }
+.skip-link:focus { top: 8px; }
+
+/* Icons that point (back, next, send) mirror in RTL. */
+[dir="rtl"] .flip-rtl { transform: scaleX(-1); }
+
+/* ---------- dialogs: modal / bottom sheet / drawer (native <dialog>) ---------- */
+dialog { padding: 0; border: 0; color: inherit; background: transparent; max-width: none; max-height: none; }
+dialog::backdrop { background: rgb(9 13 26 / .55); }
+dialog[open] { animation: bs-fade .16s ease-out; }
+dialog.sheet { margin: auto 0 0; width: 100%; }
+dialog.sheet[open] { animation: bs-up .2s ease-out; }
+@media (min-width: 640px) { dialog.sheet { margin: auto; width: auto; } }
+dialog.drawer { margin: 0; margin-inline-end: auto; height: 100%; width: min(320px, 86vw); }
+dialog.drawer[open] { animation: bs-in-start .2s ease-out; }
+[dir="rtl"] dialog.drawer[open] { animation-name: bs-in-start-rtl; }
+@keyframes bs-fade { from { opacity: 0; } }
+@keyframes bs-up { from { transform: translateY(24px); opacity: 0; } }
+@keyframes bs-in-start { from { transform: translateX(-24px); opacity: 0; } }
+@keyframes bs-in-start-rtl { from { transform: translateX(24px); opacity: 0; } }
+
+/* ---------- loading ---------- */
+.skeleton { background: linear-gradient(90deg, rgb(var(--surface-2)) 25%, rgb(var(--line)) 50%, rgb(var(--surface-2)) 75%); background-size: 200% 100%; animation: bs-shimmer 1.4s linear infinite; }
+@keyframes bs-shimmer { to { background-position: -200% 0; } }
+
+/* Voice recording waveform */
+.wave { display: flex; align-items: center; justify-content: center; gap: 5px; height: 48px; }
+.wave span { width: 5px; height: 40%; border-radius: 4px; background: rgb(var(--brand)); animation: bs-wave .9s ease-in-out infinite; }
+.wave span:nth-child(2n) { animation-delay: .15s; } .wave span:nth-child(3n) { animation-delay: .3s; }
+@keyframes bs-wave { 50% { height: 100%; } }
+
+/* Skill Passport cover */
+.passport-cover {
+  background: radial-gradient(circle at 88% 12%, rgb(var(--on-brand) / .10) 0 18%, transparent 19%),
+    repeating-radial-gradient(circle at 88% 12%, rgb(var(--on-brand) / .07) 0 1px, transparent 1px 9px), rgb(var(--brand));
+  color: rgb(var(--on-brand));
+}
+
+/* Sidebar collapse (org/admin workspaces, lg+) */
+@media (min-width: 1024px) {
+  [data-collapsed="true"] .sidebar { width: 76px; }
+  [data-collapsed="true"] .sidebar .nav-label { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+  [data-collapsed="true"] .sidebar .nav-section { display: none; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; }
+}

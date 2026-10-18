@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Organisation Workspace · BLUESKILLS</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,700;12..96,800&family=Figtree:wght@400;500;600;700&family=JetBrains+Mono:wght@500;700&display=swap">
+<link rel="stylesheet" href="../assets/tokens.css">
+<script src="https://cdn.tailwindcss.com/3.4.17"></script>
+<script src="../assets/tailwind.config.js"></script>
+<script src="../assets/app.js"></script>
+</head>
+<body class="font-sans">
+<a href="#main" class="skip-link inline-flex items-center min-h-11 rounded-lg bg-brand text-onbrand px-4 font-semibold">Skip to content</a>
+
+<div data-collapsed="false" class="min-h-screen lg:flex">
+  <!-- Sidebar (lg+). Collapses to icons; labels stay for screen readers. -->
+  <aside class="sidebar hidden lg:flex sticky top-0 h-screen w-64 shrink-0 flex-col border-e border-line bg-surface transition-[width] duration-200 overflow-hidden">
+    <div class="flex items-center gap-2 h-16 px-4 border-b border-line">
+      <a href="../index.html" class="grid place-items-center w-11 h-11 shrink-0 rounded-lg bg-brand text-onbrand" aria-label="BLUESKILLS home"><svg class="w-5 h-5" aria-hidden="true"><use href="#i-passport"/></svg></a>
+      <div class="nav-label min-w-0"><p class="font-bold truncate leading-tight">ABC Contracting LLC</p><p class="text-[13px] text-muted truncate">Employer · Dubai, UAE</p></div>
+    </div>
+    <nav aria-label="Workspace" class="flex-1 overflow-y-auto p-3">
+      <p class="nav-section px-3 pt-1 pb-2 text-[13px] font-bold uppercase tracking-wider text-muted">Recruitment</p>
+      <ul class="space-y-0.5">
+        <li><a href="#" aria-current="page" title="Overview" class="flex items-center gap-3 min-h-11 px-3 rounded-lg bg-brandsoft text-brand font-semibold"><svg class="w-5 h-5 shrink-0" aria-hidden="true"><use href="#i-grid"/></svg><span class="nav-label">Overview</span></a></li>
+        <li><a href="#" title="Jobs" class="flex items-center gap-3 min-h-11 px-3 rounded-lg text-ink font-medium hover:bg-surface2"><svg class="w-5 h-5 shrink-0 text-muted" aria-hidden="true"><use href="#i-briefcase"/></svg><span class="nav-label">Jobs</span><span class="nav-label ms-auto text-[13px] text-muted tabular-nums">4</span></a></li>
+        <li><a href="#" title="Talent search" class="flex items-center gap-3 min-h-11 px-3 rounded-lg text-ink font-medium hover:bg-surface2"><svg class="w-5 h-5 shrink-0 text-muted" aria-hidden="true"><use href="#i-search"/></svg><span class="nav-label">Talent search</span></a></li>
+        <li><a href="#" title="Pipeline" class="flex items-center gap-3 min-h-11 px-3 rounded-lg text-ink font-medium hover:bg-surface2"><svg class="w-5 h-5 shrink-0 text-muted" aria-hidden="true"><use href="#i-kanban"/></svg><span class="nav-label">Pipeline</span></a></li>
+        <li><a href="#" title="Messages" class="flex items-center gap-3 min-h-11 px-3 rounded-lg text-ink font-medium hover:bg-surface2"><svg class="w-5 h-5 shrink-0 text-muted" aria-hidden="true"><use href="#i-chat"/></svg><span class="nav-label">Messages</span><span class="nav-label ms-auto rounded-full bg-brand text-onbrand text-[13px] font-bold px-2 tabular-nums">3</span></a></li>
+        <li><a href="#" title="Reports" class="flex items-center gap-3 min-h-11 px-3 rounded-lg text-ink font-medium hover:bg-surface2"><svg class="w-5 h-5 shrink-0 text-muted" aria-hidden="true"><use href="#i-chart"/></svg><span class="nav-label">Reports</span></a></li>
+      </ul>
+      <p class="nav-section px-3 pt-5 pb-2 text-[13px] font-bold uppercase tracking-wider text-muted">Organisation</p>
+      <ul class="space-y-0.5 mt-2 lg:mt-0">
+        <li><a href="#" title="Verification" class="flex items-center gap-3 min-h-11 px-3 rounded-lg text-ink font-medium hover:bg-surface2"><svg class="w-5 h-5 shrink-0 text-muted" aria-hidden="true"><use href="#i-shield-check"/></svg><span class="nav-label">Verification</span></a></li>
+        <li><a href="#" title="Team" class="flex items-center gap-3 min-h-11 px-3 rounded-lg text-ink font-medium hover:bg-surface2"><svg class="w-5 h-5 shrink-0 text-muted" aria-hidden="true"><use href="#i-users"/></svg><span class="nav-label">Team</span></a></li>
+        <li><a href="#" title="Settings" class="flex items-center gap-3 min-h-11 px-3 rounded-lg text-ink font-medium hover:bg-surface2"><svg class="w-5 h-5 shrink-0 text-muted" aria-hidden="true"><use href="#i-settings"/></svg><span class="nav-label">Settings</span></a></li>
+      </ul>
+    </nav>
+    <div class="p-3 border-t border-line">
+      <button type="button" data-sidebar-toggle aria-expanded="true" title="Collapse sidebar" class="flex w-full items-center gap-3 min-h-11 px-3 rounded-lg text-muted font-medium hover:bg-surface2 hover:text-ink"><svg class="w-5 h-5 shrink-0" aria-hidden="true"><use href="#i-panel"/></svg><span class="nav-label">Collapse</span></button>
+    </div>
+  </aside>
+
+  <div class="flex-1 min-w-0">
+    <header class="sticky top-0 z-20 border-b border-line bg-surface/95 backdrop-blur">
+      <div class="flex items-center gap-2 h-16 px-4 lg:px-6">
+        <button type="button" data-open="org-drawer" class="lg:hidden grid place-items-center w-11 h-11 shrink-0 -ms-2 rounded-lg hover:bg-surface2" aria-label="Open menu"><svg class="w-6 h-6" aria-hidden="true"><use href="#i-menu"/></svg></button>
+        <p class="lg:hidden font-bold truncate">ABC Contracting</p>
+        <label class="relative hidden md:block w-full max-w-sm">
+          <span class="sr-only">Search jobs and candidates</span>
+          <svg class="pointer-events-none absolute start-3 top-1/2 -translate-y-1/2 w-5 h-5 text-muted" aria-hidden="true"><use href="#i-search"/></svg>
+          <input type="search" placeholder="Search jobs, candidates, job IDs…" class="block w-full min-h-11 rounded-lg border border-linestrong bg-surface ps-10 pe-3 text-[15px] text-ink placeholder:text-muted focus:outline-none focus:border-brand focus:ring-[3px] focus:ring-brand/40">
+        </label>
+        <div class="ms-auto flex items-center gap-1">
+          <span class="hidden sm:inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-sm font-semibold bg-oksoft text-ok"><svg class="w-4 h-4" aria-hidden="true"><use href="#i-shield-check"/></svg>Verified organisation</span>
+          <a href="#" class="grid place-items-center w-11 h-11 rounded-lg hover:bg-surface2" aria-label="Help"><svg class="w-5 h-5" aria-hidden="true"><use href="#i-help"/></svg></a>
+          <a href="#" class="relative grid place-items-center w-11 h-11 rounded-lg hover:bg-surface2" aria-label="Notifications, 2 new"><svg class="w-5 h-5" aria-hidden="true"><use href="#i-bell"/></svg><span class="absolute top-2.5 end-2.5 w-2 h-2 rounded-full bg-bad" aria-hidden="true"></span></a>
+          <button type="button" data-theme-toggle aria-label="Dark theme" class="grid place-items-center w-11 h-11 rounded-lg hover:bg-surface2"><svg class="w-5 h-5" aria-hidden="true"><use href="#i-moon"/></svg></button>
+          <button type="button" class="flex items-center gap-2 min-h-11 ps-1 pe-2 rounded-lg hover:bg-surface2" aria-label="Account: Sara K., HR Admin"><span class="grid place-items-center w-9 h-9 rounded-full bg-stampsoft text-stamp font-bold text-sm">SK</span><span class="hidden xl:block text-start leading-tight"><span class="block text-[15px] font-semibold">Sara K.</span><span class="block text-[13px] text-muted">HR Admin</span></span></button>
+        </div>
+      </div>
+    </header>
+
+    <main id="main" class="px-4 lg:px-6 py-6 max-w-[90rem]">
+      <div class="flex flex-wrap items-center gap-3">
+        <div class="me-auto min-w-0">
+          <nav aria-label="Breadcrumb" class="text-sm text-muted"><ol class="flex items-center gap-1"><li>ABC Contracting</li><li aria-hidden="true">/</li><li aria-current="page" class="text-ink font-medium">Overview</li></ol></nav>
+          <h1 class="font-display text-2xl sm:text-3xl font-bold">Overview</h1>
+        </div>
+        <span class="inline-flex items-center gap-1 rounded-md border border-dashed border-linestrong px-2 py-0.5 text-[13px] font-semibold text-muted">Sample data</span>
+        <a href="#" class="inline-flex items-center justify-center gap-2 min-h-11 px-4 rounded-lg bg-brand text-onbrand font-semibold hover:bg-brand/90"><svg class="w-5 h-5" aria-hidden="true"><use href="#i-plus"/></svg>Post a job</a>
+      </div>
+
+      <ul class="mt-6 grid grid-cols-2 xl:grid-cols-4 gap-3">
+        <li class="rounded-xl border border-line bg-surface p-4"><p class="text-sm text-muted">Live jobs</p><p class="text-3xl font-bold tabular-nums">3</p><p class="text-sm text-warn font-semibold">1 in review</p></li>
+        <li class="rounded-xl border border-line bg-surface p-4"><p class="text-sm text-muted">Applicants</p><p class="text-3xl font-bold tabular-nums">1,284</p><p class="text-sm text-ok font-semibold">+86 this week</p></li>
+        <li class="rounded-xl border border-line bg-surface p-4"><p class="text-sm text-muted">Shortlisted</p><p class="text-3xl font-bold tabular-nums">318</p><p class="text-sm text-muted">Across 3 jobs</p></li>
+        <li class="rounded-xl border border-line bg-surface p-4"><p class="text-sm text-muted">Selected</p><p class="text-3xl font-bold tabular-nums">142<span class="text-lg text-muted font-semibold"> / 200</span></p><p class="text-sm text-muted">Dubai project</p></li>
+      </ul>
+
+      <div class="mt-6 grid gap-6 xl:grid-cols-[minmax(0,1fr)_22rem] items-start">
+        <section aria-labelledby="jobs-h" class="rounded-xl border border-line bg-surface overflow-hidden">
+          <div class="flex items-center gap-2 px-4 py-3 border-b border-line"><h2 id="jobs-h" class="font-bold me-auto">Jobs</h2><a href="#" class="inline-flex items-center min-h-11 px-3 rounded-lg font-semibold text-brand hover:bg-brandsoft">All jobs</a></div>
+          <table class="hidden md:table w-full text-[15px]">
+            <thead class="bg-surface2/60 text-sm text-muted"><tr><th scope="col" class="px-4 py-2.5 text-start font-semibold">Job</th><th scope="col" class="px-3 py-2.5 text-start font-semibold">Status</th><th scope="col" class="px-3 py-2.5 text-end font-semibold">Applicants</th><th scope="col" class="px-3 py-2.5 text-start font-semibold">Progress</th><th scope="col" class="px-4 py-2.5"><span class="sr-only">Actions</span></th></tr></thead>
+            <tbody class="divide-y divide-line">
+              <tr class="hover:bg-surface2/50"><td class="px-4 py-3"><p class="font-semibold">Building Electrician</p><p class="text-sm text-muted"><span class="font-mono">UAE-EL-0001</span> · Dubai</p></td><td class="px-3 py-3"><span class="inline-flex items-center gap-1.5 rounded-full whitespace-nowrap px-2.5 py-1 text-sm font-semibold bg-oksoft text-ok"><span class="w-2 h-2 rounded-full bg-ok" aria-hidden="true"></span>Live</span></td><td class="px-3 py-3 text-end tabular-nums">864</td><td class="px-3 py-3 w-48"><div class="flex items-center gap-2"><div class="h-2 flex-1 rounded-full bg-surface2 overflow-hidden"><div class="h-full bg-ok rounded-full" style="width:71%"></div></div><span class="text-sm tabular-nums text-muted">142/200</span></div></td><td class="px-4 py-3 text-end"><a href="#" class="inline-flex items-center min-h-11 px-3 rounded-lg font-semibold text-brand hover:bg-brandsoft">Pipeline</a></td></tr>
+              <tr class="hover:bg-surface2/50"><td class="px-4 py-3"><p class="font-semibold">HVAC Technician</p><p class="text-sm text-muted"><span class="font-mono">SA-HV-0021</span> · Riyadh</p></td><td class="px-3 py-3"><span class="inline-flex items-center gap-1.5 rounded-full whitespace-nowrap px-2.5 py-1 text-sm font-semibold bg-warnsoft text-warn"><svg class="w-4 h-4" aria-hidden="true"><use href="#i-clock"/></svg>In compliance review</span></td><td class="px-3 py-3 text-end tabular-nums">—</td><td class="px-3 py-3 w-48 text-sm text-muted">Mandate pending</td><td class="px-4 py-3 text-end"><a href="#" class="inline-flex items-center min-h-11 px-3 rounded-lg font-semibold text-brand hover:bg-brandsoft">View</a></td></tr>
+              <tr class="hover:bg-surface2/50"><td class="px-4 py-3"><p class="font-semibold">Site Supervisor (MEP)</p><p class="text-sm text-muted"><span class="font-mono">UAE-SU-0004</span> · Abu Dhabi</p></td><td class="px-3 py-3"><span class="inline-flex items-center gap-1.5 rounded-full whitespace-nowrap px-2.5 py-1 text-sm font-semibold bg-surface2 text-muted"><svg class="w-4 h-4" aria-hidden="true"><use href="#i-edit"/></svg>Draft</span></td><td class="px-3 py-3 text-end tabular-nums">—</td><td class="px-3 py-3 w-48 text-sm text-muted">Step 3 of 5</td><td class="px-4 py-3 text-end"><a href="#" class="inline-flex items-center min-h-11 px-3 rounded-lg font-semibold text-brand hover:bg-brandsoft">Continue</a></td></tr>
+            </tbody>
+          </table>
+          <ul class="md:hidden divide-y divide-line">
+            <li class="p-4"><div class="flex items-start gap-2"><div class="min-w-0 flex-1"><p class="font-semibold">Building Electrician</p><p class="text-sm text-muted"><span class="font-mono">UAE-EL-0001</span> · Dubai · 864 applicants</p></div><span class="inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-sm font-semibold bg-oksoft text-ok"><span class="w-2 h-2 rounded-full bg-ok" aria-hidden="true"></span>Live</span></div><div class="mt-2 flex items-center gap-2"><div class="h-2 flex-1 rounded-full bg-surface2 overflow-hidden"><div class="h-full bg-ok rounded-full" style="width:71%"></div></div><span class="text-sm tabular-nums text-muted">142/200</span><a href="#" class="inline-flex items-center min-h-11 px-3 rounded-lg font-semibold text-brand hover:bg-brandsoft">Pipeline</a></div></li>
+            <li class="p-4"><div class="flex items-start gap-2"><div class="min-w-0 flex-1"><p class="font-semibold">HVAC Technician</p><p class="text-sm text-muted"><span class="font-mono">SA-HV-0021</span> · Riyadh</p></div><span class="inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-sm font-semibold bg-warnsoft text-warn"><svg class="w-4 h-4" aria-hidden="true"><use href="#i-clock"/></svg>In review</span></div><div class="mt-1 flex items-center justify-between gap-2"><span class="text-sm text-muted">Mandate pending</span><a href="#" class="inline-flex items-center min-h-11 px-3 rounded-lg font-semibold text-brand hover:bg-brandsoft">View</a></div></li>
+            <li class="p-4"><div class="flex items-start gap-2"><div class="min-w-0 flex-1"><p class="font-semibold">Site Supervisor (MEP)</p><p class="text-sm text-muted"><span class="font-mono">UAE-SU-0004</span> · Abu Dhabi</p></div><span class="inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-sm font-semibold bg-surface2 text-muted"><svg class="w-4 h-4" aria-hidden="true"><use href="#i-edit"/></svg>Draft</span></div><div class="mt-1 flex items-center justify-between gap-2"><span class="text-sm text-muted">Step 3 of 5</span><a href="#" class="inline-flex items-center min-h-11 px-3 rounded-lg font-semibold text-brand hover:bg-brandsoft">Continue</a></div></li>
+          </ul>
+        </section>
+
+        <section aria-labelledby="todo-h" class="rounded-xl border border-line bg-surface">
+          <h2 id="todo-h" class="font-bold px-4 py-3 border-b border-line">Needs your action</h2>
+          <ul class="divide-y divide-line">
+            <li class="flex gap-3 p-4"><span class="grid place-items-center w-10 h-10 shrink-0 rounded-lg bg-stampsoft text-stamp"><svg class="w-5 h-5" aria-hidden="true"><use href="#i-calendar"/></svg></span><div class="min-w-0"><p class="font-semibold">Schedule 48 interviews</p><p class="text-sm text-muted">Building Electrician · shortlisted this week</p><a href="#" class="inline-flex items-center min-h-11 font-semibold text-brand">Open pipeline</a></div></li>
+            <li class="flex gap-3 p-4"><span class="grid place-items-center w-10 h-10 shrink-0 rounded-lg bg-warnsoft text-warn"><svg class="w-5 h-5" aria-hidden="true"><use href="#i-file"/></svg></span><div class="min-w-0"><p class="font-semibold">Upload mandate letter</p><p class="text-sm text-muted">HVAC Technician cannot go live without it</p><a href="#" class="inline-flex items-center min-h-11 font-semibold text-brand">Upload</a></div></li>
+            <li class="flex gap-3 p-4"><span class="grid place-items-center w-10 h-10 shrink-0 rounded-lg bg-brandsoft text-brand"><svg class="w-5 h-5" aria-hidden="true"><use href="#i-chat"/></svg></span><div class="min-w-0"><p class="font-semibold">3 unread messages</p><p class="text-sm text-muted">From candidates and Northstar Manpower</p><a href="#" class="inline-flex items-center min-h-11 min-w-11 font-semibold text-brand">Read</a></div></li>
+          </ul>
+        </section>
+      </div>
+    </main>
+  </div>
+</div>
+
+<!-- Mobile drawer: same navigation -->
+<dialog id="org-drawer" class="drawer" aria-labelledby="org-drawer-t">
+  <nav class="h-full bg-surface flex flex-col" aria-label="Workspace">
+    <div class="flex items-center gap-2 h-16 px-4 border-b border-line">
+      <span class="grid place-items-center w-10 h-10 shrink-0 rounded-lg bg-brand text-onbrand"><svg class="w-5 h-5" aria-hidden="true"><use href="#i-passport"/></svg></span>
+      <div class="min-w-0 flex-1"><p id="org-drawer-t" class="font-bold truncate leading-tight">ABC Contracting LLC</p><p class="text-[13px] text-muted truncate">Employer · Dubai, UAE</p></div>
+      <button type="button" data-close aria-label="Close menu" class="grid place-items-center w-11 h-11 rounded-lg hover:bg-surface2"><svg class="w-5 h-5" aria-hidden="true"><use href="#i-x"/></svg></button>
+    </div>
+    <div class="flex-1 overflow-y-auto p-3">
+      <p class="px-3 pt-1 pb-2 text-[13px] font-bold uppercase tracking-wider text-muted">Recruitment</p>
+      <ul class="space-y-0.5">
+        <li><a href="#" aria-current="page" class="flex items-center gap-3 min-h-12 px-3 rounded-lg bg-brandsoft text-brand font-semibold"><svg class="w-5 h-5" aria-hidden="true"><use href="#i-grid"/></svg>Overview</a></li>
+        <li><a href="#" class="flex items-center gap-3 min-h-12 px-3 rounded-lg font-medium hover:bg-surface2"><svg class="w-5 h-5 text-muted" aria-hidden="true"><use href="#i-briefcase"/></svg>Jobs</a></li>
+        <li><a href="#" class="flex items-center gap-3 min-h-12 px-3 rounded-lg font-medium hover:bg-surface2"><svg class="w-5 h-5 text-muted" aria-hidden="true"><use href="#i-search"/></svg>Talent search</a></li>
+        <li><a href="#" class="flex items-center gap-3 min-h-12 px-3 rounded-lg font-medium hover:bg-surface2"><svg class="w-5 h-5 text-muted" aria-hidden="true"><use href="#i-kanban"/></svg>Pipeline</a></li>
+        <li><a href="#" class="flex items-center gap-3 min-h-12 px-3 rounded-lg font-medium hover:bg-surface2"><svg class="w-5 h-5 text-muted" aria-hidden="true"><use href="#i-chat"/></svg>Messages</a></li>
+        <li><a href="#" class="flex items-center gap-3 min-h-12 px-3 rounded-lg font-medium hover:bg-surface2"><svg class="w-5 h-5 text-muted" aria-hidden="true"><use href="#i-chart"/></svg>Reports</a></li>
+      </ul>
+      <p class="px-3 pt-5 pb-2 text-[13px] font-bold uppercase tracking-wider text-muted">Organisation</p>
+      <ul class="space-y-0.5">
+        <li><a href="#" class="flex items-center gap-3 min-h-12 px-3 rounded-lg font-medium hover:bg-surface2"><svg class="w-5 h-5 text-muted" aria-hidden="true"><use href="#i-shield-check"/></svg>Verification</a></li>
+        <li><a href="#" class="flex items-center gap-3 min-h-12 px-3 rounded-lg font-medium hover:bg-surface2"><svg class="w-5 h-5 text-muted" aria-hidden="true"><use href="#i-users"/></svg>Team</a></li>
+        <li><a href="#" class="flex items-center gap-3 min-h-12 px-3 rounded-lg font-medium hover:bg-surface2"><svg class="w-5 h-5 text-muted" aria-hidden="true"><use href="#i-settings"/></svg>Settings</a></li>
+      </ul>
+    </div>
+    <div class="p-3 border-t border-line"><span class="inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-sm font-semibold bg-oksoft text-ok"><svg class="w-4 h-4" aria-hidden="true"><use href="#i-shield-check"/></svg>Verified organisation</span></div>
+  </nav>
+</dialog>
+</body>
+</html>
