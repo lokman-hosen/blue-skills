@@ -158,6 +158,7 @@ type Stage = 'applied' | 'reviewed' | 'qualified' | 'shortlisted' | 'interview' 
 | 20 Graduates | `Pages/Org/Institute/Graduates.tsx` | Tabs, DataTable (`selectable`), BulkActionBar, Modal (attest needs a confirm tick), Modal (can't-confirm reason) |
 | 21 Trust reports | `Pages/Admin/Reports/Index.tsx` | AdminLayout, Tabs (reports · appeals), report list + detail, interim actions, DecisionPanel (reason codes TS-01…06), typed-name confirm for suspension. Appeals block the original decider. |
 | 22 Countries & taxonomy | `Pages/Admin/Config/Countries.tsx`, `Pages/Admin/Config/Taxonomy.tsx` | Switch, Radio, Checkbox grid, reorderable step list (up/down buttons, no drag-only), SaveBar ("send for approval"), TreeView (`role="tree"`) + node editor |
+| 23 Employer messages | `Pages/Org/Messages/Index.tsx` (+ `Show.tsx` on phones) | WorkspaceLayout, ConversationList (job + unread/agency filters), MessageBubble (worker · agency · own, translated with original), InterviewSlotCard, Modal (propose time, shows worker time zone), template Select, PayWarning (draft mentions money), candidate panel at `2xl+` / BottomSheet below. No phone numbers; participants listed above the thread. |
 
 ## Rules every component keeps
 - 44px minimum target (worker main actions 56px), body text ≥ 16px on worker screens, nothing under 13px.

@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Messages · BLUESKILLS</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,700;12..96,800&family=Figtree:wght@400;500;600;700&family=JetBrains+Mono:wght@500;700&display=swap">
+<link rel="stylesheet" href="../assets/tokens.css">
+<script src="https://cdn.tailwindcss.com/3.4.17"></script>
+<script src="../assets/tailwind.config.js"></script>
+<script src="../assets/app.js"></script>
+</head>
+<body class="font-sans">
+<a href="#main" class="skip-link inline-flex items-center min-h-11 rounded-lg bg-brand text-onbrand px-4 font-semibold">Skip to content</a>
+
+<div data-collapsed="false" class="min-h-screen lg:flex">
+  <aside class="sidebar hidden lg:flex sticky top-0 h-screen w-64 shrink-0 flex-col border-e border-line bg-surface transition-[width] duration-200 overflow-hidden">
+    <div class="flex items-center gap-2 h-16 px-4 border-b border-line">
+      <a href="../index.html" class="grid place-items-center w-11 h-11 shrink-0 rounded-lg bg-brand text-onbrand" aria-label="BLUESKILLS home"><svg class="w-5 h-5" aria-hidden="true"><use href="#i-passport"/></svg></a>
+      <div class="nav-label min-w-0"><p class="font-bold truncate leading-tight">ABC Contracting LLC</p><p class="text-[13px] text-muted truncate">Employer · Dubai, UAE</p></div>
+    </div>
+    <nav aria-label="Workspace" class="flex-1 overflow-y-auto p-3"><p class="nav-section px-3 pt-1 pb-2 text-[13px] font-bold uppercase tracking-wider text-muted">Recruitment</p><ul class="space-y-0.5"><li><a href="../layouts/org.html" title="Overview" class="flex items-center gap-3 min-h-11 px-3 rounded-lg text-ink font-medium hover:bg-surface2"><svg class="w-5 h-5 shrink-0 text-muted" aria-hidden="true"><use href="#i-grid"/></svg><span class="nav-label">Overview</span></a></li><li><a href="06-post-job.html" title="Jobs" class="flex items-center gap-3 min-h-11 px-3 rounded-lg text-ink font-medium hover:bg-surface2"><svg class="w-5 h-5 shrink-0 text-muted" aria-hidden="true"><use href="#i-briefcase"/></svg><span class="nav-label">Jobs</span><span class="nav-label ms-auto text-[13px] text-muted tabular-nums">4</span></a></li><li><a href="07-talent.html" title="Talent search" class="flex items-center gap-3 min-h-11 px-3 rounded-lg text-ink font-medium hover:bg-surface2"><svg class="w-5 h-5 shrink-0 text-muted" aria-hidden="true"><use href="#i-search"/></svg><span class="nav-label">Talent search</span></a></li><li><a href="08-pipeline.html" title="Pipeline" class="flex items-center gap-3 min-h-11 px-3 rounded-lg text-ink font-medium hover:bg-surface2"><svg class="w-5 h-5 shrink-0 text-muted" aria-hidden="true"><use href="#i-kanban"/></svg><span class="nav-label">Pipeline</span></a></li><li><a href="23-org-messages.html" aria-current="page" title="Messages" class="flex items-center gap-3 min-h-11 px-3 rounded-lg bg-brandsoft text-brand font-semibold"><svg class="w-5 h-5 shrink-0" aria-hidden="true"><use href="#i-chat"/></svg><span class="nav-label">Messages</span><span class="nav-label ms-auto rounded-full bg-brand text-onbrand text-[13px] font-bold px-2 tabular-nums">3</span></a></li><li><a href="#" title="Reports" class="flex items-center gap-3 min-h-11 px-3 rounded-lg text-ink font-medium hover:bg-surface2"><svg class="w-5 h-5 shrink-0 text-muted" aria-hidden="true"><use href="#i-chart"/></svg><span class="nav-label">Reports</span></a></li></ul><p class="nav-section px-3 pt-5 pb-2 text-[13px] font-bold uppercase tracking-wider text-muted">Organisation</p><ul class="space-y-0.5"><li><a href="16-org-register.html#review" title="Verification" class="flex items-center gap-3 min-h-11 px-3 rounded-lg text-ink font-medium hover:bg-surface2"><svg class="w-5 h-5 shrink-0 text-muted" aria-hidden="true"><use href="#i-shield-check"/></svg><span class="nav-label">Verification</span></a></li><li><a href="#" title="Team" class="flex items-center gap-3 min-h-11 px-3 rounded-lg text-ink font-medium hover:bg-surface2"><svg class="w-5 h-5 shrink-0 text-muted" aria-hidden="true"><use href="#i-users"/></svg><span class="nav-label">Team</span></a></li><li><a href="#" title="Settings" class="flex items-center gap-3 min-h-11 px-3 rounded-lg text-ink font-medium hover:bg-surface2"><svg class="w-5 h-5 shrink-0 text-muted" aria-hidden="true"><use href="#i-settings"/></svg><span class="nav-label">Settings</span></a></li></ul></nav>
+    <div class="p-3 border-t border-line">
+      <button type="button" data-sidebar-toggle aria-expanded="true" title="Collapse sidebar" class="flex w-full items-center gap-3 min-h-11 px-3 rounded-lg text-muted font-medium hover:bg-surface2 hover:text-ink"><svg class="w-5 h-5 shrink-0" aria-hidden="true"><use href="#i-panel"/></svg><span class="nav-label">Collapse</span></button>
+    </div>
+  </aside>
+
+  <div class="flex-1 min-w-0">
+    <header class="sticky top-0 z-20 border-b border-line bg-surface/95 backdrop-blur">
+      <div class="flex items-center gap-2 h-16 px-4 lg:px-6">
+        <button type="button" data-open="ws-drawer" class="lg:hidden grid place-items-center w-11 h-11 shrink-0 -ms-2 rounded-lg hover:bg-surface2" aria-label="Open menu"><svg class="w-6 h-6" aria-hidden="true"><use href="#i-menu"/></svg></button>
+        <p class="lg:hidden font-bold truncate">ABC Contracting</p>
+        <label class="relative hidden md:block w-full max-w-sm">
+          <span class="sr-only">Search candidates, job IDs, messages…</span>
+          <svg class="pointer-events-none absolute start-3 top-1/2 -translate-y-1/2 w-5 h-5 text-muted" aria-hidden="true"><use href="#i-search"/></svg>
+          <input type="search" placeholder="Search candidates, job IDs, messages…" class="block w-full min-h-11 rounded-lg border border-linestrong bg-surface ps-10 pe-3 text-[15px] text-ink placeholder:text-muted focus:outline-none focus:border-brand focus:ring-[3px] focus:ring-brand/40">
+        </label>
+        <div class="ms-auto flex items-center gap-1">
+          <span class="hidden sm:inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-sm font-semibold bg-oksoft text-ok"><svg class="w-4 h-4" aria-hidden="true"><use href="#i-shield-check"/></svg>Verified organisation</span>
+          <a href="#" class="grid place-items-center w-11 h-11 rounded-lg hover:bg-surface2" aria-label="Help"><svg class="w-5 h-5" aria-hidden="true"><use href="#i-help"/></svg></a>
+          <a href="#" class="relative grid place-items-center w-11 h-11 rounded-lg hover:bg-surface2" aria-label="Notifications, 2 new"><svg class="w-5 h-5" aria-hidden="true"><use href="#i-bell"/></svg><span class="absolute top-2.5 end-2.5 w-2 h-2 rounded-full bg-bad" aria-hidden="true"></span></a>
+          <button type="button" data-theme-toggle aria-label="Dark theme" class="grid place-items-center w-11 h-11 rounded-lg hover:bg-surface2"><svg class="w-5 h-5" aria-hidden="true"><use href="#i-moon"/></svg></button>
+          <button type="button" class="flex items-center gap-2 min-h-11 ps-1 pe-2 rounded-lg hover:bg-surface2" aria-label="Account: Sara K., HR Admin"><span class="grid place-items-center w-9 h-9 rounded-full bg-stampsoft text-stamp font-bold text-sm">SK</span><span class="hidden xl:block text-start leading-tight"><span class="block text-[15px] font-semibold">Sara K.</span><span class="block text-[13px] text-muted">HR Admin</span></span></button>
+        </div>
+      </div>
+    </header>
+
+    <main id="main" class="px-4 lg:px-6 py-6 max-w-[90rem]">
+      <div class="flex flex-wrap items-center gap-3">
+        <div class="me-auto min-w-0">
+          <nav aria-label="Breadcrumb" class="text-sm text-muted"><ol class="flex items-center gap-1"><li>ABC Contracting</li><li aria-hidden="true">/</li><li aria-current="page" class="text-ink font-medium">Messages</li></ol></nav>
+          <h1 class="font-display text-2xl sm:text-3xl font-bold">Messages</h1>
+        </div>
+        <span class="inline-flex items-center gap-1 rounded-md border border-dashed border-linestrong px-2 py-0.5 text-[13px] font-semibold text-muted">Sample data</span>
+      </div>
+
+      <div class="mt-5 grid gap-4 lg:grid-cols-[20rem_minmax(0,1fr)] 2xl:grid-cols-[20rem_minmax(0,1fr)_18rem] items-start">
+        <!-- Conversation list -->
+        <section id="list" aria-labelledby="cl-h" class="rounded-xl border border-line bg-surface overflow-hidden min-w-0">
+          <h2 id="cl-h" class="sr-only">Conversations</h2>
+          <div class="p-3 border-b border-line space-y-2">
+            <label class="relative block"><span class="sr-only">Job</span><select id="f-job" class="appearance-none block w-full min-h-11 rounded-lg border border-linestrong bg-surface ps-3 pe-8 text-[15px] font-semibold focus:outline-none focus:border-brand focus:ring-[3px] focus:ring-brand/40"><option value="">All jobs</option><option>Building Electrician · UAE-EL-0001</option><option>HVAC Technician · SA-HV-0021</option></select><svg class="pointer-events-none absolute end-2.5 top-1/2 -translate-y-1/2 w-4 h-4 text-muted" aria-hidden="true"><use href="#i-down"/></svg></label>
+            <div role="group" aria-label="Show" class="grid grid-cols-3 gap-1 rounded-lg bg-surface2 p-1">
+              <button type="button" data-f="all" aria-pressed="true" class="min-h-11 rounded-md text-[15px] font-semibold text-muted aria-pressed:bg-surface aria-pressed:text-ink aria-pressed:shadow-sm">All</button>
+              <button type="button" data-f="unread" aria-pressed="false" class="min-h-11 rounded-md text-[15px] font-semibold text-muted aria-pressed:bg-surface aria-pressed:text-ink aria-pressed:shadow-sm">Unread</button>
+              <button type="button" data-f="agency" aria-pressed="false" class="min-h-11 rounded-md text-[15px] font-semibold text-muted aria-pressed:bg-surface aria-pressed:text-ink aria-pressed:shadow-sm">Agency</button>
+            </div>
+          </div>
+          <ul id="convs" class="divide-y divide-line lg:max-h-[calc(100vh-17rem)] overflow-y-auto"></ul>
+          <p id="empty" class="hidden p-6 text-center text-muted">No conversations</p>
+        </section>
+
+        <!-- Thread -->
+        <section id="thread" aria-labelledby="th-name" class="rounded-xl border border-line bg-surface flex flex-col min-w-0 lg:h-[calc(100vh-11rem)] max-lg:hidden">
+          <header class="flex items-center gap-2 p-3 border-b border-line">
+            <a href="#" class="lg:hidden grid place-items-center w-11 h-11 shrink-0 rounded-lg hover:bg-surface2" aria-label="Back to conversations"><svg class="w-5 h-5 flip-rtl" aria-hidden="true"><use href="#i-back"/></svg></a>
+            <span id="th-ini" class="grid place-items-center w-10 h-10 shrink-0 rounded-full bg-stampsoft text-stamp font-bold text-sm"></span>
+            <div class="min-w-0 flex-1"><h2 id="th-name" class="font-bold truncate"></h2><p id="th-sub" class="text-sm text-muted truncate"></p></div>
+            <button type="button" data-open="ctx-sheet" class="2xl:hidden inline-flex items-center gap-1.5 min-h-11 px-3 rounded-lg font-semibold text-brand hover:bg-brandsoft"><svg class="w-5 h-5" aria-hidden="true"><use href="#i-user"/></svg><span class="hidden sm:inline">Candidate</span></button>
+          </header>
+          <p class="flex items-start gap-2 px-3 py-2 bg-surface2/60 border-b border-line text-sm text-muted"><svg class="w-4 h-4 shrink-0 mt-0.5" aria-hidden="true"><use href="#i-lock"/></svg><span id="th-who"></span></p>
+
+          <ol id="msgs" class="flex-1 overflow-y-auto p-3 sm:p-4 space-y-3 min-h-[45vh]" aria-live="polite"></ol>
+
+          <div class="border-t border-line p-3 space-y-2">
+            <div class="flex flex-wrap gap-2" aria-label="Quick actions">
+              <button type="button" data-open="slot-dlg" class="inline-flex items-center gap-1.5 min-h-11 px-3 rounded-lg border border-linestrong bg-surface text-[15px] font-semibold hover:bg-surface2"><svg class="w-4 h-4" aria-hidden="true"><use href="#i-calendar"/></svg>Propose interview time</button>
+              <div class="relative min-w-0 flex-1 sm:flex-none sm:w-56">
+                <label for="tpl" class="sr-only">Insert a template</label>
+                <select id="tpl" class="appearance-none block w-full truncate min-h-11 rounded-lg border border-linestrong bg-surface ps-3 pe-8 text-[15px] font-semibold focus:outline-none focus:border-brand focus:ring-[3px] focus:ring-brand/40"><option value="">Templates</option><option>Thank you for applying. We will reply within 14 days.</option><option>Please bring your passport to the interview. Do not pay anyone for this job.</option><option>Your trade test is booked. Northstar Manpower will share the address.</option></select>
+                <svg class="pointer-events-none absolute end-2.5 top-1/2 -translate-y-1/2 w-4 h-4 text-muted" aria-hidden="true"><use href="#i-down"/></svg>
+              </div>
+            </div>
+            <!-- Shown when the draft mentions money: workers must never be asked to pay -->
+            <p id="pay-warn" role="alert" class="hidden items-start gap-2 rounded-lg border border-bad/30 bg-badsoft p-2.5 text-[15px]"><svg class="w-5 h-5 shrink-0 mt-0.5 text-bad" aria-hidden="true"><use href="#i-alert"/></svg><span><b>Never ask a worker to pay.</b> Fees, deposits and charges are not allowed on this corridor. Messages are reviewed when reported.</span></p>
+            <form id="composer" class="flex items-end gap-2" onsubmit="return false">
+              <button type="button" class="grid place-items-center w-11 h-11 shrink-0 rounded-lg text-muted hover:bg-surface2" aria-label="Attach a file"><svg class="w-5 h-5" aria-hidden="true"><use href="#i-paperclip"/></svg></button>
+              <label for="msg-in" class="sr-only">Message</label>
+              <textarea id="msg-in" rows="1" placeholder="Write a message. Short and simple is easier to understand." class="min-w-0 flex-1 min-h-11 max-h-32 rounded-lg border border-linestrong bg-surface px-3 py-2.5 text-[15px] text-ink placeholder:text-muted resize-none focus:outline-none focus:border-brand focus:ring-[3px] focus:ring-brand/40"></textarea>
+              <button type="submit" class="inline-flex items-center gap-2 min-h-11 px-4 shrink-0 rounded-lg bg-brand text-onbrand font-semibold hover:bg-brand/90"><svg class="w-5 h-5 flip-rtl" aria-hidden="true"><use href="#i-send"/></svg><span class="hidden sm:inline">Send</span></button>
+            </form>
+            <p class="text-[13px] text-muted">The worker reads this in their language. Their reply is shown translated, with the original one tap away.</p>
+          </div>
+        </section>
+
+        <!-- Candidate context: column at 2xl, sheet below -->
+        <aside id="ctx-d" class="hidden 2xl:block sticky top-20" aria-label="Candidate"></aside>
+      </div>
+    </main>
+  </div>
+</div>
+
+<dialog id="ws-drawer" class="drawer" aria-labelledby="ws-drawer-t">
+  <nav class="h-full bg-surface flex flex-col" aria-label="Workspace">
+    <div class="flex items-center gap-2 h-16 px-4 border-b border-line">
+      <span class="grid place-items-center w-10 h-10 shrink-0 rounded-lg bg-brand text-onbrand"><svg class="w-5 h-5" aria-hidden="true"><use href="#i-passport"/></svg></span>
+      <div class="min-w-0 flex-1"><p id="ws-drawer-t" class="font-bold truncate leading-tight">ABC Contracting LLC</p><p class="text-[13px] text-muted truncate">Employer · Dubai, UAE</p></div>
+      <button type="button" data-close aria-label="Close menu" class="grid place-items-center w-11 h-11 rounded-lg hover:bg-surface2"><svg class="w-5 h-5" aria-hidden="true"><use href="#i-x"/></svg></button>
+    </div>
+    <div class="flex-1 overflow-y-auto p-3"><p class="px-3 pt-1 pb-2 text-[13px] font-bold uppercase tracking-wider text-muted">Recruitment</p><ul class="space-y-0.5"><li><a href="../layouts/org.html" class="flex items-center gap-3 min-h-12 px-3 rounded-lg font-medium hover:bg-surface2"><svg class="w-5 h-5 text-muted" aria-hidden="true"><use href="#i-grid"/></svg>Overview</a></li><li><a href="06-post-job.html" class="flex items-center gap-3 min-h-12 px-3 rounded-lg font-medium hover:bg-surface2"><svg class="w-5 h-5 text-muted" aria-hidden="true"><use href="#i-briefcase"/></svg>Jobs</a></li><li><a href="07-talent.html" class="flex items-center gap-3 min-h-12 px-3 rounded-lg font-medium hover:bg-surface2"><svg class="w-5 h-5 text-muted" aria-hidden="true"><use href="#i-search"/></svg>Talent search</a></li><li><a href="08-pipeline.html" class="flex items-center gap-3 min-h-12 px-3 rounded-lg font-medium hover:bg-surface2"><svg class="w-5 h-5 text-muted" aria-hidden="true"><use href="#i-kanban"/></svg>Pipeline</a></li><li><a href="23-org-messages.html" aria-current="page" class="flex items-center gap-3 min-h-12 px-3 rounded-lg bg-brandsoft text-brand font-semibold"><svg class="w-5 h-5" aria-hidden="true"><use href="#i-chat"/></svg>Messages</a></li><li><a href="#" class="flex items-center gap-3 min-h-12 px-3 rounded-lg font-medium hover:bg-surface2"><svg class="w-5 h-5 text-muted" aria-hidden="true"><use href="#i-chart"/></svg>Reports</a></li></ul><p class="px-3 pt-5 pb-2 text-[13px] font-bold uppercase tracking-wider text-muted">Organisation</p><ul class="space-y-0.5"><li><a href="16-org-register.html#review" class="flex items-center gap-3 min-h-12 px-3 rounded-lg font-medium hover:bg-surface2"><svg class="w-5 h-5 text-muted" aria-hidden="true"><use href="#i-shield-check"/></svg>Verification</a></li><li><a href="#" class="flex items-center gap-3 min-h-12 px-3 rounded-lg font-medium hover:bg-surface2"><svg class="w-5 h-5 text-muted" aria-hidden="true"><use href="#i-users"/></svg>Team</a></li><li><a href="#" class="flex items-center gap-3 min-h-12 px-3 rounded-lg font-medium hover:bg-surface2"><svg class="w-5 h-5 text-muted" aria-hidden="true"><use href="#i-settings"/></svg>Settings</a></li></ul></div>
+    <div class="p-3 border-t border-line"><span class="inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-sm font-semibold bg-oksoft text-ok"><svg class="w-4 h-4" aria-hidden="true"><use href="#i-shield-check"/></svg>Verified organisation</span></div>
+  </nav>
+</dialog>
+<dialog id="ctx-sheet" class="sheet" aria-label="Candidate">
+  <div class="rounded-t-3xl sm:rounded-2xl bg-surface sm:w-[24rem] max-h-[88vh] overflow-y-auto pb-[env(safe-area-inset-bottom)]">
+    <div class="flex justify-end p-2"><button type="button" data-close aria-label="Close" class="grid place-items-center w-11 h-11 rounded-full hover:bg-surface2"><svg class="w-5 h-5" aria-hidden="true"><use href="#i-x"/></svg></button></div>
+    <div id="ctx-m" class="px-1 pb-1"></div>
+  </div>
+</dialog>
+
+<dialog id="slot-dlg" aria-labelledby="sl-t" class="w-[min(92vw,28rem)] rounded-2xl">
+  <form method="dialog" class="rounded-2xl bg-surface p-5">
+    <div class="flex items-center justify-between gap-2"><h2 id="sl-t" class="text-xl font-bold">Propose interview time</h2><button type="button" data-close aria-label="Close" class="grid place-items-center w-11 h-11 rounded-full hover:bg-surface2"><svg class="w-5 h-5" aria-hidden="true"><use href="#i-x"/></svg></button></div>
+    <div class="mt-3 grid gap-3 sm:grid-cols-2">
+      <div><label for="sl-d" class="block font-semibold">Date</label><input id="sl-d" type="date" value="2026-10-23" class="mt-1.5 block w-full min-h-11 rounded-lg border border-linestrong bg-surface px-3 text-[15px] focus:outline-none focus:border-brand focus:ring-[3px] focus:ring-brand/40"></div>
+      <div><label for="sl-t-in" class="block font-semibold">Time (Dubai)</label><input id="sl-t-in" type="time" value="09:00" class="mt-1.5 block w-full min-h-11 rounded-lg border border-linestrong bg-surface px-3 text-[15px] focus:outline-none focus:border-brand focus:ring-[3px] focus:ring-brand/40"></div>
+    </div>
+    <p class="mt-2 text-sm text-muted">The worker sees it in their own time zone: <b class="text-ink">11:00 Dhaka</b>.</p>
+    <fieldset class="mt-3"><legend class="font-semibold">How</legend>
+      <div class="mt-1.5 grid grid-cols-2 gap-2">
+        <label class="flex items-center gap-2 min-h-11 rounded-lg border-2 border-line px-3 cursor-pointer has-[:checked]:border-brand has-[:checked]:bg-brandsoft"><input type="radio" name="how" checked class="w-5 h-5 accent-brand"><svg class="w-5 h-5 text-muted" aria-hidden="true"><use href="#i-video"/></svg>Video call</label>
+        <label class="flex items-center gap-2 min-h-11 rounded-lg border-2 border-line px-3 cursor-pointer has-[:checked]:border-brand has-[:checked]:bg-brandsoft"><input type="radio" name="how" class="w-5 h-5 accent-brand"><svg class="w-5 h-5 text-muted" aria-hidden="true"><use href="#i-building"/></svg>In person</label>
+      </div>
+    </fieldset>
+    <div class="mt-5 flex flex-col-reverse sm:flex-row sm:justify-end gap-2">
+      <button type="button" data-close class="inline-flex items-center justify-center min-h-11 px-4 rounded-lg border border-linestrong bg-surface font-semibold hover:bg-surface2">Cancel</button>
+      <button type="button" id="sl-go" class="inline-flex items-center justify-center gap-2 min-h-11 px-4 rounded-lg bg-brand text-onbrand font-semibold hover:bg-brand/90"><svg class="w-5 h-5" aria-hidden="true"><use href="#i-send"/></svg>Send proposal</button>
+    </div>
+  </form>
+</dialog>
+
+<script src="../assets/sample-data.js"></script>
+<script src="../assets/render.js"></script>
+<script>
+  (function () {
+    const $ = id => document.getElementById(id), { chip, esc, icon } = BSR;
+    // A conversation always belongs to one application. Participants: the worker, the employer and (if any) the mandated agency.
+    const CONVS = {
+      c1: { cand: 'c1', job: 'Building Electrician · UAE-EL-0001', app: 'APP-26-118204', stage: 'Shortlisted', agency: true, unread: 0, time: '10:24', msgs: [
+        ['sys', 'Conversation started for application APP-26-118204.'],
+        ['agency', 'Imran H. · Northstar Manpower', 'Hello Rahim. You are shortlisted for Building Electrician in Dubai.', 'Mon 09:12'],
+        ['worker', null, 'Thank you. What happens next?', 'Mon 09:40', 'ধন্যবাদ। এরপর কী হবে?'],
+        ['me', 'Sara K.', 'A video interview with our site manager. Which time is good for you?', 'Today 10:20'],
+        ['slot', null, 'Thu 23 Oct · 09:00 Dubai (11:00 Dhaka) · video call', 'Today 10:24', 'Waiting for reply']
+      ] },
+      c2: { cand: 'c5', job: 'Building Electrician · UAE-EL-0001', app: 'APP-26-118377', stage: 'Interview', agency: true, unread: 2, time: '09:51', msgs: [
+        ['sys', 'Conversation started for application APP-26-118377.'],
+        ['me', 'Sara K.', 'Your interview is on Wed 22 Oct at 10:00 Dubai time.', 'Fri 15:02'],
+        ['worker', null, 'OK. Do I need to bring anything?', 'Today 09:40', 'ठीक है। क्या मुझे कुछ लाना है?'],
+        ['worker', null, 'Also, someone called me and asked for money for the visa. Is this from you?', 'Today 09:51', 'किसी ने फोन करके वीज़ा के लिए पैसे मांगे। क्या यह आप हैं?']
+      ] },
+      c3: { cand: 'c2', job: 'Building Electrician · UAE-EL-0001', app: 'APP-26-118412', stage: 'Applied', agency: true, unread: 1, time: 'Sat', msgs: [
+        ['sys', 'Conversation started for application APP-26-118412.'],
+        ['worker', null, 'Hello. I have 6 years in industrial wiring. Can I send my certificate?', 'Sat 18:20', 'হ্যালো। আমার ৬ বছরের অভিজ্ঞতা আছে। আমি কি সার্টিফিকেট পাঠাতে পারি?']
+      ] },
+      c4: { cand: 'c3', job: 'HVAC Technician · SA-HV-0021', app: 'APP-26-117905', stage: 'Reviewed', agency: false, unread: 0, time: '14 Oct', msgs: [
+        ['sys', 'Conversation started for application APP-26-117905.'],
+        ['me', 'Sara K.', 'Thank you for applying. This job is in compliance review. We will contact you soon.', '14 Oct']
+      ] }
+    };
+    const cand = id => BS_DATA.CANDS.find(c => c.id === id);
+    let filter = 'all', workerName = '';
+
+    function list(active) {
+      const job = $('f-job').value;
+      const rows = Object.entries(CONVS).filter(([, c]) => (!job || c.job === job) && (filter === 'all' || (filter === 'unread' && c.unread) || (filter === 'agency' && c.agency)));
+      $('convs').innerHTML = rows.map(([id, c]) => { const w = cand(c.cand), last = c.msgs[c.msgs.length - 1]; return `<li><a href="#${id}" ${id === active ? 'aria-current="true"' : ''} class="flex items-start gap-3 p-3 ${id === active ? 'bg-brandsoft' : 'hover:bg-surface2/60'}">
+        <span class="grid place-items-center w-10 h-10 shrink-0 rounded-full bg-stampsoft text-stamp font-bold text-sm">${w.ini}</span>
+        <span class="min-w-0 flex-1"><span class="flex items-center gap-2"><span class="font-semibold truncate me-auto">${esc(w.name)}</span><span class="text-[13px] text-muted shrink-0">${c.time}</span></span>
+          <span class="block text-sm text-muted truncate">${esc(c.job.split(' · ')[0])} · ${c.stage}</span>
+          <span class="mt-0.5 flex items-center gap-2"><span class="text-sm truncate me-auto ${c.unread ? 'font-semibold' : 'text-muted'}">${esc(last[0] === 'slot' ? 'Interview time proposed' : last[0] === 'sys' ? last[1] : last[2])}</span>${c.unread ? `<span class="min-w-5 h-5 grid place-items-center rounded-full bg-brand text-onbrand text-[12px] font-bold px-1.5" aria-label="${c.unread} unread">${c.unread}</span>` : ''}</span></span></a></li>`; }).join('');
+      $('empty').classList.toggle('hidden', rows.length > 0);
+    }
+    function bubble([who, from, text, at, orig]) {
+      if (who === 'sys') return `<li class="flex justify-center"><p class="inline-flex items-center gap-1.5 rounded-lg bg-surface2 px-3 py-1.5 text-[13px] text-muted">${icon('lock', 'w-3.5 h-3.5')}${esc(from)}</p></li>`;
+      if (who === 'slot') return `<li class="flex justify-end"><div class="max-w-sm rounded-xl border-2 border-stamp/40 bg-surface p-3"><p class="flex items-center gap-1.5 text-[13px] font-bold uppercase tracking-wider text-stamp">${icon('calendar', 'w-4 h-4')}Interview proposed</p><p class="mt-1 font-semibold">${esc(text)}</p><p class="mt-1">${chip(orig, 'warn', 'clock', '!text-[13px] !py-0.5')}</p><p class="mt-1 text-[13px] text-muted text-end">${at}</p></div></li>`;
+      const me = who === 'me', ag = who === 'agency';
+      const name = me || ag ? from : workerName;
+      return `<li class="flex ${me ? 'justify-end' : ''}"><div class="max-w-[85%] sm:max-w-md">
+        <p class="mb-0.5 text-[13px] ${me ? 'text-end' : ''} text-muted">${esc(name)}</p>
+        <div class="rounded-xl ${me ? 'rounded-se-sm bg-brand text-onbrand' : ag ? 'rounded-ss-sm bg-stampsoft' : 'rounded-ss-sm bg-surface2'} px-3.5 py-2"><p class="text-[15px]">${esc(text)}</p>
+        ${orig ? `<details class="mt-1 group"><summary class="inline-flex items-center gap-1 min-h-8 text-[13px] font-semibold text-brand cursor-pointer">${icon('globe', 'w-3.5 h-3.5')}Translated · show original</summary><p class="text-[15px]">${esc(orig)}</p></details>` : ''}
+        <p class="mt-0.5 text-[12px] ${me ? 'opacity-80' : 'text-muted'} text-end">${at}</p></div></div></li>`;
+    }
+    function context(c) {
+      const w = cand(c.cand);
+      return `<div class="rounded-xl border border-line bg-surface">
+        <div class="p-4 border-b border-line"><div class="flex items-center gap-3"><span class="grid place-items-center w-12 h-12 shrink-0 rounded-full bg-stampsoft text-stamp font-bold">${w.ini}</span><div class="min-w-0"><p class="font-bold">${esc(w.name)}</p><p class="text-sm text-muted">${esc(w.occ)} · ${w.exp} years</p></div></div>
+          <div class="mt-3 flex flex-wrap gap-1.5">${w.idv ? chip('ID checked', 'ok', 'shield-check', '!text-[13px] !py-0.5') : ''}${w.ss ? chip('SkillShow', 'neutral', 'video', '!text-[13px] !py-0.5') : ''}${w.passport ? chip('Passport ready · said by worker', 'neutral', 'user', '!text-[13px] !py-0.5') : ''}</div></div>
+        <dl class="divide-y divide-line px-4 text-[15px]">
+          <div class="py-2.5"><dt class="text-sm text-muted">Application</dt><dd class="font-medium">${esc(c.job)}</dd><dd class="font-mono text-sm text-muted">${c.app}</dd></div>
+          <div class="py-2.5 flex items-center justify-between gap-2"><dt class="text-sm text-muted">Stage</dt><dd>${chip(c.stage, c.stage === 'Interview' || c.stage === 'Shortlisted' ? 'stamp' : 'brand', 'star', '!text-[13px] !py-0.5')}</dd></div>
+          <div class="py-2.5 flex items-center justify-between gap-2"><dt class="text-sm text-muted">Match</dt><dd class="font-semibold">${w.match} of 10 requirements</dd></div>
+          <div class="py-2.5"><dt class="text-sm text-muted">Languages</dt><dd>${esc(w.langs)}</dd></div>
+          <div class="py-2.5"><dt class="text-sm text-muted">Phone</dt><dd class="flex items-center gap-1.5 text-muted">${icon('eye-off', 'w-4 h-4')}Hidden · message here</dd></div>
+        </dl>
+        <div class="p-4 border-t border-line grid gap-2"><a href="08-pipeline.html" class="inline-flex items-center justify-center gap-2 min-h-11 rounded-lg border border-linestrong bg-surface font-semibold hover:bg-surface2">${icon('kanban')}Open in pipeline</a>
+          <button type="button" class="inline-flex items-center justify-center gap-2 min-h-11 rounded-lg font-semibold text-bad hover:bg-badsoft">${icon('flag')}Report this conversation</button></div></div>`;
+    }
+    function render() {
+      const id = location.hash.slice(1), c = CONVS[id];
+      const desk = matchMedia('(min-width: 1024px)').matches;
+      const open = c ? id : (desk ? 'c1' : null);
+      if (open) CONVS[open].unread = 0;
+      list(open);
+      $('list').classList.toggle('max-lg:hidden', !!c);
+      $('thread').classList.toggle('max-lg:hidden', !c);
+      if (!open) return;
+      const t = CONVS[open], w = cand(t.cand); workerName = w.name;
+      $('th-ini').textContent = w.ini; $('th-name').textContent = w.name; $('th-sub').textContent = `${t.job} · ${t.stage}`;
+      $('th-who').textContent = `Seen by ${w.name}, ABC Contracting${t.agency ? ' and Northstar Manpower' : ''}. Kept with the application record.`;
+      $('msgs').innerHTML = t.msgs.map(bubble).join('');
+      $('msgs').scrollTop = $('msgs').scrollHeight;
+      $('ctx-d').innerHTML = $('ctx-m').innerHTML = context(t);
+      $('thread').dataset.id = open;
+    }
+    const PAY = /\b(pay|fee|fees|deposit|charge|money|bkash|transfer|cost)\b/i;
+    const checkPay = () => { const on = PAY.test($('msg-in').value); $('pay-warn').classList.toggle('hidden', !on); $('pay-warn').classList.toggle('flex', on); };
+    $('msg-in').addEventListener('input', checkPay);
+    $('tpl').addEventListener('change', e => { if (e.target.value) { $('msg-in').value = e.target.value; e.target.value = ''; checkPay(); $('msg-in').focus(); } });
+    $('composer').addEventListener('submit', () => {
+      const v = $('msg-in').value.trim(); if (!v) return;
+      CONVS[$('thread').dataset.id].msgs.push(['me', 'Sara K.', v, 'Now']); $('msg-in').value = ''; checkPay(); render();
+    });
+    $('msg-in').addEventListener('keydown', e => { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); $('composer').requestSubmit(); } });
+    $('sl-go').addEventListener('click', () => {
+      CONVS[$('thread').dataset.id].msgs.push(['slot', null, 'Thu 23 Oct · 09:00 Dubai (11:00 Dhaka) · video call', 'Now', 'Waiting for reply']);
+      $('slot-dlg').close(); render(); BS.toast('Interview time sent', 'ok');
+    });
+    document.querySelectorAll('[data-f]').forEach(b => b.addEventListener('click', () => {
+      filter = b.dataset.f; document.querySelectorAll('[data-f]').forEach(x => x.setAttribute('aria-pressed', x === b)); render();
+    }));
+    $('f-job').addEventListener('change', render);
+    addEventListener('hashchange', render);
+    render();
+  })();
+</script>
+</body>
+</html>
