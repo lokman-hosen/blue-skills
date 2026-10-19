@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Courses & Cohorts · BLUESKILLS</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,700;12..96,800&family=Figtree:wght@400;500;600;700&family=JetBrains+Mono:wght@500;700&display=swap">
+<link rel="stylesheet" href="../assets/tokens.css">
+<script src="https://cdn.tailwindcss.com/3.4.17"></script>
+<script src="../assets/tailwind.config.js"></script>
+<script src="../assets/app.js"></script>
+</head>
+<body class="font-sans">
+<a href="#main" class="skip-link inline-flex items-center min-h-11 rounded-lg bg-brand text-onbrand px-4 font-semibold">Skip to content</a>
+
+<div data-collapsed="false" class="min-h-screen lg:flex">
+  <aside class="sidebar hidden lg:flex sticky top-0 h-screen w-64 shrink-0 flex-col border-e border-line bg-surface transition-[width] duration-200 overflow-hidden">
+    <div class="flex items-center gap-2 h-16 px-4 border-b border-line">
+      <a href="../index.html" class="grid place-items-center w-11 h-11 shrink-0 rounded-lg bg-brand text-onbrand" aria-label="BLUESKILLS home"><svg class="w-5 h-5" aria-hidden="true"><use href="#i-passport"/></svg></a>
+      <div class="nav-label min-w-0"><p class="font-bold truncate leading-tight">Meghna Technical Training Centre</p><p class="text-[13px] text-muted truncate">Training institute · Narayanganj, Bangladesh</p></div>
+    </div>
+    <nav aria-label="Workspace" class="flex-1 overflow-y-auto p-3"><p class="nav-section px-3 pt-1 pb-2 text-[13px] font-bold uppercase tracking-wider text-muted">Training</p><ul class="space-y-0.5"><li><a href="19-institute-cohorts.html" aria-current="page" title="Courses &amp; cohorts" class="flex items-center gap-3 min-h-11 px-3 rounded-lg bg-brandsoft text-brand font-semibold"><svg class="w-5 h-5 shrink-0" aria-hidden="true"><use href="#i-school"/></svg><span class="nav-label">Courses &amp; cohorts</span></a></li><li><a href="20-institute-graduates.html" title="Graduates &amp; attestation" class="flex items-center gap-3 min-h-11 px-3 rounded-lg text-ink font-medium hover:bg-surface2"><svg class="w-5 h-5 shrink-0 text-muted" aria-hidden="true"><use href="#i-award"/></svg><span class="nav-label">Graduates &amp; attestation</span><span class="nav-label ms-auto rounded-full bg-brand text-onbrand text-[13px] font-bold px-2 tabular-nums">18</span></a></li><li><a href="#" title="Messages" class="flex items-center gap-3 min-h-11 px-3 rounded-lg text-ink font-medium hover:bg-surface2"><svg class="w-5 h-5 shrink-0 text-muted" aria-hidden="true"><use href="#i-chat"/></svg><span class="nav-label">Messages</span></a></li><li><a href="#" title="Reports" class="flex items-center gap-3 min-h-11 px-3 rounded-lg text-ink font-medium hover:bg-surface2"><svg class="w-5 h-5 shrink-0 text-muted" aria-hidden="true"><use href="#i-chart"/></svg><span class="nav-label">Reports</span></a></li></ul><p class="nav-section px-3 pt-5 pb-2 text-[13px] font-bold uppercase tracking-wider text-muted">Organisation</p><ul class="space-y-0.5"><li><a href="#" title="Verification" class="flex items-center gap-3 min-h-11 px-3 rounded-lg text-ink font-medium hover:bg-surface2"><svg class="w-5 h-5 shrink-0 text-muted" aria-hidden="true"><use href="#i-shield-check"/></svg><span class="nav-label">Verification</span></a></li><li><a href="#" title="Team" class="flex items-center gap-3 min-h-11 px-3 rounded-lg text-ink font-medium hover:bg-surface2"><svg class="w-5 h-5 shrink-0 text-muted" aria-hidden="true"><use href="#i-users"/></svg><span class="nav-label">Team</span></a></li><li><a href="#" title="Settings" class="flex items-center gap-3 min-h-11 px-3 rounded-lg text-ink font-medium hover:bg-surface2"><svg class="w-5 h-5 shrink-0 text-muted" aria-hidden="true"><use href="#i-settings"/></svg><span class="nav-label">Settings</span></a></li></ul></nav>
+    <div class="p-3 border-t border-line">
+      <button type="button" data-sidebar-toggle aria-expanded="true" title="Collapse sidebar" class="flex w-full items-center gap-3 min-h-11 px-3 rounded-lg text-muted font-medium hover:bg-surface2 hover:text-ink"><svg class="w-5 h-5 shrink-0" aria-hidden="true"><use href="#i-panel"/></svg><span class="nav-label">Collapse</span></button>
+    </div>
+  </aside>
+
+  <div class="flex-1 min-w-0">
+    <header class="sticky top-0 z-20 border-b border-line bg-surface/95 backdrop-blur">
+      <div class="flex items-center gap-2 h-16 px-4 lg:px-6">
+        <button type="button" data-open="ws-drawer" class="lg:hidden grid place-items-center w-11 h-11 shrink-0 -ms-2 rounded-lg hover:bg-surface2" aria-label="Open menu"><svg class="w-6 h-6" aria-hidden="true"><use href="#i-menu"/></svg></button>
+        <p class="lg:hidden font-bold truncate">Meghna TTC</p>
+        <label class="relative hidden md:block w-full max-w-sm">
+          <span class="sr-only">Search courses, cohorts, graduates…</span>
+          <svg class="pointer-events-none absolute start-3 top-1/2 -translate-y-1/2 w-5 h-5 text-muted" aria-hidden="true"><use href="#i-search"/></svg>
+          <input type="search" placeholder="Search courses, cohorts, graduates…" class="block w-full min-h-11 rounded-lg border border-linestrong bg-surface ps-10 pe-3 text-[15px] text-ink placeholder:text-muted focus:outline-none focus:border-brand focus:ring-[3px] focus:ring-brand/40">
+        </label>
+        <div class="ms-auto flex items-center gap-1">
+          <span class="hidden sm:inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-sm font-semibold bg-oksoft text-ok"><svg class="w-4 h-4" aria-hidden="true"><use href="#i-shield-check"/></svg>Verified organisation</span>
+          <a href="#" class="grid place-items-center w-11 h-11 rounded-lg hover:bg-surface2" aria-label="Help"><svg class="w-5 h-5" aria-hidden="true"><use href="#i-help"/></svg></a>
+          <a href="#" class="relative grid place-items-center w-11 h-11 rounded-lg hover:bg-surface2" aria-label="Notifications, 2 new"><svg class="w-5 h-5" aria-hidden="true"><use href="#i-bell"/></svg><span class="absolute top-2.5 end-2.5 w-2 h-2 rounded-full bg-bad" aria-hidden="true"></span></a>
+          <button type="button" data-theme-toggle aria-label="Dark theme" class="grid place-items-center w-11 h-11 rounded-lg hover:bg-surface2"><svg class="w-5 h-5" aria-hidden="true"><use href="#i-moon"/></svg></button>
+          <button type="button" class="flex items-center gap-2 min-h-11 ps-1 pe-2 rounded-lg hover:bg-surface2" aria-label="Account: Nasrin A., Placement lead"><span class="grid place-items-center w-9 h-9 rounded-full bg-stampsoft text-stamp font-bold text-sm">NA</span><span class="hidden xl:block text-start leading-tight"><span class="block text-[15px] font-semibold">Nasrin A.</span><span class="block text-[13px] text-muted">Placement lead</span></span></button>
+        </div>
+      </div>
+    </header>
+
+    <main id="main" class="px-4 lg:px-6 py-6 max-w-[90rem]">
+      <div class="flex flex-wrap items-center gap-3">
+        <div class="me-auto min-w-0">
+          <nav aria-label="Breadcrumb" class="text-sm text-muted"><ol class="flex items-center gap-1"><li>Meghna TTC</li><li aria-hidden="true">/</li><li aria-current="page" class="text-ink font-medium">Courses &amp; cohorts</li></ol></nav>
+          <h1 class="font-display text-2xl sm:text-3xl font-bold">Courses &amp; cohorts</h1>
+        </div>
+        <span class="inline-flex items-center gap-1 rounded-md border border-dashed border-linestrong px-2 py-0.5 text-[13px] font-semibold text-muted">Sample data</span>
+        <button type="button" class="inline-flex items-center justify-center gap-2 min-h-11 px-4 rounded-lg border border-linestrong bg-surface font-semibold hover:bg-surface2"><svg class="w-5 h-5" aria-hidden="true"><use href="#i-plus"/></svg>Add course</button>
+        <button type="button" data-open="invite-dlg" data-cohort="Electrical Installation L2 · Jan–Jun 2026" class="inline-flex items-center justify-center gap-2 min-h-11 px-4 rounded-lg bg-brand text-onbrand font-semibold hover:bg-brand/90"><svg class="w-5 h-5" aria-hidden="true"><use href="#i-send"/></svg>Invite graduates</button>
+      </div>
+
+      <ul class="mt-6 grid grid-cols-2 xl:grid-cols-4 gap-3">
+        <li class="rounded-xl border border-line bg-surface p-4"><p class="text-sm text-muted">Courses</p><p class="text-3xl font-bold tabular-nums">4</p><p class="text-sm text-muted">NSDA accredited</p></li>
+        <li class="rounded-xl border border-line bg-surface p-4"><p class="text-sm text-muted">Graduates invited</p><p class="text-3xl font-bold tabular-nums">331</p><p class="text-sm text-muted">Since Jan 2026</p></li>
+        <li class="rounded-xl border border-line bg-surface p-4"><p class="text-sm text-muted">Joined BLUESKILLS</p><p class="text-3xl font-bold tabular-nums">212</p><p class="text-sm text-ok font-semibold">64% opted in</p></li>
+        <li class="rounded-xl border border-line bg-surface p-4"><p class="text-sm text-muted">Waiting for attestation</p><p class="text-3xl font-bold tabular-nums text-stamp">18</p><a href="20-institute-graduates.html" class="text-sm font-semibold text-brand">Review now</a></li>
+      </ul>
+
+      <div class="mt-4 flex items-start gap-3 rounded-xl border border-brand/30 bg-brandsoft p-3 text-[15px]"><svg class="w-5 h-5 shrink-0 mt-0.5 text-brand" aria-hidden="true"><use href="#i-lock"/></svg><p>Graduates choose to join and own their profile. You see their name and course status, not their documents, phone or job applications.</p></div>
+
+      <section aria-labelledby="c-h" class="mt-6">
+        <h2 id="c-h" class="text-lg font-bold">Courses</h2>
+        <ul id="courses" class="mt-3 grid gap-4 xl:grid-cols-2"></ul>
+      </section>
+    </main>
+  </div>
+</div>
+
+<dialog id="ws-drawer" class="drawer" aria-labelledby="ws-drawer-t">
+  <nav class="h-full bg-surface flex flex-col" aria-label="Workspace">
+    <div class="flex items-center gap-2 h-16 px-4 border-b border-line">
+      <span class="grid place-items-center w-10 h-10 shrink-0 rounded-lg bg-brand text-onbrand"><svg class="w-5 h-5" aria-hidden="true"><use href="#i-passport"/></svg></span>
+      <div class="min-w-0 flex-1"><p id="ws-drawer-t" class="font-bold truncate leading-tight">Meghna Technical Training Centre</p><p class="text-[13px] text-muted truncate">Training institute · Narayanganj, Bangladesh</p></div>
+      <button type="button" data-close aria-label="Close menu" class="grid place-items-center w-11 h-11 rounded-lg hover:bg-surface2"><svg class="w-5 h-5" aria-hidden="true"><use href="#i-x"/></svg></button>
+    </div>
+    <div class="flex-1 overflow-y-auto p-3"><p class="px-3 pt-1 pb-2 text-[13px] font-bold uppercase tracking-wider text-muted">Training</p><ul class="space-y-0.5"><li><a href="19-institute-cohorts.html" aria-current="page" class="flex items-center gap-3 min-h-12 px-3 rounded-lg bg-brandsoft text-brand font-semibold"><svg class="w-5 h-5" aria-hidden="true"><use href="#i-school"/></svg>Courses &amp; cohorts</a></li><li><a href="20-institute-graduates.html" class="flex items-center gap-3 min-h-12 px-3 rounded-lg font-medium hover:bg-surface2"><svg class="w-5 h-5 text-muted" aria-hidden="true"><use href="#i-award"/></svg>Graduates &amp; attestation</a></li><li><a href="#" class="flex items-center gap-3 min-h-12 px-3 rounded-lg font-medium hover:bg-surface2"><svg class="w-5 h-5 text-muted" aria-hidden="true"><use href="#i-chat"/></svg>Messages</a></li><li><a href="#" class="flex items-center gap-3 min-h-12 px-3 rounded-lg font-medium hover:bg-surface2"><svg class="w-5 h-5 text-muted" aria-hidden="true"><use href="#i-chart"/></svg>Reports</a></li></ul><p class="px-3 pt-5 pb-2 text-[13px] font-bold uppercase tracking-wider text-muted">Organisation</p><ul class="space-y-0.5"><li><a href="#" class="flex items-center gap-3 min-h-12 px-3 rounded-lg font-medium hover:bg-surface2"><svg class="w-5 h-5 text-muted" aria-hidden="true"><use href="#i-shield-check"/></svg>Verification</a></li><li><a href="#" class="flex items-center gap-3 min-h-12 px-3 rounded-lg font-medium hover:bg-surface2"><svg class="w-5 h-5 text-muted" aria-hidden="true"><use href="#i-users"/></svg>Team</a></li><li><a href="#" class="flex items-center gap-3 min-h-12 px-3 rounded-lg font-medium hover:bg-surface2"><svg class="w-5 h-5 text-muted" aria-hidden="true"><use href="#i-settings"/></svg>Settings</a></li></ul></div>
+    <div class="p-3 border-t border-line"><span class="inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-sm font-semibold bg-oksoft text-ok"><svg class="w-4 h-4" aria-hidden="true"><use href="#i-shield-check"/></svg>Verified organisation</span></div>
+  </nav>
+</dialog>
+<dialog id="invite-dlg" class="sheet" aria-labelledby="inv-t">
+  <div class="rounded-t-3xl sm:rounded-2xl bg-surface sm:w-[34rem] max-h-[90vh] overflow-y-auto p-5 pb-[max(1.25rem,env(safe-area-inset-bottom))]">
+    <div class="flex items-start justify-between gap-2"><div><h2 id="inv-t" class="text-xl font-bold">Invite graduates</h2><p id="inv-cohort" class="text-[15px] text-muted"></p></div><button type="button" data-close aria-label="Close" class="grid place-items-center w-11 h-11 rounded-full hover:bg-surface2"><svg class="w-5 h-5" aria-hidden="true"><use href="#i-x"/></svg></button></div>
+
+    <div role="tablist" aria-label="Invite by" class="mt-4 grid grid-cols-3 gap-1 rounded-xl bg-surface2 p-1">
+      <button role="tab" id="it-1" aria-controls="ip-1" aria-selected="true" class="flex items-center justify-center gap-1.5 min-h-11 rounded-lg font-semibold text-muted aria-selected:bg-surface aria-selected:text-ink aria-selected:shadow-sm"><svg class="w-5 h-5" aria-hidden="true"><use href="#i-link"/></svg>Link</button>
+      <button role="tab" id="it-2" aria-controls="ip-2" aria-selected="false" tabindex="-1" class="flex items-center justify-center gap-1.5 min-h-11 rounded-lg font-semibold text-muted aria-selected:bg-surface aria-selected:text-ink aria-selected:shadow-sm"><svg class="w-5 h-5" aria-hidden="true"><use href="#i-qr"/></svg>QR code</button>
+      <button role="tab" id="it-3" aria-controls="ip-3" aria-selected="false" tabindex="-1" class="flex items-center justify-center gap-1.5 min-h-11 rounded-lg font-semibold text-muted aria-selected:bg-surface aria-selected:text-ink aria-selected:shadow-sm"><svg class="w-5 h-5" aria-hidden="true"><use href="#i-chat"/></svg>WhatsApp</button>
+    </div>
+
+    <div id="ip-1" role="tabpanel" aria-labelledby="it-1" class="mt-4">
+      <label for="inv-link" class="block font-semibold">Invite link</label>
+      <div class="mt-1.5 flex gap-2"><input id="inv-link" readonly value="https://blueskills.org/j/MTTC-EL2-26A" dir="ltr" class="min-w-0 flex-1 min-h-11 rounded-lg border border-linestrong bg-surface2 px-3 font-mono text-[15px]"><button type="button" data-toast="Link copied" data-toast-tone="ok" class="inline-flex items-center gap-2 min-h-11 px-4 rounded-lg bg-brand text-onbrand font-semibold hover:bg-brand/90"><svg class="w-5 h-5" aria-hidden="true"><use href="#i-copy"/></svg>Copy</button></div>
+      <p class="mt-2 text-sm text-muted">Works for this cohort only · expires 31 Dec 2026 · 21 of 32 used</p>
+    </div>
+    <div id="ip-2" role="tabpanel" aria-labelledby="it-2" class="mt-4 text-center" hidden>
+      <div class="mx-auto grid place-items-center w-48 h-48 rounded-xl border border-line bg-white text-[#0e162e]" role="img" aria-label="QR code for the invite link"><svg class="w-40 h-40" aria-hidden="true"><use href="#i-qr"/></svg></div>
+      <p class="mt-2 text-[15px] text-muted">Print it for the graduation day, or show it on a screen.</p>
+      <button type="button" class="mt-3 inline-flex items-center gap-2 min-h-11 px-4 rounded-lg border border-linestrong bg-surface font-semibold hover:bg-surface2"><svg class="w-5 h-5" aria-hidden="true"><use href="#i-download"/></svg>Download poster (PDF)</button>
+    </div>
+    <div id="ip-3" role="tabpanel" aria-labelledby="it-3" class="mt-4" hidden>
+      <label for="inv-msg" class="block font-semibold">Message</label>
+      <textarea id="inv-msg" rows="4" class="mt-1.5 block w-full rounded-lg border border-linestrong bg-surface px-3 py-2 text-[15px] focus:outline-none focus:border-brand focus:ring-[3px] focus:ring-brand/40">Congratulations on finishing Electrical Installation L2 at Meghna TTC. Make your free Skill Passport on BLUESKILLS and we will confirm your course: https://blueskills.org/j/MTTC-EL2-26A</textarea>
+      <p class="mt-2 text-sm text-muted">Opens WhatsApp on this device. We never see graduates’ numbers.</p>
+      <button type="button" class="mt-3 inline-flex items-center gap-2 min-h-11 px-4 rounded-lg bg-brand text-onbrand font-semibold hover:bg-brand/90"><svg class="w-5 h-5" aria-hidden="true"><use href="#i-send"/></svg>Open WhatsApp</button>
+    </div>
+  </div>
+</dialog>
+
+<script src="../assets/render.js"></script>
+<script>
+  (function () {
+    const $ = id => document.getElementById(id), { chip, esc, icon } = BSR;
+    const COURSES = [
+      { name: 'Electrical Installation L2', code: 'NSDA-EI-2', icon: 'zap', weeks: 24, cohorts: [['Jan–Jun 2026', 32, 21, 4, 'done'], ['Jul–Dec 2026', 30, 0, 0, 'running']] },
+      { name: 'Welding (SMAW / MIG) L2', code: 'NSDA-WD-2', icon: 'flame', weeks: 20, cohorts: [['Feb–Jun 2026', 24, 19, 9, 'done'], ['Aug–Dec 2026', 24, 0, 0, 'running']] },
+      { name: 'Plumbing & Pipe Fitting L1', code: 'NSDA-PL-1', icon: 'wrench', weeks: 16, cohorts: [['Mar–Jun 2026', 28, 14, 5, 'done']] },
+      { name: 'Refrigeration & AC L2', code: 'NSDA-RAC-2', icon: 'fan', weeks: 24, cohorts: [['Nov 2026–Apr 2027', 26, 0, 0, 'upcoming']] }
+    ];
+    const ST = { done: ['Finished', 'ok', 'check-circle'], running: ['Running', 'brand', 'clock'], upcoming: ['Starts Nov', 'neutral', 'calendar'] };
+    $('courses').innerHTML = COURSES.map(c => `<li class="rounded-xl border border-line bg-surface overflow-hidden">
+      <div class="flex items-start gap-3 p-4 border-b border-line"><span class="grid place-items-center w-11 h-11 shrink-0 rounded-xl bg-stampsoft text-stamp">${icon(c.icon, 'w-6 h-6')}</span>
+        <div class="min-w-0 flex-1"><h3 class="font-bold">${esc(c.name)}</h3><p class="text-sm text-muted"><span class="font-mono">${c.code}</span> · ${c.weeks} weeks</p></div>
+        <button type="button" class="inline-flex items-center min-h-11 px-3 rounded-lg text-[15px] font-semibold text-brand hover:bg-brandsoft">Add cohort</button></div>
+      <ul class="divide-y divide-line">${c.cohorts.map(([when, n, joined, waiting, st]) => { const [l, t, ic] = ST[st]; const pct = n ? Math.round(joined / n * 100) : 0; return `<li class="p-4">
+        <div class="flex flex-wrap items-center gap-2"><p class="font-semibold me-auto">${when}</p>${chip(l, t, ic)}</div>
+        ${st === 'done' ? `<div class="mt-2 flex items-center gap-3"><div class="h-2 flex-1 rounded-full bg-surface2 overflow-hidden" role="progressbar" aria-label="Joined" aria-valuemin="0" aria-valuemax="${n}" aria-valuenow="${joined}"><div class="h-full rounded-full bg-ok" style="width:${pct}%"></div></div><span class="text-sm tabular-nums text-muted">${joined} of ${n} joined</span></div>
+        <div class="mt-2 flex flex-wrap items-center gap-2">${waiting ? `<a href="20-institute-graduates.html" class="inline-flex items-center gap-1.5 min-h-11 px-3 rounded-lg bg-stampsoft text-stamp font-semibold">${icon('award', 'w-4 h-4')}${waiting} to attest</a>` : `<span class="text-sm text-muted">All attested</span>`}<button type="button" data-open="invite-dlg" data-cohort="${esc(c.name)} · ${when}" class="ms-auto inline-flex items-center gap-1.5 min-h-11 px-3 rounded-lg border border-linestrong bg-surface font-semibold hover:bg-surface2">${icon('send', 'w-4 h-4')}Invite</button></div>`
+          : `<p class="mt-1 text-sm text-muted tabular-nums">${n} learners · invite them when they finish</p>`}</li>`; }).join('')}</ul></li>`).join('');
+    document.addEventListener('click', e => { const b = e.target.closest('[data-cohort]'); if (b) $('inv-cohort').textContent = b.dataset.cohort; });
+  })();
+</script>
+</body>
+</html>

@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Messages · BLUESKILLS</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,700;12..96,800&family=Figtree:wght@400;500;600;700&family=JetBrains+Mono:wght@500;700&display=swap">
+<link rel="stylesheet" href="../assets/tokens.css">
+<script src="https://cdn.tailwindcss.com/3.4.17"></script>
+<script src="../assets/tailwind.config.js"></script>
+<script src="../assets/app.js"></script>
+</head>
+<body class="font-sans">
+<a href="#main" class="skip-link inline-flex items-center min-h-11 rounded-lg bg-brand text-onbrand px-4 font-semibold">Skip to content</a>
+
+<aside class="hidden lg:flex fixed inset-y-0 start-0 z-30 w-64 flex-col border-e border-line bg-surface">
+  <a href="../index.html" class="flex items-center gap-2 h-16 px-5 border-b border-line" aria-label="BLUESKILLS home">
+    <span class="grid place-items-center w-9 h-9 rounded-lg bg-brand text-onbrand"><svg class="w-5 h-5" aria-hidden="true"><use href="#i-passport"/></svg></span>
+    <span class="font-display text-lg font-extrabold tracking-tight">BLUESKILLS</span>
+  </a>
+  <nav aria-label="Main" class="flex-1 overflow-y-auto p-3">
+    <ul class="space-y-1"><li><a href="../layouts/worker.html" class="flex items-center gap-3 min-h-12 px-3 rounded-xl text-ink hover:bg-surface2 text-base font-semibold"><svg class="w-6 h-6 text-muted" aria-hidden="true"><use href="#i-home"/></svg><span>Home</span></a></li><li><a href="02-jobs.html" class="flex items-center gap-3 min-h-12 px-3 rounded-xl text-ink hover:bg-surface2 text-base font-semibold"><svg class="w-6 h-6 text-muted" aria-hidden="true"><use href="#i-search"/></svg><span>Jobs</span></a></li><li><a href="05-apply.html#tracker" class="flex items-center gap-3 min-h-12 px-3 rounded-xl text-ink hover:bg-surface2 text-base font-semibold"><svg class="w-6 h-6 text-muted" aria-hidden="true"><use href="#i-list"/></svg><span>Applications</span></a></li><li><a href="14-messages.html" aria-current="page" class="flex items-center gap-3 min-h-12 px-3 rounded-xl bg-brandsoft text-brand text-base font-semibold"><svg class="w-6 h-6" aria-hidden="true"><use href="#i-chat"/></svg><span>Messages</span></a></li><li><a href="04-passport.html" class="flex items-center gap-3 min-h-12 px-3 rounded-xl text-ink hover:bg-surface2 text-base font-semibold"><svg class="w-6 h-6 text-muted" aria-hidden="true"><use href="#i-passport"/></svg><span>Passport</span></a></li></ul>
+    <ul class="mt-4 pt-4 border-t border-line space-y-1">
+      <li><a href="10-settings.html" class="flex items-center gap-3 min-h-12 px-3 rounded-xl text-ink hover:bg-surface2 font-semibold"><svg class="w-6 h-6 text-muted" aria-hidden="true"><use href="#i-settings"/></svg><span>Settings</span></a></li>
+      <li><a href="#" class="flex items-center gap-3 min-h-12 px-3 rounded-xl text-ink font-semibold hover:bg-surface2"><svg class="w-6 h-6 text-muted" aria-hidden="true"><use href="#i-help"/></svg><span>Help</span></a></li>
+    </ul>
+  </nav>
+  <div class="p-3 border-t border-line"><div class="flex items-center gap-3 rounded-xl p-2"><span class="grid place-items-center w-11 h-11 shrink-0 rounded-full bg-brandsoft text-brand font-bold">RU</span><div class="min-w-0"><p class="font-semibold truncate">Md Rahim Uddin</p><p class="text-sm text-muted truncate">Electrician</p></div></div></div>
+</aside>
+
+<div class="lg:ps-64">
+  <header class="sticky top-0 z-20 border-b border-line bg-surface/95 backdrop-blur pt-[env(safe-area-inset-top)]">
+    <div class="mx-auto max-w-6xl flex items-center gap-2 h-16 px-4">
+      <a href="../index.html" class="lg:hidden flex items-center gap-2 min-h-11 min-w-11" aria-label="BLUESKILLS home">
+        <span class="grid place-items-center w-9 h-9 rounded-lg bg-brand text-onbrand"><svg class="w-5 h-5" aria-hidden="true"><use href="#i-passport"/></svg></span>
+      </a>
+      <p class="text-lg font-bold truncate">Messages</p>
+      <div class="ms-auto flex items-center gap-1">
+        <a href="10-settings.html" class="inline-flex items-center gap-2 min-h-11 px-3 rounded-full border border-linestrong bg-surface font-semibold hover:bg-surface2"><svg class="w-5 h-5 text-muted" aria-hidden="true"><use href="#i-globe"/></svg><span>English</span><span class="sr-only">Language</span></a>
+        <button type="button" data-theme-toggle aria-label="Dark theme" class="grid place-items-center w-11 h-11 rounded-full hover:bg-surface2"><svg class="w-5 h-5" aria-hidden="true"><use href="#i-moon"/></svg></button>
+      </div>
+    </div>
+  </header>
+
+  <main id="main" class="mx-auto max-w-6xl px-4 pt-5 pb-28 lg:pb-12">
+    <div class="grid gap-4 lg:grid-cols-[20rem_minmax(0,1fr)] items-start">
+      <!-- Conversation list: always visible at lg, the whole screen on phones until one is opened -->
+      <section id="list" aria-labelledby="ml-h" class="min-w-0">
+        <div class="flex items-center gap-2">
+          <h1 id="ml-h" class="font-display text-2xl sm:text-3xl font-bold me-auto">Messages</h1>
+          <span class="inline-flex items-center gap-1 rounded-md border border-dashed border-linestrong px-2 py-0.5 text-[13px] font-semibold text-muted">Sample data</span>
+        </div>
+        <p class="mt-2 flex items-start gap-2 text-[15px] text-muted"><svg class="w-5 h-5 shrink-0 mt-0.5" aria-hidden="true"><use href="#i-eye-off"/></svg>Your phone number is hidden. Talk here.</p>
+        <ul id="convs" class="mt-3 space-y-2"></ul>
+      </section>
+
+      <!-- Thread -->
+      <section id="thread" aria-labelledby="th-name" class="min-w-0 rounded-2xl border border-line bg-surface flex flex-col lg:sticky lg:top-20 lg:h-[calc(100vh-7rem)] max-lg:hidden">
+        <header class="flex items-center gap-2 p-3 border-b border-line">
+          <a href="#" class="lg:hidden grid place-items-center w-11 h-11 shrink-0 rounded-full hover:bg-surface2" aria-label="Back to messages"><svg class="w-6 h-6 flip-rtl" aria-hidden="true"><use href="#i-back"/></svg></a>
+          <span id="th-ini" class="grid place-items-center w-11 h-11 shrink-0 rounded-full bg-brandsoft text-brand font-bold"></span>
+          <div class="min-w-0 flex-1"><h2 id="th-name" class="font-bold truncate"></h2><p id="th-sub" class="text-sm text-muted truncate"></p></div>
+          <a id="th-job" href="05-apply.html#tracker" class="hidden sm:inline-flex items-center gap-1.5 min-h-11 px-3 rounded-xl text-brand font-semibold hover:bg-brandsoft"><svg class="w-5 h-5" aria-hidden="true"><use href="#i-list"/></svg>Application</a>
+        </header>
+
+        <ol id="msgs" class="flex-1 overflow-y-auto p-3 sm:p-4 space-y-3 min-h-[50vh]" aria-live="polite"></ol>
+
+        <div class="border-t border-line p-3">
+          <p class="mb-2 flex items-start gap-2 text-sm text-muted"><svg class="w-4 h-4 shrink-0 mt-0.5 text-warn" aria-hidden="true"><use href="#i-shield"/></svg>Never send money or your passport photo here. To share papers, use your Passport page.</p>
+          <form id="composer" class="flex items-end gap-2" onsubmit="return false">
+            <button type="button" class="grid place-items-center w-12 h-12 shrink-0 rounded-full bg-brandsoft text-brand hover:bg-brandsoft/70" aria-label="Record a voice message"><svg class="w-6 h-6" aria-hidden="true"><use href="#i-mic"/></svg></button>
+            <label for="msg-in" class="sr-only">Message</label>
+            <textarea id="msg-in" rows="1" placeholder="Write a message" class="min-w-0 flex-1 min-h-12 max-h-32 rounded-2xl border border-linestrong bg-surface px-4 py-3 text-base text-ink placeholder:text-muted resize-none focus:outline-none focus:border-brand focus:ring-[3px] focus:ring-brand/40"></textarea>
+            <button type="submit" id="send" class="grid place-items-center w-12 h-12 shrink-0 rounded-full bg-brand text-onbrand hover:bg-brand/90" aria-label="Send"><svg class="w-6 h-6 flip-rtl" aria-hidden="true"><use href="#i-send"/></svg></button>
+          </form>
+        </div>
+      </section>
+    </div>
+  </main>
+</div>
+
+<!-- Mobile bottom tabs (< lg) -->
+<nav aria-label="Main" class="lg:hidden fixed bottom-0 inset-x-0 z-30 border-t border-line bg-surface pb-[env(safe-area-inset-bottom)]">
+  <ul class="grid grid-cols-5"><li><a href="../layouts/worker.html" class="flex flex-col items-center justify-center gap-0.5 min-h-16 px-1 text-muted hover:text-ink"><svg class="w-6 h-6" aria-hidden="true"><use href="#i-home"/></svg><span class="text-[13px] font-semibold leading-tight text-center">Home</span></a></li><li><a href="02-jobs.html" class="flex flex-col items-center justify-center gap-0.5 min-h-16 px-1 text-muted hover:text-ink"><svg class="w-6 h-6" aria-hidden="true"><use href="#i-search"/></svg><span class="text-[13px] font-semibold leading-tight text-center">Jobs</span></a></li><li><a href="05-apply.html#tracker" class="flex flex-col items-center justify-center gap-0.5 min-h-16 px-1 text-muted hover:text-ink"><svg class="w-6 h-6" aria-hidden="true"><use href="#i-list"/></svg><span class="text-[13px] font-semibold leading-tight text-center">Applied</span></a></li><li><a href="14-messages.html" aria-current="page" class="relative flex flex-col items-center justify-center gap-0.5 min-h-16 px-1 text-brand"><span class="absolute top-0 inset-x-3 h-1 rounded-b-full bg-brand" aria-hidden="true"></span><svg class="w-6 h-6" aria-hidden="true"><use href="#i-chat"/></svg><span class="text-[13px] font-semibold leading-tight text-center">Messages</span></a></li><li><a href="04-passport.html" class="flex flex-col items-center justify-center gap-0.5 min-h-16 px-1 text-muted hover:text-ink"><svg class="w-6 h-6" aria-hidden="true"><use href="#i-passport"/></svg><span class="text-[13px] font-semibold leading-tight text-center">Passport</span></a></li></ul>
+</nav>
+<script>
+  (function () {
+    const $ = id => document.getElementById(id), icon = (n, c = 'w-5 h-5') => `<svg class="${c} shrink-0" aria-hidden="true"><use href="#i-${n}"/></svg>`;
+    const esc = s => String(s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+    // Each conversation is tied to an application or case; only its authorised parties take part.
+    const CONVS = {
+      c1: { ini: 'IH', name: 'Imran H.', org: 'Northstar Manpower', about: 'Building Electrician · ABC Contracting', unread: 2, time: '10:24', msgs: [
+        ['sys', 'Conversation for application APP-26-118204. Your phone number is hidden.'],
+        ['them', 'Hello Rahim. You are shortlisted for Building Electrician in Dubai.', 'Mon 09:12'],
+        ['me', 'Thank you. What happens next?', 'Mon 09:40'],
+        ['them', 'A video interview with ABC Contracting. Which time is good for you?', 'Today 10:20'],
+        ['slot', 'Thu 23 Oct · 11:00 Dhaka time', 'Today 10:24']
+      ] },
+      c2: { ini: 'GF', name: 'Global Facilities KK', org: 'Employer · direct hire', about: 'Industrial Technician · Toyota, Japan', unread: 0, time: 'Sat', msgs: [
+        ['sys', 'Conversation for application APP-26-117730. Your phone number is hidden.'],
+        ['them', 'We received your application. We reply within 14 days.', 'Sat 14:02']
+      ] },
+      c3: { ini: 'BS', name: 'BLUESKILLS Help', org: 'Support team', about: 'Your account', unread: 0, time: '2 Oct', msgs: [
+        ['them', 'Welcome to BLUESKILLS. We never ask you for money. If anyone does, tap Report.', '2 Oct']
+      ] }
+    };
+    function list(active) {
+      $('convs').innerHTML = Object.entries(CONVS).map(([id, c]) => `<li><a href="#${id}" ${id === active ? 'aria-current="true"' : ''} class="flex items-start gap-3 rounded-2xl border ${id === active ? 'border-brand bg-brandsoft' : 'border-line bg-surface hover:border-brand/60'} p-3">
+        <span class="grid place-items-center w-12 h-12 shrink-0 rounded-full ${id === 'c3' ? 'bg-brand text-onbrand' : 'bg-stampsoft text-stamp'} font-bold">${c.ini}</span>
+        <span class="min-w-0 flex-1"><span class="flex items-center gap-2"><span class="font-bold truncate me-auto">${esc(c.name)}</span><span class="text-sm text-muted shrink-0">${c.time}</span></span>
+          <span class="block text-[15px] text-muted truncate">${esc(c.about)}</span>
+          <span class="mt-0.5 flex items-center gap-2"><span class="text-[15px] truncate ${c.unread ? 'font-semibold' : 'text-muted'} me-auto">${esc(c.msgs[c.msgs.length - 1][1])}</span>${c.unread ? `<span class="min-w-6 h-6 grid place-items-center rounded-full bg-stamp text-onbrand text-[13px] font-bold px-1.5" aria-label="${c.unread} new">${c.unread}</span>` : ''}</span></span></a></li>`).join('');
+    }
+    function bubble([who, text, at]) {
+      if (who === 'sys') return `<li class="flex justify-center"><p class="inline-flex items-start gap-1.5 max-w-md rounded-xl bg-surface2 px-3 py-2 text-sm text-muted text-center">${icon('lock', 'w-4 h-4 mt-0.5')}${esc(text)}</p></li>`;
+      if (who === 'slot') return `<li class="flex"><div class="max-w-sm w-full rounded-2xl rounded-ss-md border-2 border-stamp/40 bg-surface p-4">
+        <p class="flex items-center gap-2 text-sm font-bold uppercase tracking-wider text-stamp">${icon('calendar')}Interview time</p><p class="mt-1 text-lg font-bold">${esc(text)}</p>
+        <div class="mt-3 grid gap-2"><button type="button" data-toast="Time accepted" data-toast-tone="ok" class="inline-flex items-center justify-center gap-2 min-h-12 rounded-xl bg-brand text-onbrand font-bold hover:bg-brand/90">${icon('check')}Yes, this time is good</button>
+        <button type="button" class="inline-flex items-center justify-center gap-2 min-h-12 rounded-xl border border-linestrong bg-surface font-semibold hover:bg-surface2">${icon('clock')}Ask for another time</button></div>
+        <p class="mt-2 text-sm text-muted">${at}</p></div></li>`;
+      const me = who === 'me';
+      return `<li class="flex ${me ? 'justify-end' : ''}"><div class="max-w-[85%] sm:max-w-md rounded-2xl ${me ? 'rounded-se-md bg-brand text-onbrand' : 'rounded-ss-md bg-surface2'} px-4 py-2.5"><p class="text-[17px]">${esc(text)}</p><p class="mt-0.5 text-[13px] ${me ? 'opacity-80' : 'text-muted'} text-end">${at}</p></div></li>`;
+    }
+    function render() {
+      const id = location.hash.slice(1), c = CONVS[id];
+      const desk = matchMedia('(min-width: 1024px)').matches;
+      const open = c ? id : (desk ? 'c1' : null);
+      if (open) CONVS[open].unread = 0;
+      list(open);
+      // Phones: list OR thread. Desktop: both.
+      $('list').classList.toggle('max-lg:hidden', !!c);
+      $('thread').classList.toggle('max-lg:hidden', !c);
+      if (!open) return;
+      const t = CONVS[open];
+      $('th-ini').textContent = t.ini; $('th-name').textContent = t.name; $('th-sub').textContent = `${t.org} · ${t.about}`;
+      $('th-job').classList.toggle('sm:inline-flex', open !== 'c3');
+      $('msgs').innerHTML = t.msgs.map(bubble).join('');
+      $('msgs').scrollTop = $('msgs').scrollHeight;
+      $('thread').dataset.id = open;
+    }
+    $('composer').addEventListener('submit', () => {
+      const v = $('msg-in').value.trim(); if (!v) return;
+      CONVS[$('thread').dataset.id].msgs.push(['me', v, 'Now']); $('msg-in').value = ''; render();
+    });
+    $('msg-in').addEventListener('keydown', e => { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); $('composer').requestSubmit(); } });
+    addEventListener('hashchange', render);
+    render();
+  })();
+</script>
+</body>
+</html>

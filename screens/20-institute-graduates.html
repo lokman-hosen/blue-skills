@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Graduates & Attestation · BLUESKILLS</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,700;12..96,800&family=Figtree:wght@400;500;600;700&family=JetBrains+Mono:wght@500;700&display=swap">
+<link rel="stylesheet" href="../assets/tokens.css">
+<script src="https://cdn.tailwindcss.com/3.4.17"></script>
+<script src="../assets/tailwind.config.js"></script>
+<script src="../assets/app.js"></script>
+</head>
+<body class="font-sans">
+<a href="#main" class="skip-link inline-flex items-center min-h-11 rounded-lg bg-brand text-onbrand px-4 font-semibold">Skip to content</a>
+
+<div data-collapsed="false" class="min-h-screen lg:flex">
+  <aside class="sidebar hidden lg:flex sticky top-0 h-screen w-64 shrink-0 flex-col border-e border-line bg-surface transition-[width] duration-200 overflow-hidden">
+    <div class="flex items-center gap-2 h-16 px-4 border-b border-line">
+      <a href="../index.html" class="grid place-items-center w-11 h-11 shrink-0 rounded-lg bg-brand text-onbrand" aria-label="BLUESKILLS home"><svg class="w-5 h-5" aria-hidden="true"><use href="#i-passport"/></svg></a>
+      <div class="nav-label min-w-0"><p class="font-bold truncate leading-tight">Meghna Technical Training Centre</p><p class="text-[13px] text-muted truncate">Training institute · Narayanganj, Bangladesh</p></div>
+    </div>
+    <nav aria-label="Workspace" class="flex-1 overflow-y-auto p-3"><p class="nav-section px-3 pt-1 pb-2 text-[13px] font-bold uppercase tracking-wider text-muted">Training</p><ul class="space-y-0.5"><li><a href="19-institute-cohorts.html" title="Courses &amp; cohorts" class="flex items-center gap-3 min-h-11 px-3 rounded-lg text-ink font-medium hover:bg-surface2"><svg class="w-5 h-5 shrink-0 text-muted" aria-hidden="true"><use href="#i-school"/></svg><span class="nav-label">Courses &amp; cohorts</span></a></li><li><a href="20-institute-graduates.html" aria-current="page" title="Graduates &amp; attestation" class="flex items-center gap-3 min-h-11 px-3 rounded-lg bg-brandsoft text-brand font-semibold"><svg class="w-5 h-5 shrink-0" aria-hidden="true"><use href="#i-award"/></svg><span class="nav-label">Graduates &amp; attestation</span><span class="nav-label ms-auto rounded-full bg-brand text-onbrand text-[13px] font-bold px-2 tabular-nums">18</span></a></li><li><a href="#" title="Messages" class="flex items-center gap-3 min-h-11 px-3 rounded-lg text-ink font-medium hover:bg-surface2"><svg class="w-5 h-5 shrink-0 text-muted" aria-hidden="true"><use href="#i-chat"/></svg><span class="nav-label">Messages</span></a></li><li><a href="#" title="Reports" class="flex items-center gap-3 min-h-11 px-3 rounded-lg text-ink font-medium hover:bg-surface2"><svg class="w-5 h-5 shrink-0 text-muted" aria-hidden="true"><use href="#i-chart"/></svg><span class="nav-label">Reports</span></a></li></ul><p class="nav-section px-3 pt-5 pb-2 text-[13px] font-bold uppercase tracking-wider text-muted">Organisation</p><ul class="space-y-0.5"><li><a href="#" title="Verification" class="flex items-center gap-3 min-h-11 px-3 rounded-lg text-ink font-medium hover:bg-surface2"><svg class="w-5 h-5 shrink-0 text-muted" aria-hidden="true"><use href="#i-shield-check"/></svg><span class="nav-label">Verification</span></a></li><li><a href="#" title="Team" class="flex items-center gap-3 min-h-11 px-3 rounded-lg text-ink font-medium hover:bg-surface2"><svg class="w-5 h-5 shrink-0 text-muted" aria-hidden="true"><use href="#i-users"/></svg><span class="nav-label">Team</span></a></li><li><a href="#" title="Settings" class="flex items-center gap-3 min-h-11 px-3 rounded-lg text-ink font-medium hover:bg-surface2"><svg class="w-5 h-5 shrink-0 text-muted" aria-hidden="true"><use href="#i-settings"/></svg><span class="nav-label">Settings</span></a></li></ul></nav>
+    <div class="p-3 border-t border-line">
+      <button type="button" data-sidebar-toggle aria-expanded="true" title="Collapse sidebar" class="flex w-full items-center gap-3 min-h-11 px-3 rounded-lg text-muted font-medium hover:bg-surface2 hover:text-ink"><svg class="w-5 h-5 shrink-0" aria-hidden="true"><use href="#i-panel"/></svg><span class="nav-label">Collapse</span></button>
+    </div>
+  </aside>
+
+  <div class="flex-1 min-w-0">
+    <header class="sticky top-0 z-20 border-b border-line bg-surface/95 backdrop-blur">
+      <div class="flex items-center gap-2 h-16 px-4 lg:px-6">
+        <button type="button" data-open="ws-drawer" class="lg:hidden grid place-items-center w-11 h-11 shrink-0 -ms-2 rounded-lg hover:bg-surface2" aria-label="Open menu"><svg class="w-6 h-6" aria-hidden="true"><use href="#i-menu"/></svg></button>
+        <p class="lg:hidden font-bold truncate">Meghna TTC</p>
+        <label class="relative hidden md:block w-full max-w-sm">
+          <span class="sr-only">Search graduates…</span>
+          <svg class="pointer-events-none absolute start-3 top-1/2 -translate-y-1/2 w-5 h-5 text-muted" aria-hidden="true"><use href="#i-search"/></svg>
+          <input type="search" placeholder="Search graduates…" class="block w-full min-h-11 rounded-lg border border-linestrong bg-surface ps-10 pe-3 text-[15px] text-ink placeholder:text-muted focus:outline-none focus:border-brand focus:ring-[3px] focus:ring-brand/40">
+        </label>
+        <div class="ms-auto flex items-center gap-1">
+          <span class="hidden sm:inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-sm font-semibold bg-oksoft text-ok"><svg class="w-4 h-4" aria-hidden="true"><use href="#i-shield-check"/></svg>Verified organisation</span>
+          <a href="#" class="grid place-items-center w-11 h-11 rounded-lg hover:bg-surface2" aria-label="Help"><svg class="w-5 h-5" aria-hidden="true"><use href="#i-help"/></svg></a>
+          <a href="#" class="relative grid place-items-center w-11 h-11 rounded-lg hover:bg-surface2" aria-label="Notifications, 2 new"><svg class="w-5 h-5" aria-hidden="true"><use href="#i-bell"/></svg><span class="absolute top-2.5 end-2.5 w-2 h-2 rounded-full bg-bad" aria-hidden="true"></span></a>
+          <button type="button" data-theme-toggle aria-label="Dark theme" class="grid place-items-center w-11 h-11 rounded-lg hover:bg-surface2"><svg class="w-5 h-5" aria-hidden="true"><use href="#i-moon"/></svg></button>
+          <button type="button" class="flex items-center gap-2 min-h-11 ps-1 pe-2 rounded-lg hover:bg-surface2" aria-label="Account: Nasrin A., Placement lead"><span class="grid place-items-center w-9 h-9 rounded-full bg-stampsoft text-stamp font-bold text-sm">NA</span><span class="hidden xl:block text-start leading-tight"><span class="block text-[15px] font-semibold">Nasrin A.</span><span class="block text-[13px] text-muted">Placement lead</span></span></button>
+        </div>
+      </div>
+    </header>
+
+    <main id="main" class="px-4 lg:px-6 py-6 max-w-[90rem]">
+      <div class="flex flex-wrap items-center gap-3">
+        <div class="me-auto min-w-0">
+          <nav aria-label="Breadcrumb" class="text-sm text-muted"><ol class="flex items-center gap-1"><li>Meghna TTC</li><li aria-hidden="true">/</li><li aria-current="page" class="text-ink font-medium">Graduates &amp; attestation</li></ol></nav>
+          <h1 class="font-display text-2xl sm:text-3xl font-bold">Graduates &amp; attestation</h1>
+        </div>
+        <span class="inline-flex items-center gap-1 rounded-md border border-dashed border-linestrong px-2 py-0.5 text-[13px] font-semibold text-muted">Sample data</span>
+      </div>
+
+      <div class="mt-6 grid gap-6 xl:grid-cols-[minmax(0,1fr)_20rem] items-start">
+        <section aria-label="Graduates" class="rounded-xl border border-line bg-surface overflow-hidden min-w-0">
+          <div role="tablist" aria-label="Status" class="flex gap-1 overflow-x-auto border-b border-line px-2">
+            <button role="tab" id="gt-1" aria-selected="true" data-st="waiting" class="shrink-0 min-h-12 px-4 border-b-[3px] border-transparent font-semibold text-muted hover:text-ink aria-selected:border-brand aria-selected:text-brand">Waiting · <span data-n="waiting">0</span></button>
+            <button role="tab" id="gt-2" aria-selected="false" tabindex="-1" data-st="attested" class="shrink-0 min-h-12 px-4 border-b-[3px] border-transparent font-semibold text-muted hover:text-ink aria-selected:border-brand aria-selected:text-brand">Attested · <span data-n="attested">0</span></button>
+            <button role="tab" id="gt-3" aria-selected="false" tabindex="-1" data-st="declined" class="shrink-0 min-h-12 px-4 border-b-[3px] border-transparent font-semibold text-muted hover:text-ink aria-selected:border-brand aria-selected:text-brand">Could not confirm · <span data-n="declined">0</span></button>
+          </div>
+          <div id="gp">
+            <div id="bulk" class="hidden flex-wrap items-center gap-2 px-4 py-2.5 bg-brandsoft border-b border-brand/30">
+              <p class="font-semibold me-auto"><span id="sel-n">0</span> selected</p>
+              <button type="button" id="bulk-attest" class="inline-flex items-center gap-2 min-h-11 px-4 rounded-lg bg-brand text-onbrand font-semibold hover:bg-brand/90"><svg class="w-5 h-5" aria-hidden="true"><use href="#i-award"/></svg>Attest selected</button>
+              <button type="button" id="clear-sel" class="inline-flex items-center min-h-11 px-3 rounded-lg font-semibold text-brand hover:bg-surface">Clear</button>
+            </div>
+            <table class="hidden md:table w-full text-[15px]">
+              <thead class="bg-surface2/60 text-sm text-muted"><tr>
+                <th scope="col" class="ps-4 py-2.5 w-10"><label class="grid place-items-center w-11 h-11 -m-3 cursor-pointer"><span class="sr-only">Select all</span><input id="all" type="checkbox" class="w-5 h-5 accent-brand"></label></th>
+                <th scope="col" class="px-3 py-2.5 text-start font-semibold">Graduate</th><th scope="col" class="px-3 py-2.5 text-start font-semibold">Course · cohort</th><th scope="col" class="px-3 py-2.5 text-start font-semibold">Graduate says</th><th scope="col" class="px-4 py-2.5"><span class="sr-only">Actions</span></th></tr></thead>
+              <tbody id="rows" class="divide-y divide-line"></tbody>
+            </table>
+            <ul id="cards" class="md:hidden divide-y divide-line"></ul>
+            <div id="empty" class="hidden p-8 text-center"><svg class="mx-auto w-10 h-10 text-ok" aria-hidden="true"><use href="#i-check-circle"/></svg><p class="mt-2 font-bold">Nothing waiting</p><p class="text-muted">New requests appear when graduates join.</p></div>
+          </div>
+        </section>
+
+        <aside class="space-y-4">
+          <section aria-labelledby="can-h" class="rounded-xl border border-line bg-surface p-4">
+            <h2 id="can-h" class="flex items-center gap-2 font-bold"><svg class="w-5 h-5 text-ok" aria-hidden="true"><use href="#i-check-circle"/></svg>What attesting does</h2>
+            <ul class="mt-2 space-y-2 text-[15px]">
+              <li>Adds <b>“Attested by institute”</b> to that course line on the graduate’s Skill Passport</li>
+              <li>Records who attested and when</li>
+            </ul>
+          </section>
+          <section aria-labelledby="cant-h" class="rounded-xl border border-line bg-surface2/60 p-4">
+            <h2 id="cant-h" class="flex items-center gap-2 font-bold"><svg class="w-5 h-5 text-muted" aria-hidden="true"><use href="#i-ban"/></svg>What you cannot do</h2>
+            <ul class="mt-2 space-y-2 text-[15px] text-muted">
+              <li>Change the graduate’s work history or skills</li>
+              <li>See their documents, phone or applications</li>
+              <li>Remove or hide their profile</li>
+            </ul>
+          </section>
+        </aside>
+      </div>
+    </main>
+  </div>
+</div>
+
+<dialog id="ws-drawer" class="drawer" aria-labelledby="ws-drawer-t">
+  <nav class="h-full bg-surface flex flex-col" aria-label="Workspace">
+    <div class="flex items-center gap-2 h-16 px-4 border-b border-line">
+      <span class="grid place-items-center w-10 h-10 shrink-0 rounded-lg bg-brand text-onbrand"><svg class="w-5 h-5" aria-hidden="true"><use href="#i-passport"/></svg></span>
+      <div class="min-w-0 flex-1"><p id="ws-drawer-t" class="font-bold truncate leading-tight">Meghna Technical Training Centre</p><p class="text-[13px] text-muted truncate">Training institute · Narayanganj, Bangladesh</p></div>
+      <button type="button" data-close aria-label="Close menu" class="grid place-items-center w-11 h-11 rounded-lg hover:bg-surface2"><svg class="w-5 h-5" aria-hidden="true"><use href="#i-x"/></svg></button>
+    </div>
+    <div class="flex-1 overflow-y-auto p-3"><p class="px-3 pt-1 pb-2 text-[13px] font-bold uppercase tracking-wider text-muted">Training</p><ul class="space-y-0.5"><li><a href="19-institute-cohorts.html" class="flex items-center gap-3 min-h-12 px-3 rounded-lg font-medium hover:bg-surface2"><svg class="w-5 h-5 text-muted" aria-hidden="true"><use href="#i-school"/></svg>Courses &amp; cohorts</a></li><li><a href="20-institute-graduates.html" aria-current="page" class="flex items-center gap-3 min-h-12 px-3 rounded-lg bg-brandsoft text-brand font-semibold"><svg class="w-5 h-5" aria-hidden="true"><use href="#i-award"/></svg>Graduates &amp; attestation</a></li><li><a href="#" class="flex items-center gap-3 min-h-12 px-3 rounded-lg font-medium hover:bg-surface2"><svg class="w-5 h-5 text-muted" aria-hidden="true"><use href="#i-chat"/></svg>Messages</a></li><li><a href="#" class="flex items-center gap-3 min-h-12 px-3 rounded-lg font-medium hover:bg-surface2"><svg class="w-5 h-5 text-muted" aria-hidden="true"><use href="#i-chart"/></svg>Reports</a></li></ul><p class="px-3 pt-5 pb-2 text-[13px] font-bold uppercase tracking-wider text-muted">Organisation</p><ul class="space-y-0.5"><li><a href="#" class="flex items-center gap-3 min-h-12 px-3 rounded-lg font-medium hover:bg-surface2"><svg class="w-5 h-5 text-muted" aria-hidden="true"><use href="#i-shield-check"/></svg>Verification</a></li><li><a href="#" class="flex items-center gap-3 min-h-12 px-3 rounded-lg font-medium hover:bg-surface2"><svg class="w-5 h-5 text-muted" aria-hidden="true"><use href="#i-users"/></svg>Team</a></li><li><a href="#" class="flex items-center gap-3 min-h-12 px-3 rounded-lg font-medium hover:bg-surface2"><svg class="w-5 h-5 text-muted" aria-hidden="true"><use href="#i-settings"/></svg>Settings</a></li></ul></div>
+    <div class="p-3 border-t border-line"><span class="inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-sm font-semibold bg-oksoft text-ok"><svg class="w-4 h-4" aria-hidden="true"><use href="#i-shield-check"/></svg>Verified organisation</span></div>
+  </nav>
+</dialog>
+<dialog id="attest-dlg" aria-labelledby="at-t" class="w-[min(92vw,30rem)] rounded-2xl">
+  <form method="dialog" class="rounded-2xl bg-surface p-5">
+    <div class="flex items-start gap-3">
+      <span class="grid place-items-center w-11 h-11 shrink-0 rounded-full bg-brandsoft text-brand"><svg class="w-6 h-6" aria-hidden="true"><use href="#i-award"/></svg></span>
+      <div><h2 id="at-t" class="text-xl font-bold">Attest <span id="at-n">0</span> graduates?</h2><p class="mt-1 text-muted">You confirm each person finished the course and cohort shown, as recorded in your own training records.</p></div>
+    </div>
+    <ul id="at-list" class="mt-3 max-h-40 overflow-y-auto divide-y divide-line rounded-lg border border-line text-[15px]"></ul>
+    <label class="mt-3 flex items-start gap-3 rounded-lg border border-line p-3 cursor-pointer has-[:checked]:border-brand has-[:checked]:bg-brandsoft"><input id="at-ok" type="checkbox" class="mt-0.5 w-5 h-5 shrink-0 accent-brand"><span class="text-[15px]">I checked these against our records. Signed as Nasrin A., Placement lead.</span></label>
+    <div class="mt-5 flex flex-col-reverse sm:flex-row sm:justify-end gap-2">
+      <button type="button" data-close class="inline-flex items-center justify-center min-h-11 px-4 rounded-lg border border-linestrong bg-surface font-semibold hover:bg-surface2">Cancel</button>
+      <button type="button" id="at-go" disabled class="inline-flex items-center justify-center gap-2 min-h-11 px-4 rounded-lg bg-brand text-onbrand font-semibold hover:bg-brand/90 disabled:opacity-50 disabled:pointer-events-none"><svg class="w-5 h-5" aria-hidden="true"><use href="#i-check"/></svg>Attest</button>
+    </div>
+  </form>
+</dialog>
+
+<dialog id="decline-dlg" aria-labelledby="dc-t" class="w-[min(92vw,30rem)] rounded-2xl">
+  <form method="dialog" class="rounded-2xl bg-surface p-5">
+    <h2 id="dc-t" class="text-xl font-bold">Could not confirm <span id="dc-name"></span></h2>
+    <label for="dc-why" class="mt-3 block font-semibold">Reason</label>
+    <div class="relative mt-1.5"><select id="dc-why" class="appearance-none block w-full min-h-11 rounded-lg border border-linestrong bg-surface ps-3 pe-9 text-[15px] focus:outline-none focus:border-brand focus:ring-[3px] focus:ring-brand/40"><option>Not in our records for this cohort</option><option>Did not finish the course</option><option>Different course or level</option><option>Name does not match our records</option></select><svg class="pointer-events-none absolute end-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted" aria-hidden="true"><use href="#i-down"/></svg></div>
+    <p class="mt-2 text-sm text-muted">The graduate sees a kind message and can ask you to look again. The course line stays as “Said by worker”.</p>
+    <div class="mt-5 flex flex-col-reverse sm:flex-row sm:justify-end gap-2">
+      <button type="button" data-close class="inline-flex items-center justify-center min-h-11 px-4 rounded-lg border border-linestrong bg-surface font-semibold hover:bg-surface2">Cancel</button>
+      <button type="button" id="dc-go" class="inline-flex items-center justify-center min-h-11 px-4 rounded-lg bg-bad text-onbrand font-semibold hover:bg-bad/90">Could not confirm</button>
+    </div>
+  </form>
+</dialog>
+
+<script src="../assets/render.js"></script>
+<script>
+  (function () {
+    const $ = id => document.getElementById(id), { chip, esc, icon } = BSR;
+    const G = [
+      ['g1', 'Md Rahim Uddin', 'RU', 'Electrical Installation L2', 'Jan–Jun 2026', 'Finished Jun 2026 · grade A', 'waiting'],
+      ['g2', 'Shahin Alam', 'SA', 'Electrical Installation L2', 'Jan–Jun 2026', 'Finished Jun 2026', 'waiting'],
+      ['g3', 'Rubel Hossain', 'RH', 'Electrical Installation L2', 'Jan–Jun 2026', 'Finished Jun 2026', 'waiting'],
+      ['g4', 'Tanvir Ahmed', 'TA', 'Welding (SMAW / MIG) L2', 'Feb–Jun 2026', 'Finished Jun 2026 · grade B', 'waiting'],
+      ['g5', 'Jahid Hasan', 'JH', 'Plumbing & Pipe Fitting L1', 'Mar–Jun 2026', 'Finished Jun 2026', 'waiting'],
+      ['g6', 'Mizanur Rahman', 'MR', 'Welding (SMAW / MIG) L2', 'Feb–Jun 2026', 'Finished Jun 2026', 'attested', '12 Jul 2026'],
+      ['g7', 'Sohel Rana', 'SR', 'Electrical Installation L2', 'Jan–Jun 2026', 'Finished Jun 2026', 'attested', '8 Jul 2026'],
+      ['g8', 'Abdul Karim', 'AK', 'Electrical Installation L2', 'Jul–Dec 2025', 'Finished Dec 2025', 'declined', 'Not in our records for this cohort']
+    ].map(([id, name, ini, course, cohort, says, st, extra]) => ({ id, name, ini, course, cohort, says, st, extra }));
+    let tab = 'waiting'; const sel = new Set(); let declining = null;
+
+    function render() {
+      ['waiting', 'attested', 'declined'].forEach(s => { document.querySelector(`[data-n="${s}"]`).textContent = G.filter(g => g.st === s).length; });
+      const rows = G.filter(g => g.st === tab), wait = tab === 'waiting';
+      const status = g => g.st === 'attested' ? chip('Attested · ' + g.extra, 'ok', 'award') : g.st === 'declined' ? chip('Could not confirm', 'bad', 'x-circle') : chip('Said by graduate', 'neutral', 'user');
+      const actions = g => wait ? `<div class="flex justify-end gap-1"><button type="button" data-attest="${g.id}" class="inline-flex items-center gap-1.5 min-h-11 px-3 rounded-lg bg-brand text-onbrand font-semibold hover:bg-brand/90">${icon('award', 'w-4 h-4')}Attest</button><button type="button" data-decline="${g.id}" class="inline-flex items-center min-h-11 px-3 rounded-lg font-semibold text-bad hover:bg-badsoft">Can’t confirm</button></div>`
+        : g.st === 'attested' ? `<button type="button" class="inline-flex items-center min-h-11 px-3 rounded-lg font-semibold text-muted hover:bg-surface2">Withdraw</button>` : `<span class="text-sm text-muted">${esc(g.extra)}</span>`;
+      $('rows').innerHTML = rows.map(g => `<tr class="${sel.has(g.id) ? 'bg-brandsoft/60' : 'hover:bg-surface2/50'}">
+        <td class="ps-4 py-3">${wait ? `<label class="grid place-items-center w-11 h-11 -m-3 cursor-pointer"><span class="sr-only">Select ${esc(g.name)}</span><input type="checkbox" data-sel="${g.id}" ${sel.has(g.id) ? 'checked' : ''} class="w-5 h-5 accent-brand"></label>` : ''}</td>
+        <td class="px-3 py-3"><div class="flex items-center gap-3"><span class="grid place-items-center w-9 h-9 shrink-0 rounded-full bg-brandsoft text-brand font-bold text-sm">${g.ini}</span><span class="font-semibold">${esc(g.name)}</span></div></td>
+        <td class="px-3 py-3"><p>${esc(g.course)}</p><p class="text-sm text-muted">${g.cohort}</p></td>
+        <td class="px-3 py-3"><p>${esc(g.says)}</p><div class="mt-1">${status(g)}</div></td>
+        <td class="px-4 py-3 text-end">${actions(g)}</td></tr>`).join('');
+      $('cards').innerHTML = rows.map(g => `<li class="p-4"><div class="flex items-start gap-3">${wait ? `<label class="grid place-items-center w-11 h-11 -m-2 shrink-0 cursor-pointer"><span class="sr-only">Select ${esc(g.name)}</span><input type="checkbox" data-sel="${g.id}" ${sel.has(g.id) ? 'checked' : ''} class="w-5 h-5 accent-brand"></label>` : ''}
+        <div class="min-w-0 flex-1"><p class="font-semibold">${esc(g.name)}</p><p class="text-sm text-muted">${esc(g.course)} · ${g.cohort}</p><p class="text-sm">${esc(g.says)}</p><div class="mt-1">${status(g)}</div></div></div><div class="mt-2">${actions(g)}</div></li>`).join('');
+      $('empty').classList.toggle('hidden', rows.length > 0);
+      $('all').closest('th').style.visibility = wait ? '' : 'hidden';
+      $('all').checked = wait && rows.length > 0 && rows.every(g => sel.has(g.id));
+      $('sel-n').textContent = sel.size; $('bulk').classList.toggle('hidden', !sel.size); $('bulk').classList.toggle('flex', !!sel.size);
+    }
+    function openAttest(ids) {
+      $('at-n').textContent = ids.length; $('at-ok').checked = false; $('at-go').disabled = true;
+      $('at-list').innerHTML = ids.map(id => { const g = G.find(x => x.id === id); return `<li class="px-3 py-2"><b>${esc(g.name)}</b> · ${esc(g.course)} · ${g.cohort}</li>`; }).join('');
+      $('at-go').dataset.ids = ids.join(','); $('attest-dlg').showModal();
+    }
+    document.querySelectorAll('[data-st]').forEach(b => b.addEventListener('click', () => { tab = b.dataset.st; sel.clear(); render(); }));
+    document.addEventListener('change', e => {
+      if (e.target.dataset.sel) { e.target.checked ? sel.add(e.target.dataset.sel) : sel.delete(e.target.dataset.sel); render(); }
+      if (e.target.id === 'all') { G.filter(g => g.st === 'waiting').forEach(g => e.target.checked ? sel.add(g.id) : sel.delete(g.id)); render(); }
+      if (e.target.id === 'at-ok') $('at-go').disabled = !e.target.checked;
+    });
+    document.addEventListener('click', e => {
+      const a = e.target.closest('[data-attest]'), d = e.target.closest('[data-decline]');
+      if (a) openAttest([a.dataset.attest]);
+      if (d) { declining = d.dataset.decline; $('dc-name').textContent = G.find(g => g.id === declining).name; $('decline-dlg').showModal(); }
+    });
+    $('bulk-attest').addEventListener('click', () => openAttest([...sel]));
+    $('at-go').addEventListener('click', () => {
+      const ids = $('at-go').dataset.ids.split(',');
+      ids.forEach(id => { const g = G.find(x => x.id === id); g.st = 'attested'; g.extra = '19 Oct 2026'; sel.delete(id); });
+      $('attest-dlg').close(); render(); BS.toast(`${ids.length} attested`, 'ok');
+    });
+    $('dc-go').addEventListener('click', () => { const g = G.find(x => x.id === declining); g.st = 'declined'; g.extra = $('dc-why').value; $('decline-dlg').close(); render(); });
+    $('clear-sel').addEventListener('click', () => { sel.clear(); render(); });
+    render();
+  })();
+</script>
+</body>
+</html>

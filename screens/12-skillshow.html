@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>SkillShow · BLUESKILLS</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,700;12..96,800&family=Figtree:wght@400;500;600;700&family=JetBrains+Mono:wght@500;700&display=swap">
+<link rel="stylesheet" href="../assets/tokens.css">
+<script src="https://cdn.tailwindcss.com/3.4.17"></script>
+<script src="../assets/tailwind.config.js"></script>
+<script src="../assets/app.js"></script>
+</head>
+<body class="font-sans">
+<a href="#main" class="skip-link inline-flex items-center min-h-11 rounded-lg bg-brand text-onbrand px-4 font-semibold">Skip to content</a>
+
+<aside class="hidden lg:flex fixed inset-y-0 start-0 z-30 w-64 flex-col border-e border-line bg-surface">
+  <a href="../index.html" class="flex items-center gap-2 h-16 px-5 border-b border-line" aria-label="BLUESKILLS home">
+    <span class="grid place-items-center w-9 h-9 rounded-lg bg-brand text-onbrand"><svg class="w-5 h-5" aria-hidden="true"><use href="#i-passport"/></svg></span>
+    <span class="font-display text-lg font-extrabold tracking-tight">BLUESKILLS</span>
+  </a>
+  <nav aria-label="Main" class="flex-1 overflow-y-auto p-3">
+    <ul class="space-y-1"><li><a href="../layouts/worker.html" class="flex items-center gap-3 min-h-12 px-3 rounded-xl text-ink hover:bg-surface2 text-base font-semibold"><svg class="w-6 h-6 text-muted" aria-hidden="true"><use href="#i-home"/></svg><span>Home</span></a></li><li><a href="02-jobs.html" class="flex items-center gap-3 min-h-12 px-3 rounded-xl text-ink hover:bg-surface2 text-base font-semibold"><svg class="w-6 h-6 text-muted" aria-hidden="true"><use href="#i-search"/></svg><span>Jobs</span></a></li><li><a href="05-apply.html#tracker" class="flex items-center gap-3 min-h-12 px-3 rounded-xl text-ink hover:bg-surface2 text-base font-semibold"><svg class="w-6 h-6 text-muted" aria-hidden="true"><use href="#i-list"/></svg><span>Applications</span></a></li><li><a href="14-messages.html" class="flex items-center gap-3 min-h-12 px-3 rounded-xl text-ink hover:bg-surface2 text-base font-semibold"><svg class="w-6 h-6 text-muted" aria-hidden="true"><use href="#i-chat"/></svg><span>Messages</span></a></li><li><a href="04-passport.html" class="flex items-center gap-3 min-h-12 px-3 rounded-xl text-ink hover:bg-surface2 text-base font-semibold"><svg class="w-6 h-6 text-muted" aria-hidden="true"><use href="#i-passport"/></svg><span>Passport</span></a></li></ul>
+    <ul class="mt-4 pt-4 border-t border-line space-y-1">
+      <li><a href="10-settings.html" class="flex items-center gap-3 min-h-12 px-3 rounded-xl text-ink hover:bg-surface2 font-semibold"><svg class="w-6 h-6 text-muted" aria-hidden="true"><use href="#i-settings"/></svg><span>Settings</span></a></li>
+      <li><a href="#" class="flex items-center gap-3 min-h-12 px-3 rounded-xl text-ink font-semibold hover:bg-surface2"><svg class="w-6 h-6 text-muted" aria-hidden="true"><use href="#i-help"/></svg><span>Help</span></a></li>
+    </ul>
+  </nav>
+  <div class="p-3 border-t border-line"><div class="flex items-center gap-3 rounded-xl p-2"><span class="grid place-items-center w-11 h-11 shrink-0 rounded-full bg-brandsoft text-brand font-bold">RU</span><div class="min-w-0"><p class="font-semibold truncate">Md Rahim Uddin</p><p class="text-sm text-muted truncate">Electrician</p></div></div></div>
+</aside>
+
+<div class="lg:ps-64">
+  <header class="sticky top-0 z-20 border-b border-line bg-surface/95 backdrop-blur pt-[env(safe-area-inset-top)]">
+    <div class="mx-auto max-w-3xl flex items-center gap-2 h-16 px-4">
+      <a href="../index.html" class="lg:hidden flex items-center gap-2 min-h-11 min-w-11" aria-label="BLUESKILLS home">
+        <span class="grid place-items-center w-9 h-9 rounded-lg bg-brand text-onbrand"><svg class="w-5 h-5" aria-hidden="true"><use href="#i-passport"/></svg></span>
+      </a>
+      <p class="text-lg font-bold truncate">SkillShow video</p>
+      <div class="ms-auto flex items-center gap-1">
+        <a href="10-settings.html" class="inline-flex items-center gap-2 min-h-11 px-3 rounded-full border border-linestrong bg-surface font-semibold hover:bg-surface2"><svg class="w-5 h-5 text-muted" aria-hidden="true"><use href="#i-globe"/></svg><span>English</span><span class="sr-only">Language</span></a>
+        <button type="button" data-theme-toggle aria-label="Dark theme" class="grid place-items-center w-11 h-11 rounded-full hover:bg-surface2"><svg class="w-5 h-5" aria-hidden="true"><use href="#i-moon"/></svg></button>
+      </div>
+    </div>
+  </header>
+
+  <main id="main" class="mx-auto max-w-3xl px-4 pt-5 pb-12">
+    <a href="04-passport.html" class="inline-flex items-center gap-1 min-h-11 -ms-2 px-2 rounded-lg font-semibold text-brand hover:bg-brandsoft"><svg class="w-5 h-5 flip-rtl" aria-hidden="true"><use href="#i-back"/></svg>Back to Passport</a>
+
+    <nav aria-label="Video steps" class="mt-2">
+      <p class="font-semibold"><span id="st-m">Step 1 of 4</span> · <span id="st-name" class="text-brand">Make a video</span></p>
+      <div class="mt-2 grid grid-cols-4 gap-1.5" aria-hidden="true"><span data-bar="1"></span><span data-bar="2"></span><span data-bar="3"></span><span data-bar="4"></span></div>
+    </nav>
+
+    <!-- 1 · Record or upload -->
+    <section data-step="1" aria-labelledby="s1-h" class="mt-6">
+      <h1 id="s1-h" tabindex="-1" class="font-display text-2xl sm:text-3xl font-bold">Show your work in 30 seconds</h1>
+      <p class="mt-1 text-lg text-muted">A short video of your hands doing the job. Employers like to see it.</p>
+
+      <div class="mt-5 grid gap-3 sm:grid-cols-2">
+        <label class="relative flex flex-col items-center justify-center gap-2 min-h-40 rounded-2xl bg-brand text-onbrand p-4 text-center cursor-pointer hover:bg-brand/90 focus-within:ring-[3px] focus-within:ring-brand/50">
+          <input type="file" accept="video/*" capture="environment" data-video class="sr-only">
+          <svg class="w-12 h-12" aria-hidden="true"><use href="#i-camera"/></svg><span class="text-xl font-bold">Record now</span><span class="text-[15px] opacity-90">Opens your camera</span>
+        </label>
+        <label class="relative flex flex-col items-center justify-center gap-2 min-h-40 rounded-2xl border-2 border-dashed border-linestrong bg-surface p-4 text-center cursor-pointer hover:bg-surface2 focus-within:ring-[3px] focus-within:ring-brand/50">
+          <input type="file" accept="video/*" data-video class="sr-only">
+          <svg class="w-12 h-12 text-brand" aria-hidden="true"><use href="#i-upload"/></svg><span class="text-xl font-bold">Choose a video</span><span class="text-[15px] text-muted">From your phone</span>
+        </label>
+      </div>
+      <button type="button" data-demo class="mt-3 inline-flex items-center gap-2 min-h-11 px-3 rounded-xl text-[15px] font-semibold text-muted hover:bg-surface2"><svg class="w-5 h-5" aria-hidden="true"><use href="#i-play"/></svg>No video handy? Use a sample</button>
+
+      <section aria-labelledby="tips-h" class="mt-6 rounded-2xl border border-line bg-surface p-4 sm:p-5">
+        <h2 id="tips-h" class="text-lg font-bold">Good videos</h2>
+        <ul class="mt-2 space-y-3 text-[17px]">
+          <li class="flex items-start gap-3"><span class="grid place-items-center w-10 h-10 shrink-0 rounded-xl bg-oksoft text-ok"><svg class="w-5 h-5" aria-hidden="true"><use href="#i-wrench"/></svg></span><span class="pt-1.5">Show your hands and the work</span></li>
+          <li class="flex items-start gap-3"><span class="grid place-items-center w-10 h-10 shrink-0 rounded-xl bg-oksoft text-ok"><svg class="w-5 h-5" aria-hidden="true"><use href="#i-clock"/></svg></span><span class="pt-1.5">30 seconds or less</span></li>
+          <li class="flex items-start gap-3"><span class="grid place-items-center w-10 h-10 shrink-0 rounded-xl bg-oksoft text-ok"><svg class="w-5 h-5" aria-hidden="true"><use href="#i-sun"/></svg></span><span class="pt-1.5">Good light, phone held still</span></li>
+          <li class="flex items-start gap-3"><span class="grid place-items-center w-10 h-10 shrink-0 rounded-xl bg-badsoft text-bad"><svg class="w-5 h-5" aria-hidden="true"><use href="#i-eye-off"/></svg></span><span class="pt-1.5">No documents, no other people’s faces, no phone numbers</span></li>
+        </ul>
+      </section>
+    </section>
+
+    <!-- 2 · Length check (done in the browser before upload) -->
+    <section data-step="2" aria-labelledby="s2-h" class="mt-6" hidden>
+      <h1 id="s2-h" tabindex="-1" class="font-display text-2xl sm:text-3xl font-bold">Checking your video</h1>
+      <div class="mt-4 aspect-video rounded-2xl overflow-hidden bg-[linear-gradient(135deg,rgb(var(--ink)/.85),rgb(var(--brand)/.85))] grid place-items-center text-white">
+        <video id="vid" class="hidden w-full h-full object-contain bg-black" controls playsinline></video>
+        <svg id="vid-ph" class="w-14 h-14" aria-hidden="true"><use href="#i-video"/></svg>
+      </div>
+      <p id="vid-name" class="mt-2 text-[15px] text-muted truncate"></p>
+
+      <div id="len-ok" class="mt-4 hidden items-start gap-3 rounded-2xl border border-ok/30 bg-oksoft p-4">
+        <svg class="w-7 h-7 shrink-0 text-ok" aria-hidden="true"><use href="#i-check-circle"/></svg>
+        <div><p class="text-lg font-bold">Good length: <span id="len-ok-t" class="tabular-nums" dir="ltr">0:28</span></p><p class="text-muted">Watch it once. Is your work easy to see?</p></div>
+      </div>
+      <div id="len-bad" role="alert" class="mt-4 hidden items-start gap-3 rounded-2xl border border-bad/30 bg-badsoft p-4">
+        <svg class="w-7 h-7 shrink-0 text-bad" aria-hidden="true"><use href="#i-x-circle"/></svg>
+        <div><p class="text-lg font-bold">Too long: <span id="len-bad-t" class="tabular-nums" dir="ltr">0:42</span></p><p>Keep it to 30 seconds. Record again and show one task.</p></div>
+      </div>
+
+      <div class="mt-6 grid gap-2 sm:grid-cols-2">
+        <button type="button" data-goto="1" class="inline-flex items-center justify-center gap-2 min-h-14 rounded-2xl border border-linestrong bg-surface text-lg font-semibold hover:bg-surface2"><svg class="w-6 h-6" aria-hidden="true"><use href="#i-refresh"/></svg>Record again</button>
+        <button type="button" id="use-vid" data-goto="3" class="inline-flex items-center justify-center gap-2 min-h-14 rounded-2xl bg-brand text-onbrand text-lg font-bold hover:bg-brand/90 disabled:opacity-50 disabled:pointer-events-none"><svg class="w-6 h-6" aria-hidden="true"><use href="#i-check"/></svg>Use this video</button>
+      </div>
+    </section>
+
+    <!-- 3 · Name it and tag skills -->
+    <section data-step="3" aria-labelledby="s3-h" class="mt-6" hidden>
+      <h1 id="s3-h" tabindex="-1" class="font-display text-2xl sm:text-3xl font-bold">What does it show?</h1>
+      <form class="mt-5 space-y-6" onsubmit="return false">
+        <div>
+          <label for="v-title" class="block text-lg font-semibold">Name your video</label>
+          <input id="v-title" type="text" value="DB panel wiring" class="mt-2 block w-full min-h-14 rounded-xl border border-linestrong bg-surface px-4 text-lg text-ink focus:outline-none focus:border-brand focus:ring-[3px] focus:ring-brand/40">
+          <button type="button" class="mt-1 inline-flex items-center gap-2 min-h-11 px-2 rounded-lg text-brand font-semibold hover:bg-brandsoft"><svg class="w-5 h-5" aria-hidden="true"><use href="#i-mic"/></svg>Say it instead</button>
+        </div>
+        <fieldset>
+          <legend class="text-lg font-semibold">Skills in the video</legend>
+          <p class="text-muted">Pick up to 3</p>
+          <div id="skills" class="mt-2 flex flex-wrap gap-2"></div>
+          <p id="sk-err" class="mt-2 hidden items-center gap-1.5 font-medium text-bad"><svg class="w-5 h-5 shrink-0" aria-hidden="true"><use href="#i-alert"/></svg>Pick at least one skill</p>
+        </fieldset>
+        <div class="flex items-start gap-3 rounded-2xl border border-line bg-surface2 p-4">
+          <svg class="w-6 h-6 shrink-0 text-muted mt-0.5" aria-hidden="true"><use href="#i-info"/></svg>
+          <p>Employers see this as <b>“Worker demonstration · not certification”</b>. A person checks it before anyone can see it.</p>
+        </div>
+        <button type="button" id="send" class="flex w-full items-center justify-center gap-2 min-h-14 rounded-2xl bg-brand text-onbrand text-lg font-bold hover:bg-brand/90"><svg class="w-6 h-6" aria-hidden="true"><use href="#i-upload"/></svg>Send for checking</button>
+      </form>
+    </section>
+
+    <!-- 4 · Sent: in moderation -->
+    <section data-step="4" aria-labelledby="s4-h" class="mt-6 text-center" hidden>
+      <span class="mx-auto grid place-items-center w-20 h-20 rounded-full bg-oksoft text-ok"><svg class="w-10 h-10" aria-hidden="true"><use href="#i-check"/></svg></span>
+      <h1 id="s4-h" tabindex="-1" class="mt-4 font-display text-2xl sm:text-3xl font-bold">Video sent</h1>
+      <p class="mt-1 text-lg text-muted">We check it within 2 days. We send you a message when it is on your Passport.</p>
+
+      <article class="mt-6 text-start rounded-2xl border border-line bg-surface p-4 flex gap-4 items-center">
+        <span class="grid place-items-center w-20 h-20 shrink-0 rounded-xl bg-[linear-gradient(135deg,rgb(var(--ink)/.85),rgb(var(--brand)/.85))] text-white"><svg class="w-8 h-8" aria-hidden="true"><use href="#i-play"/></svg></span>
+        <div class="min-w-0">
+          <p id="done-title" class="text-lg font-bold truncate">DB panel wiring</p>
+          <p class="text-muted tabular-nums" dir="ltr">0:28</p>
+          <span class="mt-1 inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-sm font-semibold bg-warnsoft text-warn"><svg class="w-4 h-4" aria-hidden="true"><use href="#i-clock"/></svg>Being checked</span>
+        </div>
+      </article>
+
+      <a href="04-passport.html" class="mt-6 flex w-full items-center justify-center gap-2 min-h-14 rounded-2xl bg-brand text-onbrand text-lg font-bold hover:bg-brand/90"><svg class="w-6 h-6" aria-hidden="true"><use href="#i-passport"/></svg>Back to Passport</a>
+    </section>
+  </main>
+</div>
+
+<script>
+  (function () {
+    const $ = id => document.getElementById(id), MAX = 30;
+    const NAMES = ['Make a video', 'Check length', 'Add details', 'Sent'];
+    const SKILLS = ['Industrial wiring', 'DB installation', 'Cable termination', 'Maintenance', 'Testing & fault finding'];
+    $('skills').innerHTML = SKILLS.map((s, i) => `<label class="inline-flex items-center gap-2 min-h-12 px-4 rounded-full border-2 border-line bg-surface font-semibold cursor-pointer has-[:checked]:border-brand has-[:checked]:bg-brandsoft has-[:checked]:text-brand has-[:focus-visible]:ring-[3px] has-[:focus-visible]:ring-brand/50"><input type="checkbox" name="skill" value="${s}" ${i < 2 ? 'checked' : ''} class="w-5 h-5 accent-brand">${s}</label>`).join('');
+    const sec = n => document.querySelector(`[data-step="${n}"]`);
+    const mmss = s => `${Math.floor(s / 60)}:${String(Math.round(s % 60)).padStart(2, '0')}`;
+
+    function go(n) {
+      document.querySelectorAll('[data-step]').forEach(s => { s.hidden = +s.dataset.step !== n; });
+      $('st-m').textContent = `Step ${n} of 4`; $('st-name').textContent = NAMES[n - 1];
+      document.querySelectorAll('[data-bar]').forEach(b => { b.className = `h-2 rounded-full ${+b.dataset.bar < n ? 'bg-ok' : +b.dataset.bar === n ? 'bg-brand' : 'bg-surface2'}`; });
+      sec(n).querySelector('h1').focus(); window.scrollTo(0, 0);
+    }
+    function showLength(sec) {
+      const ok = sec <= MAX + 0.5;
+      $('len-ok').classList.toggle('hidden', !ok); $('len-ok').classList.toggle('flex', ok);
+      $('len-bad').classList.toggle('hidden', ok); $('len-bad').classList.toggle('flex', !ok);
+      $(ok ? 'len-ok-t' : 'len-bad-t').textContent = mmss(sec);
+      $('use-vid').disabled = !ok;
+    }
+    // Real files: read the duration from the video metadata in the browser, before any upload.
+    document.querySelectorAll('[data-video]').forEach(inp => inp.addEventListener('change', () => {
+      const f = inp.files[0]; if (!f) return;
+      const v = $('vid'); v.src = URL.createObjectURL(f); v.classList.remove('hidden'); $('vid-ph').classList.add('hidden');
+      $('vid-name').textContent = f.name;
+      v.onloadedmetadata = () => showLength(v.duration);
+      inp.value = ''; go(2);
+    }));
+    document.querySelector('[data-demo]').addEventListener('click', () => {
+      $('vid').classList.add('hidden'); $('vid-ph').classList.remove('hidden'); $('vid-name').textContent = 'sample-db-wiring.mp4';
+      showLength(28); go(2);
+    });
+    document.addEventListener('click', e => { const g = e.target.closest('[data-goto]'); if (g && !g.disabled) go(+g.dataset.goto); });
+    $('skills').addEventListener('change', () => {
+      const on = [...document.querySelectorAll('[name=skill]:checked')];
+      document.querySelectorAll('[name=skill]').forEach(c => { c.disabled = !c.checked && on.length >= 3; c.closest('label').classList.toggle('opacity-50', c.disabled); });
+    });
+    $('send').addEventListener('click', () => {
+      const none = !document.querySelector('[name=skill]:checked');
+      $('sk-err').classList.toggle('hidden', !none); $('sk-err').classList.toggle('flex', none);
+      if (none) return;
+      $('done-title').textContent = $('v-title').value || 'My video'; go(4);
+    });
+    go(1);
+  })();
+</script>
+</body>
+</html>

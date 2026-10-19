@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Mobility Case · BLUESKILLS</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,700;12..96,800&family=Figtree:wght@400;500;600;700&family=JetBrains+Mono:wght@500;700&display=swap">
+<link rel="stylesheet" href="../assets/tokens.css">
+<script src="https://cdn.tailwindcss.com/3.4.17"></script>
+<script src="../assets/tailwind.config.js"></script>
+<script src="../assets/app.js"></script>
+</head>
+<body class="font-sans">
+<a href="#main" class="skip-link inline-flex items-center min-h-11 rounded-lg bg-brand text-onbrand px-4 font-semibold">Skip to content</a>
+
+<aside class="hidden lg:flex fixed inset-y-0 start-0 z-30 w-64 flex-col border-e border-line bg-surface">
+  <a href="../index.html" class="flex items-center gap-2 h-16 px-5 border-b border-line" aria-label="BLUESKILLS home">
+    <span class="grid place-items-center w-9 h-9 rounded-lg bg-brand text-onbrand"><svg class="w-5 h-5" aria-hidden="true"><use href="#i-passport"/></svg></span>
+    <span class="font-display text-lg font-extrabold tracking-tight">BLUESKILLS</span>
+  </a>
+  <nav aria-label="Main" class="flex-1 overflow-y-auto p-3">
+    <ul class="space-y-1"><li><a href="../layouts/worker.html" class="flex items-center gap-3 min-h-12 px-3 rounded-xl text-ink hover:bg-surface2 text-base font-semibold"><svg class="w-6 h-6 text-muted" aria-hidden="true"><use href="#i-home"/></svg><span>Home</span></a></li><li><a href="02-jobs.html" class="flex items-center gap-3 min-h-12 px-3 rounded-xl text-ink hover:bg-surface2 text-base font-semibold"><svg class="w-6 h-6 text-muted" aria-hidden="true"><use href="#i-search"/></svg><span>Jobs</span></a></li><li><a href="05-apply.html#tracker" aria-current="page" class="flex items-center gap-3 min-h-12 px-3 rounded-xl bg-brandsoft text-brand text-base font-semibold"><svg class="w-6 h-6" aria-hidden="true"><use href="#i-list"/></svg><span>Applications</span></a></li><li><a href="14-messages.html" class="flex items-center gap-3 min-h-12 px-3 rounded-xl text-ink hover:bg-surface2 text-base font-semibold"><svg class="w-6 h-6 text-muted" aria-hidden="true"><use href="#i-chat"/></svg><span>Messages</span></a></li><li><a href="04-passport.html" class="flex items-center gap-3 min-h-12 px-3 rounded-xl text-ink hover:bg-surface2 text-base font-semibold"><svg class="w-6 h-6 text-muted" aria-hidden="true"><use href="#i-passport"/></svg><span>Passport</span></a></li></ul>
+    <ul class="mt-4 pt-4 border-t border-line space-y-1">
+      <li><a href="10-settings.html" class="flex items-center gap-3 min-h-12 px-3 rounded-xl text-ink hover:bg-surface2 font-semibold"><svg class="w-6 h-6 text-muted" aria-hidden="true"><use href="#i-settings"/></svg><span>Settings</span></a></li>
+      <li><a href="#" class="flex items-center gap-3 min-h-12 px-3 rounded-xl text-ink font-semibold hover:bg-surface2"><svg class="w-6 h-6 text-muted" aria-hidden="true"><use href="#i-help"/></svg><span>Help</span></a></li>
+    </ul>
+  </nav>
+  <div class="p-3 border-t border-line"><div class="flex items-center gap-3 rounded-xl p-2"><span class="grid place-items-center w-11 h-11 shrink-0 rounded-full bg-brandsoft text-brand font-bold">RU</span><div class="min-w-0"><p class="font-semibold truncate">Md Rahim Uddin</p><p class="text-sm text-muted truncate">Electrician</p></div></div></div>
+</aside>
+
+<div class="lg:ps-64">
+  <header class="sticky top-0 z-20 border-b border-line bg-surface/95 backdrop-blur pt-[env(safe-area-inset-top)]">
+    <div class="mx-auto max-w-5xl flex items-center gap-2 h-16 px-4">
+      <a href="../index.html" class="lg:hidden flex items-center gap-2 min-h-11 min-w-11" aria-label="BLUESKILLS home">
+        <span class="grid place-items-center w-9 h-9 rounded-lg bg-brand text-onbrand"><svg class="w-5 h-5" aria-hidden="true"><use href="#i-passport"/></svg></span>
+      </a>
+      <p class="text-lg font-bold truncate">Getting ready to travel</p>
+      <div class="ms-auto flex items-center gap-1">
+        <a href="10-settings.html" class="inline-flex items-center gap-2 min-h-11 px-3 rounded-full border border-linestrong bg-surface font-semibold hover:bg-surface2"><svg class="w-5 h-5 text-muted" aria-hidden="true"><use href="#i-globe"/></svg><span>English</span><span class="sr-only">Language</span></a>
+        <button type="button" data-theme-toggle aria-label="Dark theme" class="grid place-items-center w-11 h-11 rounded-full hover:bg-surface2"><svg class="w-5 h-5" aria-hidden="true"><use href="#i-moon"/></svg></button>
+      </div>
+    </div>
+  </header>
+
+  <main id="main" class="mx-auto max-w-5xl px-4 pt-5 pb-28 lg:pb-12">
+    <a href="05-apply.html#tracker" class="inline-flex items-center gap-1 min-h-11 -ms-2 px-2 rounded-lg font-semibold text-brand hover:bg-brandsoft"><svg class="w-5 h-5 flip-rtl" aria-hidden="true"><use href="#i-back"/></svg>Applications</a>
+
+    <div class="mt-1 flex flex-wrap items-center gap-2">
+      <h1 class="font-display text-2xl sm:text-3xl font-bold me-auto">Getting ready to travel</h1>
+      <span class="inline-flex items-center gap-1 rounded-md border border-dashed border-linestrong px-2 py-0.5 text-[13px] font-semibold text-muted">Sample data</span>
+    </div>
+
+    <div class="mt-6 grid gap-6 lg:grid-cols-[minmax(0,1fr)_20rem] items-start">
+      <div class="space-y-6 min-w-0">
+        <!-- The job this case belongs to -->
+        <article class="rounded-2xl border border-line bg-surface p-4 sm:p-5">
+          <div class="flex flex-wrap items-start gap-3">
+            <span class="grid place-items-center w-12 h-12 shrink-0 rounded-xl bg-stampsoft text-stamp"><svg class="w-7 h-7" aria-hidden="true"><use href="#i-zap"/></svg></span>
+            <div class="min-w-0 flex-1 basis-48">
+              <h2 class="text-xl font-bold leading-snug">Building Electrician</h2>
+              <p class="text-muted">ABC Contracting LLC · Dubai, UAE</p>
+              <p class="text-sm text-muted">Case <span class="font-mono" dir="ltr">MC-26-00412</span> · started 14 Oct 2026</p>
+            </div>
+            <span class="inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-sm font-semibold bg-oksoft text-ok whitespace-nowrap"><svg class="w-4 h-4" aria-hidden="true"><use href="#i-check-circle"/></svg>Offer accepted</span>
+          </div>
+          <p class="mt-3 flex items-start gap-2 text-[15px] text-muted"><svg class="w-5 h-5 shrink-0 mt-0.5" aria-hidden="true"><use href="#i-info"/></svg>You accepted the job offer. These are the steps to go to the UAE. Your application is finished.</p>
+        </article>
+
+        <!-- Do this now -->
+        <section aria-labelledby="now-h" class="rounded-2xl border-2 border-stamp/40 bg-surface p-4 sm:p-5">
+          <h2 id="now-h" class="text-sm font-bold uppercase tracking-wider text-stamp">Do this now</h2>
+          <div class="mt-3 flex items-start gap-4">
+            <span class="grid place-items-center w-14 h-14 shrink-0 rounded-2xl bg-stampsoft text-stamp"><svg class="w-8 h-8" aria-hidden="true"><use href="#i-medical"/></svg></span>
+            <div class="min-w-0">
+              <p id="now-say" class="text-lg font-bold leading-snug">Go for your medical test by 30 October</p>
+              <p class="text-[17px]">GAMCA medical centre, Dhaka. Take your passport. The employer pays.</p>
+            </div>
+          </div>
+          <div class="mt-4 grid gap-2 sm:grid-cols-2">
+            <a href="14-messages.html#c1" class="inline-flex items-center justify-center gap-2 min-h-14 rounded-2xl bg-brand text-onbrand text-lg font-bold hover:bg-brand/90"><svg class="w-6 h-6" aria-hidden="true"><use href="#i-calendar"/></svg>Pick a date</a>
+            <button type="button" data-speak="#now-say" class="inline-flex items-center justify-center gap-2 min-h-14 rounded-2xl bg-brandsoft text-brand text-lg font-semibold hover:bg-brandsoft/70"><svg class="w-6 h-6" aria-hidden="true"><use href="#i-speaker"/></svg>Listen</button>
+          </div>
+          <p class="mt-3 text-[15px] text-muted">Handled by: <b class="text-ink">Imran H.</b> · Northstar Manpower</p>
+        </section>
+
+        <!-- Country stage template: UAE corridor -->
+        <section aria-labelledby="steps-h" class="rounded-2xl border border-line bg-surface p-4 sm:p-5">
+          <div class="flex flex-wrap items-center gap-2"><h2 id="steps-h" class="text-xl font-bold me-auto">All steps</h2><span class="text-muted tabular-nums">Step 2 of 7</span></div>
+          <ol id="steps" class="mt-4"></ol>
+        </section>
+
+        <!-- Documents requested for this case -->
+        <section aria-labelledby="docs-h" class="rounded-2xl border border-line bg-surface p-4 sm:p-5">
+          <h2 id="docs-h" class="text-xl font-bold">Papers they asked for</h2>
+          <p class="text-muted">You choose. Nothing is shared until you say yes.</p>
+          <ul class="mt-3 space-y-3">
+            <li class="rounded-2xl border-2 border-warn/50 p-4">
+              <div class="flex items-start gap-3">
+                <span class="grid place-items-center w-11 h-11 shrink-0 rounded-xl bg-warnsoft text-warn"><svg class="w-6 h-6" aria-hidden="true"><use href="#i-passport"/></svg></span>
+                <div class="min-w-0 flex-1"><p class="text-lg font-bold">Passport copy</p><p class="text-[15px] text-muted">For the work permit. Asked by Northstar Manpower.</p></div>
+              </div>
+              <div class="mt-3 grid grid-cols-2 gap-2">
+                <button type="button" data-toast="Passport copy shared with Northstar Manpower" data-toast-tone="ok" class="inline-flex items-center justify-center gap-2 min-h-12 rounded-xl bg-brand text-onbrand font-bold hover:bg-brand/90"><svg class="w-5 h-5" aria-hidden="true"><use href="#i-check"/></svg>Share</button>
+                <button type="button" class="inline-flex items-center justify-center gap-2 min-h-12 rounded-xl border border-linestrong bg-surface font-semibold hover:bg-surface2"><svg class="w-5 h-5" aria-hidden="true"><use href="#i-chat"/></svg>Ask why</button>
+              </div>
+            </li>
+            <li class="flex items-start gap-3 rounded-2xl border border-line p-4">
+              <span class="grid place-items-center w-11 h-11 shrink-0 rounded-xl bg-surface2 text-muted"><svg class="w-6 h-6" aria-hidden="true"><use href="#i-medical"/></svg></span>
+              <div class="min-w-0 flex-1"><p class="text-lg font-bold">Medical report</p><p class="text-[15px] text-muted">After your test. The centre sends it.</p></div>
+              <span class="inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-sm font-semibold bg-surface2 text-muted whitespace-nowrap"><svg class="w-4 h-4" aria-hidden="true"><use href="#i-clock"/></svg>Later</span>
+            </li>
+            <li class="flex items-start gap-3 rounded-2xl border border-line p-4">
+              <span class="grid place-items-center w-11 h-11 shrink-0 rounded-xl bg-oksoft text-ok"><svg class="w-6 h-6" aria-hidden="true"><use href="#i-file"/></svg></span>
+              <div class="min-w-0 flex-1"><p class="text-lg font-bold">Signed offer letter</p><p class="text-[15px] text-muted">Shared 14 Oct 2026</p></div>
+              <button type="button" class="inline-flex items-center gap-1.5 min-h-11 px-3 rounded-xl text-brand font-semibold hover:bg-brandsoft"><svg class="w-5 h-5" aria-hidden="true"><use href="#i-eye"/></svg>See</button>
+            </li>
+          </ul>
+        </section>
+      </div>
+
+      <aside class="space-y-4">
+        <!-- Money: who pays each step -->
+        <section aria-labelledby="pay-h" class="rounded-2xl border border-line bg-surface overflow-hidden">
+          <div class="bg-oksoft/60 p-4 border-b border-line">
+            <h2 id="pay-h" class="flex items-center gap-1.5 text-sm font-semibold text-ok"><svg class="w-5 h-5" aria-hidden="true"><use href="#i-check-circle"/></svg>You pay</h2>
+            <p class="text-2xl font-bold text-ok">Nothing</p>
+          </div>
+          <dl class="divide-y divide-line px-4">
+            <div class="flex items-center justify-between gap-2 py-2.5"><dt class="flex items-center gap-2"><svg class="w-5 h-5 text-muted" aria-hidden="true"><use href="#i-medical"/></svg>Medical test</dt><dd class="font-semibold">Employer</dd></div>
+            <div class="flex items-center justify-between gap-2 py-2.5"><dt class="flex items-center gap-2"><svg class="w-5 h-5 text-muted" aria-hidden="true"><use href="#i-passport"/></svg>Work permit</dt><dd class="font-semibold">Employer</dd></div>
+            <div class="flex items-center justify-between gap-2 py-2.5"><dt class="flex items-center gap-2"><svg class="w-5 h-5 text-muted" aria-hidden="true"><use href="#i-file"/></svg>Visa</dt><dd class="font-semibold">Employer</dd></div>
+            <div class="flex items-center justify-between gap-2 py-2.5"><dt class="flex items-center gap-2"><svg class="w-5 h-5 text-muted" aria-hidden="true"><use href="#i-plane"/></svg>Air ticket</dt><dd class="font-semibold">Employer</dd></div>
+          </dl>
+        </section>
+
+        <section class="rounded-2xl border border-bad/30 bg-badsoft p-4">
+          <p class="flex items-start gap-2 font-bold"><svg class="w-6 h-6 shrink-0 text-bad" aria-hidden="true"><use href="#i-alert"/></svg>Did anyone ask you for money?</p>
+          <p class="mt-1 text-[15px]">That is not allowed. Tell us. We keep your name private.</p>
+          <button type="button" data-open="report-dlg" class="mt-3 flex w-full items-center justify-center gap-2 min-h-12 rounded-xl bg-bad text-onbrand font-bold hover:bg-bad/90"><svg class="w-5 h-5" aria-hidden="true"><use href="#i-flag"/></svg>Report</button>
+        </section>
+
+        <section class="rounded-2xl border border-line bg-surface p-4">
+          <h2 class="font-bold">Who to talk to</h2>
+          <div class="mt-3 flex items-center gap-3"><span class="grid place-items-center w-11 h-11 shrink-0 rounded-full bg-brandsoft text-brand font-bold">IH</span><div class="min-w-0"><p class="font-semibold">Imran H.</p><p class="text-sm text-muted">Northstar Manpower · licence RA-2026-0418</p></div></div>
+          <a href="14-messages.html#c1" class="mt-3 flex w-full items-center justify-center gap-2 min-h-12 rounded-xl border border-linestrong bg-surface font-semibold hover:bg-surface2"><svg class="w-5 h-5" aria-hidden="true"><use href="#i-chat"/></svg>Message</a>
+        </section>
+      </aside>
+    </div>
+  </main>
+</div>
+
+<!-- Mobile bottom tabs (< lg) -->
+<nav aria-label="Main" class="lg:hidden fixed bottom-0 inset-x-0 z-30 border-t border-line bg-surface pb-[env(safe-area-inset-bottom)]">
+  <ul class="grid grid-cols-5"><li><a href="../layouts/worker.html" class="flex flex-col items-center justify-center gap-0.5 min-h-16 px-1 text-muted hover:text-ink"><svg class="w-6 h-6" aria-hidden="true"><use href="#i-home"/></svg><span class="text-[13px] font-semibold leading-tight text-center">Home</span></a></li><li><a href="02-jobs.html" class="flex flex-col items-center justify-center gap-0.5 min-h-16 px-1 text-muted hover:text-ink"><svg class="w-6 h-6" aria-hidden="true"><use href="#i-search"/></svg><span class="text-[13px] font-semibold leading-tight text-center">Jobs</span></a></li><li><a href="05-apply.html#tracker" aria-current="page" class="relative flex flex-col items-center justify-center gap-0.5 min-h-16 px-1 text-brand"><span class="absolute top-0 inset-x-3 h-1 rounded-b-full bg-brand" aria-hidden="true"></span><svg class="w-6 h-6" aria-hidden="true"><use href="#i-list"/></svg><span class="text-[13px] font-semibold leading-tight text-center">Applied</span></a></li><li><a href="14-messages.html" class="flex flex-col items-center justify-center gap-0.5 min-h-16 px-1 text-muted hover:text-ink"><svg class="w-6 h-6" aria-hidden="true"><use href="#i-chat"/></svg><span class="text-[13px] font-semibold leading-tight text-center">Messages</span></a></li><li><a href="04-passport.html" class="flex flex-col items-center justify-center gap-0.5 min-h-16 px-1 text-muted hover:text-ink"><svg class="w-6 h-6" aria-hidden="true"><use href="#i-passport"/></svg><span class="text-[13px] font-semibold leading-tight text-center">Passport</span></a></li></ul>
+</nav>
+<dialog id="report-dlg" aria-labelledby="rp-t" class="w-[min(92vw,28rem)] rounded-2xl">
+  <form method="dialog" class="rounded-2xl bg-surface p-5">
+    <div class="flex items-center justify-between gap-2"><h2 id="rp-t" class="flex items-center gap-2 text-xl font-bold"><svg class="w-6 h-6 text-bad" aria-hidden="true"><use href="#i-flag"/></svg>Report a problem</h2><button type="button" data-close aria-label="Close" class="grid place-items-center w-11 h-11 rounded-full hover:bg-surface2"><svg class="w-5 h-5" aria-hidden="true"><use href="#i-x"/></svg></button></div>
+    <fieldset class="mt-3 space-y-2">
+      <legend class="font-semibold">What happened?</legend>
+      <label class="flex items-center gap-3 min-h-12 rounded-xl border border-line px-3 cursor-pointer has-[:checked]:border-brand has-[:checked]:bg-brandsoft"><input type="radio" name="why" checked class="w-5 h-5 accent-brand">Someone asked me to pay</label>
+      <label class="flex items-center gap-3 min-h-12 rounded-xl border border-line px-3 cursor-pointer has-[:checked]:border-brand has-[:checked]:bg-brandsoft"><input type="radio" name="why" class="w-5 h-5 accent-brand">They took my passport</label>
+      <label class="flex items-center gap-3 min-h-12 rounded-xl border border-line px-3 cursor-pointer has-[:checked]:border-brand has-[:checked]:bg-brandsoft"><input type="radio" name="why" class="w-5 h-5 accent-brand">The job changed</label>
+      <label class="flex items-center gap-3 min-h-12 rounded-xl border border-line px-3 cursor-pointer has-[:checked]:border-brand has-[:checked]:bg-brandsoft"><input type="radio" name="why" class="w-5 h-5 accent-brand">Something else</label>
+    </fieldset>
+    <button type="button" class="mt-2 inline-flex items-center gap-2 min-h-12 px-3 rounded-xl text-brand font-semibold hover:bg-brandsoft"><svg class="w-5 h-5" aria-hidden="true"><use href="#i-mic"/></svg>Tell us by voice</button>
+    <div class="mt-4 flex flex-col-reverse sm:flex-row sm:justify-end gap-2">
+      <button type="button" data-close class="inline-flex items-center justify-center min-h-12 px-5 rounded-xl border border-linestrong bg-surface font-semibold hover:bg-surface2">Cancel</button>
+      <button type="button" data-close data-toast="Report sent. We will contact you." data-toast-tone="ok" class="inline-flex items-center justify-center gap-2 min-h-12 px-5 rounded-xl bg-bad text-onbrand font-semibold hover:bg-bad/90"><svg class="w-5 h-5" aria-hidden="true"><use href="#i-send"/></svg>Send report</button>
+    </div>
+  </form>
+</dialog>
+
+<script>
+  (function () {
+    const icon = (n, c = 'w-5 h-5') => `<svg class="${c} shrink-0" aria-hidden="true"><use href="#i-${n}"/></svg>`;
+    // UAE corridor template; comes from the country config (screen 22).
+    const STEPS = [['Offer accepted', 'check-circle', '14 Oct'], ['Medical test', 'medical', 'By 30 Oct'], ['Work permit', 'passport', ''], ['Entry visa', 'file', ''], ['Air ticket', 'ticket', ''], ['Travel and arrival', 'plane', ''], ['Start work', 'building', '']];
+    const CUR = 1;
+    document.getElementById('steps').innerHTML = STEPS.map(([s, ic, d], i) => {
+      const done = i < CUR, now = i === CUR, last = i === STEPS.length - 1;
+      const line = last ? '' : `<span class="absolute start-[19px] top-11 bottom-0 w-0.5 ${done ? 'bg-ok' : 'bg-line'}" aria-hidden="true"></span>`;
+      const dot = done ? `<span class="relative grid place-items-center w-10 h-10 shrink-0 rounded-full bg-ok text-onbrand">${icon('check')}</span>`
+        : now ? `<span class="relative grid place-items-center w-10 h-10 shrink-0 rounded-full bg-stamp text-onbrand ring-4 ring-stampsoft">${icon(ic)}</span>`
+        : `<span class="relative grid place-items-center w-10 h-10 shrink-0 rounded-full border-2 border-linestrong bg-surface text-muted">${icon(ic)}</span>`;
+      return `<li${now ? ' aria-current="step"' : ''} class="relative flex gap-3 ${last ? '' : 'pb-5'}">${line}${dot}<div class="min-w-0 pt-1.5"><p class="text-lg leading-tight ${now ? 'font-bold text-stamp' : done ? 'font-semibold' : 'font-semibold text-muted'}">${s}</p>${d ? `<p class="text-[15px] text-muted">${done ? 'Done ' : ''}${d}</p>` : ''}</div></li>`;
+    }).join('');
+  })();
+</script>
+</body>
+</html>

@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Trust Reports · BLUESKILLS</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,700;12..96,800&family=Figtree:wght@400;500;600;700&family=JetBrains+Mono:wght@500;700&display=swap">
+<link rel="stylesheet" href="../assets/tokens.css">
+<script src="https://cdn.tailwindcss.com/3.4.17"></script>
+<script src="../assets/tailwind.config.js"></script>
+<script src="../assets/app.js"></script>
+</head>
+<body class="font-sans">
+<a href="#main" class="skip-link inline-flex items-center min-h-11 rounded-lg bg-brand text-onbrand px-4 font-semibold">Skip to content</a>
+<!-- Staff strip: always visible so nobody forgets this is the admin area -->
+<div class="bg-stampsoft text-stamp border-b border-stamp/30">
+  <p class="flex items-center gap-2 px-4 lg:px-6 min-h-9 text-sm font-semibold"><svg class="w-4 h-4 shrink-0" aria-hidden="true"><use href="#i-lock"/></svg>Staff area · every action is recorded in the audit log</p>
+</div>
+
+<div data-collapsed="false" class="lg:flex">
+  <aside class="sidebar hidden lg:flex sticky top-0 h-screen w-64 shrink-0 flex-col border-e border-line bg-surface transition-[width] duration-200 overflow-hidden">
+    <div class="flex items-center gap-2 h-16 px-4 border-b border-line">
+      <a href="../index.html" class="grid place-items-center w-11 h-11 shrink-0 rounded-lg bg-ink text-bg" aria-label="BLUESKILLS home"><svg class="w-5 h-5" aria-hidden="true"><use href="#i-shield"/></svg></a>
+      <div class="nav-label min-w-0"><p class="font-bold truncate leading-tight">BLUESKILLS Ops</p><p class="text-[13px] text-muted truncate">Admin console</p></div>
+    </div>
+    <nav aria-label="Admin" class="flex-1 overflow-y-auto p-3"><p class="nav-section px-3 pt-1 pb-2 text-[13px] font-bold uppercase tracking-wider text-muted">Verification</p><ul class="space-y-0.5"><li><a href="09-admin-queue.html" title="Queue" class="flex items-center gap-3 min-h-11 px-3 rounded-lg text-ink font-medium hover:bg-surface2"><svg class="w-5 h-5 shrink-0 text-muted" aria-hidden="true"><use href="#i-list"/></svg><span class="nav-label">Queue</span><span class="nav-label ms-auto rounded-full bg-brand text-onbrand text-[13px] font-bold px-2 tabular-nums">27</span></a></li><li><a href="#" title="Organisations" class="flex items-center gap-3 min-h-11 px-3 rounded-lg text-ink font-medium hover:bg-surface2"><svg class="w-5 h-5 shrink-0 text-muted" aria-hidden="true"><use href="#i-building"/></svg><span class="nav-label">Organisations</span></a></li><li><a href="#" title="Agencies &amp; mandates" class="flex items-center gap-3 min-h-11 px-3 rounded-lg text-ink font-medium hover:bg-surface2"><svg class="w-5 h-5 shrink-0 text-muted" aria-hidden="true"><use href="#i-briefcase"/></svg><span class="nav-label">Agencies &amp; mandates</span></a></li><li><a href="#" title="Jobs review" class="flex items-center gap-3 min-h-11 px-3 rounded-lg text-ink font-medium hover:bg-surface2"><svg class="w-5 h-5 shrink-0 text-muted" aria-hidden="true"><use href="#i-file"/></svg><span class="nav-label">Jobs review</span></a></li><li><a href="#" title="SkillShow moderation" class="flex items-center gap-3 min-h-11 px-3 rounded-lg text-ink font-medium hover:bg-surface2"><svg class="w-5 h-5 shrink-0 text-muted" aria-hidden="true"><use href="#i-video"/></svg><span class="nav-label">SkillShow moderation</span></a></li></ul><p class="nav-section px-3 pt-5 pb-2 text-[13px] font-bold uppercase tracking-wider text-muted">Trust &amp; safety</p><ul class="space-y-0.5"><li><a href="21-admin-reports.html" aria-current="page" title="Reports" class="flex items-center gap-3 min-h-11 px-3 rounded-lg bg-brandsoft text-brand font-semibold"><svg class="w-5 h-5 shrink-0" aria-hidden="true"><use href="#i-flag"/></svg><span class="nav-label">Reports</span><span class="nav-label ms-auto rounded-full bg-brand text-onbrand text-[13px] font-bold px-2 tabular-nums">5</span></a></li><li><a href="21-admin-reports.html#appeals" title="Appeals" class="flex items-center gap-3 min-h-11 px-3 rounded-lg text-ink font-medium hover:bg-surface2"><svg class="w-5 h-5 shrink-0 text-muted" aria-hidden="true"><use href="#i-refresh"/></svg><span class="nav-label">Appeals</span></a></li><li><a href="#" title="Audit log" class="flex items-center gap-3 min-h-11 px-3 rounded-lg text-ink font-medium hover:bg-surface2"><svg class="w-5 h-5 shrink-0 text-muted" aria-hidden="true"><use href="#i-history"/></svg><span class="nav-label">Audit log</span></a></li></ul><p class="nav-section px-3 pt-5 pb-2 text-[13px] font-bold uppercase tracking-wider text-muted">Configuration</p><ul class="space-y-0.5"><li><a href="22-admin-config.html" title="Countries" class="flex items-center gap-3 min-h-11 px-3 rounded-lg text-ink font-medium hover:bg-surface2"><svg class="w-5 h-5 shrink-0 text-muted" aria-hidden="true"><use href="#i-globe"/></svg><span class="nav-label">Countries</span></a></li><li><a href="22-admin-config.html#taxonomy" title="Skills taxonomy" class="flex items-center gap-3 min-h-11 px-3 rounded-lg text-ink font-medium hover:bg-surface2"><svg class="w-5 h-5 shrink-0 text-muted" aria-hidden="true"><use href="#i-grid"/></svg><span class="nav-label">Skills taxonomy</span></a></li><li><a href="#" title="Staff &amp; roles" class="flex items-center gap-3 min-h-11 px-3 rounded-lg text-ink font-medium hover:bg-surface2"><svg class="w-5 h-5 shrink-0 text-muted" aria-hidden="true"><use href="#i-users"/></svg><span class="nav-label">Staff &amp; roles</span></a></li></ul></nav>
+    <div class="p-3 border-t border-line">
+      <button type="button" data-sidebar-toggle aria-expanded="true" title="Collapse sidebar" class="flex w-full items-center gap-3 min-h-11 px-3 rounded-lg text-muted font-medium hover:bg-surface2 hover:text-ink"><svg class="w-5 h-5 shrink-0" aria-hidden="true"><use href="#i-panel"/></svg><span class="nav-label">Collapse</span></button>
+    </div>
+  </aside>
+
+  <div class="flex-1 min-w-0">
+    <header class="sticky top-0 z-20 border-b border-line bg-surface/95 backdrop-blur">
+      <div class="flex items-center gap-2 h-16 px-4 lg:px-6">
+        <button type="button" data-open="ws-drawer" class="lg:hidden grid place-items-center w-11 h-11 shrink-0 -ms-2 rounded-lg hover:bg-surface2" aria-label="Open menu"><svg class="w-6 h-6" aria-hidden="true"><use href="#i-menu"/></svg></button>
+        <p class="lg:hidden font-bold truncate">Admin console</p>
+        <label class="relative hidden md:block w-full max-w-sm">
+          <span class="sr-only">Search ID, organisation, worker…</span>
+          <svg class="pointer-events-none absolute start-3 top-1/2 -translate-y-1/2 w-5 h-5 text-muted" aria-hidden="true"><use href="#i-search"/></svg>
+          <input type="search" placeholder="Search ID, organisation, worker…" class="block w-full min-h-11 rounded-lg border border-linestrong bg-surface ps-10 pe-3 text-[15px] text-ink placeholder:text-muted focus:outline-none focus:border-brand focus:ring-[3px] focus:ring-brand/40">
+        </label>
+        <div class="ms-auto flex items-center gap-1">
+          <span class="hidden sm:inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-sm font-semibold bg-brandsoft text-brand"><svg class="w-4 h-4" aria-hidden="true"><use href="#i-lock"/></svg>MFA · Trust &amp; safety officer</span>
+          <button type="button" data-theme-toggle aria-label="Dark theme" class="grid place-items-center w-11 h-11 rounded-lg hover:bg-surface2"><svg class="w-5 h-5" aria-hidden="true"><use href="#i-moon"/></svg></button>
+          <button type="button" class="flex items-center gap-2 min-h-11 ps-1 pe-2 rounded-lg hover:bg-surface2" aria-label="Account: S. Rahman"><span class="grid place-items-center w-9 h-9 rounded-full bg-surface2 font-bold text-sm">SR</span><span class="hidden xl:block text-[15px] font-semibold">S. Rahman</span></button>
+        </div>
+      </div>
+    </header>
+
+    <main id="main" class="px-4 lg:px-6 py-6 max-w-[90rem]">
+      <div class="flex flex-wrap items-center gap-3">
+        <h1 class="font-display text-2xl sm:text-3xl font-bold me-auto">Trust reports</h1>
+        <span class="inline-flex items-center gap-1 rounded-md border border-dashed border-linestrong px-2 py-0.5 text-[13px] font-semibold text-muted">Sample data</span>
+      </div>
+
+      <ul class="mt-5 grid grid-cols-2 xl:grid-cols-4 gap-3">
+        <li class="rounded-xl border border-line bg-surface p-4"><p class="text-sm text-muted">Open reports</p><p class="text-3xl font-bold tabular-nums">5</p><p class="text-sm text-muted">2 new today</p></li>
+        <li class="rounded-xl border border-bad/40 bg-badsoft/50 p-4"><p class="text-sm text-bad font-semibold">High risk</p><p class="text-3xl font-bold tabular-nums text-bad">2</p><p class="text-sm text-muted">Payment asked · first look within 4h</p></li>
+        <li class="rounded-xl border border-line bg-surface p-4"><p class="text-sm text-muted">Open appeals</p><p class="text-3xl font-bold tabular-nums">2</p><p class="text-sm text-muted">Need a second reviewer</p></li>
+        <li class="rounded-xl border border-line bg-surface p-4"><p class="text-sm text-muted">Median time to decision</p><p class="text-3xl font-bold tabular-nums">19h</p><p class="text-sm text-ok font-semibold">Target 48h</p></li>
+      </ul>
+
+      <div role="tablist" aria-label="Case type" class="mt-6 flex gap-1 border-b border-line">
+        <button role="tab" id="tt-1" aria-controls="tp-1" aria-selected="true" class="min-h-12 px-4 border-b-[3px] border-transparent font-semibold text-muted hover:text-ink aria-selected:border-brand aria-selected:text-brand">Reports · 5</button>
+        <button role="tab" id="tt-2" aria-controls="tp-2" aria-selected="false" tabindex="-1" class="min-h-12 px-4 border-b-[3px] border-transparent font-semibold text-muted hover:text-ink aria-selected:border-brand aria-selected:text-brand">Appeals · 2</button>
+      </div>
+
+      <!-- Reports -->
+      <div id="tp-1" role="tabpanel" aria-labelledby="tt-1" class="mt-4"><div class="grid gap-6 xl:grid-cols-[22rem_minmax(0,1fr)] items-start">
+        <section aria-label="Reports list" class="rounded-xl border border-line bg-surface overflow-hidden">
+          <div class="flex items-center gap-2 px-3 py-2 border-b border-line">
+            <label class="relative flex-1"><span class="sr-only">Type</span><select id="f-type" class="appearance-none block w-full min-h-11 rounded-lg border border-linestrong bg-surface ps-3 pe-8 text-[15px] font-semibold focus:outline-none focus:border-brand focus:ring-[3px] focus:ring-brand/40"><option value="">All types</option></select><svg class="pointer-events-none absolute end-2.5 top-1/2 -translate-y-1/2 w-4 h-4 text-muted" aria-hidden="true"><use href="#i-down"/></svg></label>
+          </div>
+          <ul id="r-list" class="divide-y divide-line"></ul>
+        </section>
+        <div id="r-detail" class="min-w-0 space-y-4"></div>
+      </div></div>
+
+      <!-- Appeals -->
+      <div id="tp-2" role="tabpanel" aria-labelledby="tt-2" class="mt-4" hidden>
+        <div class="flex items-start gap-3 rounded-xl border border-brand/30 bg-brandsoft p-3 text-[15px]"><svg class="w-5 h-5 shrink-0 mt-0.5 text-brand" aria-hidden="true"><use href="#i-users"/></svg><p>An appeal must be decided by someone other than the person who made the first decision.</p></div>
+        <ul id="appeals" class="mt-4 grid gap-4 xl:grid-cols-2"></ul>
+      </div>
+    </main>
+  </div>
+</div>
+
+<dialog id="ws-drawer" class="drawer" aria-labelledby="ws-drawer-t">
+  <nav class="h-full bg-surface flex flex-col" aria-label="Admin">
+    <div class="flex items-center gap-2 h-16 px-4 border-b border-line">
+      <span class="grid place-items-center w-10 h-10 shrink-0 rounded-lg bg-ink text-bg"><svg class="w-5 h-5" aria-hidden="true"><use href="#i-shield"/></svg></span>
+      <div class="min-w-0 flex-1"><p id="ws-drawer-t" class="font-bold truncate leading-tight">BLUESKILLS Ops</p><p class="text-[13px] text-muted truncate">Admin console</p></div>
+      <button type="button" data-close aria-label="Close menu" class="grid place-items-center w-11 h-11 rounded-lg hover:bg-surface2"><svg class="w-5 h-5" aria-hidden="true"><use href="#i-x"/></svg></button>
+    </div>
+    <div class="flex-1 overflow-y-auto p-3"><p class="px-3 pt-1 pb-2 text-[13px] font-bold uppercase tracking-wider text-muted">Verification</p><ul class="space-y-0.5"><li><a href="09-admin-queue.html" class="flex items-center gap-3 min-h-12 px-3 rounded-lg font-medium hover:bg-surface2"><svg class="w-5 h-5 text-muted" aria-hidden="true"><use href="#i-list"/></svg>Queue</a></li><li><a href="#" class="flex items-center gap-3 min-h-12 px-3 rounded-lg font-medium hover:bg-surface2"><svg class="w-5 h-5 text-muted" aria-hidden="true"><use href="#i-building"/></svg>Organisations</a></li><li><a href="#" class="flex items-center gap-3 min-h-12 px-3 rounded-lg font-medium hover:bg-surface2"><svg class="w-5 h-5 text-muted" aria-hidden="true"><use href="#i-briefcase"/></svg>Agencies &amp; mandates</a></li><li><a href="#" class="flex items-center gap-3 min-h-12 px-3 rounded-lg font-medium hover:bg-surface2"><svg class="w-5 h-5 text-muted" aria-hidden="true"><use href="#i-file"/></svg>Jobs review</a></li><li><a href="#" class="flex items-center gap-3 min-h-12 px-3 rounded-lg font-medium hover:bg-surface2"><svg class="w-5 h-5 text-muted" aria-hidden="true"><use href="#i-video"/></svg>SkillShow moderation</a></li></ul><p class="px-3 pt-5 pb-2 text-[13px] font-bold uppercase tracking-wider text-muted">Trust &amp; safety</p><ul class="space-y-0.5"><li><a href="21-admin-reports.html" aria-current="page" class="flex items-center gap-3 min-h-12 px-3 rounded-lg bg-brandsoft text-brand font-semibold"><svg class="w-5 h-5" aria-hidden="true"><use href="#i-flag"/></svg>Reports</a></li><li><a href="21-admin-reports.html#appeals" class="flex items-center gap-3 min-h-12 px-3 rounded-lg font-medium hover:bg-surface2"><svg class="w-5 h-5 text-muted" aria-hidden="true"><use href="#i-refresh"/></svg>Appeals</a></li><li><a href="#" class="flex items-center gap-3 min-h-12 px-3 rounded-lg font-medium hover:bg-surface2"><svg class="w-5 h-5 text-muted" aria-hidden="true"><use href="#i-history"/></svg>Audit log</a></li></ul><p class="px-3 pt-5 pb-2 text-[13px] font-bold uppercase tracking-wider text-muted">Configuration</p><ul class="space-y-0.5"><li><a href="22-admin-config.html" class="flex items-center gap-3 min-h-12 px-3 rounded-lg font-medium hover:bg-surface2"><svg class="w-5 h-5 text-muted" aria-hidden="true"><use href="#i-globe"/></svg>Countries</a></li><li><a href="22-admin-config.html#taxonomy" class="flex items-center gap-3 min-h-12 px-3 rounded-lg font-medium hover:bg-surface2"><svg class="w-5 h-5 text-muted" aria-hidden="true"><use href="#i-grid"/></svg>Skills taxonomy</a></li><li><a href="#" class="flex items-center gap-3 min-h-12 px-3 rounded-lg font-medium hover:bg-surface2"><svg class="w-5 h-5 text-muted" aria-hidden="true"><use href="#i-users"/></svg>Staff &amp; roles</a></li></ul></div>
+    <div class="p-3 border-t border-line"><span class="inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-sm font-semibold bg-brandsoft text-brand"><svg class="w-4 h-4" aria-hidden="true"><use href="#i-lock"/></svg>MFA · staff</span></div>
+  </nav>
+</dialog>
+<dialog id="suspend-dlg" aria-labelledby="sp-t" class="w-[min(92vw,30rem)] rounded-2xl">
+  <form method="dialog" class="rounded-2xl bg-surface p-5">
+    <div class="flex items-start gap-3">
+      <span class="grid place-items-center w-11 h-11 shrink-0 rounded-full bg-badsoft text-bad"><svg class="w-6 h-6" aria-hidden="true"><use href="#i-ban"/></svg></span>
+      <div><h2 id="sp-t" class="text-xl font-bold">Suspend <span id="sp-org"></span>?</h2><p class="mt-1 text-muted">All its jobs leave search now. Open applications pause and workers get a message. The organisation can appeal.</p></div>
+    </div>
+    <label for="sp-type" class="mt-4 block font-semibold">Type the organisation name to confirm</label>
+    <input id="sp-type" type="text" autocomplete="off" class="mt-1.5 block w-full min-h-11 rounded-lg border border-linestrong bg-surface px-3 text-[15px] focus:outline-none focus:border-brand focus:ring-[3px] focus:ring-brand/40">
+    <div class="mt-5 flex flex-col-reverse sm:flex-row sm:justify-end gap-2">
+      <button type="button" data-close class="inline-flex items-center justify-center min-h-11 px-4 rounded-lg border border-linestrong bg-surface font-semibold hover:bg-surface2">Cancel</button>
+      <button type="button" id="sp-go" disabled data-close data-toast="Organisation suspended. Logged." data-toast-tone="warn" class="inline-flex items-center justify-center gap-2 min-h-11 px-4 rounded-lg bg-bad text-onbrand font-semibold hover:bg-bad/90 disabled:opacity-50 disabled:pointer-events-none"><svg class="w-5 h-5" aria-hidden="true"><use href="#i-ban"/></svg>Suspend</button>
+    </div>
+  </form>
+</dialog>
+
+<script src="../assets/render.js"></script>
+<script>
+  (function () {
+    const $ = id => document.getElementById(id), { chip, esc, icon } = BSR;
+    const TYPE = { pay: ['Asked to pay', 'bad', 'money'], salary: ['Misleading salary', 'warn', 'scale'], fake: ['Fake job', 'bad', 'x-circle'], imp: ['Impersonation', 'warn', 'user'], harass: ['Harassment', 'bad', 'alert'], cred: ['Fake credential', 'warn', 'award'] };
+    const R = [
+      { id: 'TR-26-0091', type: 'pay', risk: true, age: '2h', org: 'Gulf Build Co.', kind: 'Employer', job: 'QA-MS-0012 · Mason · Doha', reporter: 'Worker · Bangladesh', prior: 2,
+        said: 'A man from the agency called me. He said pay BDT 180,000 for the visa or I lose the job. He sent his bKash number.', files: ['voice-note-0312.m4a', 'screenshot-call-log.jpg'] },
+      { id: 'TR-26-0090', type: 'pay', risk: true, age: '5h', org: 'Northstar Manpower', kind: 'Agency', job: 'UAE-EL-0001 · Building Electrician · Dubai', reporter: 'Worker · Nepal', prior: 0,
+        said: 'Someone said they are from Northstar and asked for money for medical test.', files: ['whatsapp-chat.jpg'], note: 'Possible impersonation: number is not Northstar’s registered contact.' },
+      { id: 'TR-26-0087', type: 'salary', risk: false, age: '1d', org: 'Moravia Steelworks', kind: 'Employer', job: 'CZ-WE-0003 · MIG/MAG Welder · Ostrava', reporter: 'Worker · India', prior: 0,
+        said: 'The contract they sent says CZK 36,000, not 42,000 like the job.', files: ['contract-page-2.pdf'] },
+      { id: 'TR-26-0084', type: 'cred', risk: false, age: '2d', org: '—', kind: 'Worker profile', job: 'Worker WK-58120', reporter: 'Employer · ABC Contracting', prior: 0,
+        said: 'Certificate number does not exist on the NSDA site.', files: ['nsda-lookup.png'] },
+      { id: 'TR-26-0080', type: 'harass', risk: false, age: '3d', org: 'Desert Logistics LLC', kind: 'Employer', job: 'Messages · APP-26-110482', reporter: 'Worker · Pakistan', prior: 1,
+        said: 'The recruiter sends messages late at night and uses bad words.', files: [] }
+    ];
+    const A = [
+      { id: 'AP-26-0012', org: 'Moravia Steelworks', what: 'Job CZ-WE-0007 removed', first: 'Removed for misleading salary (TS-04) by S. Rahman, 3 Oct', said: 'The salary shown was before tax. We updated the job to show gross and net pay and attached the collective agreement.', files: ['collective-agreement.pdf', 'payslip-sample.pdf'], conflict: true },
+      { id: 'AP-26-0011', org: 'Al Noor Facilities', what: 'Mandate MD-1121 rejected', first: 'Rejected: signatory authority not shown (MND-03) by K. Das, 29 Sep', said: 'Ahmed Al-Mansoori is on our authorised signatory list. List attached, stamped by the chamber of commerce.', files: ['signatory-list.pdf'], conflict: false }
+    ];
+    let sel = R[0].id;
+    $('f-type').innerHTML += Object.entries(TYPE).map(([k, [l]]) => `<option value="${k}">${l}</option>`).join('');
+
+    function detail(r) {
+      const [tl, tt, ti] = TYPE[r.type];
+      return `<article class="rounded-xl border border-line bg-surface overflow-hidden">
+        <header class="p-4 border-b border-line"><div class="flex flex-wrap items-center gap-2">${chip(tl, tt, ti)}${r.risk ? chip('High risk', 'bad', 'alert') : ''}<span class="ms-auto font-mono text-sm text-muted">${r.id}</span></div>
+          <h2 class="mt-2 text-xl font-bold">${esc(r.org === '—' ? r.job : r.org)}</h2><p class="text-muted">${esc(r.kind)} · ${esc(r.job)}</p></header>
+        <div class="grid gap-0 md:grid-cols-2 border-b border-line">
+          <section class="p-4 md:border-e border-line"><h3 class="text-[13px] font-bold uppercase tracking-wider text-muted">What the reporter said</h3>
+            <blockquote class="mt-2 border-s-4 border-line ps-3 text-[15px]">${esc(r.said)}</blockquote>
+            <p class="mt-2 flex items-center gap-1.5 text-sm text-muted">${icon('eye-off', 'w-4 h-4')}${esc(r.reporter)} · identity hidden from the organisation</p></section>
+          <section class="p-4"><h3 class="text-[13px] font-bold uppercase tracking-wider text-muted">Evidence</h3>
+            ${r.files.length ? `<ul class="mt-2 space-y-1.5">${r.files.map(f => `<li><button type="button" class="flex w-full items-center gap-2 min-h-11 rounded-lg border border-line px-3 text-start hover:bg-surface2">${icon(/\.(jpg|png)$/.test(f) ? 'image' : /\.m4a$/.test(f) ? 'mic' : 'file', 'w-5 h-5 text-muted')}<span class="truncate font-medium">${f}</span><span class="ms-auto text-sm text-muted">View</span></button></li>`).join('')}</ul>` : '<p class="mt-2 text-[15px] text-muted">No files. Messages are in the linked conversation.</p>'}
+            ${r.prior ? `<p class="mt-3 flex items-start gap-2 rounded-lg bg-warnsoft p-2.5 text-[15px]">${icon('history', 'w-5 h-5 mt-0.5 text-warn')}<span><b>${r.prior} earlier report${r.prior > 1 ? 's' : ''}</b> about this organisation in 90 days</span></p>` : ''}
+            ${r.note ? `<p class="mt-3 flex items-start gap-2 rounded-lg bg-brandsoft p-2.5 text-[15px]">${icon('info', 'w-5 h-5 mt-0.5 text-brand')}${esc(r.note)}</p>` : ''}</section>
+        </div>
+        <section class="p-4 border-b border-line"><h3 class="text-[13px] font-bold uppercase tracking-wider text-muted">Act now</h3>
+          <div class="mt-2 flex flex-wrap gap-2">
+            <button type="button" data-toast="Job hidden from search. Logged." data-toast-tone="warn" class="inline-flex items-center gap-2 min-h-11 px-4 rounded-lg border border-linestrong bg-surface font-semibold hover:bg-surface2">${icon('eye-off')}Pause the job</button>
+            <button type="button" data-toast="Safety message sent to applicants" data-toast-tone="ok" class="inline-flex items-center gap-2 min-h-11 px-4 rounded-lg border border-linestrong bg-surface font-semibold hover:bg-surface2">${icon('shield')}Warn applicants</button>
+            ${r.org !== '—' ? `<button type="button" data-suspend="${esc(r.org)}" class="inline-flex items-center gap-2 min-h-11 px-4 rounded-lg font-semibold text-bad hover:bg-badsoft">${icon('ban')}Suspend organisation</button>` : ''}
+          </div></section>
+        <form class="p-4 space-y-3" onsubmit="return false"><h3 class="text-[13px] font-bold uppercase tracking-wider text-muted">Decision</h3>
+          <fieldset class="grid gap-2 sm:grid-cols-3"><legend class="sr-only">Outcome</legend>
+            ${[['Upheld', 'check-circle'], ['Need information', 'help'], ['Not upheld', 'x-circle']].map(([l, ic], i) => `<label class="flex items-center gap-2 min-h-11 rounded-lg border-2 border-line px-3 cursor-pointer has-[:checked]:border-brand has-[:checked]:bg-brandsoft"><input type="radio" name="out" ${i === 0 ? 'checked' : ''} class="w-5 h-5 accent-brand">${icon(ic, 'w-5 h-5 text-muted')}<span class="font-semibold">${l}</span></label>`).join('')}</fieldset>
+          <div><label for="rc" class="block font-semibold">Reason code</label><div class="relative mt-1.5"><select id="rc" class="appearance-none block w-full min-h-11 rounded-lg border border-linestrong bg-surface ps-3 pe-9 text-[15px] focus:outline-none focus:border-brand focus:ring-[3px] focus:ring-brand/40"><option value="">Choose a reason</option><option ${r.type === 'pay' ? 'selected' : ''}>TS-01 · Worker asked to pay recruitment fee</option><option>TS-02 · Fake or non-existent job</option><option>TS-03 · Impersonation of organisation</option><option ${r.type === 'salary' ? 'selected' : ''}>TS-04 · Pay or conditions differ from Truth Card</option><option>TS-05 · Harassment</option><option>TS-06 · False credential</option></select><svg class="pointer-events-none absolute end-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted" aria-hidden="true"><use href="#i-down"/></svg></div></div>
+          <div class="grid gap-3 md:grid-cols-2">
+            <div><label for="m-org" class="block font-semibold">Message to organisation</label><textarea id="m-org" rows="3" class="mt-1.5 block w-full rounded-lg border border-linestrong bg-surface px-3 py-2 text-[15px] focus:outline-none focus:border-brand focus:ring-[3px] focus:ring-brand/40"></textarea></div>
+            <div><label for="m-rep" class="block font-semibold">Message to reporter</label><textarea id="m-rep" rows="3" class="mt-1.5 block w-full rounded-lg border border-linestrong bg-surface px-3 py-2 text-[15px] focus:outline-none focus:border-brand focus:ring-[3px] focus:ring-brand/40">Thank you for telling us. We have acted on this job. You did the right thing.</textarea></div>
+          </div>
+          <div><label for="m-int" class="block font-semibold">Internal note <span class="font-normal text-muted">(staff only)</span></label><textarea id="m-int" rows="2" class="mt-1.5 block w-full rounded-lg border border-linestrong bg-surface px-3 py-2 text-[15px] focus:outline-none focus:border-brand focus:ring-[3px] focus:ring-brand/40"></textarea></div>
+          <div class="flex flex-wrap items-center gap-2"><p class="text-sm text-muted me-auto">Recorded in the audit log as S. Rahman</p><button type="button" data-toast="Decision saved" data-toast-tone="ok" class="inline-flex items-center gap-2 min-h-11 px-5 rounded-lg bg-brand text-onbrand font-semibold hover:bg-brand/90">${icon('check')}Save decision</button></div>
+        </form></article>`;
+    }
+    function render() {
+      const f = $('f-type').value, rows = R.filter(r => !f || r.type === f);
+      $('r-list').innerHTML = rows.map(r => { const [tl, tt, ti] = TYPE[r.type]; return `<li><button type="button" data-r="${r.id}" ${r.id === sel ? 'aria-current="true"' : ''} class="w-full text-start p-3 ${r.id === sel ? 'bg-brandsoft' : 'hover:bg-surface2/60'}">
+        <span class="flex items-center gap-2">${chip(tl, tt, ti, '!text-[13px] !py-0.5')}${r.risk ? `<span class="w-2.5 h-2.5 rounded-full bg-bad" aria-label="High risk"></span>` : ''}<span class="ms-auto text-sm text-muted tabular-nums">${r.age}</span></span>
+        <span class="mt-1 block font-semibold">${esc(r.org === '—' ? r.job : r.org)}</span><span class="block text-sm text-muted truncate">${esc(r.job)}</span></button></li>`; }).join('');
+      const r = R.find(x => x.id === sel); $('r-detail').innerHTML = r ? detail(r) : '';
+    }
+    $('appeals').innerHTML = A.map(a => `<li class="rounded-xl border border-line bg-surface overflow-hidden">
+      <header class="p-4 border-b border-line"><div class="flex items-center gap-2">${chip('Appeal', 'brand', 'refresh')}<span class="ms-auto font-mono text-sm text-muted">${a.id}</span></div><h2 class="mt-2 text-lg font-bold">${esc(a.org)}</h2><p class="text-muted">${esc(a.what)}</p></header>
+      <dl class="p-4 space-y-3 text-[15px]"><div><dt class="text-[13px] font-bold uppercase tracking-wider text-muted">First decision</dt><dd>${esc(a.first)}</dd></div>
+        <div><dt class="text-[13px] font-bold uppercase tracking-wider text-muted">Organisation says</dt><dd><blockquote class="border-s-4 border-line ps-3">${esc(a.said)}</blockquote></dd></div>
+        <div><dt class="text-[13px] font-bold uppercase tracking-wider text-muted">New evidence</dt><dd class="flex flex-wrap gap-2 mt-1">${a.files.map(f => `<button type="button" class="inline-flex items-center gap-1.5 min-h-11 px-3 rounded-lg border border-line hover:bg-surface2">${icon('file', 'w-4 h-4 text-muted')}${f}</button>`).join('')}</dd></div></dl>
+      <footer class="p-4 border-t border-line">${a.conflict ? `<p class="flex items-start gap-2 rounded-lg bg-warnsoft p-2.5 text-[15px]">${icon('lock', 'w-5 h-5 mt-0.5 text-warn')}You made the first decision. Another officer must decide this appeal.</p><button type="button" class="mt-2 inline-flex items-center gap-2 min-h-11 px-4 rounded-lg border border-linestrong bg-surface font-semibold hover:bg-surface2">${icon('users')}Assign to another officer</button>`
+        : `<div class="flex flex-wrap gap-2"><button type="button" data-toast="Appeal upheld: decision reversed" data-toast-tone="ok" class="inline-flex items-center gap-2 min-h-11 px-4 rounded-lg bg-brand text-onbrand font-semibold hover:bg-brand/90">${icon('check')}Reverse decision</button><button type="button" data-toast="Appeal rejected: decision stands" class="inline-flex items-center gap-2 min-h-11 px-4 rounded-lg border border-linestrong bg-surface font-semibold hover:bg-surface2">Keep decision</button></div>`}</footer></li>`).join('');
+
+    document.addEventListener('click', e => {
+      const b = e.target.closest('[data-r]'), s = e.target.closest('[data-suspend]');
+      if (b) { sel = b.dataset.r; render(); if (!matchMedia('(min-width: 1280px)').matches) $('r-detail').scrollIntoView({ behavior: 'smooth' }); }
+      if (s) { $('sp-org').textContent = s.dataset.suspend; $('sp-org').dataset.name = s.dataset.suspend; $('sp-type').value = ''; $('sp-go').disabled = true; $('suspend-dlg').showModal(); }
+    });
+    $('sp-type').addEventListener('input', e => { $('sp-go').disabled = e.target.value.trim() !== $('sp-org').dataset.name; });
+    $('f-type').addEventListener('change', render);
+    render();
+    if (location.hash === '#appeals') document.addEventListener('DOMContentLoaded', () => $('tt-2').click());
+  })();
+</script>
+</body>
+</html>

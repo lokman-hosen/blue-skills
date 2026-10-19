@@ -146,6 +146,18 @@ type Stage = 'applied' | 'reviewed' | 'qualified' | 'shortlisted' | 'interview' 
 | 08 Pipeline | `Pages/Org/Pipeline/Show.tsx` | KanbanBoard, BulkActionBar, RejectDialog, BottomSheet (move) |
 | 09 Verification queue | `Pages/Admin/Verification/Index.tsx` | AdminLayout, QueueList, Tabs, DocumentViewer, ComparisonTable, DecisionPanel, AuditLog |
 | 10 Settings & privacy | `Pages/Worker/Settings.tsx` | LanguagePicker, Switch, Radio, SaveBar, Modal |
+| 11 Profile setup | `Pages/Worker/Onboarding/Basics.tsx`, `Pages/Worker/Onboarding/Review.tsx` | WorkerLayout (`hideTabs`), ChoiceTileGroup (country, trade), TextInput, ProgressBar, BottomSheet (edit field). Every generated line needs an explicit Yes before the Passport is created. |
+| 12 SkillShow | `Pages/Worker/SkillShow/Create.tsx` | FileUploader (`camera`, video), length check from video metadata (max 30 s), FilterChip skill tags (max 3), Alert. Status after send: "Being checked". |
+| 13 Mobility case (worker) | `Pages/Worker/Cases/Show.tsx` | StageTracker (country template), NextStepPanel, ConsentList (per-document request), StatCard "You pay", ReportJobDialog (case reasons) |
+| 14 Messages | `Pages/Worker/Messages/Index.tsx` (+ `Show.tsx` on phones) | ConversationList, MessageBubble, InterviewSlotCard, Composer (voice + text). Phone never shown. |
+| 15 Public jobs | `Pages/Jobs/Index.tsx` | PublicLayout, SearchInput, FilterChip, JobCard + TruthCard (`showMatch=false`), sign-in banner, ReportJobDialog |
+| 16 Org registration | `Pages/Auth/OrgRegister.tsx` | AuthLayout (`max-w-2xl`), WizardStepper, Field…, MFA setup (QR + key + OtpInput), FileUploader per evidence item, status timeline |
+| 17 Licence & mandates | `Pages/Org/Agency/Mandates.tsx` | WorkspaceLayout (agency), licence card (`.passport-cover`), DataTable, StatusChip (`mandate`), BottomSheet (add mandate) |
+| 18 Agency cases | `Pages/Org/Agency/Cases/Index.tsx` | StatCard, DataTable, case panel (StageTracker compact list, document chips, request Modal). Panel at `xl+`, BottomSheet below. |
+| 19 Cohorts | `Pages/Org/Institute/Cohorts.tsx` | WorkspaceLayout (institute), StatCard, ProgressBar, Invite sheet with Tabs (link · QR · WhatsApp) |
+| 20 Graduates | `Pages/Org/Institute/Graduates.tsx` | Tabs, DataTable (`selectable`), BulkActionBar, Modal (attest needs a confirm tick), Modal (can't-confirm reason) |
+| 21 Trust reports | `Pages/Admin/Reports/Index.tsx` | AdminLayout, Tabs (reports · appeals), report list + detail, interim actions, DecisionPanel (reason codes TS-01…06), typed-name confirm for suspension. Appeals block the original decider. |
+| 22 Countries & taxonomy | `Pages/Admin/Config/Countries.tsx`, `Pages/Admin/Config/Taxonomy.tsx` | Switch, Radio, Checkbox grid, reorderable step list (up/down buttons, no drag-only), SaveBar ("send for approval"), TreeView (`role="tree"`) + node editor |
 
 ## Rules every component keeps
 - 44px minimum target (worker main actions 56px), body text ≥ 16px on worker screens, nothing under 13px.

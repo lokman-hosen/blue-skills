@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Register Organisation · BLUESKILLS</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,700;12..96,800&family=Figtree:wght@400;500;600;700&family=JetBrains+Mono:wght@500;700&display=swap">
+<link rel="stylesheet" href="../assets/tokens.css">
+<script src="https://cdn.tailwindcss.com/3.4.17"></script>
+<script src="../assets/tailwind.config.js"></script>
+<script src="../assets/app.js"></script>
+</head>
+<body class="font-sans">
+<a href="#main" class="skip-link inline-flex items-center min-h-11 rounded-lg bg-brand text-onbrand px-4 font-semibold">Skip to content</a>
+
+<div class="min-h-screen flex flex-col bg-[radial-gradient(circle_at_top,rgb(var(--brand-soft))_0,transparent_60%)]">
+  <header class="flex items-center gap-2 px-4 h-16 max-w-5xl w-full mx-auto">
+    <a href="01-home.html" class="flex items-center gap-2 min-h-11 min-w-11" aria-label="BLUESKILLS home">
+      <span class="grid place-items-center w-9 h-9 rounded-lg bg-brand text-onbrand"><svg class="w-5 h-5" aria-hidden="true"><use href="#i-passport"/></svg></span>
+      <span class="font-display text-lg font-extrabold tracking-tight">BLUESKILLS</span>
+    </a>
+    <div class="ms-auto flex items-center gap-1">
+      <a href="03-signin-voice.html" class="hidden sm:inline-flex items-center min-h-11 px-3 rounded-lg font-semibold text-brand hover:bg-brandsoft">Already registered? Sign in</a>
+      <button type="button" data-theme-toggle aria-label="Dark theme" class="grid place-items-center w-11 h-11 rounded-full hover:bg-surface2"><svg class="w-5 h-5" aria-hidden="true"><use href="#i-moon"/></svg></button>
+    </div>
+  </header>
+
+  <main id="main" class="flex-1 px-4 py-6">
+    <div class="mx-auto w-full max-w-2xl">
+      <div class="flex flex-wrap items-center gap-2">
+        <h1 class="font-display text-2xl sm:text-3xl font-bold me-auto">Register your organisation</h1>
+        <span class="inline-flex items-center gap-1 rounded-md border border-dashed border-linestrong px-2 py-0.5 text-[13px] font-semibold text-muted">Sample data</span>
+      </div>
+      <p class="mt-1 text-muted">Employers, licensed agencies and training institutes are checked by a person before they can see workers or publish jobs.</p>
+
+      <!-- Stepper: full at sm+, compact below -->
+      <nav aria-label="Steps" class="mt-5">
+        <div class="sm:hidden">
+          <p class="font-semibold"><span id="st-m">Step 1 of 4</span> · <span id="st-name" class="text-brand">Account</span></p>
+          <div class="mt-2 h-2 rounded-full bg-surface2 overflow-hidden"><div id="st-bar" class="h-full rounded-full bg-brand transition-all" style="width:25%"></div></div>
+        </div>
+        <ol id="stepper" class="hidden sm:flex items-center gap-2"></ol>
+      </nav>
+
+      <div class="mt-5 rounded-3xl border border-line bg-surface shadow-[0_20px_50px_-30px_rgb(var(--ink)/.35)] p-5 sm:p-8">
+        <!-- 1 · Account: business email, password, MFA -->
+        <section data-wstep="1" aria-labelledby="w1-h">
+          <h2 id="w1-h" tabindex="-1" class="text-xl font-bold">Your account</h2>
+          <form class="mt-4 space-y-4" onsubmit="return false">
+            <div class="grid gap-4 sm:grid-cols-2">
+              <div><label for="r-name" class="block font-semibold">Your full name</label><input id="r-name" type="text" autocomplete="name" value="Sara Khan" class="mt-1.5 block w-full min-h-12 rounded-xl border border-linestrong bg-surface px-4 text-base text-ink focus:outline-none focus:border-brand focus:ring-[3px] focus:ring-brand/40"></div>
+              <div><label for="r-role" class="block font-semibold">Job title</label><input id="r-role" type="text" value="HR Manager" class="mt-1.5 block w-full min-h-12 rounded-xl border border-linestrong bg-surface px-4 text-base text-ink focus:outline-none focus:border-brand focus:ring-[3px] focus:ring-brand/40"></div>
+            </div>
+            <div>
+              <label for="r-email" class="block font-semibold">Business email</label>
+              <p id="r-email-h" class="text-sm text-muted">Use your company domain. Free email (Gmail, Yahoo) slows down checking.</p>
+              <input id="r-email" type="email" autocomplete="username" value="sara.khan@abc-contracting.ae" aria-describedby="r-email-h" class="mt-1.5 block w-full min-h-12 rounded-xl border border-linestrong bg-surface px-4 text-base text-ink focus:outline-none focus:border-brand focus:ring-[3px] focus:ring-brand/40" dir="ltr">
+            </div>
+            <div>
+              <label for="r-pass" class="block font-semibold">Password</label>
+              <input id="r-pass" type="password" autocomplete="new-password" aria-describedby="r-pass-h" class="mt-1.5 block w-full min-h-12 rounded-xl border border-linestrong bg-surface px-4 text-base text-ink focus:outline-none focus:border-brand focus:ring-[3px] focus:ring-brand/40">
+              <p id="r-pass-h" class="mt-1 text-sm text-muted">At least 12 characters</p>
+            </div>
+            <fieldset class="rounded-2xl border border-line p-4">
+              <legend class="px-1 font-semibold">Two-step sign-in (required)</legend>
+              <div class="flex flex-col sm:flex-row gap-4">
+                <div class="grid place-items-center w-36 h-36 shrink-0 rounded-xl border border-line bg-white text-[#0e162e] mx-auto sm:mx-0" role="img" aria-label="QR code for your authenticator app"><svg class="w-28 h-28" aria-hidden="true"><use href="#i-qr"/></svg></div>
+                <div class="min-w-0 flex-1">
+                  <ol class="list-decimal ps-5 space-y-1 text-[15px]"><li>Open an authenticator app (Google Authenticator, Microsoft Authenticator, 1Password).</li><li>Scan the code, or type the key below.</li><li>Enter the 6-digit code it shows.</li></ol>
+                  <p class="mt-2 text-sm text-muted">Key: <span class="font-mono text-ink" dir="ltr">JBSW Y3DP EHPK 3PXP</span></p>
+                  <label for="r-mfa" class="mt-3 block font-semibold">6-digit code</label>
+                  <input id="r-mfa" inputmode="numeric" autocomplete="one-time-code" maxlength="6" placeholder="123456" dir="ltr" class="mt-1.5 block w-40 min-h-12 rounded-xl border border-linestrong bg-surface px-4 font-mono text-lg tracking-[.3em] text-ink focus:outline-none focus:border-brand focus:ring-[3px] focus:ring-brand/40">
+                </div>
+              </div>
+            </fieldset>
+          </form>
+        </section>
+
+        <!-- 2 · Organisation details -->
+        <section data-wstep="2" aria-labelledby="w2-h" hidden>
+          <h2 id="w2-h" tabindex="-1" class="text-xl font-bold">About the organisation</h2>
+          <form class="mt-4 space-y-5" onsubmit="return false">
+            <fieldset>
+              <legend class="font-semibold">You are</legend>
+              <div class="mt-2 grid gap-2 sm:grid-cols-3">
+                <label class="flex flex-col gap-1 rounded-xl border-2 border-line p-3 cursor-pointer has-[:checked]:border-brand has-[:checked]:bg-brandsoft has-[:focus-visible]:ring-[3px] has-[:focus-visible]:ring-brand/50"><input type="radio" name="kind" value="employer" checked class="sr-only"><svg class="w-6 h-6 text-brand" aria-hidden="true"><use href="#i-building"/></svg><span class="font-semibold">Employer</span><span class="text-sm text-muted">You hire workers directly</span></label>
+                <label class="flex flex-col gap-1 rounded-xl border-2 border-line p-3 cursor-pointer has-[:checked]:border-brand has-[:checked]:bg-brandsoft has-[:focus-visible]:ring-[3px] has-[:focus-visible]:ring-brand/50"><input type="radio" name="kind" value="agency" class="sr-only"><svg class="w-6 h-6 text-brand" aria-hidden="true"><use href="#i-briefcase"/></svg><span class="font-semibold">Licensed agency</span><span class="text-sm text-muted">You recruit for employers</span></label>
+                <label class="flex flex-col gap-1 rounded-xl border-2 border-line p-3 cursor-pointer has-[:checked]:border-brand has-[:checked]:bg-brandsoft has-[:focus-visible]:ring-[3px] has-[:focus-visible]:ring-brand/50"><input type="radio" name="kind" value="institute" class="sr-only"><svg class="w-6 h-6 text-brand" aria-hidden="true"><use href="#i-school"/></svg><span class="font-semibold">Training institute</span><span class="text-sm text-muted">You train and attest graduates</span></label>
+              </div>
+            </fieldset>
+            <div class="grid gap-4 sm:grid-cols-2">
+              <div class="sm:col-span-2"><label for="o-legal" class="block font-semibold">Legal name</label><p id="o-legal-h" class="text-sm text-muted">Exactly as on the trade licence</p><input id="o-legal" type="text" value="ABC Contracting LLC" aria-describedby="o-legal-h" class="mt-1.5 block w-full min-h-12 rounded-xl border border-linestrong bg-surface px-4 text-base text-ink focus:outline-none focus:border-brand focus:ring-[3px] focus:ring-brand/40"></div>
+              <div>
+                <label for="o-country" class="block font-semibold">Country of registration</label>
+                <div class="relative mt-1.5"><select id="o-country" class="appearance-none block w-full min-h-12 rounded-xl border border-linestrong bg-surface ps-4 pe-10 text-base text-ink focus:outline-none focus:border-brand focus:ring-[3px] focus:ring-brand/40"><option selected>United Arab Emirates</option><option>Saudi Arabia</option><option>Poland</option><option>Czechia</option><option>Japan</option><option>Bangladesh</option></select><svg class="pointer-events-none absolute end-3 top-1/2 -translate-y-1/2 w-5 h-5 text-muted" aria-hidden="true"><use href="#i-down"/></svg></div>
+              </div>
+              <div><label for="o-reg" class="block font-semibold">Trade licence number</label><input id="o-reg" type="text" value="DED-784512" dir="ltr" class="mt-1.5 block w-full min-h-12 rounded-xl border border-linestrong bg-surface px-4 font-mono text-base text-ink focus:outline-none focus:border-brand focus:ring-[3px] focus:ring-brand/40"></div>
+              <div id="agency-only" class="sm:col-span-2 hidden"><label for="o-lic" class="block font-semibold">Recruitment licence number</label><p id="o-lic-h" class="text-sm text-muted">Issued by the recruiting country’s labour ministry</p><input id="o-lic" type="text" placeholder="RA-2026-0000" dir="ltr" aria-describedby="o-lic-h" class="mt-1.5 block w-full min-h-12 rounded-xl border border-linestrong bg-surface px-4 font-mono text-base text-ink placeholder:text-muted focus:outline-none focus:border-brand focus:ring-[3px] focus:ring-brand/40"></div>
+              <div class="sm:col-span-2"><label for="o-addr" class="block font-semibold">Registered address</label><textarea id="o-addr" rows="2" class="mt-1.5 block w-full rounded-xl border border-linestrong bg-surface px-4 py-3 text-base text-ink focus:outline-none focus:border-brand focus:ring-[3px] focus:ring-brand/40">Office 1204, Al Quoz Industrial 3, Dubai</textarea></div>
+              <div><label for="o-web" class="block font-semibold">Website <span class="font-normal text-muted">(optional)</span></label><input id="o-web" type="url" value="https://abc-contracting.ae" dir="ltr" class="mt-1.5 block w-full min-h-12 rounded-xl border border-linestrong bg-surface px-4 text-base text-ink focus:outline-none focus:border-brand focus:ring-[3px] focus:ring-brand/40"></div>
+              <div><label for="o-size" class="block font-semibold">Number of staff</label><div class="relative mt-1.5"><select id="o-size" class="appearance-none block w-full min-h-12 rounded-xl border border-linestrong bg-surface ps-4 pe-10 text-base text-ink focus:outline-none focus:border-brand focus:ring-[3px] focus:ring-brand/40"><option>1–49</option><option>50–249</option><option selected>250–999</option><option>1,000+</option></select><svg class="pointer-events-none absolute end-3 top-1/2 -translate-y-1/2 w-5 h-5 text-muted" aria-hidden="true"><use href="#i-down"/></svg></div></div>
+            </div>
+          </form>
+        </section>
+
+        <!-- 3 · Evidence -->
+        <section data-wstep="3" aria-labelledby="w3-h" hidden>
+          <h2 id="w3-h" tabindex="-1" class="text-xl font-bold">Proof of registration</h2>
+          <p class="mt-1 text-muted">PDF, JPG or PNG, up to 10 MB each. Only BLUESKILLS reviewers see these files.</p>
+          <ul class="mt-4 space-y-4">
+            <li class="rounded-2xl border border-line p-4">
+              <div class="flex flex-wrap items-start gap-3"><span class="grid place-items-center w-11 h-11 shrink-0 rounded-xl bg-brandsoft text-brand"><svg class="w-6 h-6" aria-hidden="true"><use href="#i-file"/></svg></span><div class="min-w-0 flex-1 basis-40"><p class="font-semibold">Trade licence <span class="text-bad">*</span></p><p class="text-sm text-muted">Must show the legal name and licence number you entered</p></div>
+                <label class="inline-flex items-center gap-2 min-h-11 px-4 rounded-lg border border-linestrong bg-surface font-semibold cursor-pointer hover:bg-surface2 focus-within:ring-[3px] focus-within:ring-brand/40"><svg class="w-5 h-5" aria-hidden="true"><use href="#i-upload"/></svg>Choose file<input type="file" accept=".pdf,image/*" data-file-list="fl-1" data-max-mb="10" class="sr-only"></label></div>
+              <ul id="fl-1" class="mt-3 space-y-2"><li class="flex items-center gap-3 rounded-xl border border-line bg-surface p-3"><svg class="w-6 h-6 shrink-0 text-ok" aria-hidden="true"><use href="#i-check-circle"/></svg><div class="min-w-0 flex-1"><p class="font-semibold truncate">DED-trade-licence-2026.pdf</p><p class="text-sm text-muted">1.4 MB · Ready</p></div><button type="button" aria-label="Remove file" class="grid place-items-center w-11 h-11 rounded-lg text-muted hover:bg-badsoft hover:text-bad"><svg class="w-5 h-5" aria-hidden="true"><use href="#i-trash"/></svg></button></li></ul>
+            </li>
+            <li class="rounded-2xl border border-line p-4">
+              <div class="flex flex-wrap items-start gap-3"><span class="grid place-items-center w-11 h-11 shrink-0 rounded-xl bg-brandsoft text-brand"><svg class="w-6 h-6" aria-hidden="true"><use href="#i-user"/></svg></span><div class="min-w-0 flex-1 basis-40"><p class="font-semibold">Proof you can act for the organisation <span class="text-bad">*</span></p><p class="text-sm text-muted">Authorised signatory list, or a signed letter on company paper</p></div>
+                <label class="inline-flex items-center gap-2 min-h-11 px-4 rounded-lg border border-linestrong bg-surface font-semibold cursor-pointer hover:bg-surface2 focus-within:ring-[3px] focus-within:ring-brand/40"><svg class="w-5 h-5" aria-hidden="true"><use href="#i-upload"/></svg>Choose file<input type="file" accept=".pdf,image/*" data-file-list="fl-2" data-max-mb="10" class="sr-only"></label></div>
+              <ul id="fl-2" class="mt-3 space-y-2"></ul>
+              <p id="fl-2-err" class="mt-2 hidden items-center gap-1.5 font-medium text-bad"><svg class="w-5 h-5 shrink-0" aria-hidden="true"><use href="#i-alert"/></svg>Add this file to continue</p>
+            </li>
+            <li id="agency-ev" class="rounded-2xl border border-line p-4 hidden">
+              <div class="flex flex-wrap items-start gap-3"><span class="grid place-items-center w-11 h-11 shrink-0 rounded-xl bg-brandsoft text-brand"><svg class="w-6 h-6" aria-hidden="true"><use href="#i-award"/></svg></span><div class="min-w-0 flex-1 basis-40"><p class="font-semibold">Recruitment licence <span class="text-bad">*</span></p><p class="text-sm text-muted">Each job also needs a mandate letter from the employer</p></div>
+                <label class="inline-flex items-center gap-2 min-h-11 px-4 rounded-lg border border-linestrong bg-surface font-semibold cursor-pointer hover:bg-surface2 focus-within:ring-[3px] focus-within:ring-brand/40"><svg class="w-5 h-5" aria-hidden="true"><use href="#i-upload"/></svg>Choose file<input type="file" accept=".pdf,image/*" data-file-list="fl-3" data-max-mb="10" class="sr-only"></label></div>
+              <ul id="fl-3" class="mt-3 space-y-2"></ul>
+            </li>
+          </ul>
+          <label class="mt-5 flex items-start gap-3 rounded-xl border border-line p-3 cursor-pointer has-[:checked]:border-brand has-[:checked]:bg-brandsoft">
+            <input id="attest" type="checkbox" class="mt-0.5 w-5 h-5 shrink-0 accent-brand">
+            <span>I confirm these documents are genuine and that our organisation will never charge workers recruitment fees.</span>
+          </label>
+          <p id="attest-err" class="mt-2 hidden items-center gap-1.5 font-medium text-bad"><svg class="w-5 h-5 shrink-0" aria-hidden="true"><use href="#i-alert"/></svg>Tick to confirm</p>
+        </section>
+
+        <!-- 4 · Submitted: under review -->
+        <section data-wstep="4" aria-labelledby="w4-h" hidden>
+          <div class="flex items-start gap-3">
+            <span class="grid place-items-center w-12 h-12 shrink-0 rounded-full bg-warnsoft text-warn"><svg class="w-6 h-6" aria-hidden="true"><use href="#i-clock"/></svg></span>
+            <div><h2 id="w4-h" tabindex="-1" class="text-xl font-bold">We are checking your organisation</h2><p class="text-muted">Usually within 2 working days. We email <b class="text-ink" dir="ltr">sara.khan@abc-contracting.ae</b> when it is done.</p></div>
+          </div>
+          <ol class="mt-5 relative border-s-2 border-line ms-3 space-y-5">
+            <li class="ps-6 relative"><span class="absolute -start-[13px] top-0 grid place-items-center w-6 h-6 rounded-full bg-ok text-onbrand"><svg class="w-3.5 h-3.5" aria-hidden="true"><use href="#i-check"/></svg></span><p class="font-semibold">Submitted</p><p class="text-sm text-muted">19 Oct 2026, 10:42</p></li>
+            <li class="ps-6 relative" aria-current="step"><span class="absolute -start-[13px] top-0 grid place-items-center w-6 h-6 rounded-full bg-stamp text-onbrand ring-4 ring-stampsoft"><svg class="w-3.5 h-3.5" aria-hidden="true"><use href="#i-clock"/></svg></span><p class="font-semibold text-stamp">Reviewer checks documents</p><p class="text-sm text-muted">Licence, signatory, company registry</p></li>
+            <li class="ps-6 relative"><span class="absolute -start-[13px] top-0 grid place-items-center w-6 h-6 rounded-full border-2 border-linestrong bg-surface"></span><p class="font-semibold text-muted">Decision</p><p class="text-sm text-muted">Approved, or we ask for more information</p></li>
+          </ol>
+          <div class="mt-6 grid gap-3 sm:grid-cols-2">
+            <section aria-labelledby="now-h" class="rounded-2xl border border-line p-4">
+              <h3 id="now-h" class="flex items-center gap-2 font-bold"><svg class="w-5 h-5 text-ok" aria-hidden="true"><use href="#i-check-circle"/></svg>You can do now</h3>
+              <ul class="mt-2 space-y-1.5 text-[15px]"><li>Draft job posts</li><li>Invite your team</li><li>Set up your company profile</li></ul>
+            </section>
+            <section aria-labelledby="later-h" class="rounded-2xl border border-line bg-surface2/60 p-4">
+              <h3 id="later-h" class="flex items-center gap-2 font-bold"><svg class="w-5 h-5 text-muted" aria-hidden="true"><use href="#i-lock"/></svg>Unlocks after approval</h3>
+              <ul class="mt-2 space-y-1.5 text-[15px] text-muted"><li>Publish jobs</li><li>Search worker profiles</li><li>“Employer verified” badge</li></ul>
+            </section>
+          </div>
+          <a href="06-post-job.html" class="mt-6 flex w-full items-center justify-center gap-2 min-h-12 rounded-xl bg-brand text-onbrand font-semibold hover:bg-brand/90"><svg class="w-5 h-5" aria-hidden="true"><use href="#i-plus"/></svg>Start a draft job</a>
+        </section>
+
+        <div id="nav-btns" class="mt-8 flex items-center gap-2 border-t border-line pt-5">
+          <button type="button" id="prev" class="inline-flex items-center gap-2 min-h-12 px-4 rounded-xl border border-linestrong bg-surface font-semibold hover:bg-surface2 disabled:opacity-50 disabled:pointer-events-none"><svg class="w-5 h-5 flip-rtl" aria-hidden="true"><use href="#i-back"/></svg>Back</button>
+          <button type="button" id="next" class="ms-auto inline-flex items-center gap-2 min-h-12 px-5 rounded-xl bg-brand text-onbrand font-semibold hover:bg-brand/90"><span id="next-l">Continue</span><svg class="w-5 h-5 flip-rtl" aria-hidden="true"><use href="#i-arrow"/></svg></button>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <footer class="px-4 py-4 text-center text-sm text-muted">
+    <a href="#" class="inline-flex items-center justify-center min-h-11 min-w-11 px-2 hover:text-ink">Help</a> · <a href="#" class="inline-flex items-center justify-center min-h-11 min-w-11 px-2 hover:text-ink">Privacy</a> · <a href="#" class="inline-flex items-center justify-center min-h-11 min-w-11 px-2 hover:text-ink">Terms</a>
+  </footer>
+</div>
+<script>
+  (function () {
+    const $ = id => document.getElementById(id), icon = (n, c = 'w-4 h-4') => `<svg class="${c} shrink-0" aria-hidden="true"><use href="#i-${n}"/></svg>`;
+    const STEPS = ['Account', 'Organisation', 'Documents', 'Review'], KEYS = ['account', 'company', 'evidence', 'review'];
+    let step = 1;
+    function go(n, focus = true) {
+      step = Math.min(4, Math.max(1, n));
+      document.querySelectorAll('[data-wstep]').forEach(s => { s.hidden = +s.dataset.wstep !== step; });
+      $('stepper').innerHTML = STEPS.map((s, i) => {
+        const k = i + 1, done = k < step, now = k === step;
+        return `<li class="flex items-center gap-2 ${k < 4 ? 'flex-1' : ''}"><span ${now ? 'aria-current="step"' : ''} class="flex items-center gap-2 min-h-11 font-semibold ${now ? 'text-brand' : done ? 'text-ink' : 'text-muted'}"><span class="grid place-items-center w-8 h-8 shrink-0 rounded-full ${done ? 'bg-ok text-onbrand' : now ? 'bg-brand text-onbrand' : 'border-2 border-linestrong'} text-sm font-bold">${done ? icon('check') : k}</span><span class="whitespace-nowrap">${s}</span></span>${k < 4 ? `<span class="h-0.5 flex-1 min-w-4 ${done ? 'bg-ok' : 'bg-line'}" aria-hidden="true"></span>` : ''}</li>`;
+      }).join('');
+      $('st-m').textContent = `Step ${step} of 4`; $('st-name').textContent = STEPS[step - 1]; $('st-bar').style.width = step * 25 + '%';
+      $('prev').disabled = step === 1; $('nav-btns').classList.toggle('hidden', step === 4);
+      $('next-l').textContent = step === 3 ? 'Submit for review' : 'Continue';
+      if (location.hash.slice(1) !== KEYS[step - 1]) history.replaceState(null, '', '#' + KEYS[step - 1]);
+      if (focus) document.querySelector(`[data-wstep="${step}"] h2`).focus();
+    }
+    const err = (id, on) => { $(id).classList.toggle('hidden', !on); $(id).classList.toggle('flex', on); };
+    $('next').addEventListener('click', () => {
+      if (step === 3) {
+        const noSign = !$('fl-2').children.length, noAttest = !$('attest').checked;
+        err('fl-2-err', noSign); err('attest-err', noAttest);
+        if (noSign || noAttest) return;
+        BS.toast('Sent for review', 'ok');
+      }
+      go(step + 1);
+    });
+    $('prev').addEventListener('click', () => go(step - 1));
+    // Agencies also provide a recruitment licence.
+    document.querySelectorAll('[name=kind]').forEach(r => r.addEventListener('change', () => {
+      const ag = document.querySelector('[name=kind]:checked').value === 'agency';
+      $('agency-only').classList.toggle('hidden', !ag); $('agency-ev').classList.toggle('hidden', !ag);
+    }));
+    go(Math.max(1, KEYS.indexOf(location.hash.slice(1)) + 1), false);
+  })();
+</script>
+</body>
+</html>

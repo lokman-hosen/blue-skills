@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Profile Setup · BLUESKILLS</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,700;12..96,800&family=Figtree:wght@400;500;600;700&family=JetBrains+Mono:wght@500;700&display=swap">
+<link rel="stylesheet" href="../assets/tokens.css">
+<script src="https://cdn.tailwindcss.com/3.4.17"></script>
+<script src="../assets/tailwind.config.js"></script>
+<script src="../assets/app.js"></script>
+</head>
+<body class="font-sans">
+<a href="#main" class="skip-link inline-flex items-center min-h-11 rounded-lg bg-brand text-onbrand px-4 font-semibold">Skip to content</a>
+
+<aside class="hidden lg:flex fixed inset-y-0 start-0 z-30 w-64 flex-col border-e border-line bg-surface">
+  <a href="../index.html" class="flex items-center gap-2 h-16 px-5 border-b border-line" aria-label="BLUESKILLS home">
+    <span class="grid place-items-center w-9 h-9 rounded-lg bg-brand text-onbrand"><svg class="w-5 h-5" aria-hidden="true"><use href="#i-passport"/></svg></span>
+    <span class="font-display text-lg font-extrabold tracking-tight">BLUESKILLS</span>
+  </a>
+  <nav aria-label="Main" class="flex-1 overflow-y-auto p-3">
+    <ul class="space-y-1"><li><a href="../layouts/worker.html" class="flex items-center gap-3 min-h-12 px-3 rounded-xl text-ink hover:bg-surface2 text-base font-semibold"><svg class="w-6 h-6 text-muted" aria-hidden="true"><use href="#i-home"/></svg><span>Home</span></a></li><li><a href="02-jobs.html" class="flex items-center gap-3 min-h-12 px-3 rounded-xl text-ink hover:bg-surface2 text-base font-semibold"><svg class="w-6 h-6 text-muted" aria-hidden="true"><use href="#i-search"/></svg><span>Jobs</span></a></li><li><a href="05-apply.html#tracker" class="flex items-center gap-3 min-h-12 px-3 rounded-xl text-ink hover:bg-surface2 text-base font-semibold"><svg class="w-6 h-6 text-muted" aria-hidden="true"><use href="#i-list"/></svg><span>Applications</span></a></li><li><a href="14-messages.html" class="flex items-center gap-3 min-h-12 px-3 rounded-xl text-ink hover:bg-surface2 text-base font-semibold"><svg class="w-6 h-6 text-muted" aria-hidden="true"><use href="#i-chat"/></svg><span>Messages</span></a></li><li><a href="04-passport.html" class="flex items-center gap-3 min-h-12 px-3 rounded-xl text-ink hover:bg-surface2 text-base font-semibold"><svg class="w-6 h-6 text-muted" aria-hidden="true"><use href="#i-passport"/></svg><span>Passport</span></a></li></ul>
+    <ul class="mt-4 pt-4 border-t border-line space-y-1">
+      <li><a href="10-settings.html" class="flex items-center gap-3 min-h-12 px-3 rounded-xl text-ink hover:bg-surface2 font-semibold"><svg class="w-6 h-6 text-muted" aria-hidden="true"><use href="#i-settings"/></svg><span>Settings</span></a></li>
+      <li><a href="#" class="flex items-center gap-3 min-h-12 px-3 rounded-xl text-ink font-semibold hover:bg-surface2"><svg class="w-6 h-6 text-muted" aria-hidden="true"><use href="#i-help"/></svg><span>Help</span></a></li>
+    </ul>
+  </nav>
+  <div class="p-3 border-t border-line"><div class="flex items-center gap-3 rounded-xl p-2"><span class="grid place-items-center w-11 h-11 shrink-0 rounded-full bg-brandsoft text-brand font-bold">RU</span><div class="min-w-0"><p class="font-semibold truncate">Md Rahim Uddin</p><p class="text-sm text-muted truncate">Electrician</p></div></div></div>
+</aside>
+
+<div class="lg:ps-64">
+  <header class="sticky top-0 z-20 border-b border-line bg-surface/95 backdrop-blur pt-[env(safe-area-inset-top)]">
+    <div class="mx-auto max-w-3xl flex items-center gap-2 h-16 px-4">
+      <a href="../index.html" class="lg:hidden flex items-center gap-2 min-h-11 min-w-11" aria-label="BLUESKILLS home">
+        <span class="grid place-items-center w-9 h-9 rounded-lg bg-brand text-onbrand"><svg class="w-5 h-5" aria-hidden="true"><use href="#i-passport"/></svg></span>
+      </a>
+      <p class="text-lg font-bold truncate">Make your profile</p>
+      <div class="ms-auto flex items-center gap-1">
+        <a href="10-settings.html" class="inline-flex items-center gap-2 min-h-11 px-3 rounded-full border border-linestrong bg-surface font-semibold hover:bg-surface2"><svg class="w-5 h-5 text-muted" aria-hidden="true"><use href="#i-globe"/></svg><span>English</span><span class="sr-only">Language</span></a>
+        <button type="button" data-theme-toggle aria-label="Dark theme" class="grid place-items-center w-11 h-11 rounded-full hover:bg-surface2"><svg class="w-5 h-5" aria-hidden="true"><use href="#i-moon"/></svg></button>
+      </div>
+    </div>
+  </header>
+
+  <main id="main" class="mx-auto max-w-3xl px-4 pt-5 pb-12">
+    <!-- Progress through onboarding: Basics (A) → Voice answers (B, screen 03) → Check (C) -->
+    <nav aria-label="Profile steps">
+      <p class="font-semibold"><span id="st-m">Step 1 of 3</span> · <span id="st-name" class="text-brand">About you</span></p>
+      <div class="mt-2 grid grid-cols-3 gap-1.5" aria-hidden="true"><span data-bar="1" class="h-2 rounded-full bg-brand"></span><span data-bar="2" class="h-2 rounded-full bg-surface2"></span><span data-bar="3" class="h-2 rounded-full bg-surface2"></span></div>
+    </nav>
+
+    <!-- ===== A · Basics: name, country, trade. Nothing else before the worker knows the portal. ===== -->
+    <section id="v-basics" aria-labelledby="b-h" class="mt-6">
+      <h1 id="b-h" tabindex="-1" class="font-display text-2xl sm:text-3xl font-bold">About you</h1>
+      <p class="mt-1 text-lg text-muted">Three quick things. You can change them later.</p>
+
+      <form id="b-form" class="mt-6 space-y-8" onsubmit="return false" novalidate>
+        <div>
+          <label for="b-name" class="block text-lg font-semibold">Your name</label>
+          <p id="b-name-hint" class="text-muted">As on your passport</p>
+          <input id="b-name" type="text" autocomplete="name" value="Md Rahim Uddin" aria-describedby="b-name-hint b-name-err" class="mt-2 block w-full min-h-14 rounded-xl border border-linestrong bg-surface px-4 text-xl text-ink placeholder:text-muted focus:outline-none focus:border-brand focus:ring-[3px] focus:ring-brand/40 aria-[invalid=true]:border-bad">
+          <p id="b-name-err" class="mt-2 hidden items-center gap-1.5 font-medium text-bad"><svg class="w-5 h-5 shrink-0" aria-hidden="true"><use href="#i-alert"/></svg>Write your name</p>
+        </div>
+
+        <fieldset>
+          <legend class="text-lg font-semibold">Where do you live now?</legend>
+          <div class="mt-2 grid grid-cols-2 sm:grid-cols-3 gap-2">
+            <label class="flex items-center gap-3 min-h-14 rounded-2xl border-2 border-line bg-surface px-4 cursor-pointer has-[:checked]:border-brand has-[:checked]:bg-brandsoft has-[:focus-visible]:ring-[3px] has-[:focus-visible]:ring-brand/50"><input type="radio" name="country" value="Bangladesh" checked class="sr-only"><span class="text-lg font-semibold">Bangladesh</span></label>
+            <label class="flex items-center gap-3 min-h-14 rounded-2xl border-2 border-line bg-surface px-4 cursor-pointer has-[:checked]:border-brand has-[:checked]:bg-brandsoft has-[:focus-visible]:ring-[3px] has-[:focus-visible]:ring-brand/50"><input type="radio" name="country" value="India" class="sr-only"><span class="text-lg font-semibold">India</span></label>
+            <label class="flex items-center gap-3 min-h-14 rounded-2xl border-2 border-line bg-surface px-4 cursor-pointer has-[:checked]:border-brand has-[:checked]:bg-brandsoft has-[:focus-visible]:ring-[3px] has-[:focus-visible]:ring-brand/50"><input type="radio" name="country" value="Nepal" class="sr-only"><span class="text-lg font-semibold">Nepal</span></label>
+            <label class="flex items-center gap-3 min-h-14 rounded-2xl border-2 border-line bg-surface px-4 cursor-pointer has-[:checked]:border-brand has-[:checked]:bg-brandsoft has-[:focus-visible]:ring-[3px] has-[:focus-visible]:ring-brand/50"><input type="radio" name="country" value="Pakistan" class="sr-only"><span class="text-lg font-semibold">Pakistan</span></label>
+            <label class="flex items-center gap-3 min-h-14 rounded-2xl border-2 border-line bg-surface px-4 cursor-pointer has-[:checked]:border-brand has-[:checked]:bg-brandsoft has-[:focus-visible]:ring-[3px] has-[:focus-visible]:ring-brand/50"><input type="radio" name="country" value="Sri Lanka" class="sr-only"><span class="text-lg font-semibold">Sri Lanka</span></label>
+            <label class="flex items-center gap-3 min-h-14 rounded-2xl border-2 border-line bg-surface px-4 cursor-pointer has-[:checked]:border-brand has-[:checked]:bg-brandsoft has-[:focus-visible]:ring-[3px] has-[:focus-visible]:ring-brand/50"><input type="radio" name="country" value="Other" class="sr-only"><span class="text-lg font-semibold">Other</span></label>
+          </div>
+        </fieldset>
+
+        <fieldset>
+          <legend class="text-lg font-semibold">What is your trade?</legend>
+          <p class="text-muted">Pick the work you know best</p>
+          <div id="trades" class="mt-2 grid grid-cols-2 sm:grid-cols-4 gap-2"></div>
+          <p id="b-trade-err" class="mt-2 hidden items-center gap-1.5 font-medium text-bad"><svg class="w-5 h-5 shrink-0" aria-hidden="true"><use href="#i-alert"/></svg>Pick one trade</p>
+        </fieldset>
+
+        <div class="flex items-start gap-3 rounded-2xl border border-brand/30 bg-brandsoft p-4">
+          <svg class="w-6 h-6 shrink-0 text-brand mt-0.5" aria-hidden="true"><use href="#i-lock"/></svg>
+          <p class="font-medium">No documents now. You add your passport only when a job needs it.</p>
+        </div>
+
+        <button type="button" id="b-next" class="flex w-full items-center justify-center gap-2 min-h-14 rounded-2xl bg-brand text-onbrand text-lg font-bold hover:bg-brand/90">Continue<svg class="w-6 h-6 flip-rtl" aria-hidden="true"><use href="#i-arrow"/></svg></button>
+      </form>
+    </section>
+
+    <!-- ===== C · Check: every generated field confirmed before the Skill Passport is created ===== -->
+    <section id="v-review" aria-labelledby="r-h" class="mt-6" hidden>
+      <div class="flex flex-wrap items-center gap-2">
+        <h1 id="r-h" tabindex="-1" class="font-display text-2xl sm:text-3xl font-bold me-auto">Is this right?</h1>
+        <span class="inline-flex items-center gap-1 rounded-md border border-dashed border-linestrong px-2 py-0.5 text-[13px] font-semibold text-muted">Sample data</span>
+      </div>
+      <p class="mt-1 text-lg text-muted">We wrote this from your answers. Check each line. Nothing is shown to employers until you say yes.</p>
+
+      <div class="mt-4 flex items-center justify-between gap-3 rounded-2xl bg-surface2 p-4">
+        <p class="font-semibold"><span id="r-n" class="tabular-nums">5</span> of <span id="r-t" class="tabular-nums">8</span> checked</p>
+        <div class="h-3 flex-1 max-w-48 rounded-full bg-surface overflow-hidden" role="progressbar" aria-label="Lines checked" aria-valuemin="0" aria-valuemax="8" aria-valuenow="5"><div id="r-bar" class="h-full rounded-full bg-brand" style="width:62%"></div></div>
+      </div>
+
+      <ul id="fields" class="mt-4 space-y-3"></ul>
+
+      <p id="r-left" class="mt-6 flex items-start gap-2 font-medium text-warn"><svg class="w-5 h-5 shrink-0 mt-0.5" aria-hidden="true"><use href="#i-info"/></svg><span>Check every line to continue</span></p>
+      <a id="r-done" href="04-passport.html" aria-disabled="true" class="mt-3 flex w-full items-center justify-center gap-2 min-h-14 rounded-2xl bg-brand text-onbrand text-lg font-bold hover:bg-brand/90 aria-disabled:opacity-50 aria-disabled:pointer-events-none"><svg class="w-6 h-6" aria-hidden="true"><use href="#i-passport"/></svg>Make my Skill Passport</a>
+      <a href="03-signin-voice.html#idle" class="mt-2 flex w-full items-center justify-center gap-2 min-h-12 rounded-xl text-brand font-semibold hover:bg-brandsoft"><svg class="w-5 h-5" aria-hidden="true"><use href="#i-mic"/></svg>Answer the questions again</a>
+    </section>
+  </main>
+</div>
+
+<dialog id="edit-sheet" class="sheet" aria-labelledby="edit-t">
+  <form method="dialog" class="rounded-t-3xl sm:rounded-2xl bg-surface sm:w-[28rem] p-5 pb-[max(1.25rem,env(safe-area-inset-bottom))]">
+    <div class="mx-auto mb-3 h-1.5 w-12 rounded-full bg-line sm:hidden" aria-hidden="true"></div>
+    <div class="flex items-center justify-between gap-2"><h2 id="edit-t" class="text-xl font-bold">Change: <span id="edit-label"></span></h2><button type="button" data-close aria-label="Close" class="grid place-items-center w-11 h-11 rounded-full hover:bg-surface2"><svg class="w-5 h-5" aria-hidden="true"><use href="#i-x"/></svg></button></div>
+    <label for="edit-val" class="sr-only">New value</label>
+    <input id="edit-val" type="text" class="mt-3 block w-full min-h-14 rounded-xl border border-linestrong bg-surface px-4 text-lg text-ink focus:outline-none focus:border-brand focus:ring-[3px] focus:ring-brand/40">
+    <button type="button" class="mt-2 inline-flex items-center gap-2 min-h-12 px-3 rounded-xl text-brand font-semibold hover:bg-brandsoft"><svg class="w-5 h-5" aria-hidden="true"><use href="#i-mic"/></svg>Say it instead</button>
+    <button type="button" id="edit-save" class="mt-4 flex w-full items-center justify-center gap-2 min-h-14 rounded-2xl bg-brand text-onbrand text-lg font-bold hover:bg-brand/90"><svg class="w-6 h-6" aria-hidden="true"><use href="#i-check"/></svg>Save</button>
+  </form>
+</dialog>
+
+<script>
+  (function () {
+    const $ = id => document.getElementById(id), icon = (n, c = 'w-5 h-5') => `<svg class="${c} shrink-0" aria-hidden="true"><use href="#i-${n}"/></svg>`;
+    const esc = s => String(s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+    const TRADES = [['Electrician', 'zap'], ['Plumber', 'wrench'], ['Welder', 'flame'], ['HVAC technician', 'fan'], ['Mason', 'brick'], ['Driver', 'car'], ['Warehouse', 'box'], ['Other', 'more']];
+    $('trades').innerHTML = TRADES.map(([t, ic], i) => `<label class="flex flex-col items-center justify-center gap-1 min-h-24 rounded-2xl border-2 border-line bg-surface p-2 text-center cursor-pointer has-[:checked]:border-brand has-[:checked]:bg-brandsoft has-[:focus-visible]:ring-[3px] has-[:focus-visible]:ring-brand/50"><input type="radio" name="trade" value="${t}" ${i === 0 ? 'checked' : ''} class="sr-only"><span class="grid place-items-center w-11 h-11 rounded-xl bg-stampsoft text-stamp">${icon(ic, 'w-6 h-6')}</span><span class="font-semibold leading-tight">${t}</span></label>`).join('');
+
+    // Generated from voice answers. heard = what speech-to-text produced, shown when we are unsure.
+    const FIELDS = [
+      { k: 'Trade', v: 'Electrician', sub: 'Construction › Electrical › Industrial electrician', ic: 'zap', ok: true },
+      { k: 'Experience', v: '8 years', ic: 'calendar', ok: true },
+      { k: 'Countries worked', v: 'Bangladesh 5 years, UAE 3 years', ic: 'globe', ok: true },
+      { k: 'Skills', v: 'Industrial wiring, DB installation, Maintenance', heard: 'We heard “DB fitting”. We wrote “DB installation”.', ic: 'wrench', ok: false },
+      { k: 'Passport', v: 'Ready · valid to 2030', sub: 'You said this. We check it only after an offer.', ic: 'passport', ok: true },
+      { k: 'Can start', v: 'Immediately', ic: 'clock', ok: true },
+      { k: 'Countries you want', v: 'UAE, Poland', ic: 'plane', ok: false },
+      { k: 'Languages', v: 'Bangla, Hindi (some)', heard: 'We were not sure about “Hindi”.', ic: 'chat', ok: false }
+    ];
+    let editing = -1;
+    function renderFields() {
+      $('fields').innerHTML = FIELDS.map((f, i) => `<li class="rounded-2xl border-2 ${f.ok ? 'border-ok/40' : f.heard ? 'border-warn/50' : 'border-line'} bg-surface p-4">
+        <div class="flex items-start gap-3">
+          <span class="grid place-items-center w-11 h-11 shrink-0 rounded-xl ${f.ok ? 'bg-oksoft text-ok' : 'bg-surface2 text-muted'}">${icon(f.ok ? 'check' : f.ic, 'w-6 h-6')}</span>
+          <div class="min-w-0 flex-1"><p class="text-muted">${f.k}</p><p class="text-lg font-bold break-words">${esc(f.v)}</p>${f.sub ? `<p class="text-[15px] text-muted">${f.sub}</p>` : ''}
+            ${f.heard && !f.ok ? `<p class="mt-1 flex items-start gap-1.5 text-[15px] font-medium text-warn">${icon('info', 'w-5 h-5 mt-0.5')}${f.heard}</p>` : ''}</div>
+        </div>
+        <div class="mt-3 grid grid-cols-2 gap-2">
+          <button type="button" data-yes="${i}" aria-pressed="${f.ok}" class="inline-flex items-center justify-center gap-2 min-h-12 rounded-xl font-bold ${f.ok ? 'bg-ok text-onbrand' : 'border-2 border-ok/50 text-ok hover:bg-oksoft'}">${icon('check')}${f.ok ? 'Right' : 'Yes, right'}</button>
+          <button type="button" data-edit="${i}" class="inline-flex items-center justify-center gap-2 min-h-12 rounded-xl border border-linestrong bg-surface font-semibold hover:bg-surface2">${icon('edit')}Change</button>
+        </div></li>`).join('');
+      const n = FIELDS.filter(f => f.ok).length, t = FIELDS.length;
+      $('r-n').textContent = n; $('r-t').textContent = t; $('r-bar').style.width = Math.round(n / t * 100) + '%';
+      $('r-bar').parentElement.setAttribute('aria-valuenow', n);
+      $('r-done').setAttribute('aria-disabled', n < t); $('r-left').classList.toggle('hidden', n === t);
+    }
+    $('fields').addEventListener('click', e => {
+      const y = e.target.closest('[data-yes]'), ed = e.target.closest('[data-edit]');
+      if (y) { const f = FIELDS[y.dataset.yes]; f.ok = !f.ok; renderFields(); }
+      if (ed) { editing = +ed.dataset.edit; $('edit-label').textContent = FIELDS[editing].k; $('edit-val').value = FIELDS[editing].v; $('edit-sheet').showModal(); }
+    });
+    $('edit-save').addEventListener('click', () => {
+      const f = FIELDS[editing]; f.v = $('edit-val').value.trim() || f.v; f.ok = true; f.heard = '';
+      $('edit-sheet').close(); renderFields(); BS.toast('Saved', 'ok');
+    });
+
+    $('b-next').addEventListener('click', () => {
+      const name = $('b-name'), bad = !name.value.trim();
+      name.setAttribute('aria-invalid', bad); $('b-name-err').classList.toggle('hidden', !bad); $('b-name-err').classList.toggle('flex', bad);
+      if (bad) { name.focus(); return; }
+      location.href = '03-signin-voice.html#idle';
+    });
+
+    function render() {
+      const review = location.hash === '#review';
+      $('v-basics').hidden = review; $('v-review').hidden = !review;
+      const step = review ? 3 : 1;
+      $('st-m').textContent = `Step ${step} of 3`; $('st-name').textContent = review ? 'Check your profile' : 'About you';
+      document.querySelectorAll('[data-bar]').forEach(b => { b.className = `h-2 rounded-full ${+b.dataset.bar < step ? 'bg-ok' : +b.dataset.bar === step ? 'bg-brand' : 'bg-surface2'}`; });
+      if (review) renderFields();
+      $(review ? 'r-h' : 'b-h').focus(); window.scrollTo(0, 0);
+    }
+    addEventListener('hashchange', render);
+    render();
+  })();
+</script>
+</body>
+</html>
