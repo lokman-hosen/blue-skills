@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Admin\JobReviewController;
 use App\Http\Controllers\Admin\OrganizationReviewController;
 use App\Http\Controllers\Admin\SkillShowModerationController;
 use App\Http\Controllers\Admin\StaffController;
@@ -18,6 +19,13 @@ Route::middleware(['auth', 'verified', 'user.type:staff', 'staff.2fa'])->prefix(
 
     // Organization registration review (Module 3).
     Route::controller(OrganizationReviewController::class)->prefix('organizations')->name('organizations.')->group(function () {
+        Route::get('/', 'index')->name('index');
+        Route::get('reviews/{review}', 'show')->name('show');
+        Route::patch('reviews/{review}', 'decide')->name('decide');
+    });
+
+    // Job review (Module 3).
+    Route::controller(JobReviewController::class)->prefix('jobs')->name('jobs.')->group(function () {
         Route::get('/', 'index')->name('index');
         Route::get('reviews/{review}', 'show')->name('show');
         Route::patch('reviews/{review}', 'decide')->name('decide');

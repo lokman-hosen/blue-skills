@@ -211,6 +211,18 @@ declare namespace App {
                     lastDecision: App.Domain.Verification.Data.ReviewDecisionData | null;
                     editable: boolean;
                 };
+                export type JobReviewItemData = {
+                    reviewId: string;
+                    reviewStatus: App.Support.Data.StatusData;
+                    code: string;
+                    title: string;
+                    employerName: string;
+                    employerVerification: App.Support.Data.StatusData;
+                    destination: string | null;
+                    notes: string | null;
+                    problemCount: number;
+                    submittedAt: string | null;
+                };
                 export type JobTruthCardData = {
                     publicCode: string;
                     title: string;

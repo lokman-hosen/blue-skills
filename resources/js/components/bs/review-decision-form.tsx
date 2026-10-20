@@ -67,8 +67,14 @@ export function ReviewDecisionForm({
                 <p id="review-note-hint" className="text-xs text-muted">
                     {t('admin.review.note_hint')}
                 </p>
-                <InputError message={form.errors.note ?? form.errors.decision} />
+                <InputError message={form.errors.note} />
             </div>
+            {/* Anything else the server refused, e.g. a job that now breaks the corridor rules. */}
+            {Object.entries(form.errors as Record<string, string>)
+                .filter(([key]) => key !== 'reason' && key !== 'note')
+                .map(([key, message]) => (
+                    <InputError key={key} message={message} />
+                ))}
             <div className="grid gap-2 sm:grid-cols-3">
                 <Button type="submit" className="min-h-11" disabled={form.processing}>
                     {form.processing ? <Spinner /> : <Check aria-hidden className="size-4" />}

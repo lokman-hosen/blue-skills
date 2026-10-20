@@ -433,3 +433,12 @@ colour) and the appearance tabs use design tokens instead of the kit's neutral g
   through the current organization.
 - The organization dashboard shows live, in-review, needs-changes and draft counts and the latest
   jobs.
+
+### D-057 · Job review
+- `/admin/jobs` lists submitted jobs oldest first for staff with `jobs.moderate` (superuser,
+  verification officer, trust officer). Each shows the Truth Card exactly as workers will see it,
+  the employer's verification, why a live job came back, and the corridor-rule checks.
+- Staff publish, ask for changes (`more_information_requested`) or reject, with the same reason
+  codes and message flow as organization review. Publishing re-checks the employer and the cost
+  rules and is refused if either fails. The first publication sets `published_at`; republishing
+  after a change keeps it. Employer owners are emailed each decision.
