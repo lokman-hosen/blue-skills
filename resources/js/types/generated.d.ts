@@ -221,6 +221,24 @@ declare namespace App {
                     name: string;
                     sizeKb: number;
                     uploadedAt: string | null;
+                    url: string | null;
+                };
+                export type OrganizationReviewData = {
+                    reviewId: string;
+                    reviewStatus: App.Support.Data.StatusData;
+                    organizationId: string;
+                    displayName: string;
+                    legalName: string;
+                    type: App.Domain.Organization.Enums.OrganizationType;
+                    countryCode: string;
+                    city: string | null;
+                    registrationNumber: string | null;
+                    licenceNumber: string | null;
+                    licenceExpiresOn: string | null;
+                    verification: App.Support.Data.StatusData;
+                    flags: string | null;
+                    evidenceCount: number;
+                    submittedAt: string | null;
                 };
                 export type OrganizationSummaryData = {
                     id: string;
@@ -293,6 +311,15 @@ declare namespace App {
             }
         }
         namespace Verification {
+            namespace Data {
+                export type ReviewDecisionData = {
+                    decision: App.Domain.Verification.Enums.VerificationDecision;
+                    reasonCode: string | null;
+                    note: string | null;
+                    decidedAt: string | null;
+                    reviewerName: string | null;
+                };
+            }
             namespace Enums {
                 export type DocumentType =
                     | 'passport'

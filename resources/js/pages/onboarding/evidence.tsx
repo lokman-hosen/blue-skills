@@ -1,4 +1,4 @@
-import { Head, Link, router, setLayoutProps } from '@inertiajs/react';
+import { Form, Head, Link, router, setLayoutProps } from '@inertiajs/react';
 import { FileText } from 'lucide-react';
 import { useState } from 'react';
 import VerificationEvidenceController from '@/actions/App/Http/Controllers/Organization/VerificationEvidenceController';
@@ -13,6 +13,8 @@ type Props = {
     organization: App.Domain.Organization.Data.OrganizationSummaryData;
     documents: App.Domain.Organization.Data.EvidenceDocumentData[];
     reviewOpen: boolean;
+    lastDecision: App.Domain.Verification.Data.ReviewDecisionData | null;
+    canResubmit: boolean;
     maxSizeMb: number;
 };
 
@@ -21,6 +23,8 @@ export default function VerificationEvidence({
     organization,
     documents,
     reviewOpen,
+    lastDecision,
+    canResubmit,
     maxSizeMb,
 }: Props) {
     const { t, formatDate, formatNumber } = useTranslation();
@@ -70,6 +74,25 @@ export default function VerificationEvidence({
                     </div>
                     <StatusChip status={organization.verification} />
                 </div>
+
+                {lastDecision && lastDecision.decision !== 'approved' && (
+                    <div
+                        role="status"
+                        className="flex flex-col gap-1 rounded-xl border border-warn/30 bg-warn-soft px-4 py-3 text-sm"
+                    >
+                        <p className="font-semibold">
+                            {t(`onboarding.evidence.decision.${lastDecision.decision}`)}
+                        </p>
+                        {lastDecision.reasonCode && (
+                            <p>{t(`review_reason.${lastDecision.reasonCode}`)}</p>
+                        )}
+                        {lastDecision.note && (
+                            <p className="text-muted" dir="auto">
+                                “{lastDecision.note}”
+                            </p>
+                        )}
+                    </div>
+                )}
 
                 {reviewOpen ? (
                     <>
@@ -129,7 +152,23 @@ export default function VerificationEvidence({
                         )}
                     </>
                 ) : (
-                    <p className="text-sm text-muted">{t('onboarding.evidence.no_review')}</p>
+                    <div className="flex flex-col gap-3">
+                        <p className="text-sm text-muted">{t('onboarding.evidence.no_review')}</p>
+                        {canResubmit && (
+                            <Form {...VerificationEvidenceController.resubmit.form()}>
+                                {({ processing }) => (
+                                    <Button
+                                        type="submit"
+                                        className="min-h-11"
+                                        disabled={processing}
+                                    >
+                                        {processing && <Spinner />}
+                                        {t('onboarding.evidence.resubmit')}
+                                    </Button>
+                                )}
+                            </Form>
+                        )}
+                    </div>
                 )}
 
                 <p className="rounded-lg bg-surface-2 px-3 py-2 text-xs text-muted">

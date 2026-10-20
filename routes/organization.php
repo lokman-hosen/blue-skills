@@ -14,6 +14,9 @@ Route::middleware(['auth', 'verified', 'user.type:org'])->prefix('organizations'
     Route::post('verification/evidence', [VerificationEvidenceController::class, 'store'])
         ->middleware('throttle:20,1')
         ->name('verification.evidence.store');
+    Route::post('verification/resubmit', [VerificationEvidenceController::class, 'resubmit'])
+        ->middleware('throttle:5,1')
+        ->name('verification.resubmit');
 });
 
 // Team management for the current organization (Module 1C).

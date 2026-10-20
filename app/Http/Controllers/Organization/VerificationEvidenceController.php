@@ -3,10 +3,13 @@
 namespace App\Http\Controllers\Organization;
 
 use App\Domain\Organization\Actions\AttachVerificationEvidence;
+use App\Domain\Organization\Actions\ResubmitOrganizationReview;
 use App\Domain\Organization\Data\EvidenceDocumentData;
 use App\Domain\Organization\Data\OrganizationSummaryData;
 use App\Domain\Organization\Models\Organization;
+use App\Domain\Organization\States\Verification\Rejected;
 use App\Domain\Organization\Support\CurrentOrganization;
+use App\Domain\Verification\Data\ReviewDecisionData;
 use App\Domain\Verification\Models\VerificationRequest;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Organization\StoreVerificationEvidenceRequest;
@@ -43,6 +46,11 @@ class VerificationEvidenceController extends Controller
                 ->values()
                 ->all() ?? [],
             'reviewOpen' => $verificationRequest !== null,
+            // What the reviewer last said, so the organization can fix it.
+            'lastDecision' => ($decided = $organization->verificationRequests()->whereNotNull('decision')->latest('decided_at')->first()) !== null
+                ? ReviewDecisionData::fromRequest($decided)
+                : null,
+            'canResubmit' => $organization->verification_status->equals(Rejected::class),
             'maxSizeMb' => (int) (VerificationRequest::EVIDENCE_MAX_KB / 1024),
         ]);
     }
@@ -63,6 +71,18 @@ class VerificationEvidenceController extends Controller
         Inertia::flash('toast', ['type' => 'success', 'message' => __('organization.evidence_added')]);
 
         return back();
+    }
+
+    public function resubmit(Request $request, ResubmitOrganizationReview $resubmit): RedirectResponse
+    {
+        $organization = $this->organization($request);
+        abort_if($organization === null, 404);
+        Gate::authorize('update', $organization);
+
+        $resubmit->handle($organization, $request->user());
+        Inertia::flash('toast', ['type' => 'success', 'message' => __('organization.resubmitted')]);
+
+        return to_route('organizations.verification.edit');
     }
 
     private function organization(Request $request): ?Organization

@@ -151,7 +151,13 @@ export const adminNav: NavGroup[] = [
     {
         items: [
             { key: 'overview', label: 'nav.overview', icon: LayoutDashboard, href: dashboard() },
-            { key: 'verifications', label: 'nav.verifications', icon: ShieldCheck },
+            {
+                key: 'verifications',
+                label: 'nav.verifications',
+                icon: ShieldCheck,
+                href: admin.organizations.index(),
+                permission: 'verifications.review',
+            },
             {
                 key: 'skillshows',
                 label: 'nav.skillshows',

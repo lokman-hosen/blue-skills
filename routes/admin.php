@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Admin\OrganizationReviewController;
 use App\Http\Controllers\Admin\SkillShowModerationController;
 use App\Http\Controllers\Admin\StaffController;
 use App\Http\Controllers\Admin\StaffInvitationAcceptanceController;
@@ -13,6 +14,13 @@ Route::middleware(['auth', 'verified', 'user.type:staff', 'staff.2fa'])->prefix(
         Route::delete('invitations/{invitation}', 'revoke')->name('invitations.destroy');
         Route::patch('members/{member}', 'updateRole')->name('members.update');
         Route::delete('members/{member}', 'deactivate')->name('members.destroy');
+    });
+
+    // Organization registration review (Module 3).
+    Route::controller(OrganizationReviewController::class)->prefix('organizations')->name('organizations.')->group(function () {
+        Route::get('/', 'index')->name('index');
+        Route::get('reviews/{review}', 'show')->name('show');
+        Route::patch('reviews/{review}', 'decide')->name('decide');
     });
 
     // SkillShow moderation (Module 2, product rule 3).

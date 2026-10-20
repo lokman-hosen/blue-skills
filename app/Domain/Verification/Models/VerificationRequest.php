@@ -27,7 +27,7 @@ use Spatie\ModelStates\HasStates;
  */
 #[Fillable([
     'subject_type', 'subject_id', 'type', 'status', 'assigned_to', 'decided_by', 'decision',
-    'reason_code', 'notes', 'decided_at',
+    'reason_code', 'notes', 'decision_note', 'decided_at',
 ])]
 #[UseFactory(VerificationRequestFactory::class)]
 class VerificationRequest extends Model implements HasMedia
