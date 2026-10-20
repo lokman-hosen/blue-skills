@@ -225,6 +225,23 @@ declare namespace App {
                     licenceExpiresOn: string | null;
                     title: string | null;
                 };
+                export type TeamInvitationData = {
+                    id: string;
+                    email: string | null;
+                    role: App.Domain.Identity.Enums.OrganizationRole;
+                    expiresAt: string;
+                    invitedBy: string | null;
+                    organization: App.Domain.Organization.Data.OrganizationSummaryData;
+                };
+                export type TeamMemberData = {
+                    id: string;
+                    name: string;
+                    email: string | null;
+                    title: string | null;
+                    role: App.Domain.Identity.Enums.OrganizationRole | null;
+                    joinedAt: string | null;
+                    isYou: boolean;
+                };
             }
             namespace Enums {
                 export type OrganizationType = 'employer' | 'agency' | 'institute';

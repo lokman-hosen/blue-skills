@@ -33,6 +33,7 @@ import { dashboard } from '@/routes';
 import design from '@/routes/design';
 import horizon from '@/routes/horizon';
 import { edit as profileSettings } from '@/routes/profile';
+import team from '@/routes/team';
 
 export type NavLink = {
     key: string;
@@ -84,7 +85,7 @@ export const orgNav: Record<App.Domain.Organization.Enums.OrganizationType, NavG
         },
         {
             items: [
-                { key: 'team', label: 'nav.team', icon: Users },
+                { key: 'team', label: 'nav.team', icon: Users, href: team.index() },
                 { key: 'billing', label: 'nav.billing', icon: CreditCard },
                 ...orgFooter,
             ],
@@ -109,7 +110,7 @@ export const orgNav: Record<App.Domain.Organization.Enums.OrganizationType, NavG
         },
         {
             items: [
-                { key: 'team', label: 'nav.team', icon: Users },
+                { key: 'team', label: 'nav.team', icon: Users, href: team.index() },
                 { key: 'billing', label: 'nav.billing', icon: CreditCard },
                 ...orgFooter,
             ],
@@ -132,7 +133,10 @@ export const orgNav: Record<App.Domain.Organization.Enums.OrganizationType, NavG
             ],
         },
         {
-            items: [{ key: 'team', label: 'nav.team', icon: Users }, ...orgFooter],
+            items: [
+                { key: 'team', label: 'nav.team', icon: Users, href: team.index() },
+                ...orgFooter,
+            ],
         },
     ],
 };
