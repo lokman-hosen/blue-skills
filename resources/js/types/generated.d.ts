@@ -200,6 +200,12 @@ declare namespace App {
         }
         namespace Organization {
             namespace Data {
+                export type EvidenceDocumentData = {
+                    id: string;
+                    name: string;
+                    sizeKb: number;
+                    uploadedAt: string | null;
+                };
                 export type OrganizationSummaryData = {
                     id: string;
                     displayName: string;
@@ -207,6 +213,17 @@ declare namespace App {
                     countryCode: string;
                     city: string | null;
                     verification: App.Support.Data.StatusData;
+                };
+                export type RegisterOrganizationData = {
+                    type: App.Domain.Organization.Enums.OrganizationType;
+                    legalName: string;
+                    displayName: string;
+                    countryCode: string;
+                    city: string | null;
+                    registrationNumber: string | null;
+                    licenceNumber: string | null;
+                    licenceExpiresOn: string | null;
+                    title: string | null;
                 };
             }
             namespace Enums {

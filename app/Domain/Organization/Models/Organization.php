@@ -141,6 +141,17 @@ class Organization extends Model
         return $this->morphMany(VerificationRequest::class, 'subject');
     }
 
+    /**
+     * The newest staff review of this organization that is still waiting for a decision.
+     */
+    public function openVerificationRequest(): ?VerificationRequest
+    {
+        return $this->verificationRequests()
+            ->whereIn('status', ['open', 'in_review', 'needs_info'])
+            ->latest()
+            ->first();
+    }
+
     public function isVerified(): bool
     {
         return $this->verification_status->equals(Verified::class);

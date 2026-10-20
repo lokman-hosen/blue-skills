@@ -16,7 +16,8 @@ class CurrentOrganization
 
     public function resolve(User $user, Session $session): ?Organization
     {
-        $organizations = $user->organizations;
+        // Query fresh: the relation may be cached from before a registration or switch.
+        $organizations = $user->organizations()->orderBy('organization_members.joined_at')->get();
         $id = $session->get(self::SESSION_KEY);
 
         return $organizations->firstWhere('id', $id) ?? $organizations->first();

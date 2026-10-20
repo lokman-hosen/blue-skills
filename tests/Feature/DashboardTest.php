@@ -1,27 +1,21 @@
 <?php
 
-namespace Tests\Feature;
-
 use App\Domain\Identity\Models\User;
-use Illuminate\Foundation\Testing\RefreshDatabase;
-use Tests\TestCase;
+use App\Domain\Organization\Models\Organization;
 
-class DashboardTest extends TestCase
-{
-    use RefreshDatabase;
+it('redirects guests to the login page', function () {
+    $this->get(route('dashboard'))->assertRedirect(route('login'));
+});
 
-    public function test_guests_are_redirected_to_the_login_page()
-    {
-        $response = $this->get(route('dashboard'));
-        $response->assertRedirect(route('login'));
-    }
+it('shows organization members their dashboard', function () {
+    $user = User::factory()->create();
+    Organization::factory()->create()->users()->attach($user->id, ['joined_at' => now()]);
 
-    public function test_authenticated_users_can_visit_the_dashboard()
-    {
-        $user = User::factory()->create();
-        $this->actingAs($user);
+    $this->actingAs($user)->get(route('dashboard'))->assertOk();
+});
 
-        $response = $this->get(route('dashboard'));
-        $response->assertOk();
-    }
-}
+it('sends organization users without an organization to registration', function () {
+    $this->actingAs(User::factory()->create())
+        ->get(route('dashboard'))
+        ->assertRedirect(route('organizations.create'));
+});

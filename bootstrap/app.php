@@ -1,5 +1,7 @@
 <?php
 
+use App\Http\Middleware\EnsureOrganizationVerified;
+use App\Http\Middleware\EnsureUserType;
 use App\Http\Middleware\HandleAppearance;
 use App\Http\Middleware\HandleInertiaRequests;
 use App\Http\Middleware\SetLocale;
@@ -17,6 +19,11 @@ return Application::configure(basePath: dirname(__DIR__))
     )
     ->withMiddleware(function (Middleware $middleware): void {
         $middleware->encryptCookies(except: ['appearance', 'sidebar_state']);
+
+        $middleware->alias([
+            'user.type' => EnsureUserType::class,
+            'organization.verified' => EnsureOrganizationVerified::class,
+        ]);
 
         $middleware->web(append: [
             HandleAppearance::class,
