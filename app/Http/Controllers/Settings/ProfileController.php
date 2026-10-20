@@ -19,9 +19,14 @@ class ProfileController extends Controller
      */
     public function edit(Request $request): Response
     {
+        $isWorker = $request->user()->isWorker();
+
         return Inertia::render('settings/profile', [
-            'mustVerifyEmail' => $request->user() instanceof MustVerifyEmail,
+            'mustVerifyEmail' => $request->user() instanceof MustVerifyEmail && ! $isWorker,
             'status' => $request->session()->get('status'),
+            'canEditEmail' => ! $isWorker,
+            // Workers confirm account deletion with a phone code on the privacy page (Module 2).
+            'canDeleteAccount' => ! $isWorker,
         ]);
     }
 
@@ -38,7 +43,7 @@ class ProfileController extends Controller
 
         $request->user()->save();
 
-        Inertia::flash('toast', ['type' => 'success', 'message' => __('Profile updated.')]);
+        Inertia::flash('toast', ['type' => 'success', 'message' => __('settings.profile_updated')]);
 
         return to_route('profile.edit');
     }

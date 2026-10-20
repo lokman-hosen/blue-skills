@@ -1,11 +1,13 @@
 import { AlertCircleIcon } from 'lucide-react';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
+import { useTranslation } from '@/lib/i18n';
 
 export default function AlertError({ errors, title }: { errors: string[]; title?: string }) {
+    const { t } = useTranslation();
     return (
         <Alert variant="destructive">
             <AlertCircleIcon />
-            <AlertTitle>{title || 'Something went wrong.'}</AlertTitle>
+            <AlertTitle>{title || t('state.error.title')}</AlertTitle>
             <AlertDescription>
                 <ul className="list-inside list-disc text-sm">
                     {Array.from(new Set(errors)).map((error, index) => (

@@ -17,6 +17,7 @@ import { Spinner } from '@/components/ui/spinner';
 import { useAppearance } from '@/hooks/use-appearance';
 import { useClipboard } from '@/hooks/use-clipboard';
 import { OTP_MAX_LENGTH } from '@/hooks/use-two-factor-auth';
+import { useTranslation } from '@/lib/i18n';
 import { confirm } from '@/routes/two-factor';
 
 function GridScanIcon() {
@@ -61,6 +62,7 @@ function TwoFactorSetupStep({
     const { resolvedAppearance } = useAppearance();
     const [copiedText, copy] = useClipboard();
     const IconComponent = copiedText === manualSetupKey ? Check : Copy;
+    const { t } = useTranslation();
 
     return (
         <>
@@ -100,7 +102,7 @@ function TwoFactorSetupStep({
                     <div className="relative flex w-full items-center justify-center">
                         <div className="absolute inset-0 top-1/2 h-px w-full bg-border" />
                         <span className="relative bg-card px-2 py-1">
-                            or, enter the code manually
+                            {t('settings.two_factor.manual')}
                         </span>
                     </div>
 
@@ -116,11 +118,14 @@ function TwoFactorSetupStep({
                                         type="text"
                                         readOnly
                                         value={manualSetupKey}
-                                        className="h-full w-full bg-background p-3 text-foreground outline-none"
+                                        dir="ltr"
+                                        aria-label={t('settings.two_factor.setup_key')}
+                                        className="h-full w-full bg-surface p-3 font-mono text-ink outline-none"
                                     />
                                     <button
                                         onClick={() => copy(manualSetupKey)}
-                                        className="border-l border-border px-3 hover:bg-surface-2"
+                                        aria-label={t('settings.two_factor.copy')}
+                                        className="min-w-11 border-s border-border px-3 hover:bg-surface-2"
                                     >
                                         <IconComponent className="w-4" />
                                     </button>
@@ -143,6 +148,7 @@ function TwoFactorVerificationStep({
 }) {
     const [code, setCode] = useState<string>('');
     const pinInputContainerRef = useRef<HTMLDivElement>(null);
+    const { t } = useTranslation();
 
     useEffect(() => {
         setTimeout(() => {
@@ -188,14 +194,14 @@ function TwoFactorVerificationStep({
                                 onClick={onBack}
                                 disabled={processing}
                             >
-                                Back
+                                {t('common.back')}
                             </Button>
                             <Button
                                 type="submit"
                                 className="flex-1"
                                 disabled={processing || code.length < OTP_MAX_LENGTH}
                             >
-                                Confirm
+                                {t('settings.two_factor.confirm')}
                             </Button>
                         </div>
                     </div>
@@ -229,6 +235,7 @@ export default function TwoFactorSetupModal({
     errors,
 }: Props) {
     const [showVerificationStep, setShowVerificationStep] = useState<boolean>(false);
+    const { t } = useTranslation();
 
     const modalConfig = useMemo<{
         title: string;
@@ -237,28 +244,26 @@ export default function TwoFactorSetupModal({
     }>(() => {
         if (twoFactorEnabled) {
             return {
-                title: 'Two-factor authentication enabled',
-                description:
-                    'Two-factor authentication is now enabled. Scan the QR code or enter the setup key in your authenticator app.',
-                buttonText: 'Close',
+                title: t('settings.two_factor.enabled_title'),
+                description: t('settings.two_factor.enabled_modal'),
+                buttonText: t('common.close'),
             };
         }
 
         if (showVerificationStep) {
             return {
-                title: 'Verify authentication code',
-                description: 'Enter the 6-digit code from your authenticator app',
-                buttonText: 'Continue',
+                title: t('settings.two_factor.verify_title'),
+                description: t('settings.two_factor.verify_body'),
+                buttonText: t('onboarding.org.submit'),
             };
         }
 
         return {
-            title: 'Enable two-factor authentication',
-            description:
-                'To finish enabling two-factor authentication, scan the QR code or enter the setup key in your authenticator app',
-            buttonText: 'Continue',
+            title: t('settings.two_factor.enable_title'),
+            description: t('settings.two_factor.enable_body'),
+            buttonText: t('onboarding.org.submit'),
         };
-    }, [twoFactorEnabled, showVerificationStep]);
+    }, [twoFactorEnabled, showVerificationStep, t]);
 
     const resetModalState = useCallback(() => {
         if (twoFactorEnabled) {
