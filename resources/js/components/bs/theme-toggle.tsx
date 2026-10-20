@@ -19,8 +19,10 @@ const options = [
 
 export function ThemeToggle({ className }: { className?: string }) {
     const { t } = useTranslation();
-    const { appearance, resolvedAppearance, updateAppearance } = useAppearance();
-    const Icon = resolvedAppearance === 'dark' ? Moon : Sun;
+    const { appearance, updateAppearance } = useAppearance();
+    // Use the stored setting, not the resolved theme: the server cannot know the OS theme,
+    // so a resolved-theme icon would not match during hydration.
+    const Icon = options.find((option) => option.value === appearance)?.icon ?? Monitor;
 
     return (
         <DropdownMenu>

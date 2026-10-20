@@ -185,3 +185,25 @@ WCAG AA contrast. `playwright` is a dev dependency for this.
 ### D-029 · Starter-kit auth and settings screens remain English
 They now use the new layouts, but their copy is still hard-coded English. Module 1 rebuilds auth
 (phone OTP + org email/2FA) and will move these strings into `lang/*.json`.
+
+## 2026-10-20 · Module 0 · Part D (review and hand-over)
+
+### D-030 · Three light-mode tokens darkened for WCAG AA
+The locked palette's light-mode `stamp`, `warn` and `ok` fell below 4.5:1 on some of the
+palette's own backgrounds (stamp 3.6:1, warn 4.0:1, ok 4.5:1 on surface-2). Approved during
+review: each is darkened by the smallest amount that passes on every light background:
+`stamp` 178 104 12 → 151 88 10, `warn` 166 98 0 → 151 89 0, `ok` 20 122 72 → 19 118 70. Dark mode
+was already compliant and is unchanged. The prototype values are kept in comments in `app.css`.
+
+### D-031 · English fallback text is isolated inside RTL locales
+Until Urdu strings exist, Urdu pages show English fallbacks. The server wraps those fallbacks in
+Unicode isolates (U+2068 … U+2069) so punctuation stays at the end of the English run instead of
+jumping to the start. Real Urdu strings are not wrapped.
+
+### D-032 · RTL fixes in shadcn primitives
+The sidebar's menu badges, menu actions and group actions used physical `right-*` positions and
+`text-left`; they now use `end-*` and `text-start`, and menu items with a badge reserve end padding.
+
+### D-033 · Theme toggle icon follows the stored setting
+The icon reflects the stored choice (light, dark or system) rather than the resolved theme, which
+the server cannot know and which caused a hydration mismatch in dark mode.

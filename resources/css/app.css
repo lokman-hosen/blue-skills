@@ -99,11 +99,11 @@
     --bs-brand: 21 62 158;
     --bs-brand-soft: 226 234 252;
     --bs-on-brand: 255 255 255;
-    --bs-stamp: 178 104 12;
+    --bs-stamp: 151 88 10; /* prototype 178 104 12, darkened for WCAG AA (D-030) */
     --bs-stamp-soft: 252 239 215;
-    --bs-ok: 20 122 72;
+    --bs-ok: 19 118 70; /* prototype 20 122 72 (D-030) */
     --bs-ok-soft: 222 245 232;
-    --bs-warn: 166 98 0;
+    --bs-warn: 151 89 0; /* prototype 166 98 0 (D-030) */
     --bs-warn-soft: 253 241 214;
     --bs-bad: 186 40 48;
     --bs-bad-soft: 252 228 229;

@@ -30,8 +30,9 @@ it('switches to Urdu with ?lang and renders right to left', function () {
 });
 
 it('falls back to English strings for keys missing in a locale', function () {
+    // Urdu has no strings yet: English is shown, isolated so it reads correctly inside RTL text.
     $this->get('/?lang=ur')->assertInertia(fn (Assert $page) => $page
-        ->where('translations', fn ($strings) => $strings['nav.home'] === 'Home'));
+        ->where('translations', fn ($strings) => $strings['nav.home'] === "\u{2068}Home\u{2069}"));
 
     $this->get('/?lang=bn')->assertInertia(fn (Assert $page) => $page
         ->where('translations', fn ($strings) => $strings['nav.home'] === 'হোম'));

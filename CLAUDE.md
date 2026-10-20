@@ -35,6 +35,9 @@ the spec wins; on visuals, the HTML design wins.
 ## Commands
 
 ```bash
+./vendor/bin/sail up -d          # pgsql, redis, mailpit, meilisearch; app on http://localhost:8080
+./vendor/bin/sail artisan …      # host PHP has no pdo_pgsql/redis; run artisan and Pest in Sail
+./vendor/bin/sail php vendor/bin/pest --parallel
 composer run dev                 # app + vite + queue + logs
 php artisan test --parallel      # Pest
 ./vendor/bin/pint                # PHP format
@@ -42,7 +45,13 @@ php artisan test --parallel      # Pest
 npm run lint && npm run types    # ESLint + tsc
 php artisan typescript:transform # regenerate TS types from Data classes
 php artisan migrate:fresh --seed # reset local DB with sample data
+npm run format                   # Prettier
+npm run build && npm run design:review  # Playwright review of /_design (en/bn/ur, light/dark, 390/1440)
 ```
+
+Local logins after seeding (password `password`): `superuser@blueskills.test` (staff),
+`sara@abc-contracting.test` (employer HR Admin), `imran@northstar.test` (agency case officer),
+`nusrat@meghna.test` (institute placement officer). `/_design` is the staff-only component gallery.
 
 Run tests, Pint, PHPStan and `npm run types` before every commit. Never commit failing checks.
 
@@ -95,7 +104,17 @@ resources/js/
   pages/{public,auth,worker,employer,agency,institute,admin}/…
   lib/i18n.ts             t() helper reading translations shared by Inertia
   types/generated.d.ts    generated from Data classes, do not edit by hand
+  layouts/navigation.ts   nav per workspace; items without a route render as "Soon"
 ```
+
+- Layout is chosen by page folder in `app.tsx` (`public/`, `auth/`, `worker/`, `org|employer|agency|institute/`,
+  `admin/`; `settings/` and anything else use the signed-in user's workspace).
+- Status chips take `StatusData` (`value`, `label`, `tone`); model-states expose `label()` and `tone()`.
+- Translation keys are dotted (`truth_card.row.salary`) with `:name` placeholders; add every new key to
+  `lang/en.json` and `lang/bn.json` (a test keeps them in sync) and list unreviewed text in
+  `docs/translation-todo.md`.
+- Staff roles: `$user->assignStaffRole()` / `hasStaffPermission()`. Organization roles: wrap calls in
+  `TeamContext::run($organizationId, …)`. See `docs/decisions.md` D-012.
 
 - Use Wayfinder route helpers, never hard-coded URLs.
 - Design tokens live in `resources/css/app.css` under `@theme` (ported from the locked HTML design).
@@ -178,7 +197,7 @@ Update this table when a module is done.
 
 | # | Module | Status |
 |---|--------|--------|
-| 0 | Foundation: project, DB core, design system, layouts, CI | ☐ |
+| 0 | Foundation: project, DB core, design system, layouts, CI | ✓ |
 | 1 | Auth & roles: worker OTP, org email + 2FA, staff invites, team roles | ☐ |
 | 2 | Worker profile: onboarding, Skill Passport, Voice-to-CV, SkillShow | ☐ |
 | 3 | Organizations & jobs: employer verification, job wizard, Truth Card, job review, public search | ☐ |

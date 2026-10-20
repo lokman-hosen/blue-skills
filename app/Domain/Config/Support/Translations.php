@@ -10,6 +10,13 @@ use Illuminate\Support\Facades\File;
  */
 class Translations
 {
+    /** Unicode first-strong isolate / pop directional isolate. */
+    private const ISOLATE_START = "\u{2068}";
+
+    private const ISOLATE_END = "\u{2069}";
+
+    public function __construct(private readonly LocaleRegistry $locales) {}
+
     /** @var array<string, array<string, string>> */
     private array $loaded = [];
 
@@ -20,9 +27,18 @@ class Translations
     {
         $fallback = (string) config('app.fallback_locale', 'en');
 
-        return $this->loaded[$locale] ??= $locale === $fallback
-            ? $this->file($fallback)
-            : array_merge($this->file($fallback), $this->file($locale));
+        if ($locale === $fallback) {
+            return $this->loaded[$locale] ??= $this->file($fallback);
+        }
+
+        $english = $this->file($fallback);
+
+        // English shown inside a right-to-left page is isolated so its punctuation stays put.
+        if ($this->locales->isRtl($locale)) {
+            $english = array_map(fn (string $text) => self::ISOLATE_START.$text.self::ISOLATE_END, $english);
+        }
+
+        return $this->loaded[$locale] ??= array_merge($english, $this->file($locale));
     }
 
     /**
