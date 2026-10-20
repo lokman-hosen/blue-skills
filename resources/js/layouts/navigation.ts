@@ -34,6 +34,7 @@ import { dashboard } from '@/routes';
 import admin from '@/routes/admin';
 import design from '@/routes/design';
 import horizon from '@/routes/horizon';
+import jobs from '@/routes/jobs';
 import org from '@/routes/org';
 import { edit as profileSettings } from '@/routes/profile';
 import team from '@/routes/team';
@@ -56,7 +57,7 @@ export type NavGroup = { label?: string; items: NavLink[] };
 // Worker: the first four are the mobile bottom tabs; the rest live in the "More" sheet.
 export const workerPrimaryNav: NavLink[] = [
     { key: 'home', label: 'nav.home', icon: Home, href: dashboard() },
-    { key: 'jobs', label: 'nav.jobs', icon: Search },
+    { key: 'jobs', label: 'nav.jobs', icon: Search, href: jobs.index() },
     { key: 'applications', label: 'nav.applications', icon: ListChecks },
     { key: 'passport', label: 'nav.passport', icon: IdCard, href: worker.passport.show() },
 ];

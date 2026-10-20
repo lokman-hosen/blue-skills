@@ -442,3 +442,17 @@ colour) and the appearance tabs use design tokens instead of the kit's neutral g
   codes and message flow as organization review. Publishing re-checks the employer and the cost
   rules and is refused if either fails. The first publication sets `published_at`; republishing
   after a change keeps it. Employer owners are emailed each decision.
+
+### D-058 · Find Jobs, Truth Card page and matching
+- `/jobs` lists published jobs whose deadline has not passed, 20 per page, newest first or
+  closing soonest. Search matches title, city, job code, employer, trade and skill names
+  (English taxonomy names for now). Filters: destination, trade, "no costs for the worker"
+  (no worker-paid cost item, visa or permit), "accommodation provided", "salary shown".
+- `/jobs/{code}` shows the Truth Card. Jobs that are not published are visible only to their
+  organization and to job moderators; everyone else gets 403.
+- Guests and organization users see the public pages; workers see the same jobs inside their
+  workspace with "X of Y requirements met": trade, minimum experience, each required skill, each
+  language and a ready passport, each listed as met or not. No score or ranking.
+- "I can do this job" stays disabled until Module 4; guests get "Join free to apply".
+- "Report this job" needs a signed-in user and creates an open `Report` (fake job, unauthorised
+  payment, misleading pay or conditions, impersonation, other with a description) for Module 8.

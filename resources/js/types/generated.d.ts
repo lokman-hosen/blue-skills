@@ -211,6 +211,23 @@ declare namespace App {
                     lastDecision: App.Domain.Verification.Data.ReviewDecisionData | null;
                     editable: boolean;
                 };
+                export type JobListingData = {
+                    code: string;
+                    title: string;
+                    employerName: string;
+                    employerVerified: boolean;
+                    occupation: string | null;
+                    destinationCountryCode: string;
+                    destinationCountryName: string | null;
+                    destinationCity: string | null;
+                    salary: App.Support.Data.MoneyData | null;
+                    salaryPeriod: App.Domain.Jobs.Enums.SalaryPeriod | null;
+                    accommodation: App.Domain.Jobs.Enums.BenefitProvision | null;
+                    workerPaysCosts: boolean;
+                    deadline: string | null;
+                    publishedAt: string | null;
+                    match: App.Domain.Jobs.Data.MatchSummaryData | null;
+                };
                 export type JobReviewItemData = {
                     reviewId: string;
                     reviewStatus: App.Support.Data.StatusData;
@@ -261,6 +278,16 @@ declare namespace App {
                 export type LanguageRequirementData = {
                     code: string;
                     level: string;
+                };
+                export type MatchRequirementData = {
+                    key: string;
+                    params: Record<string, string | number>;
+                    met: boolean;
+                };
+                export type MatchSummaryData = {
+                    met: number;
+                    total: number;
+                    requirements: App.Domain.Jobs.Data.MatchRequirementData[];
                 };
                 export type TruthCardCheckData = {
                     key: string;
