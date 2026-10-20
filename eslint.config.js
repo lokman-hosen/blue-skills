@@ -67,6 +67,15 @@ export default [
         },
     },
     {
+        files: ['scripts/**/*.mjs'],
+        languageOptions: {
+            globals: {
+                ...globals.node,
+                ...globals.browser,
+            },
+        },
+    },
+    {
         ignores: [
             'vendor',
             'node_modules',
