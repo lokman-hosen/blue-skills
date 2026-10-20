@@ -48,6 +48,6 @@ class OrganizationPolicy
         }
 
         return TeamContext::run($organization->id, fn () => $user->unsetRelation('roles')->unsetRelation('permissions')
-            ->hasPermissionTo($permission->value));
+            ->checkPermissionTo($permission->value));
     }
 }

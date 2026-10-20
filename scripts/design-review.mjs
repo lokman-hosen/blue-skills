@@ -4,8 +4,9 @@
  *
  *   node scripts/design-review.mjs [--base=http://localhost:8080] [--out=storage/design-review]
  *                                   [--locales=en,bn,ur] [--themes=light,dark] [--widths=390,1440]
+ *                                   [--pages=/a,/b] [--email=… --password=…] [--guest]
  *
- * Signs in as the local superuser, then for each page × locale × theme × width it records
+ * Signs in as the local superuser (or --email, or nobody with --guest), then for each page × locale × theme × width it records
  * console errors, horizontal overflow, elements that spill out of the viewport and text with
  * insufficient contrast (WCAG AA), and saves a full-page screenshot. Exits 1 on any finding.
  */
@@ -29,6 +30,7 @@ const widths = (args.widths ?? '390,1440').split(',').map(Number);
 const pages = (args.pages ?? '/_design,/_design/layouts/public,/_design/layouts/auth,/_design/layouts/worker,/_design/layouts/org,/_design/layouts/admin').split(',');
 const email = args.email ?? 'superuser@blueskills.test';
 const password = args.password ?? 'password';
+const guest = args.guest === 'true';
 
 mkdirSync(out, { recursive: true });
 
@@ -186,10 +188,12 @@ try {
         page.on('console', (message) => message.type() === 'error' && errors.push(message.text()));
         page.on('pageerror', (error) => errors.push(error.message));
 
-        await page.goto(`${base}/login`);
-        await page.fill('input[name=email]', email);
-        await page.fill('input[name=password]', password);
-        await Promise.all([page.waitForURL((url) => !url.pathname.startsWith('/login')), page.click('button[type=submit]')]);
+        if (!guest) {
+            await page.goto(`${base}/login`);
+            await page.fill('input[name=email]', email);
+            await page.fill('input[name=password]', password);
+            await Promise.all([page.waitForURL((url) => !url.pathname.startsWith('/login')), page.click('button[type=submit]')]);
+        }
 
         for (const locale of locales) {
             for (const width of widths) {
@@ -205,7 +209,7 @@ try {
                         findings.push({ type: 'console', detail: error });
                     }
 
-                    const name = `${path.replaceAll('/', '_').replace(/^_+/, '')}-${locale}-${theme}-${width}`;
+                    const name = `${path.replaceAll('/', '_').replace(/^_+/, '') || 'home'}-${locale}-${theme}-${width}`;
                     await page.screenshot({ path: join(out, `${name}.png`), fullPage: true });
                     report.push({ path, locale, theme, width, findings });
                     console.log(`${findings.length === 0 ? 'ok  ' : 'FAIL'} ${name}${findings.length ? ` (${findings.length})` : ''}`);

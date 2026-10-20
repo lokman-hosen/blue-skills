@@ -12,7 +12,7 @@ const TWO_FACTOR_DISMISSED = 'blueskills.2fa-prompt-dismissed';
  */
 export function WorkspaceNotices() {
     const { t } = useTranslation();
-    const { auth, currentOrganization } = usePage().props;
+    const { auth, currentOrganization, organizationAbilities } = usePage().props;
     const [twoFactorDismissed, setTwoFactorDismissed] = useState(() => {
         try {
             return sessionStorage.getItem(TWO_FACTOR_DISMISSED) === '1';
@@ -44,12 +44,14 @@ export function WorkspaceNotices() {
                             t('organization.notice.pending'),
                         )}
                     </p>
-                    <Link
-                        href={verificationEvidence()}
-                        className="inline-flex min-h-11 items-center font-semibold text-brand hover:underline"
-                    >
-                        {t('organization.notice.add_documents')}
-                    </Link>
+                    {organizationAbilities.update && (
+                        <Link
+                            href={verificationEvidence()}
+                            className="inline-flex min-h-11 items-center font-semibold text-brand hover:underline"
+                        >
+                            {t('organization.notice.add_documents')}
+                        </Link>
+                    )}
                 </div>
             )}
             {showTwoFactor && (

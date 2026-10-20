@@ -63,6 +63,11 @@ class HandleInertiaRequests extends Middleware
                 'user' => $user !== null ? AuthUserData::fromUser($user) : null,
             ],
             'currentOrganization' => $organization !== null ? OrganizationSummaryData::fromOrganization($organization) : null,
+            // What the signed-in member may do in the current organization (hides links that would 403).
+            'organizationAbilities' => [
+                'update' => $organization !== null && $user->can('update', $organization),
+                'manageTeam' => $organization !== null && $user->can('manageTeam', $organization),
+            ],
             'organizations' => fn () => $user?->organizations
                 ->map(fn (Organization $organization) => OrganizationSummaryData::fromOrganization($organization))
                 ->values()

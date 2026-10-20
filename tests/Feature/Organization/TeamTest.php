@@ -215,3 +215,14 @@ it('renders the invitation email with the accept link', function () {
         ->toContain($this->organization->display_name)
         ->toContain('Recruiter');
 });
+
+it('shares what the member may do in the current organization', function () {
+    $hr = memberWithRole($this->organization, OrganizationRole::HrAdmin);
+
+    $this->actingAs($hr)->get(route('team.index'))->assertInertia(fn (Assert $page) => $page
+        ->where('organizationAbilities.update', false)
+        ->where('organizationAbilities.manageTeam', true));
+
+    $this->actingAs($this->owner)->get(route('team.index'))->assertInertia(fn (Assert $page) => $page
+        ->where('organizationAbilities.update', true));
+});

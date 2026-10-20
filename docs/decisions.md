@@ -242,3 +242,60 @@ staff support.
    stay `in_review` in the languages table, which shows the "awaiting review" banner.
 5. Machine translation is never committed silently. A translation-management tool (e.g. Crowdin,
    Lokalise) can be proposed later if volume grows; it is a new dependency and needs approval.
+
+## 2026-10-21 · Module 1 · Auth & roles
+
+### D-039 · New worker profiles are visible only to jobs they apply to
+Spec §16 leaves the default open. New Skill Passports start at `applications_only`; the worker can
+widen it later (Module 2).
+
+### D-040 · Worker phone sign-in
+- Flow: language → phone (BD, NP, IN, PK, LK dial codes) → 6-digit WhatsApp code → name and
+  country of residence. The same flow signs existing workers in.
+- `otp_challenges` stores an HMAC of the code (app key), never the code. Codes expire after 10
+  minutes and allow 5 attempts. Resend after 60 seconds; at most 5 codes per phone and 20 per IP
+  per hour, counted from the table so limits survive cache flushes. Every wrong attempt is
+  committed before the error is returned.
+- Delivery runs in an encrypted queued job through `OtpChannel` (`WhatsAppCloudOtpChannel` with an
+  approved authentication template; `LogOtpChannel` locally, refused in production).
+- Numbers that belong to deleted accounts or to organization/staff users get "this number can't be
+  used to sign in, contact support". This reveals that the number is blocked, which we accept so
+  that real people are not left waiting for a code that never comes.
+- Verified-but-unregistered numbers may finish the details step for 30 minutes.
+
+### D-041 · Organization self-registration
+Step 1 Fortify account (name, email, password, email verification) → step 2 organization details
+(type, legal and display name, country, city, registration number, agency licence + expiry,
+optional job title) → step 3 evidence upload. The organization starts `pending`, the user becomes
+Owner / Agency Owner / Institute Owner, and a verification request of the matching type is opened.
+Evidence files (PDF/JPG/PNG ≤ 10 MB) are media on that verification request on the private disk.
+Free-webmail sign-ups are flagged in the request's `notes` for the reviewer. Only members with
+`organization.update` can add evidence. `organization.verified` middleware is ready for Module 3.
+
+### D-042 · Team invitations
+Invitations are by email with a role valid for the organization type, single-use (SHA-256 of a
+48-character token), valid 7 days, and replace earlier pending invitations for the same address.
+Only a signed-in organization user whose verified email matches may accept. Organization users
+without a workspace see their pending invitations before being asked to register an organization.
+An organization always keeps at least one owner. Every change is in the activity log.
+
+### D-043 · Staff accounts
+Invitation-only (3-day links) by staff with `staff.manage` (superusers). Accepting creates a verified
+staff account and goes straight to the security page to set up 2FA. Staff screens (dashboard,
+`/admin`, `/_design`, Horizon) require confirmed 2FA via `staff.2fa`;
+`BLUESKILLS_ENFORCE_STAFF_2FA=false` relaxes it on a local machine only. Deactivating a staff member
+removes their roles and soft-deletes the account. At least one superuser always remains.
+
+### D-044 · Worker account settings
+Workers edit only their name in settings; email, password, 2FA and passkeys are for organization
+and staff accounts (`/settings/security` is limited to those types). Deleting a worker account
+needs a phone-code confirmation and moves to the Module 2 privacy page.
+
+### D-045 · Permission checks never throw
+Policies use spatie's `checkPermissionTo` (false when a permission is missing) instead of
+`hasPermissionTo` (throws). The current member's abilities (`organizationAbilities.update`,
+`.manageTeam`) are shared so the UI hides links that would end in 403.
+
+### D-046 · Primitives restyled on tokens during review
+The destructive button now uses `text-on-brand` (white text failed contrast on the dark-mode `bad`
+colour) and the appearance tabs use design tokens instead of the kit's neutral greys.
