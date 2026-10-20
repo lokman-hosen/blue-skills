@@ -25,3 +25,4 @@ Route::middleware(['auth', 'can:viewDesignSystem'])->prefix('_design')->name('de
 });
 
 require __DIR__.'/settings.php';
+require __DIR__.'/worker.php';

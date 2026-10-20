@@ -14,6 +14,11 @@ declare namespace App {
         }
         namespace Config {
             namespace Data {
+                export type CountryOptionData = {
+                    code: string;
+                    name: string;
+                    dialCode: string;
+                };
                 export type LocaleData = {
                     code: string;
                     dir: string;
@@ -66,6 +71,7 @@ declare namespace App {
                     | 'trainer'
                     | 'assessor'
                     | 'placement_officer';
+                export type OtpPurpose = 'login';
                 export type Permission =
                     | 'organization.update'
                     | 'team.manage'
