@@ -11,8 +11,8 @@ use App\Domain\Identity\Models\User;
 use Illuminate\Validation\ValidationException;
 
 /**
- * Issues a sign-in code for a worker phone and queues its delivery. Limits are counted from
- * stored challenges so they survive cache flushes.
+ * Issues a one-time code for a worker phone (sign-in, or confirming account deletion) and
+ * queues its delivery. Limits are counted from stored challenges so they survive cache flushes.
  */
 class RequestPhoneOtp
 {
@@ -22,7 +22,7 @@ class RequestPhoneOtp
      * @throws PhoneSignInBlocked
      * @throws ValidationException
      */
-    public function handle(string $phone, ?string $ip, string $locale): OtpChallenge
+    public function handle(string $phone, ?string $ip, string $locale, OtpPurpose $purpose = OtpPurpose::Login): OtpChallenge
     {
         $this->ensurePhoneMaySignIn($phone);
         $this->ensureWithinLimits($phone, $ip);
@@ -32,7 +32,7 @@ class RequestPhoneOtp
 
         $challenge = OtpChallenge::query()->create([
             'phone' => $phone,
-            'purpose' => OtpPurpose::Login,
+            'purpose' => $purpose,
             'channel' => $this->channel->name(),
             'code_hash' => OtpChallenge::hashCode($code),
             'expires_at' => now()->addMinutes((int) config('blueskills.otp.ttl_minutes')),

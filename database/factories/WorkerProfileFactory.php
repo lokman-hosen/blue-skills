@@ -22,6 +22,7 @@ class WorkerProfileFactory extends Factory
     {
         return [
             'user_id' => User::factory()->worker(),
+            'reference' => fn () => WorkerProfile::newReference(),
             'headline' => fake()->jobTitle(),
             'occupation_id' => Occupation::factory(),
             'years_experience' => fake()->numberBetween(1, 15),
@@ -30,5 +31,20 @@ class WorkerProfileFactory extends Factory
             'availability' => Availability::Immediately,
             'visibility' => ProfileVisibility::EmployersAndAgencies,
         ];
+    }
+
+    /**
+     * A profile straight after phone sign-up (RegisterWorker): name and country only.
+     */
+    public function fresh(): static
+    {
+        return $this->state([
+            'headline' => null,
+            'occupation_id' => null,
+            'years_experience' => null,
+            'passport_status' => null,
+            'availability' => null,
+            'visibility' => ProfileVisibility::ApplicationsOnly,
+        ]);
     }
 }

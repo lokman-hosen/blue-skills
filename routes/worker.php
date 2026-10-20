@@ -1,6 +1,11 @@
 <?php
 
 use App\Http\Controllers\Worker\Auth\PhoneSignInController;
+use App\Http\Controllers\Worker\BasicsController;
+use App\Http\Controllers\Worker\PassportController;
+use App\Http\Controllers\Worker\PrivacyController;
+use App\Http\Controllers\Worker\SkillShowController;
+use App\Http\Controllers\Worker\VoiceController;
 use Illuminate\Support\Facades\Route;
 
 // Worker sign-in / sign-up by phone (Module 1).
@@ -13,4 +18,48 @@ Route::middleware('guest')->prefix('join')->name('worker.')->controller(PhoneSig
     Route::post('resend', 'resend')->middleware('throttle:5,1')->name('resend');
     Route::get('details', 'details')->name('details');
     Route::post('details', 'register')->middleware('throttle:10,1')->name('details.store');
+});
+
+// Skill Passport: onboarding, sections and Voice-to-CV (Module 2).
+Route::middleware(['auth', 'verified', 'user.type:worker'])->prefix('passport')->name('worker.')->group(function () {
+    Route::get('basics', [BasicsController::class, 'edit'])->name('basics.edit');
+    Route::put('basics', [BasicsController::class, 'update'])->name('basics.update');
+
+    Route::controller(PassportController::class)->name('passport.')->group(function () {
+        Route::get('/', 'show')->name('show');
+        Route::get('edit/{section}', 'edit')->whereIn('section', PassportController::SECTIONS)->name('edit');
+        Route::put('about', 'updateAbout')->name('about.update');
+        Route::post('experiences', 'storeExperience')->name('experiences.store');
+        Route::put('experiences/{experience}', 'updateExperience')->name('experiences.update');
+        Route::delete('experiences/{experience}', 'destroyExperience')->name('experiences.destroy');
+        Route::put('skills', 'updateSkills')->name('skills.update');
+        Route::put('languages', 'updateLanguages')->name('languages.update');
+        Route::put('preferences', 'updatePreferences')->name('preferences.update');
+        Route::post('photo', 'updatePhoto')->middleware('throttle:10,1')->name('photo.update');
+        Route::delete('photo', 'destroyPhoto')->name('photo.destroy');
+        Route::post('evidence', 'storeCredential')->middleware('throttle:20,1')->name('evidence.store');
+        Route::delete('evidence/{evidence}', 'destroyCredential')->name('evidence.destroy');
+    });
+
+    Route::controller(PrivacyController::class)->prefix('privacy')->name('privacy.')->group(function () {
+        Route::get('/', 'show')->name('show');
+        Route::put('visibility', 'updateVisibility')->name('visibility.update');
+        Route::post('delete-code', 'sendDeletionCode')->middleware('throttle:5,1')->name('deletion-code.store');
+        Route::delete('account', 'destroy')->middleware('throttle:10,1')->name('account.destroy');
+    });
+
+    Route::controller(SkillShowController::class)->prefix('skillshow')->name('skillshow.')->group(function () {
+        Route::get('/', 'edit')->name('edit');
+        Route::post('/', 'store')->middleware('throttle:10,1')->name('store');
+        Route::put('{skillShow}', 'update')->name('update');
+        Route::delete('{skillShow}', 'destroy')->name('destroy');
+    });
+
+    Route::controller(VoiceController::class)->prefix('voice')->name('voice.')->group(function () {
+        Route::get('/', 'show')->name('show');
+        Route::get('review', 'review')->name('review');
+        Route::post('apply', 'apply')->name('apply');
+        Route::post('{question}', 'submit')->middleware('throttle:30,1')->name('submit');
+        Route::post('{question}/confirm', 'confirm')->name('confirm');
+    });
 });

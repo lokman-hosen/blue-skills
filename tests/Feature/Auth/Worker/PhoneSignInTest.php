@@ -47,8 +47,9 @@ it('registers a new worker by phone', function () {
     $this->post(route('worker.verify.store'), ['code' => $this->channel->lastCode()])
         ->assertRedirect(route('worker.details'));
 
+    // Straight on to onboarding phase A (Module 2).
     $this->post(route('worker.details.store'), ['name' => 'Rahim Uddin', 'country' => 'BD'])
-        ->assertRedirect(route('dashboard'));
+        ->assertRedirect(route('worker.basics.edit'));
 
     $user = User::query()->where('phone', '+8801711000099')->firstOrFail();
 
@@ -56,7 +57,18 @@ it('registers a new worker by phone', function () {
     expect($user->isWorker())->toBeTrue()
         ->and($user->phone_verified_at)->not->toBeNull()
         ->and($user->workerProfile?->visibility)->toBe(ProfileVisibility::ApplicationsOnly)
-        ->and($user->workerProfile?->current_country_code)->toBe('BD');
+        ->and($user->workerProfile?->current_country_code)->toBe('BD')
+        ->and($user->workerProfile?->reference)->toMatch('/^BSK-\d{7}$/');
+});
+
+it('does not accept a sign-in code for another purpose', function () {
+    requestCode();
+    OtpChallenge::query()->update(['purpose' => 'account_deletion']);
+
+    $this->post(route('worker.verify.store'), ['code' => $this->channel->lastCode()])
+        ->assertSessionHasErrors('code');
+
+    $this->assertGuest();
 });
 
 it('signs an existing worker straight in', function () {

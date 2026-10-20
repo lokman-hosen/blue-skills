@@ -28,6 +28,7 @@ import {
     Tags,
     Users,
     UsersRound,
+    Video,
 } from 'lucide-react';
 import { dashboard } from '@/routes';
 import admin from '@/routes/admin';
@@ -35,6 +36,7 @@ import design from '@/routes/design';
 import horizon from '@/routes/horizon';
 import { edit as profileSettings } from '@/routes/profile';
 import team from '@/routes/team';
+import worker from '@/routes/worker';
 
 export type NavLink = {
     key: string;
@@ -55,13 +57,14 @@ export const workerPrimaryNav: NavLink[] = [
     { key: 'home', label: 'nav.home', icon: Home, href: dashboard() },
     { key: 'jobs', label: 'nav.jobs', icon: Search },
     { key: 'applications', label: 'nav.applications', icon: ListChecks },
-    { key: 'passport', label: 'nav.passport', icon: IdCard },
+    { key: 'passport', label: 'nav.passport', icon: IdCard, href: worker.passport.show() },
 ];
 
 export const workerSecondaryNav: NavLink[] = [
+    { key: 'skillshow', label: 'nav.skillshow', icon: Video, href: worker.skillshow.edit() },
     { key: 'messages', label: 'nav.messages', icon: MessageSquare },
     { key: 'documents', label: 'nav.documents', icon: FileText },
-    { key: 'privacy', label: 'nav.privacy', icon: ShieldCheck },
+    { key: 'privacy', label: 'nav.privacy', icon: ShieldCheck, href: worker.privacy.show() },
     { key: 'settings', label: 'nav.settings', icon: Settings, href: profileSettings() },
 ];
 
@@ -149,6 +152,13 @@ export const adminNav: NavGroup[] = [
         items: [
             { key: 'overview', label: 'nav.overview', icon: LayoutDashboard, href: dashboard() },
             { key: 'verifications', label: 'nav.verifications', icon: ShieldCheck },
+            {
+                key: 'skillshows',
+                label: 'nav.skillshows',
+                icon: Video,
+                href: admin.skillshows.index(),
+                permission: 'skill_shows.moderate',
+            },
             { key: 'jobs', label: 'nav.jobs', icon: BriefcaseBusiness },
             { key: 'trust', label: 'nav.trust', icon: ShieldAlert },
             { key: 'crm', label: 'nav.crm', icon: Building2 },

@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Admin\SkillShowModerationController;
 use App\Http\Controllers\Admin\StaffController;
 use App\Http\Controllers\Admin\StaffInvitationAcceptanceController;
 use Illuminate\Support\Facades\Route;
@@ -12,6 +13,12 @@ Route::middleware(['auth', 'verified', 'user.type:staff', 'staff.2fa'])->prefix(
         Route::delete('invitations/{invitation}', 'revoke')->name('invitations.destroy');
         Route::patch('members/{member}', 'updateRole')->name('members.update');
         Route::delete('members/{member}', 'deactivate')->name('members.destroy');
+    });
+
+    // SkillShow moderation (Module 2, product rule 3).
+    Route::controller(SkillShowModerationController::class)->prefix('skillshows')->name('skillshows.')->group(function () {
+        Route::get('/', 'index')->name('index');
+        Route::patch('{skillShow}', 'update')->name('update');
     });
 });
 

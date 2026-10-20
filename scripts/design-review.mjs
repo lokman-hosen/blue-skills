@@ -4,19 +4,20 @@
  *
  *   node scripts/design-review.mjs [--base=http://localhost:8080] [--out=storage/design-review]
  *                                   [--locales=en,bn,ur] [--themes=light,dark] [--widths=390,1440]
- *                                   [--pages=/a,/b] [--email=… --password=…] [--guest]
+ *                                   [--pages=/a,/b] [--email=… --password=…] [--guest] [--phone=+880…]
  *
  * Signs in as the local superuser (or --email, or nobody with --guest), then for each page × locale × theme × width it records
  * console errors, horizontal overflow, elements that spill out of the viewport and text with
  * insufficient contrast (WCAG AA), and saves a full-page screenshot. Exits 1 on any finding.
  */
-import { mkdirSync, writeFileSync } from 'node:fs';
+import { mkdirSync, readFileSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { chromium } from 'playwright';
 
 const args = Object.fromEntries(
     process.argv.slice(2).map((arg) => {
-        const [key, value] = arg.replace(/^--/, '').split('=');
+        const [key, ...rest] = arg.replace(/^--/, '').split('=');
+        const value = rest.length > 0 ? rest.join('=') : undefined;
 
         return [key, value ?? 'true'];
     }),
@@ -31,6 +32,46 @@ const pages = (args.pages ?? '/_design,/_design/layouts/public,/_design/layouts/
 const email = args.email ?? 'superuser@blueskills.test';
 const password = args.password ?? 'password';
 const guest = args.guest === 'true';
+/** Worker sign-in: E.164 number of a seeded worker, e.g. +8801711000001 (Rahim). */
+const phone = args.phone;
+
+/**
+ * Worker phone sign-in. Needs OTP_CHANNEL=log and a running queue worker; the code is read
+ * from storage/logs/laravel.log.
+ */
+async function signInByPhone(page) {
+    const country = phone.startsWith('+880') ? 'BD' : phone.startsWith('+977') ? 'NP' : phone.startsWith('+91') ? 'IN' : phone.startsWith('+92') ? 'PK' : 'LK';
+    const dial = { BD: '+880', NP: '+977', IN: '+91', PK: '+92', LK: '+94' }[country];
+
+    await page.goto(`${base}/join/phone`);
+    await page.selectOption('select[name=country]', country);
+    await page.fill('input[name=phone]', phone.slice(dial.length));
+    // Only codes logged after this request count; older ones are already used or expired.
+    const logOffset = readFileSync('storage/logs/laravel.log', 'utf8').length;
+    await Promise.all([page.waitForURL((url) => url.pathname === '/join/verify'), page.click('button[type=submit]')]);
+
+    let code = null;
+
+    for (let attempt = 0; attempt < 40 && !code; attempt++) {
+        const log = readFileSync('storage/logs/laravel.log', 'utf8').slice(logOffset);
+        const matches = [...log.matchAll(new RegExp(`sign-in code for \\${phone}: (\\d{6})`, 'g'))];
+        code = matches.at(-1)?.[1] ?? null;
+
+        if (!code) {
+            await new Promise((resolve) => setTimeout(resolve, 250));
+        }
+    }
+
+    if (!code) {
+        throw new Error(`No sign-in code for ${phone} in storage/logs/laravel.log. Is a queue worker running?`);
+    }
+
+    await page.locator('input[name=code]').pressSequentially(code);
+    await Promise.all([
+        page.waitForURL((url) => !url.pathname.startsWith('/join'), { timeout: 15000 }),
+        page.locator('form button[type=submit]').first().click(),
+    ]);
+}
 
 mkdirSync(out, { recursive: true });
 
@@ -175,11 +216,13 @@ function inspect() {
 }
 
 const browser = await chromium.launch();
+/** Session cookies from the first sign-in, reused for every theme (avoids the OTP resend wait). */
+let storageState;
 const report = [];
 
 try {
     for (const theme of themes) {
-        const context = await browser.newContext({ colorScheme: theme, viewport: { width: 1440, height: 900 } });
+        const context = await browser.newContext({ colorScheme: theme, viewport: { width: 1440, height: 900 }, storageState });
         await context.addInitScript(() => {
             localStorage.setItem('appearance', 'system');
         });
@@ -188,11 +231,19 @@ try {
         page.on('console', (message) => message.type() === 'error' && errors.push(message.text()));
         page.on('pageerror', (error) => errors.push(error.message));
 
-        if (!guest) {
+        if (storageState) {
+            // Already signed in through the shared session.
+        } else if (phone) {
+            await signInByPhone(page);
+        } else if (!guest) {
             await page.goto(`${base}/login`);
             await page.fill('input[name=email]', email);
             await page.fill('input[name=password]', password);
             await Promise.all([page.waitForURL((url) => !url.pathname.startsWith('/login')), page.click('button[type=submit]')]);
+        }
+
+        if (!guest && !storageState) {
+            storageState = await context.storageState();
         }
 
         for (const locale of locales) {
@@ -201,7 +252,7 @@ try {
 
                 for (const path of pages) {
                     errors.length = 0;
-                    await page.goto(`${base}${path}?lang=${locale}`, { waitUntil: 'networkidle' });
+                    await page.goto(`${base}${path}${path.includes('?') ? '&' : '?'}lang=${locale}`, { waitUntil: 'networkidle' });
                     await page.evaluate(() => document.fonts.ready);
                     const findings = await page.evaluate(inspect);
 

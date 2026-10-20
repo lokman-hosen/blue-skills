@@ -47,11 +47,15 @@ php artisan typescript:transform # regenerate TS types from Data classes
 php artisan migrate:fresh --seed # reset local DB with sample data
 npm run format                   # Prettier
 npm run build && npm run design:review  # Playwright review of /_design (en/bn/ur, light/dark, 390/1440)
+npm run design:review -- --phone=+8801711000001 --pages=/passport  # as a worker (needs a queue worker)
 ```
 
 Worker sign-in is `/join` (phone + code). Locally `OTP_CHANNEL=log` writes the code to
 `storage/logs/laravel.log`; `BLUESKILLS_ENFORCE_STAFF_2FA=false` in `.env` skips the staff 2FA requirement
-on your machine only (tests always enforce it).
+on your machine only (tests always enforce it). Sign-in codes, Voice-to-CV answers and SkillShow videos are
+processed on the queue: run `sail artisan queue:work` (or `composer run dev`). `SPEECH_TO_TEXT_DRIVER=sample`
+answers every recording with the prototype's sample sentence; SkillShow checks need ffmpeg (in Sail).
+Seeded worker Rahim Uddin signs in with `+8801711000001` and has a complete Skill Passport.
 
 Local logins after seeding (password `password`): `superuser@blueskills.test` (staff),
 `owner@abc-contracting.test` (employer Owner), `sara@abc-contracting.test` (employer HR Admin), `imran@northstar.test` (agency case officer),
@@ -203,7 +207,7 @@ Update this table when a module is done.
 |---|--------|--------|
 | 0 | Foundation: project, DB core, design system, layouts, CI | ✓ |
 | 1 | Auth & roles: worker OTP, org email + 2FA, staff invites, team roles | ✓ |
-| 2 | Worker profile: onboarding, Skill Passport, Voice-to-CV, SkillShow | ☐ |
+| 2 | Worker profile: onboarding, Skill Passport, Voice-to-CV, SkillShow | ✓ |
 | 3 | Organizations & jobs: employer verification, job wizard, Truth Card, job review, public search | ☐ |
 | 4 | Applications: apply + snapshot + consent, tracker, pipeline, talent search, shortlists | ☐ |
 | 5 | Messaging & notifications: in-app, WhatsApp, SMS, email | ☐ |

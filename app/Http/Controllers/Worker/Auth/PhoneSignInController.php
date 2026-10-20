@@ -161,7 +161,10 @@ class PhoneSignInController extends Controller
         Auth::login($worker, remember: true);
         $request->session()->regenerate();
 
-        return to_route('dashboard');
+        // Straight on to onboarding phase A; a worker who registered earlier just lands home.
+        return $worker->workerProfile?->occupation_id === null
+            ? to_route('worker.basics.edit')
+            : to_route('dashboard');
     }
 
     private function verifiedPhone(Request $request): ?string

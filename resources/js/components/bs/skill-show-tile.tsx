@@ -15,6 +15,8 @@ type SkillShowTileProps = {
 };
 
 const moderationTone: Record<App.Domain.Worker.Enums.ModerationStatus, Tone> = {
+    processing: 'neutral',
+    failed: 'bad',
     pending: 'warn',
     approved: 'ok',
     rejected: 'bad',

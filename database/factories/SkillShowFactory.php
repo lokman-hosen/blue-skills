@@ -25,4 +25,14 @@ class SkillShowFactory extends Factory
             'moderation_status' => ModerationStatus::Pending,
         ];
     }
+
+    public function processing(): static
+    {
+        return $this->state(['duration_ms' => null, 'moderation_status' => ModerationStatus::Processing]);
+    }
+
+    public function approved(): static
+    {
+        return $this->state(['moderation_status' => ModerationStatus::Approved, 'moderated_at' => now()]);
+    }
 }
