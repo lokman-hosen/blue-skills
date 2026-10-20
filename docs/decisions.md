@@ -207,3 +207,38 @@ The sidebar's menu badges, menu actions and group actions used physical `right-*
 ### D-033 · Theme toggle icon follows the stored setting
 The icon reflects the stored choice (light, dark or system) rather than the resolved theme, which
 the server cannot know and which caused a hydration mismatch in dark mode.
+
+## 2026-10-20 · Inputs for Module 1 (answers from the product owner)
+
+### D-034 · Worker OTP goes over WhatsApp first
+Phone OTP for workers is sent via WhatsApp initially. It sits behind an OTP channel interface so
+SMS can be added later without changing callers (spec §13: no single hard-wired vendor). Locally the
+channel logs the code instead of sending it.
+
+### D-035 · Two-factor authentication
+Staff must enable 2FA before they can use any admin screen. Organization users are strongly
+prompted to enable it (banner plus a nudge after sign-in) but not forced at launch; organization
+owners will be able to require it for their team later. Workers use phone OTP and have no 2FA.
+
+### D-036 · Organizations self-register and wait for review
+Employers, agencies and institutes sign up themselves (business email + password + 2FA prompt,
+then company details and registration evidence). The organization starts as `pending`
+verification and a verification request is queued for staff. Until it is approved, members can
+complete their profile and draft jobs, but cannot publish jobs or search talent.
+
+### D-037 · Deleted accounts cannot sign in
+A soft-deleted user cannot sign in (by phone OTP or email). Their phone number and email stay
+reserved by the unique indexes, so the same contact cannot register again; recovery goes through
+staff support.
+
+### D-038 · Translation process
+1. Developers add the English text to `lang/en.json` and the same key to `lang/bn.json` (a test
+   enforces parity); any non-reviewed text is listed in `docs/translation-todo.md`.
+2. A native-speaker translator for each launch language writes or corrects the strings (paid
+   translators, or bilingual staff at partner institutes such as Meghna for Bangla).
+3. A second native speaker reviews them in context on `/_design` and the real screens, using
+   `?lang=xx`.
+4. Reviewed keys are removed from `docs/translation-todo.md`. Locales whose review is incomplete
+   stay `in_review` in the languages table, which shows the "awaiting review" banner.
+5. Machine translation is never committed silently. A translation-management tool (e.g. Crowdin,
+   Lokalise) can be proposed later if volume grows; it is a new dependency and needs approval.
