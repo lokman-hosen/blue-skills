@@ -38,7 +38,16 @@ type WorkspaceShellProps = {
  */
 export function WorkspaceShell({ nav, context, children }: WorkspaceShellProps) {
     const { t, dir } = useTranslation();
-    const { sidebarOpen } = usePage().props;
+    const { sidebarOpen, auth } = usePage().props;
+    const permissions = auth.user?.staffPermissions ?? [];
+    const visibleNav = nav
+        .map((group) => ({
+            ...group,
+            items: group.items.filter(
+                (item) => !item.permission || permissions.includes(item.permission),
+            ),
+        }))
+        .filter((group) => group.items.length > 0);
     const { isCurrentOrParentUrl } = useCurrentUrl();
 
     return (
@@ -57,7 +66,7 @@ export function WorkspaceShell({ nav, context, children }: WorkspaceShellProps) 
                     </SidebarMenu>
                 </SidebarHeader>
                 <SidebarContent>
-                    {nav.map((group, index) => (
+                    {visibleNav.map((group, index) => (
                         <SidebarGroup key={index}>
                             <SidebarMenu>
                                 {group.items.map((item) => {

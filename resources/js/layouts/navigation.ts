@@ -30,9 +30,11 @@ import {
     UsersRound,
 } from 'lucide-react';
 import { dashboard } from '@/routes';
+import admin from '@/routes/admin';
 import design from '@/routes/design';
 import horizon from '@/routes/horizon';
 import { edit as profileSettings } from '@/routes/profile';
+import team from '@/routes/team';
 
 export type NavLink = {
     key: string;
@@ -42,6 +44,8 @@ export type NavLink = {
     /** Missing until the module that owns the screen ships; rendered as "Soon". */
     href?: NonNullable<InertiaLinkProps['href']>;
     external?: boolean;
+    /** Staff permission required to see the item. */
+    permission?: string;
 };
 
 export type NavGroup = { label?: string; items: NavLink[] };
@@ -84,7 +88,7 @@ export const orgNav: Record<App.Domain.Organization.Enums.OrganizationType, NavG
         },
         {
             items: [
-                { key: 'team', label: 'nav.team', icon: Users },
+                { key: 'team', label: 'nav.team', icon: Users, href: team.index() },
                 { key: 'billing', label: 'nav.billing', icon: CreditCard },
                 ...orgFooter,
             ],
@@ -109,7 +113,7 @@ export const orgNav: Record<App.Domain.Organization.Enums.OrganizationType, NavG
         },
         {
             items: [
-                { key: 'team', label: 'nav.team', icon: Users },
+                { key: 'team', label: 'nav.team', icon: Users, href: team.index() },
                 { key: 'billing', label: 'nav.billing', icon: CreditCard },
                 ...orgFooter,
             ],
@@ -132,7 +136,10 @@ export const orgNav: Record<App.Domain.Organization.Enums.OrganizationType, NavG
             ],
         },
         {
-            items: [{ key: 'team', label: 'nav.team', icon: Users }, ...orgFooter],
+            items: [
+                { key: 'team', label: 'nav.team', icon: Users, href: team.index() },
+                ...orgFooter,
+            ],
         },
     ],
 };
@@ -151,6 +158,13 @@ export const adminNav: NavGroup[] = [
         items: [
             { key: 'configuration', label: 'nav.configuration', icon: SlidersHorizontal },
             { key: 'taxonomy', label: 'nav.taxonomy', icon: Tags },
+            {
+                key: 'staff',
+                label: 'nav.staff',
+                icon: Users,
+                href: admin.staff.index(),
+                permission: 'staff.manage',
+            },
             { key: 'design', label: 'nav.design_system', icon: Palette, href: design.index() },
             {
                 key: 'queues',

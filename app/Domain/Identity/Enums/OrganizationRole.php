@@ -49,6 +49,20 @@ enum OrganizationRole: string
         };
     }
 
+    public static function ownerFor(OrganizationType $type): self
+    {
+        return match ($type) {
+            OrganizationType::Employer => self::Owner,
+            OrganizationType::Agency => self::AgencyOwner,
+            OrganizationType::Institute => self::InstituteOwner,
+        };
+    }
+
+    public function isOwner(): bool
+    {
+        return in_array($this, [self::Owner, self::AgencyOwner, self::InstituteOwner], true);
+    }
+
     /**
      * @return list<self>
      */

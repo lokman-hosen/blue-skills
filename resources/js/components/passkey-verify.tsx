@@ -6,6 +6,7 @@ import InputError from '@/components/input-error';
 import { Button } from '@/components/ui/button';
 import { Separator } from '@/components/ui/separator';
 import { Spinner } from '@/components/ui/spinner';
+import { useTranslation } from '@/lib/i18n';
 
 type Props = {
     routes?: {
@@ -18,6 +19,7 @@ type Props = {
 };
 
 export default function PasskeyVerify({ routes, label, loadingLabel, separator }: Props = {}) {
+    const { t } = useTranslation();
     const { verify, isLoading, error, isSupported } = usePasskeyVerify({
         ...(routes && {
             routes: {
@@ -40,14 +42,14 @@ export default function PasskeyVerify({ routes, label, loadingLabel, separator }
                 <Button
                     type="button"
                     variant="outline"
-                    className="w-full"
+                    className="min-h-11 w-full"
                     onClick={verify}
                     disabled={isLoading}
                 >
                     {isLoading ? <Spinner /> : <KeyRound className="h-4 w-4" />}
                     {isLoading
-                        ? (loadingLabel ?? 'Authenticating...')
-                        : (label ?? 'Sign in with a passkey')}
+                        ? (loadingLabel ?? t('auth.passkey.signing_in'))
+                        : (label ?? t('auth.passkey.sign_in'))}
                 </Button>
                 {error && <InputError message={error} className="text-center" />}
             </div>
@@ -57,8 +59,8 @@ export default function PasskeyVerify({ routes, label, loadingLabel, separator }
                     <Separator className="w-full" />
                 </div>
                 <div className="relative flex justify-center text-xs uppercase">
-                    <span className="bg-background px-2 text-muted-foreground">
-                        {separator ?? 'Or continue with email'}
+                    <span className="bg-surface px-2 text-muted">
+                        {separator ?? t('auth.passkey.or_email')}
                     </span>
                 </div>
             </div>

@@ -14,6 +14,7 @@ declare module '@inertiajs/core' {
             auth: Auth;
             currentOrganization: App.Domain.Organization.Data.OrganizationSummaryData | null;
             organizations: App.Domain.Organization.Data.OrganizationSummaryData[];
+            organizationAbilities: { update: boolean; manageTeam: boolean };
             locale: App.Domain.Config.Data.LocaleData;
             locales: App.Domain.Config.Data.LocaleOptionData[];
             translations: Record<string, string>;

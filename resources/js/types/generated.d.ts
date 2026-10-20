@@ -14,6 +14,11 @@ declare namespace App {
         }
         namespace Config {
             namespace Data {
+                export type CountryOptionData = {
+                    code: string;
+                    name: string;
+                    dialCode: string;
+                };
                 export type LocaleData = {
                     code: string;
                     dir: string;
@@ -50,6 +55,22 @@ declare namespace App {
                     type: App.Domain.Identity.Enums.UserType;
                     locale: string;
                     twoFactorEnabled: boolean;
+                    staffPermissions: string[];
+                };
+                export type StaffInvitationData = {
+                    id: string;
+                    email: string;
+                    role: App.Domain.Identity.Enums.StaffRole;
+                    expiresAt: string;
+                    invitedBy: string | null;
+                };
+                export type StaffMemberData = {
+                    id: string;
+                    name: string;
+                    email: string | null;
+                    role: App.Domain.Identity.Enums.StaffRole | null;
+                    twoFactorEnabled: boolean;
+                    isYou: boolean;
                 };
             }
             namespace Enums {
@@ -66,6 +87,7 @@ declare namespace App {
                     | 'trainer'
                     | 'assessor'
                     | 'placement_officer';
+                export type OtpPurpose = 'login';
                 export type Permission =
                     | 'organization.update'
                     | 'team.manage'
@@ -194,6 +216,12 @@ declare namespace App {
         }
         namespace Organization {
             namespace Data {
+                export type EvidenceDocumentData = {
+                    id: string;
+                    name: string;
+                    sizeKb: number;
+                    uploadedAt: string | null;
+                };
                 export type OrganizationSummaryData = {
                     id: string;
                     displayName: string;
@@ -201,6 +229,34 @@ declare namespace App {
                     countryCode: string;
                     city: string | null;
                     verification: App.Support.Data.StatusData;
+                };
+                export type RegisterOrganizationData = {
+                    type: App.Domain.Organization.Enums.OrganizationType;
+                    legalName: string;
+                    displayName: string;
+                    countryCode: string;
+                    city: string | null;
+                    registrationNumber: string | null;
+                    licenceNumber: string | null;
+                    licenceExpiresOn: string | null;
+                    title: string | null;
+                };
+                export type TeamInvitationData = {
+                    id: string;
+                    email: string | null;
+                    role: App.Domain.Identity.Enums.OrganizationRole;
+                    expiresAt: string;
+                    invitedBy: string | null;
+                    organization: App.Domain.Organization.Data.OrganizationSummaryData;
+                };
+                export type TeamMemberData = {
+                    id: string;
+                    name: string;
+                    email: string | null;
+                    title: string | null;
+                    role: App.Domain.Identity.Enums.OrganizationRole | null;
+                    joinedAt: string | null;
+                    isYou: boolean;
                 };
             }
             namespace Enums {

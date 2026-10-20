@@ -15,6 +15,8 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\MorphTo;
+use Spatie\MediaLibrary\HasMedia;
+use Spatie\MediaLibrary\InteractsWithMedia;
 use Spatie\ModelStates\HasStates;
 
 /**
@@ -28,10 +30,16 @@ use Spatie\ModelStates\HasStates;
     'reason_code', 'notes', 'decided_at',
 ])]
 #[UseFactory(VerificationRequestFactory::class)]
-class VerificationRequest extends Model
+class VerificationRequest extends Model implements HasMedia
 {
     /** @use HasFactory<VerificationRequestFactory> */
-    use HasFactory, HasStates, HasUlids, LogsStatusChanges;
+    use HasFactory, HasStates, HasUlids, InteractsWithMedia, LogsStatusChanges;
+
+    public const EVIDENCE_COLLECTION = 'evidence';
+
+    public const EVIDENCE_MIME_TYPES = ['application/pdf', 'image/jpeg', 'image/png'];
+
+    public const EVIDENCE_MAX_KB = 10_240;
 
     /**
      * @return array<string, string>
@@ -44,6 +52,13 @@ class VerificationRequest extends Model
             'decision' => VerificationDecision::class,
             'decided_at' => 'datetime',
         ];
+    }
+
+    public function registerMediaCollections(): void
+    {
+        $this->addMediaCollection(self::EVIDENCE_COLLECTION)
+            ->useDisk(config('blueskills.private_disk'))
+            ->acceptsMimeTypes(self::EVIDENCE_MIME_TYPES);
     }
 
     /**

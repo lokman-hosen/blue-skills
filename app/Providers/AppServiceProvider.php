@@ -9,6 +9,11 @@ use App\Domain\Applications\Models\ProfileSnapshot;
 use App\Domain\Config\Models\Country;
 use App\Domain\Config\Models\CountryRule;
 use App\Domain\Config\Models\Language;
+use App\Domain\Identity\Channels\LogOtpChannel;
+use App\Domain\Identity\Channels\WhatsAppCloudOtpChannel;
+use App\Domain\Identity\Contracts\OtpChannel;
+use App\Domain\Identity\Enums\Permission;
+use App\Domain\Identity\Models\StaffInvitation;
 use App\Domain\Identity\Models\User;
 use App\Domain\Jobs\Models\JobCost;
 use App\Domain\Jobs\Models\JobMandate;
@@ -49,7 +54,10 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register(): void
     {
-        //
+        $this->app->bind(OtpChannel::class, fn () => match (config('blueskills.otp.channel')) {
+            'whatsapp' => new WhatsAppCloudOtpChannel,
+            default => new LogOtpChannel,
+        });
     }
 
     /**
@@ -65,6 +73,7 @@ class AppServiceProvider extends ServiceProvider
     protected function configureGates(): void
     {
         Gate::define('viewDesignSystem', fn (User $user): bool => $user->isStaff());
+        Gate::define('manageStaff', fn (User $user): bool => $user->hasStaffPermission(Permission::StaffManage->value));
     }
 
     /**
@@ -74,6 +83,7 @@ class AppServiceProvider extends ServiceProvider
     {
         Relation::enforceMorphMap([
             'user' => User::class,
+            'staff_invitation' => StaffInvitation::class,
             'organization' => Organization::class,
             'organization_member' => OrganizationMember::class,
             'organization_invitation' => OrganizationInvitation::class,

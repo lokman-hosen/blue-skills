@@ -35,4 +35,13 @@ return [
         ],
     ],
 
+    // WhatsApp Cloud API (Meta) for worker sign-in codes. Needs an approved
+    // "authentication" template with one body parameter and a copy-code button.
+    'whatsapp' => [
+        'token' => env('WHATSAPP_TOKEN'),
+        'phone_number_id' => env('WHATSAPP_PHONE_NUMBER_ID'),
+        'otp_template' => env('WHATSAPP_OTP_TEMPLATE', 'blueskills_login_code'),
+        'api_version' => env('WHATSAPP_API_VERSION', 'v23.0'),
+    ],
+
 ];

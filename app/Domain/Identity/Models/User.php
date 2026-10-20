@@ -151,6 +151,6 @@ class User extends Authenticatable implements MustVerifyEmail, PasskeyUser
             return false;
         }
 
-        return PlatformTeam::run(fn () => $this->unsetRelation('roles')->unsetRelation('permissions')->hasPermissionTo($permission));
+        return PlatformTeam::run(fn () => $this->unsetRelation('roles')->unsetRelation('permissions')->checkPermissionTo($permission));
     }
 }

@@ -14,7 +14,11 @@ Route::middleware(['auth'])->group(function () {
 
 Route::middleware(['auth', 'verified'])->group(function () {
     Route::delete('settings/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+    Route::inertia('settings/appearance', 'settings/appearance')->name('appearance.edit');
+});
 
+// Passwords, 2FA and passkeys belong to email accounts; workers sign in by phone.
+Route::middleware(['auth', 'verified', 'user.type:org,staff'])->group(function () {
     Route::get('settings/security', [SecurityController::class, 'edit'])
         ->middleware(RequirePassword::class)
         ->name('security.edit');
@@ -22,8 +26,6 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::put('settings/password', [SecurityController::class, 'update'])
         ->middleware('throttle:6,1')
         ->name('user-password.update');
-
-    Route::inertia('settings/appearance', 'settings/appearance')->name('appearance.edit');
 });
 
 Route::get('.well-known/passkey-endpoints', function () {

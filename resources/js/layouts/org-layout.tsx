@@ -1,6 +1,7 @@
 import { usePage } from '@inertiajs/react';
 import type { ReactNode } from 'react';
 import { OrgSwitcher } from '@/components/bs/org-switcher';
+import { WorkspaceNotices } from '@/components/bs/workspace-notices';
 import { WorkspaceShell } from '@/components/bs/workspace-shell';
 import { orgNav } from '@/layouts/navigation';
 
@@ -13,6 +14,7 @@ export default function OrgLayout({ children }: { children: ReactNode }) {
             nav={orgNav[currentOrganization?.type ?? 'employer']}
             context={<OrgSwitcher />}
         >
+            <WorkspaceNotices />
             {children}
         </WorkspaceShell>
     );

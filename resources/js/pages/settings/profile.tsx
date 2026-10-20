@@ -1,5 +1,4 @@
-import { Form, Head, usePage } from '@inertiajs/react';
-import { Link } from '@inertiajs/react';
+import { Form, Head, Link, usePage } from '@inertiajs/react';
 import ProfileController from '@/actions/App/Http/Controllers/Settings/ProfileController';
 import DeleteUser from '@/components/delete-user';
 import Heading from '@/components/heading';
@@ -7,121 +6,109 @@ import InputError from '@/components/input-error';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { edit } from '@/routes/profile';
+import { useTranslation } from '@/lib/i18n';
 import { send } from '@/routes/verification';
-import type { Auth } from '@/types';
 
-type PageProps = {
-    auth: Auth;
+type Props = {
+    mustVerifyEmail: boolean;
+    status?: string;
+    canEditEmail: boolean;
+    canDeleteAccount: boolean;
 };
 
 export default function Profile({
     mustVerifyEmail,
     status,
-}: {
-    mustVerifyEmail: boolean;
-    status?: string;
-}) {
-    const { auth } = usePage<PageProps>().props;
-    const user = auth.user;
+    canEditEmail,
+    canDeleteAccount,
+}: Props) {
+    const { t } = useTranslation();
+    const user = usePage().props.auth.user;
 
     return (
         <>
-            <Head title="Profile settings" />
+            <Head title={t('settings.profile.title')} />
 
-            <h1 className="sr-only">Profile settings</h1>
-
-            <div className="space-y-6">
+            <div className="flex flex-col gap-6">
                 <Heading
                     variant="small"
-                    title="Profile"
-                    description="Update your name and email address"
+                    title={t('settings.profile.title')}
+                    description={t(
+                        canEditEmail ? 'settings.profile.body' : 'settings.profile.body_worker',
+                    )}
                 />
 
                 <Form
                     {...ProfileController.update.form()}
-                    options={{
-                        preserveScroll: true,
-                    }}
-                    className="space-y-6"
+                    options={{ preserveScroll: true }}
+                    className="flex flex-col gap-5"
                 >
                     {({ processing, errors }) => (
                         <>
-                            <div className="grid gap-2">
-                                <Label htmlFor="name">Name</Label>
-
+                            <div className="flex flex-col gap-1.5">
+                                <Label htmlFor="name">{t('auth.worker.name')}</Label>
                                 <Input
                                     id="name"
-                                    className="mt-1 block w-full"
+                                    className="h-11"
                                     defaultValue={user?.name}
                                     name="name"
                                     required
                                     autoComplete="name"
-                                    placeholder="Full name"
+                                    aria-invalid={!!errors.name}
                                 />
-
-                                <InputError className="mt-2" message={errors.name} />
+                                <InputError message={errors.name} />
                             </div>
 
-                            <div className="grid gap-2">
-                                <Label htmlFor="email">Email address</Label>
-
-                                <Input
-                                    id="email"
-                                    type="email"
-                                    className="mt-1 block w-full"
-                                    defaultValue={user?.email ?? ''}
-                                    name="email"
-                                    required
-                                    autoComplete="username"
-                                    placeholder="Email address"
-                                />
-
-                                <InputError className="mt-2" message={errors.email} />
-                            </div>
+                            {canEditEmail && (
+                                <div className="flex flex-col gap-1.5">
+                                    <Label htmlFor="email">{t('auth.email')}</Label>
+                                    <Input
+                                        id="email"
+                                        type="email"
+                                        className="h-11"
+                                        defaultValue={user?.email ?? ''}
+                                        name="email"
+                                        required
+                                        autoComplete="username"
+                                        aria-invalid={!!errors.email}
+                                    />
+                                    <InputError message={errors.email} />
+                                </div>
+                            )}
 
                             {mustVerifyEmail && user?.emailVerifiedAt === null && (
-                                <div>
-                                    <p className="-mt-4 text-sm text-muted-foreground">
-                                        Your email address is unverified.{' '}
+                                <div className="flex flex-col gap-2 text-sm">
+                                    <p className="text-muted">
+                                        {t('settings.profile.unverified')}{' '}
                                         <Link
                                             href={send()}
                                             as="button"
-                                            className="text-foreground underline decoration-neutral-300 underline-offset-4 transition-colors duration-300 ease-out hover:decoration-current! dark:decoration-neutral-500"
+                                            className="font-semibold text-brand underline-offset-4 hover:underline"
                                         >
-                                            Click here to re-send the verification email.
+                                            {t('auth.verify_email.resend')}
                                         </Link>
                                     </p>
-
                                     {status === 'verification-link-sent' && (
-                                        <div className="mt-2 text-sm font-medium text-green-600">
-                                            A new verification link has been sent to your email
-                                            address.
-                                        </div>
+                                        <p role="status" className="font-medium text-ok">
+                                            {t('auth.verify_email.sent')}
+                                        </p>
                                     )}
                                 </div>
                             )}
 
-                            <div className="flex items-center gap-4">
-                                <Button disabled={processing} data-test="update-profile-button">
-                                    Save
-                                </Button>
-                            </div>
+                            <Button
+                                disabled={processing}
+                                className="min-h-11 self-start"
+                                data-test="update-profile-button"
+                            >
+                                {t('common.save')}
+                            </Button>
                         </>
                     )}
                 </Form>
             </div>
 
-            <DeleteUser />
+            {canDeleteAccount && <DeleteUser />}
         </>
     );
 }
-
-Profile.layout = {
-    breadcrumbs: [
-        {
-            title: 'Profile settings',
-            href: edit(),
-        },
-    ],
-};

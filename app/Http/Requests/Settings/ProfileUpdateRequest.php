@@ -17,6 +17,11 @@ class ProfileUpdateRequest extends FormRequest
      */
     public function rules(): array
     {
+        // Workers sign in by phone; their email is managed with the Skill Passport (Module 2).
+        if ($this->user()->isWorker()) {
+            return ['name' => $this->nameRules()];
+        }
+
         return $this->profileRules($this->user()->id);
     }
 }
