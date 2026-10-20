@@ -38,6 +38,20 @@ return [
     ],
 
     /*
+    | Voice-to-CV (Module 2, D-047). `speech_to_text` is `sample` locally (returns the
+    | prototype's answers) or `none` (typing only) until a provider driver is added.
+    | Recordings are deleted once the answer is confirmed or discarded, and after
+    | `recording_retention_days` at the latest.
+    */
+    'voice' => [
+        'speech_to_text' => env('SPEECH_TO_TEXT_DRIVER', 'sample'),
+        'max_recording_seconds' => 60,
+        'max_recording_kb' => 5_120,
+        'recording_retention_days' => 30,
+        'max_typed_characters' => 500,
+    ],
+
+    /*
     | Countries whose numbers can register as workers (dial-code picker on the phone step).
     */
     'worker_phone_countries' => ['BD', 'NP', 'IN', 'PK', 'LK'],

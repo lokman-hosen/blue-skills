@@ -15,6 +15,8 @@ export type SkillPassport = {
     countriesWorked: { code: string; name: string; years: number }[];
     skills: string[];
     evidence?: { label: string; state: EvidenceState }[];
+    /** Signed, short-lived link to the optional profile photo. */
+    photoUrl?: string | null;
 };
 
 /**
@@ -46,9 +48,17 @@ export function SkillPassportCard({
                     </span>
                 </div>
                 <div className="mt-4 flex items-center gap-3">
-                    <span className="grid size-14 shrink-0 place-items-center rounded-xl bg-on-brand/15 font-display text-xl font-bold">
-                        {initials}
-                    </span>
+                    {passport.photoUrl ? (
+                        <img
+                            src={passport.photoUrl}
+                            alt=""
+                            className="size-14 shrink-0 rounded-xl object-cover"
+                        />
+                    ) : (
+                        <span className="grid size-14 shrink-0 place-items-center rounded-xl bg-on-brand/15 font-display text-xl font-bold">
+                            {initials}
+                        </span>
+                    )}
                     <div className="min-w-0">
                         <p className="font-display text-xl leading-tight font-bold break-words uppercase">
                             {passport.name}

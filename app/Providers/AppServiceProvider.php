@@ -32,6 +32,8 @@ use App\Domain\Trust\Models\Report;
 use App\Domain\Verification\Models\Document;
 use App\Domain\Verification\Models\EvidenceItem;
 use App\Domain\Verification\Models\VerificationRequest;
+use App\Domain\Worker\Contracts\ProfileExtractor;
+use App\Domain\Worker\Contracts\SpeechToText;
 use App\Domain\Worker\Models\SkillShow;
 use App\Domain\Worker\Models\VoiceAnswer;
 use App\Domain\Worker\Models\WorkerDestinationPreference;
@@ -39,6 +41,9 @@ use App\Domain\Worker\Models\WorkerExperience;
 use App\Domain\Worker\Models\WorkerLanguage;
 use App\Domain\Worker\Models\WorkerProfile;
 use App\Domain\Worker\Models\WorkerSkill;
+use App\Domain\Worker\Voice\RuleBasedProfileExtractor;
+use App\Domain\Worker\Voice\SampleSpeechToText;
+use App\Domain\Worker\Voice\UnavailableSpeechToText;
 use Carbon\CarbonImmutable;
 use Illuminate\Database\Eloquent\Relations\Relation;
 use Illuminate\Support\Facades\Date;
@@ -58,6 +63,13 @@ class AppServiceProvider extends ServiceProvider
             'whatsapp' => new WhatsAppCloudOtpChannel,
             default => new LogOtpChannel,
         });
+
+        $this->app->bind(SpeechToText::class, fn () => match (config('blueskills.voice.speech_to_text')) {
+            'sample' => new SampleSpeechToText,
+            default => new UnavailableSpeechToText,
+        });
+
+        $this->app->bind(ProfileExtractor::class, RuleBasedProfileExtractor::class);
     }
 
     /**

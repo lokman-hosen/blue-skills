@@ -2,6 +2,7 @@
 
 namespace App\Domain\Identity\Actions;
 
+use App\Domain\Identity\Enums\OtpPurpose;
 use App\Domain\Identity\Models\OtpChallenge;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Validation\ValidationException;
@@ -16,13 +17,14 @@ class VerifyPhoneOtp
      *
      * @throws ValidationException
      */
-    public function handle(string $challengeId, string $code): string
+    public function handle(string $challengeId, string $code, OtpPurpose $purpose = OtpPurpose::Login): string
     {
         /** @var array{status: 'ok'|'expired'|'wrong', phone?: string, remaining?: int} $result */
-        $result = DB::transaction(function () use ($challengeId, $code): array {
+        $result = DB::transaction(function () use ($challengeId, $code, $purpose): array {
             $challenge = OtpChallenge::query()->lockForUpdate()->find($challengeId);
 
-            if ($challenge === null || ! $challenge->isUsable()) {
+            // A code only works for what it was sent for.
+            if ($challenge === null || $challenge->purpose !== $purpose || ! $challenge->isUsable()) {
                 return ['status' => 'expired'];
             }
 

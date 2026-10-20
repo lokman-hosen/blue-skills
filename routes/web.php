@@ -3,6 +3,7 @@
 use App\Http\Controllers\Admin\DesignSystemController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\Shared\LocaleController;
+use App\Http\Controllers\Shared\PrivateMediaController;
 use App\Http\Controllers\Shared\SwitchOrganizationController;
 use Illuminate\Support\Facades\Route;
 
@@ -16,6 +17,11 @@ Route::middleware(['auth', 'verified', 'staff.2fa'])->group(function () {
     Route::post('organizations/{organization}/switch', SwitchOrganizationController::class)
         ->name('organizations.switch');
 });
+
+// Private media: signed, short-lived link plus a policy check on the owning model.
+Route::get('media/{media:uuid}', PrivateMediaController::class)
+    ->middleware(['auth', 'signed'])
+    ->name('media.show');
 
 Route::middleware(['auth', 'can:viewDesignSystem', 'staff.2fa'])->prefix('_design')->name('design.')->group(function () {
     Route::get('/', [DesignSystemController::class, 'index'])->name('index');

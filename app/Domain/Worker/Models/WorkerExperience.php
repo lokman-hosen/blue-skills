@@ -35,7 +35,7 @@ class WorkerExperience extends Model
     }
 
     /**
-     * Whole years worked: as stated, or counted from the dates (an open period runs to today).
+     * Whole years worked: as stated, or rounded from the dates (an open period runs to today).
      */
     public function yearsWorked(): ?int
     {
@@ -47,7 +47,8 @@ class WorkerExperience extends Model
             return null;
         }
 
-        return (int) $this->started_on->diffInYears($this->ended_on ?? now());
+        // Nearest whole year: Jan 2016 – Dec 2020 is five years, not four.
+        return (int) round($this->started_on->diffInYears($this->ended_on ?? now()));
     }
 
     /**

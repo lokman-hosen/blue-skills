@@ -263,6 +263,23 @@ declare namespace App {
                 export type OrganizationType = 'employer' | 'agency' | 'institute';
             }
         }
+        namespace Taxonomy {
+            namespace Data {
+                export type OccupationOptionData = {
+                    id: string;
+                    slug: string;
+                    name: string;
+                    sector: string;
+                    specializations: App.Domain.Taxonomy.Data.TaxonomyOptionData[];
+                    skills: App.Domain.Taxonomy.Data.TaxonomyOptionData[];
+                };
+                export type TaxonomyOptionData = {
+                    id: string;
+                    slug: string;
+                    name: string;
+                };
+            }
+        }
         namespace Trust {
             namespace Enums {
                 export type ReportCategory =
@@ -312,6 +329,132 @@ declare namespace App {
             }
         }
         namespace Worker {
+            namespace Data {
+                export type ConsentRecordData = {
+                    id: string;
+                    purpose: App.Domain.Applications.Enums.ConsentPurpose;
+                    grantedAt: string;
+                    revokedAt: string | null;
+                };
+                export type EvidenceSummaryData = {
+                    id: string;
+                    type: App.Domain.Verification.Enums.EvidenceType;
+                    title: string | null;
+                    state: string;
+                    reasonCode: string | null;
+                    expiresOn: string | null;
+                    removable: boolean;
+                };
+                export type ProfileCompletionData = {
+                    percent: number;
+                    steps: App.Domain.Worker.Data.ProfileStepData[];
+                    next: string | null;
+                };
+                export type ProfileOptionsData = {
+                    occupations: App.Domain.Taxonomy.Data.OccupationOptionData[];
+                    skills: App.Domain.Taxonomy.Data.TaxonomyOptionData[];
+                    countries: App.Domain.Config.Data.CountryOptionData[];
+                    destinations: App.Domain.Config.Data.CountryOptionData[];
+                };
+                export type ProfileStepData = {
+                    key: string;
+                    done: boolean;
+                };
+                export type SkillShowData = {
+                    id: string;
+                    status: App.Domain.Worker.Enums.ModerationStatus;
+                    durationMs: number | null;
+                    visibility: App.Domain.Worker.Enums.ProfileVisibility;
+                    skills: string[];
+                    skillSlugs: string[];
+                    reasonCode: string | null;
+                    videoUrl: string | null;
+                    posterUrl: string | null;
+                    createdAt: string | null;
+                };
+                export type SkillShowReviewData = {
+                    skillShow: App.Domain.Worker.Data.SkillShowData;
+                    workerName: string;
+                    reference: string;
+                    occupation: string | null;
+                };
+                export type VoiceAnswerData = {
+                    id: string;
+                    question: App.Domain.Worker.Enums.VoiceQuestion;
+                    status: App.Domain.Worker.Enums.VoiceAnswerStatus;
+                    typed: boolean;
+                    transcript: string | null;
+                    fields: App.Domain.Worker.Data.VoiceFieldsData | null;
+                    errorCode: string | null;
+                    confirmedAt: string | null;
+                };
+                export type VoiceCountryData = {
+                    code: string;
+                    years: number | null;
+                };
+                export type VoiceFieldsData = {
+                    occupation: string | null;
+                    specialization: string | null;
+                    yearsExperience: number | null;
+                    countries: App.Domain.Worker.Data.VoiceCountryData[] | null;
+                    skills: string[] | null;
+                    passportStatus: string | null;
+                    passportValidUntilYear: number | null;
+                    availability: string | null;
+                    destinations: string[] | null;
+                };
+                export type VoiceProgressData = {
+                    question: App.Domain.Worker.Enums.VoiceQuestion;
+                    confirmed: boolean;
+                };
+                export type WorkerExperienceData = {
+                    id: string;
+                    countryCode: string;
+                    countryName: string;
+                    role: string;
+                    employerName: string | null;
+                    years: number | null;
+                    startedOn: string | null;
+                    endedOn: string | null;
+                    description: string | null;
+                };
+                export type WorkerLanguageData = {
+                    code: string;
+                    name: string;
+                    proficiency: App.Domain.Worker.Enums.LanguageProficiency;
+                };
+                export type WorkerPassportData = {
+                    reference: string;
+                    name: string;
+                    headline: string | null;
+                    photoUrl: string | null;
+                    currentCountry: App.Domain.Config.Data.CountryOptionData | null;
+                    nationality: string;
+                    occupation: App.Domain.Taxonomy.Data.TaxonomyOptionData | null;
+                    specialization: App.Domain.Taxonomy.Data.TaxonomyOptionData | null;
+                    yearsExperience: number | null;
+                    passportStatus: App.Domain.Worker.Enums.PassportStatus | null;
+                    passportValidUntilYear: number | null;
+                    availability: App.Domain.Worker.Enums.Availability | null;
+                    salaryExpectation: App.Support.Data.MoneyData | null;
+                    salaryPeriod: App.Domain.Jobs.Enums.SalaryPeriod | null;
+                    visibility: App.Domain.Worker.Enums.ProfileVisibility;
+                    experiences: App.Domain.Worker.Data.WorkerExperienceData[];
+                    skills: App.Domain.Worker.Data.WorkerSkillData[];
+                    languages: App.Domain.Worker.Data.WorkerLanguageData[];
+                    destinations: App.Domain.Config.Data.CountryOptionData[];
+                    skillShow: App.Domain.Worker.Data.SkillShowData | null;
+                    phoneVerified: boolean;
+                    evidence: App.Domain.Worker.Data.EvidenceSummaryData[];
+                    completion: App.Domain.Worker.Data.ProfileCompletionData;
+                };
+                export type WorkerSkillData = {
+                    id: string;
+                    slug: string;
+                    name: string;
+                    source: App.Domain.Worker.Enums.SkillSource;
+                };
+            }
             namespace Enums {
                 export type Availability =
                     | 'immediately'
@@ -325,6 +468,12 @@ declare namespace App {
                 export type PassportStatus = 'none' | 'applied' | 'ready' | 'expired';
                 export type ProfileVisibility =
                     'employers_and_agencies' | 'applications_only' | 'hidden';
+                export type SkillShowRejectionReason =
+                    | 'not_a_demonstration'
+                    | 'unsafe_work'
+                    | 'personal_information'
+                    | 'poor_quality'
+                    | 'inappropriate';
                 export type SkillSource = 'voice' | 'typed' | 'institute';
                 export type VoiceAnswerStatus =
                     'pending' | 'transcribed' | 'extracted' | 'confirmed' | 'discarded' | 'failed';

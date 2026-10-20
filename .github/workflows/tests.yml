@@ -66,6 +66,9 @@ jobs:
           node-version: '22'
           cache: npm
 
+      - name: Install ffmpeg (SkillShow video checks)
+        run: sudo apt-get update && sudo apt-get install -y --no-install-recommends ffmpeg
+
       - name: Install Composer dependencies
         run: composer install --no-interaction --prefer-dist --no-progress
 

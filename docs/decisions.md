@@ -319,7 +319,7 @@ colour) and the appearance tabs use design tokens instead of the kit's neutral g
 - `passport_valid_until_year` stores only the year the worker gave ("valid until 2030"), never a
   guessed day. `salary_period` reuses the job `SalaryPeriod` enum.
 - `worker_experiences.years` holds "five years in Bangladesh" answers; `started_on` became nullable.
-  `yearsWorked()` returns the stated years or counts them from the dates.
+  `yearsWorked()` returns the stated years or rounds them from the dates to the nearest year.
 - `voice_answers.typed` marks typed answers; `error_code` and the new `failed` status cover
   speech-to-text failures.
 - SkillShow moderation stays an enum (D-014) with two new cases before review: `processing` (the
@@ -327,3 +327,61 @@ colour) and the appearance tabs use design tokens instead of the kit's neutral g
   holds the processing or rejection reason. Uploads, the converted MP4 and the poster are separate
   private media collections.
 - Profile visibility changes are written to the activity log.
+
+### D-049 · Onboarding and Voice-to-CV flow
+- After `/join/details` a new worker goes to phase A (`/passport/basics`: trade from the taxonomy,
+  optional specialization, years of experience), then chooses voice, typing or "later". Nothing
+  blocks the portal; the home page shows progress (phone, trade, answers, SkillShow, evidence =
+  20 % each) and the next step.
+- Seven questions, one per screen: occupation, experience, countries, skills, passport,
+  availability, destinations. A recording (≤ 60 s, ≤ 5 MB, WebM/MP4/OGG audio) or typed text
+  (≤ 500 characters) is processed on the queue: speech-to-text, then extraction. The page polls
+  until it is done.
+- The worker sees the transcript and what was understood, then taps "Yes, correct", edits the
+  structured fields, or fills them in directly without speaking. Confirmed values replace the
+  suggestion on the answer; only one answer per question stays open.
+- "Save to my Skill Passport" needs all seven confirmed answers and writes them in one transaction:
+  occupation, years, passport status and year, availability, years-only experience per country
+  (dated entries added by hand are kept), skills (institute-attested skills are kept) and ordered
+  destinations. `profile_completed_at` is stamped the first time the core fields are all present.
+- The rules-based extractor matches English taxonomy and country names plus a small reviewed
+  vocabulary (`VoiceVocabulary`: Bangla words, city names, number words, Bangla digits). Anything
+  it cannot find stays empty for the worker; it never guesses.
+
+### D-050 · Skill Passport editing and credentials
+- Sections: about (headline, trade, years, country of residence), work history (years or exact
+  dates; dates win), skills, languages (from the `languages` table, so only the eight configured
+  languages for now), preferences (passport status and expiry year, availability, up to five
+  destinations, optional salary in whole units stored as `amount_minor` using the currency's own
+  decimals), photo (JPG/PNG/WebP ≥ 200 px, private disk) and certificates.
+- Certificates, training records and work references upload as a `Document` (private) with an
+  `uploaded_unreviewed` evidence item. The worker can withdraw them (the document is soft deleted).
+- Private media is served by `GET /media/{uuid}`: a 15-minute signed link AND a policy check on the
+  owning model (worker profile, SkillShow, voice answer: owner or moderator; document: owner).
+  Local disks stream with range support so video can seek; object storage redirects to a 5-minute
+  temporary URL.
+
+### D-051 · SkillShow
+- One SkillShow per worker; a new upload replaces the old one. Workers record with the phone's
+  camera through the file picker or upload a file (MP4, WebM, MOV, 3GP, ≤ 50 MB). The browser
+  checks the length first only to save a wasted upload.
+- A queued job reads the real duration with ffprobe (≤ 30 s + 0.5 s container tolerance), converts
+  to H.264/AAC MP4 at most 720 px tall with a poster frame, deletes the upload and moves the
+  SkillShow to `pending`. Unreadable or too-long files become `failed` with `unreadable` or
+  `too_long`. CI installs ffmpeg so these tests run for real.
+- Changing skill tags or visibility keeps the moderation decision (the video is unchanged).
+- Staff with `skill_shows.moderate` (superuser, verification officer) publish or reject from
+  `/admin/skillshows`, oldest first. Rejection needs a reason (`not_a_demonstration`,
+  `unsafe_work`, `personal_information`, `poor_quality`, `inappropriate`), shown to the worker with
+  how to fix it. Decisions are logged with moderator, reason and before/after status. Employers and
+  agencies see SkillShows from Modules 3–4, through applications and talent search.
+
+### D-052 · Privacy page and account deletion
+- `/passport/privacy` holds profile visibility, consent history and account deletion.
+- Choosing "verified employers and agencies" grants a `discovery` consent; narrowing revokes it.
+  Rows are never deleted, so the history survives.
+- Deleting the account needs a fresh code sent to the worker's phone (`account_deletion`
+  purpose). Codes only work for the purpose they were sent for, so a deletion code cannot sign
+  anyone in. Deletion revokes every consent, removes recordings, SkillShows, photo and uploaded
+  files, hides the Passport and soft deletes the user (D-018), which keeps the number blocked
+  (D-037). Application snapshots already shared stay with those applications (product rule 7).

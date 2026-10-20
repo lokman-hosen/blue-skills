@@ -25,7 +25,7 @@ class ProfileController extends Controller
             'mustVerifyEmail' => $request->user() instanceof MustVerifyEmail && ! $isWorker,
             'status' => $request->session()->get('status'),
             'canEditEmail' => ! $isWorker,
-            // Workers confirm account deletion with a phone code on the privacy page (Module 2).
+            // Workers delete their account with a phone code on the privacy page (D-052).
             'canDeleteAccount' => ! $isWorker,
         ]);
     }

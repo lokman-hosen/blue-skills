@@ -5,14 +5,15 @@ namespace App\Http\Controllers;
 use App\Domain\Identity\Enums\UserType;
 use App\Domain\Organization\Models\OrganizationInvitation;
 use App\Domain\Organization\Support\CurrentOrganization;
+use App\Domain\Worker\Data\WorkerPassportData;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 use Inertia\Response;
 
 /**
- * Lands each user type in its own workspace. The screens are placeholders until their
- * modules ship (worker home: Module 2, organization dashboard: Module 3, admin: Module 8).
+ * Lands each user type in its own workspace. The organization dashboard (Module 3) and the
+ * admin overview (Module 8) are still placeholders.
  */
 class DashboardController extends Controller
 {
@@ -21,7 +22,9 @@ class DashboardController extends Controller
         $user = $request->user();
 
         return match ($user?->type) {
-            UserType::Worker => Inertia::render('worker/home'),
+            UserType::Worker => Inertia::render('worker/home', [
+                'passport' => $user->workerProfile !== null ? WorkerPassportData::fromProfile($user->workerProfile) : null,
+            ]),
             UserType::Staff => Inertia::render('admin/overview'),
             // Organization users without a workspace accept an invitation or register one first.
             default => match (true) {

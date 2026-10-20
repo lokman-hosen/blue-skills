@@ -8,6 +8,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { useTranslation } from '@/lib/i18n';
 import { send } from '@/routes/verification';
+import worker from '@/routes/worker';
 
 type Props = {
     mustVerifyEmail: boolean;
@@ -108,7 +109,19 @@ export default function Profile({
                 </Form>
             </div>
 
-            {canDeleteAccount && <DeleteUser />}
+            {canDeleteAccount ? (
+                <DeleteUser />
+            ) : (
+                <p className="text-sm text-muted">
+                    {t('settings.worker_delete_hint')}{' '}
+                    <Link
+                        href={worker.privacy.show()}
+                        className="font-semibold text-brand underline"
+                    >
+                        {t('nav.privacy')}
+                    </Link>
+                </p>
+            )}
         </>
     );
 }
