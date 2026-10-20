@@ -2,24 +2,35 @@ import { createInertiaApp } from '@inertiajs/react';
 import { Toaster } from '@/components/ui/sonner';
 import { TooltipProvider } from '@/components/ui/tooltip';
 import { initializeTheme } from '@/hooks/use-appearance';
-import AppLayout from '@/layouts/app-layout';
+import AdminLayout from '@/layouts/admin-layout';
+import AppShell from '@/layouts/app-shell';
 import AuthLayout from '@/layouts/auth-layout';
+import OrgLayout from '@/layouts/org-layout';
+import PublicLayout from '@/layouts/public-layout';
 import SettingsLayout from '@/layouts/settings/layout';
+import WorkerLayout from '@/layouts/worker-layout';
 
-const appName = import.meta.env.VITE_APP_NAME || 'Laravel';
+const appName = import.meta.env.VITE_APP_NAME || 'BLUESKILLS';
 
 void createInertiaApp({
-    title: (title) => (title ? `${title} - ${appName}` : appName),
+    title: (title) => (title ? `${title} · ${appName}` : appName),
+    // The page folder decides the layout (CLAUDE.md: pages/{public,auth,worker,employer,agency,institute,admin}).
     layout: (name) => {
         switch (true) {
-            case name === 'welcome':
-                return null;
+            case name.startsWith('public/'):
+                return PublicLayout;
             case name.startsWith('auth/'):
                 return AuthLayout;
+            case name.startsWith('worker/'):
+                return WorkerLayout;
+            case /^(org|employer|agency|institute)\//.test(name):
+                return OrgLayout;
+            case name.startsWith('admin/'):
+                return AdminLayout;
             case name.startsWith('settings/'):
-                return [AppLayout, SettingsLayout];
+                return [AppShell, SettingsLayout];
             default:
-                return AppLayout;
+                return AppShell;
         }
     },
     strictMode: true,
@@ -32,7 +43,7 @@ void createInertiaApp({
         );
     },
     progress: {
-        color: '#4B5563',
+        color: '#153e9e',
     },
 });
 

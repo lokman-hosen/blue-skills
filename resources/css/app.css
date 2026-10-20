@@ -7,136 +7,222 @@
 
 @custom-variant dark (&:is(.dark *));
 
-@theme {
+/*
+ * BLUESKILLS design tokens, ported from docs/design/prototype-v1.html.
+ * Palette: passport-cover blue + customs-stamp amber on blue-tinted neutrals.
+ * Raw values are RGB triplets so any utility can take an opacity modifier (bg-brand/90).
+ * `inline` makes utilities read the --bs-* variables directly, so a nested `.dark`
+ * scope (used by /_design) re-themes correctly.
+ */
+@theme inline {
+    --color-bg: rgb(var(--bs-bg));
+    --color-surface: rgb(var(--bs-surface));
+    --color-surface-2: rgb(var(--bs-surface-2));
+    --color-line: rgb(var(--bs-line));
+    --color-ink: rgb(var(--bs-ink));
+    --color-muted: rgb(var(--bs-muted));
+    --color-brand: rgb(var(--bs-brand));
+    --color-brand-soft: rgb(var(--bs-brand-soft));
+    --color-on-brand: rgb(var(--bs-on-brand));
+    --color-stamp: rgb(var(--bs-stamp));
+    --color-stamp-soft: rgb(var(--bs-stamp-soft));
+    --color-ok: rgb(var(--bs-ok));
+    --color-ok-soft: rgb(var(--bs-ok-soft));
+    --color-warn: rgb(var(--bs-warn));
+    --color-warn-soft: rgb(var(--bs-warn-soft));
+    --color-bad: rgb(var(--bs-bad));
+    --color-bad-soft: rgb(var(--bs-bad-soft));
+    --color-bezel: rgb(var(--bs-bezel));
+    --color-screen: rgb(var(--bs-screen));
+    --color-on-screen: rgb(var(--bs-on-screen));
+
+    /* shadcn/ui variables mapped onto the BLUESKILLS palette */
+    --color-background: var(--color-bg);
+    --color-foreground: var(--color-ink);
+    --color-card: var(--color-surface);
+    --color-card-foreground: var(--color-ink);
+    --color-popover: var(--color-surface);
+    --color-popover-foreground: var(--color-ink);
+    --color-primary: var(--color-brand);
+    --color-primary-foreground: var(--color-on-brand);
+    --color-secondary: var(--color-surface-2);
+    --color-secondary-foreground: var(--color-ink);
+    --color-muted-foreground: var(--color-muted);
+    --color-accent: var(--color-surface-2);
+    --color-accent-foreground: var(--color-ink);
+    --color-destructive: var(--color-bad);
+    --color-destructive-foreground: var(--color-on-brand);
+    --color-border: var(--color-line);
+    --color-input: var(--color-line);
+    --color-ring: var(--color-brand);
+    --color-chart-1: var(--color-brand);
+    --color-chart-2: var(--color-stamp);
+    --color-chart-3: var(--color-ok);
+    --color-chart-4: var(--color-warn);
+    --color-chart-5: var(--color-bad);
+    --color-sidebar: var(--color-surface);
+    --color-sidebar-foreground: var(--color-ink);
+    --color-sidebar-primary: var(--color-brand);
+    --color-sidebar-primary-foreground: var(--color-on-brand);
+    --color-sidebar-accent: var(--color-brand-soft);
+    --color-sidebar-accent-foreground: var(--color-brand);
+    --color-sidebar-border: var(--color-line);
+    --color-sidebar-ring: var(--color-brand);
+
+    --radius-sm: 0.375rem;
+    --radius-md: 0.5rem;
+    --radius-lg: 0.625rem;
+    --radius-xl: 0.75rem;
+    --radius-2xl: 1rem;
+
+    /* Font variables come from the @fonts directive (vite.config.ts). Script fonts follow
+       Figtree so Bangla, Devanagari, Arabic-script, Sinhala and Tamil text renders natively. */
     --font-sans:
-        'Instrument Sans', ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji',
-        'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
-
-    --radius-lg: var(--radius);
-    --radius-md: calc(var(--radius) - 2px);
-    --radius-sm: calc(var(--radius) - 4px);
-
-    --color-background: var(--background);
-    --color-foreground: var(--foreground);
-
-    --color-card: var(--card);
-    --color-card-foreground: var(--card-foreground);
-
-    --color-popover: var(--popover);
-    --color-popover-foreground: var(--popover-foreground);
-
-    --color-primary: var(--primary);
-    --color-primary-foreground: var(--primary-foreground);
-
-    --color-secondary: var(--secondary);
-    --color-secondary-foreground: var(--secondary-foreground);
-
-    --color-muted: var(--muted);
-    --color-muted-foreground: var(--muted-foreground);
-
-    --color-accent: var(--accent);
-    --color-accent-foreground: var(--accent-foreground);
-
-    --color-destructive: var(--destructive);
-    --color-destructive-foreground: var(--destructive-foreground);
-
-    --color-border: var(--border);
-    --color-input: var(--input);
-    --color-ring: var(--ring);
-
-    --color-chart-1: var(--chart-1);
-    --color-chart-2: var(--chart-2);
-    --color-chart-3: var(--chart-3);
-    --color-chart-4: var(--chart-4);
-    --color-chart-5: var(--chart-5);
-
-    --color-sidebar: var(--sidebar);
-    --color-sidebar-foreground: var(--sidebar-foreground);
-    --color-sidebar-primary: var(--sidebar-primary);
-    --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
-    --color-sidebar-accent: var(--sidebar-accent);
-    --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
-    --color-sidebar-border: var(--sidebar-border);
-    --color-sidebar-ring: var(--sidebar-ring);
+        var(--font-figtree), var(--font-noto-sans-bengali), var(--font-noto-sans-devanagari),
+        var(--font-noto-naskh-arabic), var(--font-noto-sans-sinhala), var(--font-noto-sans-tamil),
+        ui-sans-serif, system-ui, sans-serif;
+    --font-display:
+        var(--font-bricolage-grotesque), var(--font-figtree), var(--font-noto-sans-bengali),
+        var(--font-noto-sans-devanagari), var(--font-noto-naskh-arabic), ui-sans-serif, system-ui,
+        sans-serif;
+    --font-mono: var(--font-jetbrains-mono), ui-monospace, SFMono-Regular, monospace;
 }
 
-:root {
-    --background: oklch(1 0 0);
-    --foreground: oklch(0.145 0 0);
-    --card: oklch(1 0 0);
-    --card-foreground: oklch(0.145 0 0);
-    --popover: oklch(1 0 0);
-    --popover-foreground: oklch(0.145 0 0);
-    --primary: oklch(0.205 0 0);
-    --primary-foreground: oklch(0.985 0 0);
-    --secondary: oklch(0.97 0 0);
-    --secondary-foreground: oklch(0.205 0 0);
-    --muted: oklch(0.97 0 0);
-    --muted-foreground: oklch(0.556 0 0);
-    --accent: oklch(0.97 0 0);
-    --accent-foreground: oklch(0.205 0 0);
-    --destructive: oklch(0.577 0.245 27.325);
-    --destructive-foreground: oklch(0.577 0.245 27.325);
-    --border: oklch(0.922 0 0);
-    --input: oklch(0.922 0 0);
-    --ring: oklch(0.87 0 0);
-    --chart-1: oklch(0.646 0.222 41.116);
-    --chart-2: oklch(0.6 0.118 184.704);
-    --chart-3: oklch(0.398 0.07 227.392);
-    --chart-4: oklch(0.828 0.189 84.429);
-    --chart-5: oklch(0.769 0.188 70.08);
-    --radius: 0.625rem;
-    --sidebar: oklch(0.985 0 0);
-    --sidebar-foreground: oklch(0.145 0 0);
-    --sidebar-primary: oklch(0.205 0 0);
-    --sidebar-primary-foreground: oklch(0.985 0 0);
-    --sidebar-accent: oklch(0.97 0 0);
-    --sidebar-accent-foreground: oklch(0.205 0 0);
-    --sidebar-border: oklch(0.922 0 0);
-    --sidebar-ring: oklch(0.87 0 0);
+:root,
+.light {
+    --bs-bg: 243 245 250;
+    --bs-surface: 255 255 255;
+    --bs-surface-2: 234 238 246;
+    --bs-line: 214 220 233;
+    --bs-ink: 14 22 46;
+    --bs-muted: 86 97 124;
+    --bs-brand: 21 62 158;
+    --bs-brand-soft: 226 234 252;
+    --bs-on-brand: 255 255 255;
+    --bs-stamp: 178 104 12;
+    --bs-stamp-soft: 252 239 215;
+    --bs-ok: 20 122 72;
+    --bs-ok-soft: 222 245 232;
+    --bs-warn: 166 98 0;
+    --bs-warn-soft: 253 241 214;
+    --bs-bad: 186 40 48;
+    --bs-bad-soft: 252 228 229;
+    --bs-bezel: 22 28 48;
+    --bs-screen: 14 18 32;
+    --bs-on-screen: 240 243 250;
+    color-scheme: light;
 }
 
 .dark {
-    --background: oklch(0.145 0 0);
-    --foreground: oklch(0.985 0 0);
-    --card: oklch(0.145 0 0);
-    --card-foreground: oklch(0.985 0 0);
-    --popover: oklch(0.145 0 0);
-    --popover-foreground: oklch(0.985 0 0);
-    --primary: oklch(0.985 0 0);
-    --primary-foreground: oklch(0.205 0 0);
-    --secondary: oklch(0.269 0 0);
-    --secondary-foreground: oklch(0.985 0 0);
-    --muted: oklch(0.269 0 0);
-    --muted-foreground: oklch(0.708 0 0);
-    --accent: oklch(0.269 0 0);
-    --accent-foreground: oklch(0.985 0 0);
-    --destructive: oklch(0.396 0.141 25.723);
-    --destructive-foreground: oklch(0.637 0.237 25.331);
-    --border: oklch(0.269 0 0);
-    --input: oklch(0.269 0 0);
-    --ring: oklch(0.439 0 0);
-    --chart-1: oklch(0.488 0.243 264.376);
-    --chart-2: oklch(0.696 0.17 162.48);
-    --chart-3: oklch(0.769 0.188 70.08);
-    --chart-4: oklch(0.627 0.265 303.9);
-    --chart-5: oklch(0.645 0.246 16.439);
-    --sidebar: oklch(0.205 0 0);
-    --sidebar-foreground: oklch(0.985 0 0);
-    --sidebar-primary: oklch(0.985 0 0);
-    --sidebar-primary-foreground: oklch(0.985 0 0);
-    --sidebar-accent: oklch(0.269 0 0);
-    --sidebar-accent-foreground: oklch(0.985 0 0);
-    --sidebar-border: oklch(0.269 0 0);
-    --sidebar-ring: oklch(0.439 0 0);
+    --bs-bg: 9 13 26;
+    --bs-surface: 16 22 40;
+    --bs-surface-2: 24 32 56;
+    --bs-line: 40 50 80;
+    --bs-ink: 230 235 247;
+    --bs-muted: 150 161 189;
+    --bs-brand: 122 160 255;
+    --bs-brand-soft: 28 42 86;
+    --bs-on-brand: 8 14 34;
+    --bs-stamp: 240 172 74;
+    --bs-stamp-soft: 60 42 14;
+    --bs-ok: 84 205 140;
+    --bs-ok-soft: 16 52 36;
+    --bs-warn: 240 186 70;
+    --bs-warn-soft: 58 44 12;
+    --bs-bad: 245 120 120;
+    --bs-bad-soft: 64 22 26;
+    --bs-bezel: 52 62 92;
+    color-scheme: dark;
 }
 
 @layer base {
     * {
-        @apply border-border;
+        @apply border-line;
+    }
+
+    html {
+        -webkit-text-size-adjust: 100%;
     }
 
     body {
-        @apply bg-background text-foreground;
+        @apply bg-bg font-sans text-[15px] leading-normal text-ink antialiased;
     }
+
+    /* Bangla, Devanagari and Arabic-script text needs more vertical room. */
+    :lang(bn),
+    :lang(hi),
+    :lang(ne),
+    :lang(si),
+    :lang(ta) {
+        line-height: 1.65;
+    }
+
+    :lang(ur),
+    :lang(ar) {
+        line-height: 1.85;
+    }
+
+    h1,
+    h2,
+    h3 {
+        text-wrap: balance;
+    }
+
+    :focus-visible {
+        outline: 2px solid var(--color-brand);
+        outline-offset: 2px;
+    }
+}
+
+@utility eyebrow {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+}
+
+@utility tnum {
+    font-variant-numeric: tabular-nums;
+}
+
+@utility gutter {
+    padding-inline-start: max(16px, env(safe-area-inset-left, 0px));
+    padding-inline-end: max(16px, env(safe-area-inset-right, 0px));
+}
+
+@utility passport-cover {
+    background:
+        radial-gradient(circle at 85% 15%, rgb(var(--bs-on-brand) / 0.1) 0 18%, transparent 19%),
+        repeating-radial-gradient(
+            circle at 85% 15%,
+            rgb(var(--bs-on-brand) / 0.07) 0 1px,
+            transparent 1px 9px
+        ),
+        rgb(var(--bs-brand));
+    color: rgb(var(--bs-on-brand));
+}
+
+@utility mrz {
+    font-family: var(--font-mono);
+    font-size: 10.5px;
+    letter-spacing: 0.12em;
+    line-height: 1.6;
+    word-break: break-all;
+}
+
+@utility stamp-mark {
+    display: inline-block;
+    border: 2px solid rgb(var(--bs-stamp));
+    border-radius: 8px;
+    padding: 3px 8px;
+    color: rgb(var(--bs-stamp));
+    font-family: var(--font-mono);
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    transform: rotate(-6deg);
+}
+
+@utility pb-safe {
+    padding-bottom: env(safe-area-inset-bottom, 0px);
 }

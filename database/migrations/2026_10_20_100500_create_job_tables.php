@@ -51,10 +51,16 @@ return new class extends Migration
             $table->text('overtime_terms')->nullable();
             $table->unsignedSmallInteger('contract_months')->nullable();
 
-            foreach (['accommodation', 'food', 'transport', 'medical', 'airfare'] as $benefit) {
-                $table->string($benefit, 16)->nullable();
-                $table->string("{$benefit}_details")->nullable();
-            }
+            $table->string('accommodation', 16)->nullable();
+            $table->string('accommodation_details')->nullable();
+            $table->string('food', 16)->nullable();
+            $table->string('food_details')->nullable();
+            $table->string('transport', 16)->nullable();
+            $table->string('transport_details')->nullable();
+            $table->string('medical', 16)->nullable();
+            $table->string('medical_details')->nullable();
+            $table->string('airfare', 16)->nullable();
+            $table->string('airfare_details')->nullable();
             $table->text('other_benefits')->nullable();
 
             $table->string('permit_payer', 16)->nullable();

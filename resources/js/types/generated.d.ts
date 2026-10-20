@@ -13,6 +13,20 @@ declare namespace App {
             }
         }
         namespace Config {
+            namespace Data {
+                export type LocaleData = {
+                    code: string;
+                    dir: string;
+                    translationPending: boolean;
+                };
+                export type LocaleOptionData = {
+                    code: string;
+                    nativeName: string;
+                    englishName: string;
+                    rtl: boolean;
+                    status: App.Domain.Config.Enums.LanguageStatus;
+                };
+            }
             namespace Enums {
                 export type CountryRuleKey =
                     | 'languages'
@@ -27,6 +41,17 @@ declare namespace App {
             }
         }
         namespace Identity {
+            namespace Data {
+                export type AuthUserData = {
+                    id: string;
+                    name: string;
+                    email: string | null;
+                    emailVerifiedAt: string | null;
+                    type: App.Domain.Identity.Enums.UserType;
+                    locale: string;
+                    twoFactorEnabled: boolean;
+                };
+            }
             namespace Enums {
                 export type OrganizationRole =
                     | 'owner'
@@ -84,6 +109,62 @@ declare namespace App {
             }
         }
         namespace Jobs {
+            namespace Data {
+                export type JobBenefitData = {
+                    key: string;
+                    provision: App.Domain.Jobs.Enums.BenefitProvision | null;
+                    details: string | null;
+                };
+                export type JobCostData = {
+                    category: App.Domain.Jobs.Enums.JobCostCategory;
+                    description: string | null;
+                    amount: App.Support.Data.MoneyData;
+                    payer: App.Domain.Jobs.Enums.CostPayer;
+                };
+                export type JobTruthCardData = {
+                    publicCode: string;
+                    title: string;
+                    occupation: string | null;
+                    destinationCountryCode: string;
+                    destinationCountryName: string | null;
+                    destinationCity: string | null;
+                    employerName: string;
+                    postedByName: string;
+                    postedByAgency: boolean;
+                    agencyLicenceNumber: string | null;
+                    agencyLicenceExpiresOn: string | null;
+                    mandateReference: string | null;
+                    mandateHeadcount: number | null;
+                    salary: App.Support.Data.MoneyData | null;
+                    salaryPeriod: App.Domain.Jobs.Enums.SalaryPeriod | null;
+                    hoursPerDay: number | null;
+                    daysPerWeek: number | null;
+                    overtimeTerms: string | null;
+                    contractMonths: number | null;
+                    headcount: number;
+                    minExperienceYears: number | null;
+                    languageRequirements: App.Domain.Jobs.Data.LanguageRequirementData[];
+                    skills: string[];
+                    benefits: App.Domain.Jobs.Data.JobBenefitData[];
+                    otherBenefits: string | null;
+                    permitPayer: App.Domain.Jobs.Enums.CostPayer | null;
+                    visaPayer: App.Domain.Jobs.Enums.CostPayer | null;
+                    costs: App.Domain.Jobs.Data.JobCostData[];
+                    joiningFrom: string | null;
+                    joiningTo: string | null;
+                    deadline: string | null;
+                    status: App.Support.Data.StatusData;
+                    checks: App.Domain.Jobs.Data.TruthCardCheckData[];
+                };
+                export type LanguageRequirementData = {
+                    code: string;
+                    level: string;
+                };
+                export type TruthCardCheckData = {
+                    key: string;
+                    tone: string;
+                };
+            }
             namespace Enums {
                 export type BenefitProvision =
                     'provided' | 'allowance' | 'deducted' | 'not_provided';
@@ -112,6 +193,16 @@ declare namespace App {
             }
         }
         namespace Organization {
+            namespace Data {
+                export type OrganizationSummaryData = {
+                    id: string;
+                    displayName: string;
+                    type: App.Domain.Organization.Enums.OrganizationType;
+                    countryCode: string;
+                    city: string | null;
+                    verification: App.Support.Data.StatusData;
+                };
+            }
             namespace Enums {
                 export type OrganizationType = 'employer' | 'agency' | 'institute';
             }
@@ -189,6 +280,19 @@ declare namespace App {
                     | 'availability'
                     | 'destinations';
             }
+        }
+    }
+    namespace Support {
+        namespace Data {
+            export type MoneyData = {
+                amountMinor: number;
+                currency: string;
+            };
+            export type StatusData = {
+                value: string;
+                label: string;
+                tone: string;
+            };
         }
     }
 }

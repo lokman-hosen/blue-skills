@@ -7,6 +7,7 @@ use App\Domain\Identity\Models\User;
 use App\Domain\Jobs\Models\JobMandate;
 use App\Domain\Jobs\Models\JobPosting;
 use App\Domain\Organization\Enums\OrganizationType;
+use App\Domain\Organization\Policies\OrganizationPolicy;
 use App\Domain\Organization\States\Verification\OrganizationVerificationState;
 use App\Domain\Organization\States\Verification\Verified;
 use App\Domain\Verification\Models\VerificationRequest;
@@ -14,6 +15,7 @@ use App\Support\Concerns\LogsStatusChanges;
 use Database\Factories\OrganizationFactory;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Attributes\UseFactory;
+use Illuminate\Database\Eloquent\Attributes\UsePolicy;
 use Illuminate\Database\Eloquent\Concerns\HasUlids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -33,6 +35,7 @@ use Spatie\ModelStates\HasStates;
     'licence_number', 'licence_expires_on', 'verification_status', 'verified_at', 'data_region',
 ])]
 #[UseFactory(OrganizationFactory::class)]
+#[UsePolicy(OrganizationPolicy::class)]
 class Organization extends Model
 {
     /** @use HasFactory<OrganizationFactory> */

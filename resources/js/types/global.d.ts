@@ -12,6 +12,11 @@ declare module '@inertiajs/core' {
         sharedPageProps: {
             name: string;
             auth: Auth;
+            currentOrganization: App.Domain.Organization.Data.OrganizationSummaryData | null;
+            organizations: App.Domain.Organization.Data.OrganizationSummaryData[];
+            locale: App.Domain.Config.Data.LocaleData;
+            locales: App.Domain.Config.Data.LocaleOptionData[];
+            translations: Record<string, string>;
             sidebarOpen: boolean;
             [key: string]: unknown;
         };

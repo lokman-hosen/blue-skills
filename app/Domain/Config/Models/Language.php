@@ -3,6 +3,7 @@
 namespace App\Domain\Config\Models;
 
 use App\Domain\Config\Enums\LanguageStatus;
+use App\Domain\Config\Support\LocaleRegistry;
 use Database\Factories\LanguageFactory;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Attributes\RouteKey;
@@ -20,6 +21,12 @@ class Language extends Model
 {
     /** @use HasFactory<LanguageFactory> */
     use HasFactory, HasUlids;
+
+    protected static function booted(): void
+    {
+        static::saved(fn () => app(LocaleRegistry::class)->forget());
+        static::deleted(fn () => app(LocaleRegistry::class)->forget());
+    }
 
     /**
      * @return array<string, string>

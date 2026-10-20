@@ -110,6 +110,15 @@ class User extends Authenticatable implements MustVerifyEmail, PasskeyUser
         return $this->hasMany(Document::class, 'owner_user_id');
     }
 
+    /**
+     * Workers sign in by phone OTP and may have no email, so for them a verified phone
+     * satisfies the `verified` middleware.
+     */
+    public function hasVerifiedEmail(): bool
+    {
+        return $this->isWorker() ? $this->phone_verified_at !== null : parent::hasVerifiedEmail();
+    }
+
     public function isWorker(): bool
     {
         return $this->type === UserType::Worker;

@@ -1,11 +1,27 @@
 <?php
 
+use App\Http\Controllers\Admin\DesignSystemController;
+use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\Shared\LocaleController;
+use App\Http\Controllers\Shared\SwitchOrganizationController;
 use Illuminate\Support\Facades\Route;
 
-Route::inertia('/', 'welcome')->name('home');
+Route::inertia('/', 'public/home')->name('home');
+
+Route::post('locale', [LocaleController::class, 'update'])->name('locale.update');
 
 Route::middleware(['auth', 'verified'])->group(function () {
-    Route::inertia('dashboard', 'dashboard')->name('dashboard');
+    Route::get('dashboard', DashboardController::class)->name('dashboard');
+
+    Route::post('organizations/{organization}/switch', SwitchOrganizationController::class)
+        ->name('organizations.switch');
+});
+
+Route::middleware(['auth', 'can:viewDesignSystem'])->prefix('_design')->name('design.')->group(function () {
+    Route::get('/', [DesignSystemController::class, 'index'])->name('index');
+    Route::get('layouts/{layout}', [DesignSystemController::class, 'layout'])
+        ->whereIn('layout', DesignSystemController::LAYOUTS)
+        ->name('layout');
 });
 
 require __DIR__.'/settings.php';

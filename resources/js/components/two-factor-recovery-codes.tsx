@@ -101,7 +101,7 @@ export default function TwoFactorRecoveryCodes({
                             <>
                                 <div
                                     ref={codesSectionRef}
-                                    className="grid gap-1 rounded-lg bg-muted p-4 font-mono text-sm"
+                                    className="grid gap-1 rounded-lg bg-surface-2 p-4 font-mono text-sm"
                                     role="list"
                                     aria-label="Recovery codes"
                                 >
@@ -123,7 +123,7 @@ export default function TwoFactorRecoveryCodes({
                                             {Array.from({ length: 8 }, (_, index) => (
                                                 <div
                                                     key={index}
-                                                    className="h-4 animate-pulse rounded bg-muted-foreground/20"
+                                                    className="h-4 animate-pulse rounded bg-muted/20"
                                                     aria-hidden="true"
                                                 />
                                             ))}

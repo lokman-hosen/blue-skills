@@ -121,3 +121,67 @@ Module 1 must decide how a soft-deleted email/phone can register again (unique i
 ### D-019 · Larastan reads `casts()`
 `parseModelCastsMethod: true` is enabled so enum, state and date attributes are typed from the
 model's `casts()` method instead of the raw migration column type.
+
+## 2026-10-20 · Module 0 · Part C (design system, layouts, i18n)
+
+### D-020 · Token names and shadcn mapping
+Prototype tokens are Tailwind colours with hyphenated names: `bg`, `surface`, `surface-2`, `line`,
+`ink`, `muted`, `brand`, `brand-soft`, `on-brand`, `stamp`, `stamp-soft`, `ok`/`warn`/`bad` (+
+`-soft`), `screen`, `on-screen`, `bezel`. Raw values are RGB triplets in `--bs-*` variables under
+`:root`/`.light` and `.dark`, read through `@theme inline` so nested theme scopes work (used by
+`/_design`). shadcn's variables (`primary`, `accent`, `border`, `sidebar-*`…) are mapped onto these
+tokens; shadcn's old `bg-muted` (a background) became `bg-surface-2` because `muted` is the
+prototype's grey text colour.
+
+### D-021 · Fonts are self-hosted at build time
+`laravel-vite-plugin/fonts` downloads Figtree, Bricolage Grotesque, JetBrains Mono and the Noto
+scripts (Bengali, Devanagari, Naskh Arabic, Sinhala, Tamil) from Google Fonts during `npm run
+build` and serves them from `public/build`. Only Figtree 400/600 and Bricolage 700 are preloaded;
+script fonts load on demand via unicode-range. Metric-matched fallbacks need the optional `fontaine`
+package, which is not installed (`optimizedFallbacks: false`).
+
+### D-022 · i18n plumbing
+- Keys are dotted (`nav.home`) with Laravel-style `:name` placeholders. `lang/en.json` is the
+  complete source; other locales are merged over it, so missing keys show English.
+- Selectable locales come from the `languages` table (active + in_review), cached as plain arrays
+  (Laravel 13's cache refuses to unserialize objects). Planned languages (ar) are not selectable.
+- Resolution order: `?lang=` (kept in the session) → session → user's `locale` → Accept-Language →
+  English. `POST /locale` stores the choice on the session and the signed-in user.
+- `<html lang dir>` is rendered on the server; Urdu and Arabic are RTL.
+- In-review locales (si, ta) show a "waiting for translation review" banner.
+- Numbers use Latin digits in every locale (`-u-nu-latn`) so amounts and IDs read consistently.
+
+### D-023 · Worker navigation
+Bottom tabs on phones: Home, Jobs, Applications, Passport, More. Messages, Documents, Privacy and
+Settings live in the "More" sheet (five tabs fit 360px; the prototype's sixth tab did not). From
+`lg` the worker gets a side navigation with every item.
+
+### D-024 · Navigation items for unbuilt screens
+Nav entries whose screen belongs to a later module have no route yet; they render as disabled with
+a "Soon" label. Each module wires its entries when it ships (CLAUDE.md: no hard-coded URLs).
+
+### D-025 · Placeholder landing screens and the org switcher
+`/dashboard` renders `worker/home`, `org/dashboard` or `admin/overview` by user type; each is an
+empty state naming the module that fills it. The public home is a minimal hero until Module 3.
+`POST /organizations/{organization}/switch` (OrganizationPolicy::switchTo = membership) stores the
+current organization in the session; shared props expose `currentOrganization` and
+`organizations` as Data objects. Settings pages render inside the user's own workspace layout.
+
+### D-026 · Workers satisfy `verified` with a verified phone
+Workers may have no email, so `User::hasVerifiedEmail()` returns the phone verification state for
+workers. Module 1 may replace this with a dedicated middleware.
+
+### D-027 · RTL details
+ESLint forbids physical Tailwind direction utilities. The shadcn Sheet gained logical `start`/`end`
+sides, and the workspace sidebar switches to the right in RTL. Directional icons flip with
+`rtl:` utilities.
+
+### D-028 · `/_design` and Playwright review
+`/_design` (gate `viewDesignSystem` = staff) shows every component, both themes side by side, and
+links to `/_design/layouts/{public|auth|worker|org|admin}`. `npm run design:review` runs Playwright
+over those pages for chosen locales, themes and widths and reports console errors, overflow and
+WCAG AA contrast. `playwright` is a dev dependency for this.
+
+### D-029 · Starter-kit auth and settings screens remain English
+They now use the new layouts, but their copy is still hard-coded English. Module 1 rebuilds auth
+(phone OTP + org email/2FA) and will move these strings into `lang/*.json`.

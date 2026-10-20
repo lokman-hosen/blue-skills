@@ -2,6 +2,14 @@
 
 namespace App\Http\Middleware;
 
+use App\Domain\Config\Data\LocaleData;
+use App\Domain\Config\Support\LocaleRegistry;
+use App\Domain\Config\Support\Translations;
+use App\Domain\Identity\Data\AuthUserData;
+use App\Domain\Identity\Models\User;
+use App\Domain\Organization\Data\OrganizationSummaryData;
+use App\Domain\Organization\Models\Organization;
+use App\Domain\Organization\Support\CurrentOrganization;
 use Illuminate\Http\Request;
 use Inertia\Middleware;
 
@@ -15,6 +23,12 @@ class HandleInertiaRequests extends Middleware
      * @var string
      */
     protected $rootView = 'app';
+
+    public function __construct(
+        private readonly LocaleRegistry $locales,
+        private readonly Translations $translations,
+        private readonly CurrentOrganization $currentOrganization,
+    ) {}
 
     /**
      * Determines the current asset version.
@@ -35,12 +49,31 @@ class HandleInertiaRequests extends Middleware
      */
     public function share(Request $request): array
     {
+        /** @var User|null $user */
+        $user = $request->user();
+        $locale = app()->getLocale();
+        $organization = $user !== null && $request->hasSession()
+            ? $this->currentOrganization->resolve($user, $request->session())
+            : null;
+
         return [
             ...parent::share($request),
             'name' => config('app.name'),
             'auth' => [
-                'user' => $request->user(),
+                'user' => $user !== null ? AuthUserData::fromUser($user) : null,
             ],
+            'currentOrganization' => $organization !== null ? OrganizationSummaryData::fromOrganization($organization) : null,
+            'organizations' => fn () => $user?->organizations
+                ->map(fn (Organization $organization) => OrganizationSummaryData::fromOrganization($organization))
+                ->values()
+                ->all() ?? [],
+            'locale' => new LocaleData(
+                code: $locale,
+                dir: $this->locales->isRtl($locale) ? 'rtl' : 'ltr',
+                translationPending: $this->locales->isTranslationPending($locale),
+            ),
+            'locales' => fn () => $this->locales->available()->all(),
+            'translations' => fn () => $this->translations->for($locale),
             'sidebarOpen' => ! $request->hasCookie('sidebar_state') || $request->cookie('sidebar_state') === 'true',
         ];
     }

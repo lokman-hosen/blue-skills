@@ -75,7 +75,7 @@ export default function PasskeyRegistration({ onSuccess }: Props) {
     return (
         <form
             onSubmit={handleSubmit}
-            className="space-y-4 rounded-lg border border-border bg-muted/50 p-4"
+            className="space-y-4 rounded-lg border border-border bg-surface-2/50 p-4"
         >
             <div className="grid gap-2">
                 <Label htmlFor="passkey-name">Passkey name</Label>

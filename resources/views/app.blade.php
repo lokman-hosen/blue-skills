@@ -1,8 +1,10 @@
 <!DOCTYPE html>
-<html lang="{{ str_replace('_', '-', app()->getLocale()) }}" @class(['dark' => ($appearance ?? 'system') == 'dark'])>
+@php($locale = app()->getLocale())
+<html lang="{{ str_replace('_', '-', $locale) }}" dir="{{ app(\App\Domain\Config\Support\LocaleRegistry::class)->isRtl($locale) ? 'rtl' : 'ltr' }}" @class(['dark' => ($appearance ?? 'system') == 'dark'])>
     <head>
         <meta charset="utf-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+        <meta name="theme-color" content="#153e9e">
 
         {{-- Inline script to detect system dark mode preference and apply it immediately --}}
         <script>
@@ -22,11 +24,11 @@
         {{-- Inline style to set the HTML background color based on our theme in app.css --}}
         <style>
             html {
-                background-color: oklch(1 0 0);
+                background-color: rgb(243 245 250);
             }
 
             html.dark {
-                background-color: oklch(0.145 0 0);
+                background-color: rgb(9 13 26);
             }
         </style>
 

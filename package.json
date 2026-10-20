@@ -10,7 +10,8 @@
         "format:check": "prettier --check resources/",
         "lint": "eslint .",
         "lint:fix": "eslint . --fix",
-        "types": "tsc --noEmit"
+        "types": "tsc --noEmit",
+        "design:review": "node scripts/design-review.mjs"
     },
     "dependencies": {
         "@inertiajs/react": "^3.0.0",
@@ -60,6 +61,7 @@
         "eslint-plugin-react": "^7.37.5",
         "eslint-plugin-react-hooks": "^7.1.1",
         "globals": "^17.13.0",
+        "playwright": "^1.64.1",
         "prettier": "^3.9.10",
         "prettier-plugin-tailwindcss": "^0.8.1",
         "typescript-eslint": "^8.72.0",
