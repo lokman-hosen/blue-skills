@@ -385,3 +385,23 @@ colour) and the appearance tabs use design tokens instead of the kit's neutral g
   anyone in. Deletion revokes every consent, removes recordings, SkillShows, photo and uploaded
   files, hides the Passport and soft deletes the user (D-018), which keeps the number blocked
   (D-037). Application snapshots already shared stay with those applications (product rule 7).
+
+## Module 3 — Organizations and jobs
+
+### D-053 · Module 3 inputs (owner answers, 2026-10-20)
+- **Employer jobs only.** Agencies post jobs in Module 6 together with mandates, because product
+  rule 10 needs a verified licence and a verified mandate. Seeded agency jobs still render.
+- **Search:** indexed Postgres filters and text match now; Scout + Meilisearch when listings grow.
+- **Unlawful worker costs block submission.** The wizard shows the destination's rule, and a job
+  whose worker-paid cost category the country does not allow cannot be submitted. A destination
+  without cost rules allows no worker-paid costs.
+- **Review cadence:** once at the end of the module.
+
+### D-054 · Job review tracking and codes
+- Staff review decisions live on `verification_requests` (type `job` or the organization's type)
+  with decision, reason code, notes, decider and time. `jobs.submitted_at` and
+  `jobs.material_change_at` record the last submission and the last material change.
+- Reason codes are one `ReviewReason` enum with organization and job subsets.
+- Public job codes are `{country}-{trade}-{4 random digits}` (e.g. `AE-EL-4821`), unique, never a
+  counter.
+- Organization permission checks share `OrganizationPermissions::allows()`.

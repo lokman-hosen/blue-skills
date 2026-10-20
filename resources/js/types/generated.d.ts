@@ -317,6 +317,18 @@ declare namespace App {
                     | 'training'
                     | 'trade_assessment'
                     | 'work_experience';
+                export type ReviewReason =
+                    | 'document_unreadable'
+                    | 'document_expired'
+                    | 'details_mismatch'
+                    | 'not_a_registered_business'
+                    | 'licence_out_of_scope'
+                    | 'unlawful_worker_fee'
+                    | 'conditions_unclear'
+                    | 'salary_implausible'
+                    | 'duplicate_job'
+                    | 'prohibited_content'
+                    | 'more_information_needed';
                 export type VerificationDecision = 'approved' | 'rejected' | 'needs_info';
                 export type VerificationType =
                     | 'organization'

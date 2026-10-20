@@ -7,7 +7,12 @@ use App\Domain\Config\Models\Country;
 use App\Domain\Jobs\Enums\BenefitProvision;
 use App\Domain\Jobs\Enums\CostPayer;
 use App\Domain\Jobs\Enums\SalaryPeriod;
+use App\Domain\Jobs\States\Job\Draft;
 use App\Domain\Jobs\States\Job\JobState;
+use App\Domain\Jobs\States\Job\MoreInformationRequested;
+use App\Domain\Jobs\States\Job\Paused;
+use App\Domain\Jobs\States\Job\Published;
+use App\Domain\Jobs\States\Job\Rejected;
 use App\Domain\Organization\Models\Organization;
 use App\Domain\Taxonomy\Models\Occupation;
 use App\Domain\Taxonomy\Models\Skill;
@@ -46,6 +51,7 @@ use Spatie\ModelStates\HasStates;
     'accommodation', 'accommodation_details', 'food', 'food_details', 'transport', 'transport_details',
     'medical', 'medical_details', 'airfare', 'airfare_details', 'other_benefits',
     'permit_payer', 'visa_payer', 'joining_from', 'joining_to', 'deadline', 'status', 'published_at',
+    'submitted_at', 'material_change_at',
 ])]
 #[UseFactory(JobPostingFactory::class)]
 class JobPosting extends Model
@@ -54,6 +60,19 @@ class JobPosting extends Model
     use HasFactory, HasStates, HasUlids, LogsStatusChanges, SoftDeletes;
 
     public const BENEFITS = ['accommodation', 'food', 'transport', 'medical', 'airfare'];
+
+    /**
+     * Changing any of these on a live job sends it back to review (product rule 5). Worker
+     * costs are compared separately.
+     */
+    public const MATERIAL_FIELDS = [
+        'employer_organization_id', 'destination_country_code', 'destination_city',
+        'salary_amount_minor', 'salary_currency', 'salary_period', 'hours_per_day', 'days_per_week',
+        'overtime_terms', 'contract_months',
+        'accommodation', 'accommodation_details', 'food', 'food_details', 'transport', 'transport_details',
+        'medical', 'medical_details', 'airfare', 'airfare_details', 'other_benefits',
+        'permit_payer', 'visa_payer',
+    ];
 
     /**
      * @return array<string, string>
@@ -81,6 +100,8 @@ class JobPosting extends Model
             'deadline' => 'date',
             'status' => JobState::class,
             'published_at' => 'datetime',
+            'submitted_at' => 'datetime',
+            'material_change_at' => 'datetime',
         ];
     }
 
@@ -174,6 +195,28 @@ class JobPosting extends Model
     public function verificationRequests(): MorphMany
     {
         return $this->morphMany(VerificationRequest::class, 'subject');
+    }
+
+    /**
+     * Drafts, jobs sent back by a reviewer and live jobs can be edited. Jobs waiting for or
+     * under review, suspended, closed or archived cannot.
+     */
+    public function isEditable(): bool
+    {
+        return $this->status->equals(Draft::class, MoreInformationRequested::class, Rejected::class, Published::class, Paused::class);
+    }
+
+    public function isLive(): bool
+    {
+        return $this->status->equals(Published::class, Paused::class);
+    }
+
+    /**
+     * The newest staff review of this job, open or decided.
+     */
+    public function latestReview(): ?VerificationRequest
+    {
+        return $this->verificationRequests()->latest()->first();
     }
 
     /**
