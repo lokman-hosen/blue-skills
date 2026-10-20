@@ -6,6 +6,7 @@ use App\Domain\Applications\Models\Application;
 use App\Domain\Applications\Models\Consent;
 use App\Domain\Config\Models\Country;
 use App\Domain\Identity\Models\User;
+use App\Domain\Jobs\Enums\SalaryPeriod;
 use App\Domain\Taxonomy\Models\Occupation;
 use App\Domain\Taxonomy\Models\Skill;
 use App\Domain\Taxonomy\Models\Specialization;
@@ -13,6 +14,7 @@ use App\Domain\Verification\Models\EvidenceItem;
 use App\Domain\Worker\Enums\Availability;
 use App\Domain\Worker\Enums\PassportStatus;
 use App\Domain\Worker\Enums\ProfileVisibility;
+use App\Support\Concerns\LogsStatusChanges;
 use Database\Factories\WorkerProfileFactory;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Attributes\UseFactory;
@@ -22,20 +24,43 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Spatie\MediaLibrary\HasMedia;
+use Spatie\MediaLibrary\InteractsWithMedia;
 
 /**
  * The worker-owned Global Skill Passport. Organizations only ever see projections of it.
  */
 #[Fillable([
-    'user_id', 'headline', 'occupation_id', 'specialization_id', 'years_experience', 'current_country_code',
-    'passport_status', 'availability', 'visibility', 'salary_expectation_minor', 'salary_currency',
-    'profile_completed_at',
+    'user_id', 'reference', 'headline', 'occupation_id', 'specialization_id', 'years_experience', 'current_country_code',
+    'passport_status', 'passport_valid_until_year', 'availability', 'visibility', 'salary_expectation_minor',
+    'salary_currency', 'salary_period', 'profile_completed_at',
 ])]
 #[UseFactory(WorkerProfileFactory::class)]
-class WorkerProfile extends Model
+class WorkerProfile extends Model implements HasMedia
 {
     /** @use HasFactory<WorkerProfileFactory> */
-    use HasFactory, HasUlids;
+    use HasFactory, HasUlids, InteractsWithMedia, LogsStatusChanges;
+
+    public const PHOTO_COLLECTION = 'photo';
+
+    protected static function booted(): void
+    {
+        static::creating(function (WorkerProfile $profile): void {
+            $profile->reference ??= self::newReference();
+        });
+    }
+
+    /**
+     * A random public Passport number such as BSK-0004182.
+     */
+    public static function newReference(): string
+    {
+        do {
+            $reference = 'BSK-'.str_pad((string) random_int(0, 9_999_999), 7, '0', STR_PAD_LEFT);
+        } while (self::query()->where('reference', $reference)->exists());
+
+        return $reference;
+    }
 
     /**
      * @return array<string, string>
@@ -44,12 +69,31 @@ class WorkerProfile extends Model
     {
         return [
             'passport_status' => PassportStatus::class,
+            'passport_valid_until_year' => 'integer',
             'availability' => Availability::class,
             'visibility' => ProfileVisibility::class,
             'years_experience' => 'integer',
             'salary_expectation_minor' => 'integer',
+            'salary_period' => SalaryPeriod::class,
             'profile_completed_at' => 'datetime',
         ];
+    }
+
+    /**
+     * Visibility changes are privacy decisions, so they go to the activity log.
+     *
+     * @return list<string>
+     */
+    protected function loggedStatusAttributes(): array
+    {
+        return ['visibility'];
+    }
+
+    public function registerMediaCollections(): void
+    {
+        $this->addMediaCollection(self::PHOTO_COLLECTION)
+            ->singleFile()
+            ->useDisk(config('blueskills.private_disk'));
     }
 
     /**

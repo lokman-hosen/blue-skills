@@ -299,3 +299,31 @@ Policies use spatie's `checkPermissionTo` (false when a permission is missing) i
 ### D-046 · Primitives restyled on tokens during review
 The destructive button now uses `text-on-brand` (white text failed contrast on the dark-mode `bad`
 colour) and the appearance tabs use design tokens instead of the kit's neutral greys.
+
+## Module 2 — Worker profile
+
+### D-047 · Module 2 inputs (owner answers, 2026-10-20)
+- **Voice-to-CV providers:** speech-to-text and field extraction sit behind `SpeechToText` and
+  `ProfileExtractor` contracts. Until a provider is chosen, a fake transcriber (local/tests) and a
+  rules-based extractor (taxonomy names, numbers, country names) are bound. Typing is always offered.
+- **Voice recordings** are deleted as soon as the worker confirms or discards the answer, and after
+  30 days at the latest. Transcripts stay with the answer.
+- **Credentials in Module 2:** certificates and work references upload as evidence items
+  (`uploaded_unreviewed`). Passport and ID scans and the Documents page come in Module 4 with
+  per-application consent.
+- **Review cadence:** once at the end of the module.
+
+### D-048 · Skill Passport schema additions
+- `worker_profiles.reference` is the public Passport number `BSK-` + 7 random digits (unique, never
+  sequential). Rahim keeps the prototype's `BSK-0004182`.
+- `passport_valid_until_year` stores only the year the worker gave ("valid until 2030"), never a
+  guessed day. `salary_period` reuses the job `SalaryPeriod` enum.
+- `worker_experiences.years` holds "five years in Bangladesh" answers; `started_on` became nullable.
+  `yearsWorked()` returns the stated years or counts them from the dates.
+- `voice_answers.typed` marks typed answers; `error_code` and the new `failed` status cover
+  speech-to-text failures.
+- SkillShow moderation stays an enum (D-014) with two new cases before review: `processing` (the
+  server checks length and format and converts the video) and `failed`. `skill_shows.reason_code`
+  holds the processing or rejection reason. Uploads, the converted MP4 and the poster are separate
+  private media collections.
+- Profile visibility changes are written to the activity log.

@@ -18,7 +18,7 @@ use Spatie\MediaLibrary\InteractsWithMedia;
  * One Voice-to-CV answer. Extracted fields are never saved to the profile until the worker
  * confirms them (product rule 2).
  */
-#[Fillable(['worker_profile_id', 'question_key', 'locale', 'transcript', 'extracted', 'status', 'confirmed_at'])]
+#[Fillable(['worker_profile_id', 'question_key', 'locale', 'transcript', 'extracted', 'status', 'typed', 'error_code', 'confirmed_at'])]
 #[UseFactory(VoiceAnswerFactory::class)]
 class VoiceAnswer extends Model implements HasMedia
 {
@@ -36,6 +36,7 @@ class VoiceAnswer extends Model implements HasMedia
             'question_key' => VoiceQuestion::class,
             'extracted' => 'array',
             'status' => VoiceAnswerStatus::class,
+            'typed' => 'boolean',
             'confirmed_at' => 'datetime',
         ];
     }

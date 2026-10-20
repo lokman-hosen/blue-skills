@@ -197,6 +197,8 @@
     "skillshow.disclaimer": "কর্মীর দেওয়া প্রদর্শনী, সার্টিফিকেট নয়",
     "skillshow.play": "স্কিলশো চালান",
     "skillshow.none": "এখনও কোনো স্কিলশো নেই",
+    "skillshow.moderation.processing": "ভিডিও যাচাই হচ্ছে",
+    "skillshow.moderation.failed": "ভিডিও ব্যবহার করা যায়নি",
     "skillshow.moderation.pending": "মডারেশনে আছে",
     "skillshow.moderation.approved": "প্রকাশিত",
     "skillshow.moderation.rejected": "অনুমোদিত হয়নি",

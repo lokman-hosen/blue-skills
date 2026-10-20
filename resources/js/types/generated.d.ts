@@ -87,7 +87,7 @@ declare namespace App {
                     | 'trainer'
                     | 'assessor'
                     | 'placement_officer';
-                export type OtpPurpose = 'login';
+                export type OtpPurpose = 'login' | 'account_deletion';
                 export type Permission =
                     | 'organization.update'
                     | 'team.manage'
@@ -320,13 +320,14 @@ declare namespace App {
                     | 'within_90_days'
                     | 'not_available';
                 export type LanguageProficiency = 'basic' | 'conversational' | 'fluent' | 'native';
-                export type ModerationStatus = 'pending' | 'approved' | 'rejected';
+                export type ModerationStatus =
+                    'processing' | 'failed' | 'pending' | 'approved' | 'rejected';
                 export type PassportStatus = 'none' | 'applied' | 'ready' | 'expired';
                 export type ProfileVisibility =
                     'employers_and_agencies' | 'applications_only' | 'hidden';
                 export type SkillSource = 'voice' | 'typed' | 'institute';
                 export type VoiceAnswerStatus =
-                    'pending' | 'transcribed' | 'extracted' | 'confirmed' | 'discarded';
+                    'pending' | 'transcribed' | 'extracted' | 'confirmed' | 'discarded' | 'failed';
                 export type VoiceQuestion =
                     | 'occupation'
                     | 'experience'

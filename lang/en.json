@@ -197,6 +197,8 @@
     "skillshow.disclaimer": "Worker-provided demonstration, not certification",
     "skillshow.play": "Play SkillShow",
     "skillshow.none": "No SkillShow yet",
+    "skillshow.moderation.processing": "Checking video",
+    "skillshow.moderation.failed": "Could not use video",
     "skillshow.moderation.pending": "In moderation",
     "skillshow.moderation.approved": "Published",
     "skillshow.moderation.rejected": "Not approved",

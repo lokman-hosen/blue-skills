@@ -393,6 +393,8 @@ class SampleWorldSeeder extends Seeder
 
             $profile = WorkerProfile::query()->create([
                 'user_id' => $user->id,
+                // Rahim keeps the prototype's Passport number; seeding runs without model events.
+                'reference' => $key === 'rahim' ? 'BSK-0004182' : WorkerProfile::newReference(),
                 'headline' => $headline,
                 'occupation_id' => $occupationModel->id,
                 'specialization_id' => $specialization ? Specialization::query()->where('occupation_id', $occupationModel->id)->where('slug', $specialization)->value('id') : null,
@@ -435,6 +437,7 @@ class SampleWorldSeeder extends Seeder
     private function seedRahimPassport(): void
     {
         $rahim = $this->workers['rahim'];
+        $rahim->update(['passport_valid_until_year' => 2030]);
         $confirmedAt = now()->subWeeks(3);
 
         // Bangla answers from the prototype's Voice-to-CV demo, with the fields the worker confirmed.

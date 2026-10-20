@@ -11,7 +11,11 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
-#[Fillable(['worker_profile_id', 'country_code', 'employer_name', 'role', 'started_on', 'ended_on', 'description'])]
+/**
+ * A period of work. Either exact dates or only the number of years the worker gave
+ * ("five years in Bangladesh"), never both guessed from each other.
+ */
+#[Fillable(['worker_profile_id', 'country_code', 'employer_name', 'role', 'years', 'started_on', 'ended_on', 'description'])]
 #[UseFactory(WorkerExperienceFactory::class)]
 class WorkerExperience extends Model
 {
@@ -24,9 +28,26 @@ class WorkerExperience extends Model
     protected function casts(): array
     {
         return [
+            'years' => 'integer',
             'started_on' => 'date',
             'ended_on' => 'date',
         ];
+    }
+
+    /**
+     * Whole years worked: as stated, or counted from the dates (an open period runs to today).
+     */
+    public function yearsWorked(): ?int
+    {
+        if ($this->years !== null) {
+            return $this->years;
+        }
+
+        if ($this->started_on === null) {
+            return null;
+        }
+
+        return (int) $this->started_on->diffInYears($this->ended_on ?? now());
     }
 
     /**
