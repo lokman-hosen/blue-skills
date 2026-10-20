@@ -405,3 +405,31 @@ colour) and the appearance tabs use design tokens instead of the kit's neutral g
 - Public job codes are `{country}-{trade}-{4 random digits}` (e.g. `AE-EL-4821`), unique, never a
   counter.
 - Organization permission checks share `OrganizationPermissions::allows()`.
+
+### D-055 · Organization review
+- `/admin/organizations` lists open registrations oldest first for staff with
+  `verifications.review` (superuser, verification officer). Staff open evidence through signed
+  links, then approve, ask for more information or reject. Asking or rejecting needs a reason code;
+  an optional message goes to the organization. Owners get an email for every decision.
+- Approval verifies the organization. Asking for more keeps it pending; when the organization adds a
+  document the review goes back to the reviewer. A rejected organization can send a new review
+  request after fixing its documents.
+- The reviewer's message is stored in `verification_requests.decision_note`, separate from `notes`
+  (intake flags such as free webmail).
+
+### D-056 · Post a Job wizard and job lifecycle for employers
+- Four steps (requirement; skills and languages; employment terms; benefits, permit/visa payers,
+  deadline and itemised costs) then preview and submit. Each step saves; the first creates a draft
+  with its public code. Amounts are entered in whole units and stored as `amount_minor`.
+- Submitting needs a verified organization, the destination's mandatory disclosures (country rule
+  keys mapped to job fields, e.g. AE: salary, accommodation, hours, contract length) and only
+  allowed worker-paid costs. A worker-paid visa or work permit counts as a worker cost.
+- A change to any `JobPosting::MATERIAL_FIELDS` or to the costs of a published or paused job
+  resubmits it for review straight away (it leaves public search until approved); the review notes
+  list the changed fields. Title, headcount, skills, languages, joining window and deadline are not
+  material. A material change that would break the cost rules is refused.
+- Employers pause, resume and close live jobs, and archive drafts and closed jobs, following the
+  job state machine. Viewers and hiring managers see jobs but cannot post. Jobs are only reached
+  through the current organization.
+- The organization dashboard shows live, in-review, needs-changes and draft counts and the latest
+  jobs.

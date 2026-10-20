@@ -34,6 +34,7 @@ import { dashboard } from '@/routes';
 import admin from '@/routes/admin';
 import design from '@/routes/design';
 import horizon from '@/routes/horizon';
+import org from '@/routes/org';
 import { edit as profileSettings } from '@/routes/profile';
 import team from '@/routes/team';
 import worker from '@/routes/worker';
@@ -82,7 +83,7 @@ export const orgNav: Record<App.Domain.Organization.Enums.OrganizationType, NavG
                     icon: LayoutDashboard,
                     href: dashboard(),
                 },
-                { key: 'jobs', label: 'nav.jobs', icon: BriefcaseBusiness },
+                { key: 'jobs', label: 'nav.jobs', icon: BriefcaseBusiness, href: org.jobs.index() },
                 { key: 'talent', label: 'nav.talent', icon: Search },
                 { key: 'shortlists', label: 'nav.shortlists', icon: Star },
                 { key: 'projects', label: 'nav.projects', icon: FolderKanban },

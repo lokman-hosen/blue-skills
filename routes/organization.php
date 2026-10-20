@@ -1,6 +1,9 @@
 <?php
 
+use App\Domain\Jobs\Actions\ChangeJobAvailability;
+use App\Domain\Jobs\Support\JobWizard;
 use App\Http\Controllers\Organization\InvitationController;
+use App\Http\Controllers\Organization\JobController;
 use App\Http\Controllers\Organization\OrganizationRegistrationController;
 use App\Http\Controllers\Organization\TeamController;
 use App\Http\Controllers\Organization\VerificationEvidenceController;
@@ -36,4 +39,16 @@ Route::get('invitations/{token}', [InvitationController::class, 'show'])
 Route::middleware(['auth', 'verified', 'user.type:org'])->group(function () {
     Route::get('invitations', [InvitationController::class, 'index'])->name('invitations.index');
     Route::post('invitations/{invitation}/accept', [InvitationController::class, 'accept'])->name('invitations.accept');
+});
+
+// The organization's jobs and the Post a Job wizard (Module 3, employers only: D-053).
+Route::middleware(['auth', 'verified', 'user.type:org'])->prefix('org/jobs')->name('org.jobs.')->controller(JobController::class)->group(function () {
+    Route::get('/', 'index')->name('index');
+    Route::get('new', 'create')->name('create');
+    Route::post('/', 'store')->name('store');
+    Route::get('{job}', 'show')->name('show');
+    Route::get('{job}/edit/{step}', 'edit')->whereIn('step', [...JobWizard::STEPS, 'preview'])->name('edit');
+    Route::put('{job}/steps/{step}', 'update')->whereIn('step', JobWizard::STEPS)->name('update');
+    Route::post('{job}/submit', 'submit')->middleware('throttle:20,1')->name('submit');
+    Route::post('{job}/{action}', 'availability')->whereIn('action', ChangeJobAvailability::ACTIONS)->name('availability');
 });

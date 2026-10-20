@@ -132,6 +132,14 @@ declare namespace App {
         }
         namespace Jobs {
             namespace Data {
+                export type DestinationOptionData = {
+                    code: string;
+                    name: string;
+                    currency: string;
+                    allowedWorkerCosts: App.Domain.Jobs.Enums.JobCostCategory[];
+                    workerCostPolicy: string | null;
+                    mandatoryFields: string[];
+                };
                 export type JobBenefitData = {
                     key: string;
                     provision: App.Domain.Jobs.Enums.BenefitProvision | null;
@@ -142,6 +150,66 @@ declare namespace App {
                     description: string | null;
                     amount: App.Support.Data.MoneyData;
                     payer: App.Domain.Jobs.Enums.CostPayer;
+                };
+                export type JobCostFormData = {
+                    category: App.Domain.Jobs.Enums.JobCostCategory;
+                    description: string | null;
+                    amount: number;
+                    currency: string;
+                    payer: App.Domain.Jobs.Enums.CostPayer;
+                };
+                export type JobCountsData = {
+                    live: number;
+                    inReview: number;
+                    needsChanges: number;
+                    drafts: number;
+                };
+                export type JobFormData = {
+                    title: string;
+                    occupationId: string;
+                    headcount: number;
+                    destinationCountryCode: string;
+                    destinationCity: string | null;
+                    joiningFrom: string | null;
+                    joiningTo: string | null;
+                    skillIds: string[];
+                    minExperienceYears: number | null;
+                    languageRequirements: App.Domain.Jobs.Data.LanguageRequirementData[];
+                    salaryAmount: number | null;
+                    salaryCurrency: string | null;
+                    salaryPeriod: App.Domain.Jobs.Enums.SalaryPeriod | null;
+                    hoursPerDay: number | null;
+                    daysPerWeek: number | null;
+                    overtimeTerms: string | null;
+                    contractMonths: number | null;
+                    benefits: Record<string, App.Domain.Jobs.Enums.BenefitProvision | null>;
+                    benefitDetails: Record<string, string | null>;
+                    otherBenefits: string | null;
+                    permitPayer: App.Domain.Jobs.Enums.CostPayer | null;
+                    visaPayer: App.Domain.Jobs.Enums.CostPayer | null;
+                    deadline: string | null;
+                    costs: App.Domain.Jobs.Data.JobCostFormData[];
+                };
+                export type JobFormOptionsData = {
+                    occupations: App.Domain.Taxonomy.Data.OccupationOptionData[];
+                    skills: App.Domain.Taxonomy.Data.TaxonomyOptionData[];
+                    destinations: App.Domain.Jobs.Data.DestinationOptionData[];
+                    currencies: string[];
+                };
+                export type JobListItemData = {
+                    code: string;
+                    title: string;
+                    occupation: string | null;
+                    destinationCountryCode: string;
+                    destinationCountryName: string | null;
+                    destinationCity: string | null;
+                    headcount: number;
+                    status: App.Support.Data.StatusData;
+                    deadline: string | null;
+                    updatedAt: string | null;
+                    publishedAt: string | null;
+                    lastDecision: App.Domain.Verification.Data.ReviewDecisionData | null;
+                    editable: boolean;
                 };
                 export type JobTruthCardData = {
                     publicCode: string;
