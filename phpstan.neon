@@ -11,3 +11,6 @@ parameters:
         - routes/
 
     level: 6
+
+    # Read Eloquent casts() so enum, state and date attributes get their real types.
+    parseModelCastsMethod: true

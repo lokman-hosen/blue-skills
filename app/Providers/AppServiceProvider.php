@@ -2,7 +2,40 @@
 
 namespace App\Providers;
 
+use App\Domain\Applications\Models\Application;
+use App\Domain\Applications\Models\ApplicationConsent;
+use App\Domain\Applications\Models\Consent;
+use App\Domain\Applications\Models\ProfileSnapshot;
+use App\Domain\Config\Models\Country;
+use App\Domain\Config\Models\CountryRule;
+use App\Domain\Config\Models\Language;
+use App\Domain\Identity\Models\User;
+use App\Domain\Jobs\Models\JobCost;
+use App\Domain\Jobs\Models\JobMandate;
+use App\Domain\Jobs\Models\JobPosting;
+use App\Domain\Jobs\Models\JobSkillRequirement;
+use App\Domain\Mobility\Models\MobilityCase;
+use App\Domain\Mobility\Models\MobilityCaseStage;
+use App\Domain\Organization\Models\Organization;
+use App\Domain\Organization\Models\OrganizationInvitation;
+use App\Domain\Organization\Models\OrganizationMember;
+use App\Domain\Taxonomy\Models\Occupation;
+use App\Domain\Taxonomy\Models\Sector;
+use App\Domain\Taxonomy\Models\Skill;
+use App\Domain\Taxonomy\Models\Specialization;
+use App\Domain\Trust\Models\Report;
+use App\Domain\Verification\Models\Document;
+use App\Domain\Verification\Models\EvidenceItem;
+use App\Domain\Verification\Models\VerificationRequest;
+use App\Domain\Worker\Models\SkillShow;
+use App\Domain\Worker\Models\VoiceAnswer;
+use App\Domain\Worker\Models\WorkerDestinationPreference;
+use App\Domain\Worker\Models\WorkerExperience;
+use App\Domain\Worker\Models\WorkerLanguage;
+use App\Domain\Worker\Models\WorkerProfile;
+use App\Domain\Worker\Models\WorkerSkill;
 use Carbon\CarbonImmutable;
+use Illuminate\Database\Eloquent\Relations\Relation;
 use Illuminate\Support\Facades\Date;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\ServiceProvider;
@@ -24,6 +57,48 @@ class AppServiceProvider extends ServiceProvider
     public function boot(): void
     {
         $this->configureDefaults();
+        $this->configureMorphMap();
+    }
+
+    /**
+     * Short, stable morph names so polymorphic columns never store PHP class names.
+     */
+    protected function configureMorphMap(): void
+    {
+        Relation::enforceMorphMap([
+            'user' => User::class,
+            'organization' => Organization::class,
+            'organization_member' => OrganizationMember::class,
+            'organization_invitation' => OrganizationInvitation::class,
+            'country' => Country::class,
+            'country_rule' => CountryRule::class,
+            'language' => Language::class,
+            'sector' => Sector::class,
+            'occupation' => Occupation::class,
+            'specialization' => Specialization::class,
+            'skill' => Skill::class,
+            'worker_profile' => WorkerProfile::class,
+            'worker_experience' => WorkerExperience::class,
+            'worker_skill' => WorkerSkill::class,
+            'worker_language' => WorkerLanguage::class,
+            'worker_destination_preference' => WorkerDestinationPreference::class,
+            'voice_answer' => VoiceAnswer::class,
+            'skill_show' => SkillShow::class,
+            'document' => Document::class,
+            'evidence_item' => EvidenceItem::class,
+            'verification_request' => VerificationRequest::class,
+            'consent' => Consent::class,
+            'application' => Application::class,
+            'application_consent' => ApplicationConsent::class,
+            'profile_snapshot' => ProfileSnapshot::class,
+            'job' => JobPosting::class,
+            'job_cost' => JobCost::class,
+            'job_mandate' => JobMandate::class,
+            'job_skill_requirement' => JobSkillRequirement::class,
+            'mobility_case' => MobilityCase::class,
+            'mobility_case_stage' => MobilityCaseStage::class,
+            'report' => Report::class,
+        ]);
     }
 
     /**

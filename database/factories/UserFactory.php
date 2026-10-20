@@ -2,7 +2,8 @@
 
 namespace Database\Factories;
 
-use App\Models\User;
+use App\Domain\Identity\Enums\UserType;
+use App\Domain\Identity\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
@@ -25,6 +26,7 @@ class UserFactory extends Factory
     public function definition(): array
     {
         return [
+            'type' => UserType::Org,
             'name' => fake()->name(),
             'email' => fake()->unique()->safeEmail(),
             'email_verified_at' => now(),
@@ -33,7 +35,35 @@ class UserFactory extends Factory
             'two_factor_secret' => null,
             'two_factor_recovery_codes' => null,
             'two_factor_confirmed_at' => null,
+            'locale' => 'en',
+            'timezone' => 'UTC',
+            'data_region' => config('blueskills.default_data_region'),
         ];
+    }
+
+    /**
+     * Workers sign in with a phone OTP; email and password are optional.
+     */
+    public function worker(): static
+    {
+        return $this->state(fn (array $attributes) => [
+            'type' => UserType::Worker,
+            'phone' => '+8801'.fake()->unique()->numerify('7########'),
+            'phone_verified_at' => now(),
+            'email' => null,
+            'email_verified_at' => null,
+            'password' => null,
+            'locale' => 'bn',
+            'timezone' => 'Asia/Dhaka',
+        ]);
+    }
+
+    public function staff(): static
+    {
+        return $this->state(fn (array $attributes) => [
+            'type' => UserType::Staff,
+            'timezone' => 'Asia/Dubai',
+        ]);
     }
 
     /**

@@ -2,6 +2,8 @@
 
 namespace App\Providers;
 
+use App\Domain\Identity\Enums\Permission;
+use App\Domain\Identity\Models\User;
 use Illuminate\Support\Facades\Gate;
 use Laravel\Horizon\Horizon;
 use Laravel\Horizon\HorizonApplicationServiceProvider;
@@ -21,13 +23,10 @@ class HorizonServiceProvider extends HorizonApplicationServiceProvider
     }
 
     /**
-     * Register the Horizon gate.
-     *
-     * This gate determines who can access Horizon in non-local environments.
+     * Only staff with the horizon.view permission (superusers) may open Horizon outside local.
      */
     protected function gate(): void
     {
-        // Deny outside local until staff roles exist (Part B swaps this for a staff check).
-        Gate::define('viewHorizon', fn ($user = null): bool => false);
+        Gate::define('viewHorizon', fn (?User $user = null): bool => $user?->hasStaffPermission(Permission::HorizonView->value) ?? false);
     }
 }

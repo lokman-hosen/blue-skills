@@ -38,6 +38,17 @@ return [
             'report' => false,
         ],
 
+        // Sensitive worker and organization files. Never public; served via temporaryUrl().
+        'private' => [
+            'driver' => 'local',
+            'root' => storage_path('app/private/blueskills'),
+            'visibility' => 'private',
+            'serve' => true,
+            'url' => '/private-files',
+            'throw' => false,
+            'report' => false,
+        ],
+
         'public' => [
             'driver' => 'local',
             'root' => storage_path('app/public'),

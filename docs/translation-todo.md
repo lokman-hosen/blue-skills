@@ -5,3 +5,4 @@ silently: add the key here, and remove it once a reviewed translation lands in `
 
 | Key | Missing in | Added in | Notes |
 |-----|------------|----------|-------|
+| Taxonomy names (sectors, occupations, specializations, skills) | all except `en` | Module 0 | Seeded English only (D-017) |
