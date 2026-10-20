@@ -55,6 +55,22 @@ declare namespace App {
                     type: App.Domain.Identity.Enums.UserType;
                     locale: string;
                     twoFactorEnabled: boolean;
+                    staffPermissions: string[];
+                };
+                export type StaffInvitationData = {
+                    id: string;
+                    email: string;
+                    role: App.Domain.Identity.Enums.StaffRole;
+                    expiresAt: string;
+                    invitedBy: string | null;
+                };
+                export type StaffMemberData = {
+                    id: string;
+                    name: string;
+                    email: string | null;
+                    role: App.Domain.Identity.Enums.StaffRole | null;
+                    twoFactorEnabled: boolean;
+                    isYou: boolean;
                 };
             }
             namespace Enums {

@@ -11,7 +11,7 @@ beforeEach(function () {
 });
 
 it('lands each user type in its own workspace', function (string $state, string $component) {
-    $user = User::factory()->{$state}()->create();
+    $user = User::factory()->{$state}()->withTwoFactor()->create();
 
     $this->actingAs($user)
         ->get(route('dashboard'))

@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Middleware\EnsureOrganizationVerified;
+use App\Http\Middleware\EnsureStaffTwoFactor;
 use App\Http\Middleware\EnsureUserType;
 use App\Http\Middleware\HandleAppearance;
 use App\Http\Middleware\HandleInertiaRequests;
@@ -23,6 +24,7 @@ return Application::configure(basePath: dirname(__DIR__))
         $middleware->alias([
             'user.type' => EnsureUserType::class,
             'organization.verified' => EnsureOrganizationVerified::class,
+            'staff.2fa' => EnsureStaffTwoFactor::class,
         ]);
 
         $middleware->web(append: [

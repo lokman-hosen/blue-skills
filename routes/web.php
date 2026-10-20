@@ -10,14 +10,14 @@ Route::inertia('/', 'public/home')->name('home');
 
 Route::post('locale', [LocaleController::class, 'update'])->name('locale.update');
 
-Route::middleware(['auth', 'verified'])->group(function () {
+Route::middleware(['auth', 'verified', 'staff.2fa'])->group(function () {
     Route::get('dashboard', DashboardController::class)->name('dashboard');
 
     Route::post('organizations/{organization}/switch', SwitchOrganizationController::class)
         ->name('organizations.switch');
 });
 
-Route::middleware(['auth', 'can:viewDesignSystem'])->prefix('_design')->name('design.')->group(function () {
+Route::middleware(['auth', 'can:viewDesignSystem', 'staff.2fa'])->prefix('_design')->name('design.')->group(function () {
     Route::get('/', [DesignSystemController::class, 'index'])->name('index');
     Route::get('layouts/{layout}', [DesignSystemController::class, 'layout'])
         ->whereIn('layout', DesignSystemController::LAYOUTS)
@@ -27,3 +27,4 @@ Route::middleware(['auth', 'can:viewDesignSystem'])->prefix('_design')->name('de
 require __DIR__.'/settings.php';
 require __DIR__.'/worker.php';
 require __DIR__.'/organization.php';
+require __DIR__.'/admin.php';

@@ -4,6 +4,7 @@ namespace App\Domain\Identity\Data;
 
 use App\Domain\Identity\Enums\UserType;
 use App\Domain\Identity\Models\User;
+use App\Domain\Identity\Support\PlatformTeam;
 use Spatie\LaravelData\Data;
 
 /**
@@ -19,6 +20,8 @@ class AuthUserData extends Data
         public UserType $type,
         public string $locale,
         public bool $twoFactorEnabled,
+        /** @var list<string> Staff permissions (empty for workers and organization users). */
+        public array $staffPermissions,
     ) {}
 
     public static function fromUser(User $user): self
@@ -31,6 +34,9 @@ class AuthUserData extends Data
             type: $user->type,
             locale: $user->locale,
             twoFactorEnabled: $user->two_factor_confirmed_at !== null,
+            staffPermissions: $user->isStaff()
+                ? PlatformTeam::run(fn () => $user->unsetRelation('roles')->unsetRelation('permissions')->getAllPermissions()->pluck('name')->values()->all())
+                : [],
         );
     }
 }

@@ -27,6 +27,8 @@ class HorizonServiceProvider extends HorizonApplicationServiceProvider
      */
     protected function gate(): void
     {
-        Gate::define('viewHorizon', fn (?User $user = null): bool => $user?->hasStaffPermission(Permission::HorizonView->value) ?? false);
+        Gate::define('viewHorizon', fn (?User $user = null): bool => $user !== null
+            && $user->hasStaffPermission(Permission::HorizonView->value)
+            && (! config('blueskills.enforce_staff_two_factor') || $user->two_factor_confirmed_at !== null));
     }
 }

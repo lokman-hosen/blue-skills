@@ -30,6 +30,7 @@ import {
     UsersRound,
 } from 'lucide-react';
 import { dashboard } from '@/routes';
+import admin from '@/routes/admin';
 import design from '@/routes/design';
 import horizon from '@/routes/horizon';
 import { edit as profileSettings } from '@/routes/profile';
@@ -43,6 +44,8 @@ export type NavLink = {
     /** Missing until the module that owns the screen ships; rendered as "Soon". */
     href?: NonNullable<InertiaLinkProps['href']>;
     external?: boolean;
+    /** Staff permission required to see the item. */
+    permission?: string;
 };
 
 export type NavGroup = { label?: string; items: NavLink[] };
@@ -155,6 +158,13 @@ export const adminNav: NavGroup[] = [
         items: [
             { key: 'configuration', label: 'nav.configuration', icon: SlidersHorizontal },
             { key: 'taxonomy', label: 'nav.taxonomy', icon: Tags },
+            {
+                key: 'staff',
+                label: 'nav.staff',
+                icon: Users,
+                href: admin.staff.index(),
+                permission: 'staff.manage',
+            },
             { key: 'design', label: 'nav.design_system', icon: Palette, href: design.index() },
             {
                 key: 'queues',

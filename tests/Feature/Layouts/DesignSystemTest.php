@@ -14,7 +14,7 @@ it('is only for staff', function () {
 it('renders the component gallery with seeded Truth Cards', function () {
     $this->seed(DatabaseSeeder::class);
 
-    $this->actingAs(User::factory()->staff()->create())
+    $this->actingAs(User::factory()->staff()->withTwoFactor()->create())
         ->get(route('design.index'))
         ->assertOk()
         ->assertInertia(fn (Assert $page) => $page
@@ -26,14 +26,14 @@ it('renders the component gallery with seeded Truth Cards', function () {
 it('previews every layout', function (string $layout) {
     $this->seed(DatabaseSeeder::class);
 
-    $this->actingAs(User::factory()->staff()->create())
+    $this->actingAs(User::factory()->staff()->withTwoFactor()->create())
         ->get(route('design.layout', $layout))
         ->assertOk()
         ->assertInertia(fn (Assert $page) => $page->component("{$layout}/design-preview"));
 })->with(['public', 'auth', 'worker', 'org', 'admin']);
 
 it('returns 404 for unknown layouts', function () {
-    $this->actingAs(User::factory()->staff()->create())
+    $this->actingAs(User::factory()->staff()->withTwoFactor()->create())
         ->get('/_design/layouts/unknown')
         ->assertNotFound();
 });
