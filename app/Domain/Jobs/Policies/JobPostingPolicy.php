@@ -4,6 +4,7 @@ namespace App\Domain\Jobs\Policies;
 
 use App\Domain\Identity\Enums\Permission;
 use App\Domain\Identity\Models\User;
+use App\Domain\Jobs\Models\JobMandate;
 use App\Domain\Jobs\Models\JobPosting;
 use App\Domain\Jobs\States\Job\Published;
 use App\Domain\Organization\Enums\OrganizationType;
@@ -35,13 +36,17 @@ class JobPostingPolicy
     }
 
     /**
-     * Employers post their own jobs in Module 3; agencies post with a verified mandate in
-     * Module 6 (D-053).
+     * Employers post their own jobs; agencies post only while they hold a usable mandate
+     * (product rule 10, D-077).
      */
     public function create(User $user, Organization $organization): bool
     {
-        return $organization->type === OrganizationType::Employer
-            && OrganizationPermissions::allows($user, $organization, Permission::JobsManage);
+        return match ($organization->type) {
+            OrganizationType::Employer => OrganizationPermissions::allows($user, $organization, Permission::JobsManage),
+            OrganizationType::Agency => OrganizationPermissions::allows($user, $organization, Permission::JobsManage)
+                && JobMandate::usableFor($organization)->isNotEmpty(),
+            default => false,
+        };
     }
 
     public function update(User $user, JobPosting $job): bool

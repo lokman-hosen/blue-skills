@@ -1,5 +1,5 @@
 import { Head, Link } from '@inertiajs/react';
-import { BriefcaseBusiness, Plus } from 'lucide-react';
+import { BriefcaseBusiness, FileCheck, Plus } from 'lucide-react';
 import JobController from '@/actions/App/Http/Controllers/Organization/JobController';
 import { DataTable } from '@/components/bs/data-table';
 import { EmptyState } from '@/components/bs/empty-state';
@@ -7,14 +7,16 @@ import { PageHeader } from '@/components/bs/page-header';
 import { StatusChip } from '@/components/bs/status-chip';
 import { Button } from '@/components/ui/button';
 import { useTranslation } from '@/lib/i18n';
+import org from '@/routes/org';
 
 type Props = {
     jobs: App.Domain.Jobs.Data.JobListItemData[];
     canCreate: boolean;
+    needsMandate: boolean;
 };
 
 /** The organization's jobs with their review status. */
-export default function OrgJobs({ jobs, canCreate }: Props) {
+export default function OrgJobs({ jobs, canCreate, needsMandate }: Props) {
     const { t, formatDate, formatNumber } = useTranslation();
     const post = canCreate && (
         <Button asChild className="min-h-11">
@@ -30,6 +32,20 @@ export default function OrgJobs({ jobs, canCreate }: Props) {
             <Head title={t('jobs.title')} />
             <div className="flex flex-col gap-5">
                 <PageHeader title={t('jobs.title')} description={t('jobs.body')} actions={post} />
+                {needsMandate && (
+                    <section className="flex flex-col gap-3 rounded-xl border border-warn/40 bg-warn-soft px-4 py-3 sm:flex-row sm:items-center">
+                        <FileCheck aria-hidden className="size-5 shrink-0 text-warn" />
+                        <div className="flex-1 text-sm">
+                            <h2 className="font-semibold">{t('jobs.needs_mandate.title')}</h2>
+                            <p className="text-muted">{t('jobs.needs_mandate.body')}</p>
+                        </div>
+                        <Button asChild variant="outline" className="min-h-11">
+                            <Link href={org.mandates.index()}>
+                                {t('jobs.needs_mandate.action')}
+                            </Link>
+                        </Button>
+                    </section>
+                )}
                 <DataTable
                     caption={t('jobs.title')}
                     rows={jobs}

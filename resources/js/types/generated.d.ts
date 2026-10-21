@@ -384,6 +384,7 @@ declare namespace App {
                 };
                 export type JobFormData = {
                     title: string;
+                    jobMandateId: string | null;
                     occupationId: string;
                     headcount: number;
                     destinationCountryCode: string;
@@ -413,6 +414,7 @@ declare namespace App {
                     skills: App.Domain.Taxonomy.Data.TaxonomyOptionData[];
                     destinations: App.Domain.Jobs.Data.DestinationOptionData[];
                     currencies: string[];
+                    mandates: App.Domain.Jobs.Data.MandateOptionData[];
                 };
                 export type JobListItemData = {
                     code: string;
@@ -520,6 +522,16 @@ declare namespace App {
                     }[];
                     lastDecision: App.Domain.Verification.Data.ReviewDecisionData | null;
                     createdAt: string | null;
+                };
+                export type MandateOptionData = {
+                    id: string;
+                    reference: string;
+                    employer: string;
+                    occupationIds: string[];
+                    destinationCountryCode: string | null;
+                    headcountLeft: number;
+                    validUntil: string | null;
+                    usable: boolean;
                 };
                 export type MatchRequirementData = {
                     key: string;

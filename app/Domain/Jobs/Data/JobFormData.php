@@ -24,6 +24,7 @@ class JobFormData extends Data
      */
     public function __construct(
         public string $title,
+        public ?string $jobMandateId,
         public string $occupationId,
         public int $headcount,
         public string $destinationCountryCode,
@@ -55,6 +56,7 @@ class JobFormData extends Data
 
         return new self(
             title: $job->title,
+            jobMandateId: $job->job_mandate_id,
             occupationId: $job->occupation_id,
             headcount: $job->headcount,
             destinationCountryCode: $job->destination_country_code,

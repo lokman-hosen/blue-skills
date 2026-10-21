@@ -28,6 +28,7 @@ type Props = {
     problems: Record<string, string>;
     live: boolean;
     organizationVerified: boolean;
+    agency: boolean;
     options: Options;
 };
 
@@ -204,9 +205,10 @@ function useStepSubmit(code: string | null, step: Exclude<Step, 'preview'>) {
         };
 }
 
-function RequirementStep({ code, form: job, options }: Props) {
-    const { t } = useTranslation();
+function RequirementStep({ code, form: job, options, agency }: Props) {
+    const { t, formatDate, formatNumber } = useTranslation();
     const form = useForm({
+        job_mandate_id: job?.jobMandateId ?? '',
         title: job?.title ?? '',
         occupation_id: job?.occupationId ?? '',
         headcount: job?.headcount?.toString() ?? '',
@@ -215,11 +217,71 @@ function RequirementStep({ code, form: job, options }: Props) {
         joining_from: job?.joiningFrom ?? '',
         joining_to: job?.joiningTo ?? '',
     });
+    // Employers never send a mandate; agencies post inside one (product rule 10).
+    form.transform(({ job_mandate_id, ...data }) => (agency ? { ...data, job_mandate_id } : data));
     const submit = useStepSubmit(code, 'requirement')(form);
+    const mandate = options.mandates.find((item) => item.id === form.data.job_mandate_id);
+    const occupations =
+        mandate && mandate.occupationIds.length > 0
+            ? options.occupations.filter((item) => mandate.occupationIds.includes(item.id))
+            : options.occupations;
+    const destinations = mandate?.destinationCountryCode
+        ? options.destinations.filter((country) => country.code === mandate.destinationCountryCode)
+        : options.destinations;
+
+    const chooseMandate = (id: string) => {
+        const chosen = options.mandates.find((item) => item.id === id);
+        form.setData((data) => ({
+            ...data,
+            job_mandate_id: id,
+            destination_country_code:
+                chosen?.destinationCountryCode ?? data.destination_country_code,
+            occupation_id:
+                chosen &&
+                chosen.occupationIds.length > 0 &&
+                !chosen.occupationIds.includes(data.occupation_id)
+                    ? ''
+                    : data.occupation_id,
+        }));
+    };
 
     return (
         <form onSubmit={submit} noValidate>
             <Card>
+                {agency && (
+                    <Field
+                        id="job_mandate_id"
+                        label={t('jobs.field.mandate')}
+                        hint={
+                            mandate
+                                ? t('jobs.mandate.scope', {
+                                      employer: mandate.employer,
+                                      left: formatNumber(mandate.headcountLeft),
+                                      date: mandate.validUntil
+                                          ? formatDate(mandate.validUntil)
+                                          : '—',
+                                  })
+                                : t('jobs.field.mandate_hint')
+                        }
+                        error={form.errors.job_mandate_id}
+                    >
+                        <NativeSelect
+                            id="job_mandate_id"
+                            value={form.data.job_mandate_id}
+                            onChange={(e) => chooseMandate(e.target.value)}
+                        >
+                            <option value="" disabled>
+                                {t('jobs.mandate.choose')}
+                            </option>
+                            {options.mandates.map((item) => (
+                                <option key={item.id} value={item.id}>
+                                    {item.reference} · {item.employer}
+                                    {!item.usable && ` (${t('jobs.mandate.no_longer_usable')})`}
+                                </option>
+                            ))}
+                        </NativeSelect>
+                    </Field>
+                )}
                 <Field
                     id="title"
                     label={t('jobs.field.title')}
@@ -248,7 +310,7 @@ function RequirementStep({ code, form: job, options }: Props) {
                             <option value="" disabled>
                                 {t('voice.choose_trade')}
                             </option>
-                            {options.occupations.map((item) => (
+                            {occupations.map((item) => (
                                 <option key={item.id} value={item.id}>
                                     {item.name} · {item.sector}
                                 </option>
@@ -285,7 +347,7 @@ function RequirementStep({ code, form: job, options }: Props) {
                             <option value="" disabled>
                                 {t('voice.choose_country')}
                             </option>
-                            {options.destinations.map((country) => (
+                            {destinations.map((country) => (
                                 <option key={country.code} value={country.code}>
                                     {country.name}
                                 </option>

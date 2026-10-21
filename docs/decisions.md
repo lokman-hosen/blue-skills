@@ -754,3 +754,20 @@ colour) and the appearance tabs use design tokens instead of the kit's neutral g
   back in review.
 - The mandate letter is visible only to staff reviewers, the agency and the named employer.
 - Notifications: `mandate_requested` (employer), `mandate_answered` and `mandate_reviewed` (agency).
+
+### D-077 · Agency job posting (product rule 10)
+- Agencies post through the same wizard as employers. The first step asks for one of the
+  agency's mandates; the job's employer is the mandate's employer and the agency is shown as the
+  recruiter on the Truth Card. Employers cannot attach a mandate to their own jobs.
+- An agency may start a job only while it holds a **usable** mandate: verified, in date, and under
+  a licence valid for the mandate's destination. Otherwise the jobs page explains how to get one.
+  Agency Owners and Case Officers post; Compliance Reviewers do not.
+- The job must stay inside the mandate: one of its trades, its destination, and no more workers
+  than the places left. Places left = mandate headcount minus the headcount of the agency's other
+  jobs on that mandate that aren't closed, archived or rejected.
+- The same check runs when the requirement step is saved, at the wizard preview, on submission,
+  on a live job's material change and at staff approval, so a mandate that lapses, is revoked or
+  loses its licence cover blocks the job from going (back) live. Live jobs whose mandate lapses
+  are not paused automatically yet; that comes with the agency workspace (6f/6g).
+- Sample data: Northstar's licence covers AE and SA; MD-1107 covers electricians to AE with 300
+  places, MD-1121 HVAC technicians to SA.

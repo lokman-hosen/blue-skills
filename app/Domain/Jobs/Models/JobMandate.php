@@ -3,12 +3,16 @@
 namespace App\Domain\Jobs\Models;
 
 use App\Domain\Jobs\Enums\MandateStatus;
+use App\Domain\Jobs\States\Job\Archived;
+use App\Domain\Jobs\States\Job\Closed;
+use App\Domain\Jobs\States\Job\Rejected;
 use App\Domain\Organization\Models\Organization;
 use App\Domain\Verification\Models\VerificationRequest;
 use App\Support\Concerns\LogsStatusChanges;
 use Database\Factories\JobMandateFactory;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Attributes\UseFactory;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Concerns\HasUlids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -106,5 +110,36 @@ class JobMandate extends Model
 
         return ($occupations === [] || in_array($occupationId, $occupations, true))
             && ($this->destination_country_code === null || $this->destination_country_code === $destinationCountryCode);
+    }
+
+    /**
+     * Places still open under this mandate: its headcount minus what the agency's other open
+     * jobs already recruit for.
+     */
+    public function headcountLeft(?JobPosting $except = null): int
+    {
+        $used = $this->jobs()
+            ->whereNotState('status', [Closed::class, Archived::class, Rejected::class])
+            ->when($except?->exists, fn ($query) => $query->whereKeyNot($except?->getKey()))
+            ->sum('headcount');
+
+        return max(0, $this->headcount - (int) $used);
+    }
+
+    /**
+     * The agency's mandates that can back a new job today (product rule 10).
+     *
+     * @return Collection<int, self>
+     */
+    public static function usableFor(Organization $agency): Collection
+    {
+        return self::query()
+            ->where('agency_organization_id', $agency->id)
+            ->where('status', MandateStatus::Verified)
+            ->with(['agency', 'employer'])
+            ->orderBy('valid_until')
+            ->get()
+            ->filter(fn (self $mandate) => $mandate->isUsable())
+            ->values();
     }
 }

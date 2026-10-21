@@ -10,9 +10,11 @@ use App\Domain\Jobs\Data\JobFormData;
 use App\Domain\Jobs\Data\JobFormOptionsData;
 use App\Domain\Jobs\Data\JobListItemData;
 use App\Domain\Jobs\Data\JobTruthCardData;
+use App\Domain\Jobs\Models\JobMandate;
 use App\Domain\Jobs\Models\JobPosting;
 use App\Domain\Jobs\Support\JobCompliance;
 use App\Domain\Jobs\Support\JobWizard;
+use App\Domain\Organization\Enums\OrganizationType;
 use App\Domain\Organization\Models\Organization;
 use App\Domain\Organization\Support\CurrentOrganization;
 use App\Domain\Verification\Data\ReviewDecisionData;
@@ -44,7 +46,10 @@ class JobController extends Controller
 
         return Inertia::render('org/jobs/index', [
             'jobs' => $jobs->map(fn (JobPosting $job) => JobListItemData::fromJob($job))->values()->all(),
-            'canCreate' => Gate::allows('create', [JobPosting::class, $organization]),
+            'canCreate' => $canCreate = Gate::allows('create', [JobPosting::class, $organization]),
+            // Agencies post only under a usable mandate (product rule 10).
+            'needsMandate' => ! $canCreate && $organization->type === OrganizationType::Agency
+                && Gate::allows('viewAny', [JobMandate::class, $organization]),
         ]);
     }
 
@@ -145,7 +150,8 @@ class JobController extends Controller
             'problems' => $job !== null ? JobCompliance::problems($job) : [],
             'live' => $job?->isLive() ?? false,
             'organizationVerified' => $organization->isVerified(),
-            'options' => JobFormOptionsData::load(),
+            'agency' => $organization->type === OrganizationType::Agency,
+            'options' => JobFormOptionsData::load($organization, $job),
         ]);
     }
 
