@@ -1,6 +1,10 @@
 <?php
 
+use App\Domain\Identity\Enums\OrganizationRole;
 use App\Domain\Identity\Models\User;
+use App\Domain\Identity\Support\TeamContext;
+use App\Domain\Organization\Models\Organization;
+use App\Domain\Organization\Support\CurrentOrganization;
 use App\Domain\Worker\Models\WorkerProfile;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
@@ -20,4 +24,20 @@ function makeWorker(array $profile = []): User
     WorkerProfile::factory()->fresh()->for($user)->create(['current_country_code' => 'BD', ...$profile]);
 
     return $user->load('workerProfile');
+}
+
+/** A member of the organization with one role (needs RolesAndPermissionsSeeder). */
+function orgMember(Organization $organization, OrganizationRole $role): User
+{
+    $user = User::factory()->create();
+    $organization->users()->attach($user->id, ['joined_at' => now()]);
+    TeamContext::run($organization->id, fn () => $user->assignRole($role->value));
+
+    return $user;
+}
+
+/** Signed in as the member, with the organization as the current workspace. */
+function actingInOrg(User $user, Organization $organization)
+{
+    return test()->actingAs($user)->withSession([CurrentOrganization::SESSION_KEY => $organization->id]);
 }

@@ -2,6 +2,7 @@
 
 namespace App\Domain\Organization\Models;
 
+use App\Domain\Applications\Models\Shortlist;
 use App\Domain\Config\Models\Country;
 use App\Domain\Identity\Models\User;
 use App\Domain\Jobs\Models\JobMandate;
@@ -105,6 +106,14 @@ class Organization extends Model
     public function postedJobs(): HasMany
     {
         return $this->hasMany(JobPosting::class, 'organization_id');
+    }
+
+    /**
+     * @return HasMany<Shortlist, $this>
+     */
+    public function shortlists(): HasMany
+    {
+        return $this->hasMany(Shortlist::class);
     }
 
     /**

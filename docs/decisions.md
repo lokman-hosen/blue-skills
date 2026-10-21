@@ -463,3 +463,31 @@ colour) and the appearance tabs use design tokens instead of the kit's neutral g
 - ABC Contracting has draft job AE-ST-0042 (Steel Fixer) whose recruitment fee is charged to
   workers; it shows the corridor-rule block in the wizard and cannot be submitted until fixed.
 - The existing SA-HV-0021 and PL-WH-0014 reviews populate the job review queue.
+
+## Module 4 — Applications
+
+### D-060 · Module 4 inputs (owner answers, 2026-10-21)
+- **Pipeline per job.** Recruitment projects that group several jobs with a target headcount come
+  later with analytics (Module 9).
+- **Talent search shows the worker's full name** with trade, experience, countries, skills,
+  languages, passport readiness, availability, evidence states and SkillShow. Never the phone
+  number, documents or address (product rule 6).
+- **Worker alerts are in-app only** until Module 5: the application tracker shows status, next
+  step, interviews, offers and job-change notices. Stage events recorded now feed WhatsApp, SMS and
+  email in Module 5.
+- **Review cadence:** once at the end of the module.
+
+### D-061 · Hiring schema
+- `applications` gains the assigned recruiter (shown to the worker as "Handled by"), the SkillShow
+  shared with it, `stage_changed_at`, and `job_change_seen_at` (product rule 5 notice).
+- `application_consents` gains `granted_at`, `revoked_at` and the exact `document_id` shared for
+  document items, so a replaced passport scan is never shared silently. Revoking keeps the row.
+- `application_stage_events` is the application timeline (from, to, actor, reason code, note);
+  rows are never edited. The activity log still records each state change.
+- `interviews` (time, length, in person / video / phone, place or link, instructions, outcome) and
+  `offers` (pay, start date, answer-by date, note, status `sent/accepted/declined/withdrawn`). Offer
+  status is a categorical enum like D-014; the application state machine carries the stage.
+- `shortlists` (named per organization, optionally for a job) and `shortlist_entries` (one per
+  worker per list, with a note). Being on a list gives no extra access to the profile.
+- `RejectionReason` codes: requirements not met, not enough experience, skills not shown,
+  interview not passed, trade assessment not passed, positions filled, not available, other.

@@ -2,7 +2,6 @@
 
 use App\Domain\Identity\Enums\OrganizationRole;
 use App\Domain\Identity\Models\User;
-use App\Domain\Identity\Support\TeamContext;
 use App\Domain\Jobs\Enums\CostPayer;
 use App\Domain\Jobs\Models\JobPosting;
 use App\Domain\Jobs\States\Job\Closed;
@@ -11,7 +10,6 @@ use App\Domain\Jobs\States\Job\Paused;
 use App\Domain\Jobs\States\Job\Published;
 use App\Domain\Jobs\States\Job\Submitted;
 use App\Domain\Organization\Models\Organization;
-use App\Domain\Organization\Support\CurrentOrganization;
 use App\Domain\Taxonomy\Models\Occupation;
 use App\Domain\Taxonomy\Models\Skill;
 use App\Domain\Verification\Enums\VerificationType;
@@ -28,21 +26,6 @@ beforeEach(function () {
     $this->hr = orgMember($this->employer, OrganizationRole::HrAdmin);
     $this->electrician = Occupation::query()->where('slug', 'electrician')->firstOrFail();
 });
-
-function orgMember(Organization $organization, OrganizationRole $role): User
-{
-    $user = User::factory()->create();
-    $organization->users()->attach($user->id, ['joined_at' => now()]);
-    TeamContext::run($organization->id, fn () => $user->assignRole($role->value));
-
-    return $user;
-}
-
-/** Signed in as the member, with the organization as the current workspace. */
-function actingInOrg(User $user, Organization $organization)
-{
-    return test()->actingAs($user)->withSession([CurrentOrganization::SESSION_KEY => $organization->id]);
-}
 
 /** A complete AE job saved through the four wizard steps. */
 function postCompleteJob(User $user, Organization $organization, array $mobility = []): JobPosting
