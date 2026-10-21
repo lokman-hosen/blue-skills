@@ -10,6 +10,7 @@ use App\Http\Controllers\Organization\CaseDocumentController;
 use App\Http\Controllers\Organization\CohortController;
 use App\Http\Controllers\Organization\ComplianceController;
 use App\Http\Controllers\Organization\CourseController;
+use App\Http\Controllers\Organization\GraduateController;
 use App\Http\Controllers\Organization\GraduateRecordController;
 use App\Http\Controllers\Organization\InstitutePoolController;
 use App\Http\Controllers\Organization\InvitationController;
@@ -172,6 +173,7 @@ Route::middleware(['auth', 'verified', 'user.type:org'])->prefix('org')->name('o
     Route::get('institute-pools', [InstitutePoolController::class, 'index'])->name('institute-pools.index');
     Route::get('institute-pools/{pool}', [InstitutePoolController::class, 'show'])->name('institute-pools.show');
     Route::get('placements', [PlacementController::class, 'index'])->name('placements.index');
+    Route::get('graduates', [GraduateController::class, 'index'])->name('graduates.index');
 
     // Attestations and assessments for graduates who accepted (product rules 9 and 11).
     Route::controller(GraduateRecordController::class)->group(function () {

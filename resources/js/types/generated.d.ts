@@ -382,6 +382,10 @@ declare namespace App {
                 };
                 export type CohortMemberData = {
                     id: string;
+                    cohortId: string;
+                    cohortName: string;
+                    courseTitle: string;
+                    cohortEndsOn: string | null;
                     name: string;
                     status: App.Support.Data.StatusData;
                     source: string;
@@ -411,6 +415,15 @@ declare namespace App {
                     durationWeeks: number | null;
                     description: string | null;
                     cohorts: App.Domain.Institute.Data.CohortSummaryData[];
+                };
+                export type InstituteCountsData = {
+                    openCohorts: number;
+                    graduates: number;
+                    rosterWaiting: number;
+                    skillShows: number;
+                    attested: number;
+                    assessmentsPassed: number;
+                    sharingProgress: number;
                 };
                 export type IssuedRecordData = {
                     id: string;

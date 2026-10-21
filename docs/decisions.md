@@ -954,3 +954,17 @@ colour) and the appearance tabs use design tokens instead of the kit's neutral g
   joined. Graduates who don't share progress aren't listed at all.
 - Navigation shows Courses, Cohorts, Talent pools and Placements to the institute roles that can
   open them, and "Institute pools" to employer and agency members who may browse.
+
+### D-087 · Institute workspace, sample data and review fixes
+- **Institute workspace:** the dashboard shows graduates joined (with roster lines waiting),
+  graduates with a SkillShow, training attested and assessments passed, plus the latest cohorts.
+  "Graduates" lists everyone across cohorts (joined / roster waiting / all, by cohort) with the
+  same attest, assess and withdraw controls as a cohort page (prototype i-grads). The separate
+  "Assessments" menu item was dropped: assessments live on the graduates table.
+- **Sample data:** Meghna's Electrical Installation course and 2026 Cohort (invite link
+  `/i/MTTCEW26`). Rahim and Karim joined and were attested; Rahim passed the practical test (82)
+  and shares his progress; two roster lines wait and one declined. The published pool
+  "Electricians ready to travel" holds both, so ABC Contracting sees it under Institute pools.
+- **Review fix:** organization pages subscribed every member to the organization inbox channel,
+  which members without applicant access (all institute roles) are refused; they now subscribe
+  only when they may view applicants.

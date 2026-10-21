@@ -1923,5 +1923,21 @@
     "placements.applications": "আবেদন",
     "placements.no_applications": "এখনো কোনো আবেদন নেই।",
     "placements.empty_title": "এখনো কোনো গ্র্যাজুয়েট অগ্রগতি শেয়ার করেননি",
-    "placements.empty_body": "আমন্ত্রণ গ্রহণের সময় বা পরে প্রাইভেসি থেকে গ্র্যাজুয়েটরা এটি বেছে নেন।"
+    "placements.empty_body": "আমন্ত্রণ গ্রহণের সময় বা পরে প্রাইভেসি থেকে গ্র্যাজুয়েটরা এটি বেছে নেন।",
+    "graduates.body": "আপনার ব্যাচে যোগ দেওয়া সবাই, আপনার সত্যায়িত প্রশিক্ষণ ও লেখা পরীক্ষার ফলসহ।",
+    "graduates.states": "গ্র্যাজুয়েটের অবস্থা",
+    "graduates.state.joined": "যোগ দিয়েছেন",
+    "graduates.state.waiting": "অপেক্ষমাণ তালিকা",
+    "graduates.state.all": "সব",
+    "graduates.all_cohorts": "সব ব্যাচ",
+    "graduates.empty_title": "এখানে এখনো কোনো গ্র্যাজুয়েট নেই",
+    "graduates.empty_body": "ব্যাচের আমন্ত্রণ গ্রহণ করলে গ্র্যাজুয়েটরা দেখা যাবেন। অন্য ফিল্টার দেখুন বা ব্যাচের লিংক শেয়ার করুন।",
+    "dashboard.institute.graduates": "যোগ দেওয়া গ্র্যাজুয়েট",
+    "dashboard.institute.waiting": "তালিকায় অপেক্ষমাণ :count",
+    "dashboard.institute.skillshows": "স্কিলশোসহ",
+    "dashboard.institute.attested": "সত্যায়িত প্রশিক্ষণ",
+    "dashboard.institute.passed": "পাস করা মূল্যায়ন",
+    "dashboard.institute.cohorts": "ব্যাচ (:countটি খোলা)",
+    "dashboard.institute.all_cohorts": "সব ব্যাচ",
+    "privacy.institutes.share_hint": "প্রতিষ্ঠান দেখে আপনি কোন চাকরিতে আবেদন করেছেন এবং যোগ দিয়েছেন কিনা। বন্ধ করলে সঙ্গে সঙ্গে থেমে যায়।"
 }

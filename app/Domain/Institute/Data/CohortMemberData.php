@@ -16,6 +16,10 @@ class CohortMemberData extends Data
 {
     public function __construct(
         public string $id,
+        public string $cohortId,
+        public string $cohortName,
+        public string $courseTitle,
+        public ?string $cohortEndsOn,
         public string $name,
         /** Translated via `status.member_{value}`. */
         public StatusData $status,
@@ -37,6 +41,10 @@ class CohortMemberData extends Data
 
         return new self(
             id: $member->id,
+            cohortId: $member->cohort_id,
+            cohortName: $member->cohort->name,
+            courseTitle: $member->cohort->course->title,
+            cohortEndsOn: $member->cohort->ends_on?->toDateString(),
             name: $profile?->user->name ?? $member->roster_name ?? '',
             status: new StatusData('member_'.$member->status->value, $member->status->label(), $member->status->tone()),
             source: $member->source->value,

@@ -1923,5 +1923,21 @@
     "placements.applications": "Applications",
     "placements.no_applications": "No applications yet.",
     "placements.empty_title": "No graduate shares their progress yet",
-    "placements.empty_body": "Graduates choose this when they accept your invitation or later in Privacy."
+    "placements.empty_body": "Graduates choose this when they accept your invitation or later in Privacy.",
+    "graduates.body": "Everyone who joined your cohorts, with the training you attested and the tests you recorded.",
+    "graduates.states": "Graduate status",
+    "graduates.state.joined": "Joined",
+    "graduates.state.waiting": "Roster waiting",
+    "graduates.state.all": "All",
+    "graduates.all_cohorts": "All cohorts",
+    "graduates.empty_title": "No graduates here yet",
+    "graduates.empty_body": "Graduates appear once they accept a cohort invitation. Try another filter or share a cohort link.",
+    "dashboard.institute.graduates": "Graduates joined",
+    "dashboard.institute.waiting": ":count on rosters waiting",
+    "dashboard.institute.skillshows": "With a SkillShow",
+    "dashboard.institute.attested": "Training attested",
+    "dashboard.institute.passed": "Assessments passed",
+    "dashboard.institute.cohorts": "Cohorts (:count open)",
+    "dashboard.institute.all_cohorts": "All cohorts",
+    "privacy.institutes.share_hint": "The institute sees which jobs you applied to and whether you joined. Turning it off stops this at once."
 }

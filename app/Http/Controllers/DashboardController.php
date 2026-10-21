@@ -8,7 +8,10 @@ use App\Domain\Identity\Enums\Permission;
 use App\Domain\Identity\Enums\UserType;
 use App\Domain\Identity\Models\User;
 use App\Domain\Institute\Data\CohortInviteData;
+use App\Domain\Institute\Data\CohortSummaryData;
+use App\Domain\Institute\Data\InstituteCountsData;
 use App\Domain\Institute\Models\Cohort;
+use App\Domain\Institute\Models\Course;
 use App\Domain\Jobs\Data\JobCountsData;
 use App\Domain\Jobs\Data\JobListItemData;
 use App\Domain\Jobs\Enums\MandateStatus;
@@ -77,6 +80,14 @@ class DashboardController extends Controller
                 ? CaseCountsData::forOrganization($organization)
                 : null,
             'licenceAlert' => $this->licenceAlert($organization),
+            // Institutes (Module 7).
+            'instituteCounts' => Gate::forUser($user)->allows('viewAny', [Course::class, $organization])
+                ? InstituteCountsData::forInstitute($organization)
+                : null,
+            'recentCohorts' => Gate::forUser($user)->allows('viewAny', [Course::class, $organization])
+                ? $organization->cohorts()->with(['course', 'members'])->latest('starts_on')->limit(5)->get()
+                    ->map(fn (Cohort $cohort) => CohortSummaryData::fromCohort($cohort))->values()->all()
+                : [],
         ]);
     }
 

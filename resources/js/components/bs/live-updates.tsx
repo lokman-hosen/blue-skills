@@ -8,7 +8,7 @@ const refreshBadges = () => router.reload({ only: ['unread'] });
  * reloads the counts the viewer is allowed to see.
  */
 export function LiveUpdates() {
-    const { auth, currentOrganization } = usePage().props;
+    const { auth, currentOrganization, organizationAbilities } = usePage().props;
 
     if (!auth.user) {
         return null;
@@ -17,7 +17,10 @@ export function LiveUpdates() {
     return (
         <>
             <PersonalChannel userId={auth.user.id} />
-            {currentOrganization && <InboxChannel organizationId={currentOrganization.id} />}
+            {/* Only members who may read applicant messages (institutes have none). */}
+            {currentOrganization && organizationAbilities.viewApplicants && (
+                <InboxChannel organizationId={currentOrganization.id} />
+            )}
         </>
     );
 }

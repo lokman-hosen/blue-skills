@@ -31,7 +31,7 @@ class CohortData extends Data
     {
         $cohort->loadMissing(['course', 'organization', 'members.workerProfile.user', 'members.workerProfile.skillShows', 'members.attestations', 'members.assessments']);
         $members = $cohort->members->sortBy(fn (CohortMember $member) => [$member->status->value !== 'accepted', $member->roster_name ?? ''])
-            ->map(fn (CohortMember $member) => CohortMemberData::fromMember($member))->values();
+            ->map(fn (CohortMember $member) => CohortMemberData::fromMember($member->setRelation('cohort', $cohort)))->values();
 
         return new self(
             summary: CohortSummaryData::fromCohort($cohort),

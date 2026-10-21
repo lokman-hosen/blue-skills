@@ -2,7 +2,6 @@ import type { InertiaLinkProps } from '@inertiajs/react';
 import type { LucideIcon } from 'lucide-react';
 import {
     Activity,
-    Award,
     BookOpen,
     BriefcaseBusiness,
     Building2,
@@ -242,8 +241,13 @@ export const orgNav: Record<App.Domain.Organization.Enums.OrganizationType, NavG
                     href: org.cohorts.index(),
                     ability: 'viewCourses',
                 },
-                { key: 'graduates', label: 'nav.graduates', icon: UsersRound },
-                { key: 'assessments', label: 'nav.assessments', icon: Award },
+                {
+                    key: 'graduates',
+                    label: 'nav.graduates',
+                    icon: UsersRound,
+                    href: org.graduates.index(),
+                    ability: 'viewCourses',
+                },
                 {
                     key: 'talent_pools',
                     label: 'nav.talent_pools',

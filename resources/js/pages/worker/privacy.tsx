@@ -302,7 +302,7 @@ function MyInstitutes({
                                         })}
                                     </span>
                                     <span className="text-xs text-muted">
-                                        {t('cohorts.invite.share_progress_hint')}
+                                        {t('privacy.institutes.share_hint')}
                                     </span>
                                 </Label>
                             </div>

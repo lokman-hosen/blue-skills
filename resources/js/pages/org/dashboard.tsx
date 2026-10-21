@@ -3,6 +3,7 @@ import {
     BriefcaseBusiness,
     CircleAlert,
     FileCheck,
+    GraduationCap,
     LayoutDashboard,
     Plane,
     Plus,
@@ -24,6 +25,8 @@ type Props = {
     mandateRequests?: number;
     caseCounts?: App.Domain.Mobility.Data.CaseCountsData | null;
     licenceAlert?: { state: 'invalid' | 'expiring'; expiresOn: string | null } | null;
+    instituteCounts?: App.Domain.Institute.Data.InstituteCountsData | null;
+    recentCohorts?: App.Domain.Institute.Data.CohortSummaryData[];
 };
 
 /** Organization overview: where the jobs stand and the latest ones (prototype "Overview"). */
@@ -35,6 +38,8 @@ export default function OrgDashboard({
     mandateRequests = 0,
     caseCounts = null,
     licenceAlert = null,
+    instituteCounts = null,
+    recentCohorts = [],
 }: Props) {
     const { t, formatNumber } = useTranslation();
     const { organizationAbilities } = usePage().props;
@@ -205,6 +210,8 @@ export default function OrgDashboard({
                             )}
                         </section>
                     </>
+                ) : instituteCounts ? (
+                    <InstituteOverview counts={instituteCounts} cohorts={recentCohorts} />
                 ) : (
                     <EmptyState
                         icon={LayoutDashboard}
@@ -252,5 +259,96 @@ function LicenceAlert({
         <p role="status" className={className}>
             {content}
         </p>
+    );
+}
+
+/** Institute dashboard: graduates and evidence tiles, and the latest cohorts (prototype i-cohort). */
+function InstituteOverview({
+    counts,
+    cohorts,
+}: {
+    counts: App.Domain.Institute.Data.InstituteCountsData;
+    cohorts: App.Domain.Institute.Data.CohortSummaryData[];
+}) {
+    const { t, formatNumber } = useTranslation();
+
+    return (
+        <>
+            <div className="grid grid-cols-2 gap-3 lg:grid-cols-4">
+                <KpiTile
+                    label={t('dashboard.institute.graduates')}
+                    value={formatNumber(counts.graduates)}
+                    sub={t('dashboard.institute.waiting', {
+                        count: formatNumber(counts.rosterWaiting),
+                    })}
+                />
+                <KpiTile
+                    label={t('dashboard.institute.skillshows')}
+                    value={formatNumber(counts.skillShows)}
+                />
+                <KpiTile
+                    label={t('dashboard.institute.attested')}
+                    value={formatNumber(counts.attested)}
+                />
+                <KpiTile
+                    label={t('dashboard.institute.passed')}
+                    value={formatNumber(counts.assessmentsPassed)}
+                />
+            </div>
+            <section className="rounded-xl border border-line bg-surface p-4">
+                <div className="mb-2 flex items-center justify-between gap-2">
+                    <h2 className="eyebrow text-muted">
+                        {t('dashboard.institute.cohorts', {
+                            count: formatNumber(counts.openCohorts),
+                        })}
+                    </h2>
+                    <Link
+                        href={org.cohorts.index()}
+                        className="inline-flex min-h-11 items-center text-sm font-semibold text-brand"
+                    >
+                        {t('dashboard.institute.all_cohorts')}
+                    </Link>
+                </div>
+                {cohorts.length === 0 ? (
+                    <EmptyState
+                        icon={GraduationCap}
+                        title={t('cohorts.empty_title')}
+                        description={t('cohorts.empty_body')}
+                        action={
+                            <Button asChild className="min-h-11">
+                                <Link href={org.courses.index()}>{t('nav.courses')}</Link>
+                            </Button>
+                        }
+                    />
+                ) : (
+                    <ul className="flex flex-col divide-y divide-line">
+                        {cohorts.map((cohort) => (
+                            <li
+                                key={cohort.id}
+                                className="flex flex-wrap items-center justify-between gap-2 py-2.5"
+                            >
+                                <Link
+                                    href={org.cohorts.show(cohort.id)}
+                                    className="min-w-0 font-semibold text-brand hover:underline"
+                                >
+                                    {cohort.name}
+                                    <span className="block text-xs font-normal text-muted">
+                                        {cohort.courseTitle}
+                                    </span>
+                                </Link>
+                                <span className="flex items-center gap-2 text-sm">
+                                    <span className="text-muted tnum">
+                                        {t('cohorts.joined_count', {
+                                            count: formatNumber(cohort.joined),
+                                        })}
+                                    </span>
+                                    <StatusChip status={cohort.status} />
+                                </span>
+                            </li>
+                        ))}
+                    </ul>
+                )}
+            </section>
+        </>
     );
 }

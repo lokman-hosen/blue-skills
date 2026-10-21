@@ -7,6 +7,8 @@ use App\Domain\Config\Models\Country;
 use App\Domain\Config\Models\Language;
 use App\Domain\Identity\Enums\StaffRole;
 use App\Domain\Identity\Models\User;
+use App\Domain\Institute\Data\InstituteCountsData;
+use App\Domain\Institute\Models\Cohort;
 use App\Domain\Jobs\Actions\PauseJobsUnderLapsedMandates;
 use App\Domain\Jobs\Models\JobPosting;
 use App\Domain\Jobs\States\Job\Paused;
@@ -76,6 +78,16 @@ it('seeds the reference data and the sample world', function () {
         ->onHold->toBe(1)
         ->and(JobPosting::query()->where('public_code', 'UAE-EL-0004')->firstOrFail()->status->equals(Paused::class))->toBeTrue()
         ->and(app(PauseJobsUnderLapsedMandates::class)->handle())->toBe(0);
+
+    // Institute: Meghna's 2026 cohort with two graduates attested and a published pool (D-087).
+    $meghna = Organization::query()->where('display_name', 'Meghna Technical Training Centre')->firstOrFail();
+    expect(InstituteCountsData::forInstitute($meghna))
+        ->graduates->toBe(2)
+        ->rosterWaiting->toBe(2)
+        ->attested->toBe(2)
+        ->assessmentsPassed->toBe(1)
+        ->and(Cohort::query()->where('invite_code', 'MTTCEW26')->exists())->toBeTrue()
+        ->and($meghna->talentPools()->whereNotNull('published_at')->first()?->workers()->count())->toBe(2);
 });
 
 it('creates the local superuser with the superuser staff role', function () {
