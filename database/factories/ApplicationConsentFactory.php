@@ -21,6 +21,7 @@ class ApplicationConsentFactory extends Factory
             'application_id' => Application::factory(),
             'item' => ApplicationConsentItem::SkillPassport,
             'granted' => true,
+            'granted_at' => now(),
         ];
     }
 }

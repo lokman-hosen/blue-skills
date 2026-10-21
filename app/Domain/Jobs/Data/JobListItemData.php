@@ -26,6 +26,8 @@ class JobListItemData extends Data
         public ?string $publishedAt,
         public ?ReviewDecisionData $lastDecision,
         public bool $editable,
+        /** Set when the list query counted applications. */
+        public ?int $applicants = null,
     ) {}
 
     public static function fromJob(JobPosting $job): self
@@ -46,6 +48,7 @@ class JobListItemData extends Data
             publishedAt: $job->published_at?->toIso8601String(),
             lastDecision: $review !== null ? ReviewDecisionData::fromRequest($review) : null,
             editable: $job->isEditable(),
+            applicants: $job->getAttribute('applications_count'),
         );
     }
 }

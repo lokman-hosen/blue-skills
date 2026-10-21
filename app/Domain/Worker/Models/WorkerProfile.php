@@ -2,6 +2,7 @@
 
 namespace App\Domain\Worker\Models;
 
+use App\Domain\Applications\Enums\ConsentPurpose;
 use App\Domain\Applications\Models\Application;
 use App\Domain\Applications\Models\Consent;
 use App\Domain\Config\Models\Country;
@@ -17,7 +18,9 @@ use App\Domain\Worker\Enums\ProfileVisibility;
 use App\Support\Concerns\LogsStatusChanges;
 use Database\Factories\WorkerProfileFactory;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
+use Illuminate\Database\Eloquent\Attributes\Scope;
 use Illuminate\Database\Eloquent\Attributes\UseFactory;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Concerns\HasUlids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -209,5 +212,26 @@ class WorkerProfile extends Model implements HasMedia
     public function applications(): HasMany
     {
         return $this->hasMany(Application::class);
+    }
+
+    /**
+     * Found in talent search: visible to employers and agencies with an active discovery consent,
+     * a trade, and an account that still exists (D-052, product rule 6).
+     */
+    public function isDiscoverable(): bool
+    {
+        return self::query()->whereKey($this->id)->discoverable()->exists();
+    }
+
+    /**
+     * @param  Builder<self>  $query
+     */
+    #[Scope]
+    protected function discoverable(Builder $query): void
+    {
+        $query->where('visibility', ProfileVisibility::EmployersAndAgencies)
+            ->whereNotNull('occupation_id')
+            ->whereHas('user')
+            ->whereHas('consents', fn (Builder $consents) => $consents->where('purpose', ConsentPurpose::Discovery)->whereNull('revoked_at'));
     }
 }

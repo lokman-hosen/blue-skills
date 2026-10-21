@@ -2,7 +2,10 @@
 
 namespace App\Domain\Worker\Policies;
 
+use App\Domain\Identity\Enums\Permission;
 use App\Domain\Identity\Models\User;
+use App\Domain\Organization\Models\Organization;
+use App\Domain\Organization\Support\OrganizationPermissions;
 use App\Domain\Worker\Models\WorkerProfile;
 
 /**
@@ -19,6 +22,15 @@ class WorkerProfilePolicy
     public function update(User $user, WorkerProfile $profile): bool
     {
         return $this->owns($user, $profile);
+    }
+
+    /**
+     * Talent search for the current organization. Unverified organizations see the page with
+     * search locked until they are verified.
+     */
+    public function search(User $user, Organization $organization): bool
+    {
+        return OrganizationPermissions::allows($user, $organization, Permission::TalentSearch);
     }
 
     private function owns(User $user, WorkerProfile $profile): bool

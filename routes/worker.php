@@ -1,7 +1,10 @@
 <?php
 
+use App\Http\Controllers\Worker\ApplicationController;
+use App\Http\Controllers\Worker\ApplyController;
 use App\Http\Controllers\Worker\Auth\PhoneSignInController;
 use App\Http\Controllers\Worker\BasicsController;
+use App\Http\Controllers\Worker\DocumentController;
 use App\Http\Controllers\Worker\PassportController;
 use App\Http\Controllers\Worker\PrivacyController;
 use App\Http\Controllers\Worker\SkillShowController;
@@ -48,6 +51,12 @@ Route::middleware(['auth', 'verified', 'user.type:worker'])->prefix('passport')-
         Route::delete('account', 'destroy')->middleware('throttle:10,1')->name('account.destroy');
     });
 
+    Route::controller(DocumentController::class)->prefix('documents')->name('documents.')->group(function () {
+        Route::get('/', 'index')->name('index');
+        Route::post('/', 'store')->middleware('throttle:10,1')->name('store');
+        Route::delete('{document}', 'destroy')->name('destroy');
+    });
+
     Route::controller(SkillShowController::class)->prefix('skillshow')->name('skillshow.')->group(function () {
         Route::get('/', 'edit')->name('edit');
         Route::post('/', 'store')->middleware('throttle:10,1')->name('store');
@@ -62,4 +71,20 @@ Route::middleware(['auth', 'verified', 'user.type:worker'])->prefix('passport')-
         Route::post('{question}', 'submit')->middleware('throttle:30,1')->name('submit');
         Route::post('{question}/confirm', 'confirm')->name('confirm');
     });
+});
+
+// Applying to a job (Module 4).
+Route::middleware(['auth', 'verified', 'user.type:worker'])->prefix('jobs/{job}/apply')->name('worker.apply.')->controller(ApplyController::class)->group(function () {
+    Route::get('/', 'create')->name('create');
+    Route::post('/', 'store')->middleware('throttle:10,1')->name('store');
+});
+
+// My applications (Module 4).
+Route::middleware(['auth', 'verified', 'user.type:worker'])->prefix('applications')->name('worker.applications.')->controller(ApplicationController::class)->group(function () {
+    Route::get('/', 'index')->name('index');
+    Route::get('{application}', 'show')->name('show');
+    Route::post('{application}/withdraw', 'withdraw')->name('withdraw');
+    Route::post('{application}/offer/{decision}', 'respondToOffer')->whereIn('decision', ['accept', 'decline'])->name('offer');
+    Route::delete('{application}/items/{item}', 'revokeItem')->name('items.destroy');
+    Route::post('{application}/job-change-seen', 'acknowledgeJobChange')->name('job-change-seen');
 });

@@ -2,9 +2,12 @@
 
 use App\Domain\Jobs\Actions\ChangeJobAvailability;
 use App\Domain\Jobs\Support\JobWizard;
+use App\Http\Controllers\Organization\ApplicantController;
 use App\Http\Controllers\Organization\InvitationController;
 use App\Http\Controllers\Organization\JobController;
 use App\Http\Controllers\Organization\OrganizationRegistrationController;
+use App\Http\Controllers\Organization\ShortlistController;
+use App\Http\Controllers\Organization\TalentController;
 use App\Http\Controllers\Organization\TeamController;
 use App\Http\Controllers\Organization\VerificationEvidenceController;
 use Illuminate\Support\Facades\Route;
@@ -47,8 +50,35 @@ Route::middleware(['auth', 'verified', 'user.type:org'])->prefix('org/jobs')->na
     Route::get('new', 'create')->name('create');
     Route::post('/', 'store')->name('store');
     Route::get('{job}', 'show')->name('show');
+    Route::get('{job}/applicants', [ApplicantController::class, 'index'])->name('applicants');
     Route::get('{job}/edit/{step}', 'edit')->whereIn('step', [...JobWizard::STEPS, 'preview'])->name('edit');
     Route::put('{job}/steps/{step}', 'update')->whereIn('step', JobWizard::STEPS)->name('update');
     Route::post('{job}/submit', 'submit')->middleware('throttle:20,1')->name('submit');
     Route::post('{job}/{action}', 'availability')->whereIn('action', ChangeJobAvailability::ACTIONS)->name('availability');
+});
+
+// Applicants, pipeline, interviews and offers (Module 4).
+Route::middleware(['auth', 'verified', 'user.type:org'])->prefix('org')->name('org.')->controller(ApplicantController::class)->group(function () {
+    Route::post('applicants/move', 'move')->middleware('throttle:60,1')->name('applicants.move');
+    Route::get('applicants/{application}', 'show')->name('applicants.show');
+    Route::post('applicants/{application}/reject', 'reject')->name('applicants.reject');
+    Route::put('applicants/{application}/assignee', 'assign')->name('applicants.assign');
+    Route::post('applicants/{application}/interviews', 'scheduleInterview')->name('applicants.interviews.store');
+    Route::put('interviews/{interview}', 'interviewOutcome')->name('interviews.update');
+    Route::post('applicants/{application}/offers', 'sendOffer')->name('applicants.offers.store');
+});
+
+// Talent search and shortlists (Module 4).
+Route::middleware(['auth', 'verified', 'user.type:org'])->prefix('org')->name('org.')->group(function () {
+    Route::get('talent', [TalentController::class, 'index'])->name('talent.index');
+    Route::get('talent/{profile:reference}', [TalentController::class, 'show'])->name('talent.show');
+
+    Route::controller(ShortlistController::class)->prefix('shortlists')->name('shortlists.')->group(function () {
+        Route::get('/', 'index')->name('index');
+        Route::post('/', 'store')->middleware('throttle:30,1')->name('store');
+        Route::get('{shortlist}', 'show')->name('show');
+        Route::delete('{shortlist}', 'destroy')->name('destroy');
+        Route::post('{shortlist}/entries', 'addEntry')->middleware('throttle:60,1')->name('entries.store');
+        Route::delete('{shortlist}/entries/{entry}', 'removeEntry')->name('entries.destroy');
+    });
 });

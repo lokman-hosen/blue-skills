@@ -58,14 +58,19 @@ export type NavGroup = { label?: string; items: NavLink[] };
 export const workerPrimaryNav: NavLink[] = [
     { key: 'home', label: 'nav.home', icon: Home, href: dashboard() },
     { key: 'jobs', label: 'nav.jobs', icon: Search, href: jobs.index() },
-    { key: 'applications', label: 'nav.applications', icon: ListChecks },
+    {
+        key: 'applications',
+        label: 'nav.applications',
+        icon: ListChecks,
+        href: worker.applications.index(),
+    },
     { key: 'passport', label: 'nav.passport', icon: IdCard, href: worker.passport.show() },
 ];
 
 export const workerSecondaryNav: NavLink[] = [
     { key: 'skillshow', label: 'nav.skillshow', icon: Video, href: worker.skillshow.edit() },
     { key: 'messages', label: 'nav.messages', icon: MessageSquare },
-    { key: 'documents', label: 'nav.documents', icon: FileText },
+    { key: 'documents', label: 'nav.documents', icon: FileText, href: worker.documents.index() },
     { key: 'privacy', label: 'nav.privacy', icon: ShieldCheck, href: worker.privacy.show() },
     { key: 'settings', label: 'nav.settings', icon: Settings, href: profileSettings() },
 ];
@@ -85,8 +90,13 @@ export const orgNav: Record<App.Domain.Organization.Enums.OrganizationType, NavG
                     href: dashboard(),
                 },
                 { key: 'jobs', label: 'nav.jobs', icon: BriefcaseBusiness, href: org.jobs.index() },
-                { key: 'talent', label: 'nav.talent', icon: Search },
-                { key: 'shortlists', label: 'nav.shortlists', icon: Star },
+                { key: 'talent', label: 'nav.talent', icon: Search, href: org.talent.index() },
+                {
+                    key: 'shortlists',
+                    label: 'nav.shortlists',
+                    icon: Star,
+                    href: org.shortlists.index(),
+                },
                 { key: 'projects', label: 'nav.projects', icon: FolderKanban },
                 { key: 'messages', label: 'nav.messages', icon: MessageSquare },
             ],

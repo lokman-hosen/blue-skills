@@ -7,11 +7,13 @@ import { PageHeader } from '@/components/bs/page-header';
 import { StatusChip } from '@/components/bs/status-chip';
 import { Button } from '@/components/ui/button';
 import { useTranslation } from '@/lib/i18n';
+import org from '@/routes/org';
 
 type Props = {
     counts?: App.Domain.Jobs.Data.JobCountsData | null;
     recentJobs?: App.Domain.Jobs.Data.JobListItemData[];
     canPostJobs?: boolean;
+    applicantCounts?: App.Domain.Applications.Data.ApplicantCountsData | null;
 };
 
 /** Organization overview: where the jobs stand and the latest ones (prototype "Overview"). */
@@ -19,6 +21,7 @@ export default function OrgDashboard({
     counts = null,
     recentJobs = [],
     canPostJobs = false,
+    applicantCounts = null,
 }: Props) {
     const { t, formatNumber } = useTranslation();
 
@@ -59,6 +62,26 @@ export default function OrgDashboard({
                                 value={formatNumber(counts.drafts)}
                             />
                         </div>
+                        {applicantCounts && (
+                            <div className="grid grid-cols-2 gap-3 lg:grid-cols-4">
+                                <KpiTile
+                                    label={t('dashboard.applicants.total')}
+                                    value={formatNumber(applicantCounts.total)}
+                                />
+                                <KpiTile
+                                    label={t('dashboard.applicants.new')}
+                                    value={formatNumber(applicantCounts.new)}
+                                />
+                                <KpiTile
+                                    label={t('dashboard.applicants.shortlisted')}
+                                    value={formatNumber(applicantCounts.shortlisted)}
+                                />
+                                <KpiTile
+                                    label={t('dashboard.applicants.interviews')}
+                                    value={formatNumber(applicantCounts.interviewsUpcoming)}
+                                />
+                            </div>
+                        )}
                         <section className="rounded-xl border border-line bg-surface p-4">
                             <div className="mb-2 flex items-center justify-between gap-2">
                                 <h2 className="eyebrow text-muted">{t('dashboard.jobs.recent')}</h2>
@@ -94,7 +117,19 @@ export default function OrgDashboard({
                                                     {job.code}
                                                 </span>
                                             </Link>
-                                            <StatusChip status={job.status} />
+                                            <span className="flex items-center gap-2">
+                                                {job.applicants !== null && job.applicants > 0 && (
+                                                    <Link
+                                                        href={org.jobs.applicants.url(job.code)}
+                                                        className="inline-flex min-h-11 items-center text-sm font-semibold text-brand hover:underline"
+                                                    >
+                                                        {t('applicants.view', {
+                                                            count: job.applicants,
+                                                        })}
+                                                    </Link>
+                                                )}
+                                                <StatusChip status={job.status} />
+                                            </span>
                                         </li>
                                     ))}
                                 </ul>

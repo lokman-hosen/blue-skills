@@ -2,14 +2,24 @@
 
 namespace Database\Seeders;
 
+use App\Domain\Applications\Data\ProfileSnapshotData;
+use App\Domain\Applications\Data\ShareableItemData;
 use App\Domain\Applications\Enums\ApplicationConsentItem;
 use App\Domain\Applications\Enums\ConsentPurpose;
+use App\Domain\Applications\Enums\InterviewMode;
+use App\Domain\Applications\Enums\InterviewOutcome;
+use App\Domain\Applications\Enums\OfferStatus;
+use App\Domain\Applications\Enums\RejectionReason;
 use App\Domain\Applications\Models\Application;
 use App\Domain\Applications\States\Application\Accepted;
 use App\Domain\Applications\States\Application\ApplicationState;
 use App\Domain\Applications\States\Application\Applied;
 use App\Domain\Applications\States\Application\Interview;
+use App\Domain\Applications\States\Application\Offer as OfferStage;
+use App\Domain\Applications\States\Application\Rejected;
+use App\Domain\Applications\States\Application\Reviewed;
 use App\Domain\Applications\States\Application\Shortlisted;
+use App\Domain\Applications\Support\ShareableItems;
 use App\Domain\Config\Enums\CountryRuleKey;
 use App\Domain\Config\Models\CountryRule;
 use App\Domain\Identity\Enums\OrganizationRole;
@@ -75,6 +85,9 @@ class SampleWorldSeeder extends Seeder
 {
     public const PASSWORD = 'password';
 
+    /** A one-page blank PDF labelled as sample data. */
+    private const SAMPLE_PDF = "%PDF-1.4\n1 0 obj<</Type/Catalog/Pages 2 0 R>>endobj\n2 0 obj<</Type/Pages/Kids[3 0 R]/Count 1>>endobj\n3 0 obj<</Type/Page/Parent 2 0 R/MediaBox[0 0 300 144]/Contents 4 0 R/Resources<</Font<</F1 5 0 R>>>>>>endobj\n4 0 obj<</Length 52>>stream\nBT /F1 14 Tf 20 70 Td (SAMPLE PASSPORT SCAN) Tj ET\nendstream endobj\n5 0 obj<</Type/Font/Subtype/Type1/BaseFont/Helvetica>>endobj\ntrailer<</Root 1 0 R>>\n%%EOF\n";
+
     /** @var array<string, Organization> */
     private array $orgs = [];
 
@@ -83,6 +96,9 @@ class SampleWorldSeeder extends Seeder
 
     /** @var array<string, WorkerProfile> */
     private array $workers = [];
+
+    /** @var array<string, User> Organization members by email. */
+    private array $orgUsers = [];
 
     private User $verificationOfficer;
 
@@ -158,7 +174,7 @@ class SampleWorldSeeder extends Seeder
         ];
 
         foreach ($members as [$orgKey, $name, $email, $title, $role, $timezone]) {
-            $user = $this->user($name, $email, UserType::Org, $timezone);
+            $user = $this->orgUsers[$email] = $this->user($name, $email, UserType::Org, $timezone);
             $org = $this->orgs[$orgKey];
             $org->users()->attach($user->id, ['title' => $title, 'joined_at' => now()->subMonths(2)]);
             TeamContext::run($org->id, fn () => $user->unsetRelation('roles')->assignRole($role->value));
@@ -485,6 +501,17 @@ class SampleWorldSeeder extends Seeder
         foreach ($documents as [$type, $title, $expires, $evidenceType, $state]) {
             /** @var class-string<EvidenceState> $state */
             $document = Document::query()->create(['owner_user_id' => $rahim->user_id, 'type' => $type, 'title' => $title, 'expires_at' => $expires]);
+
+            if ($type === DocumentType::Passport) {
+                // A placeholder file so the Documents page and shared-scan links open something.
+                $media = $document->addMediaFromString(self::SAMPLE_PDF)
+                    ->usingName('passport-sample.pdf')
+                    ->usingFileName('passport.pdf')
+                    ->toMediaCollection(Document::FILE_COLLECTION);
+                // Seeding runs without model events, so the media library never sets the UUID
+                // that private media links use.
+                $media->forceFill(['uuid' => (string) str()->uuid()])->save();
+            }
             $verified = $state === IssuerVerified::class;
 
             $evidence = EvidenceItem::query()->create([
@@ -515,54 +542,189 @@ class SampleWorldSeeder extends Seeder
         $this->apply('arjun', $uae, Interview::class, '2026-09-12');
         $this->apply('sunil', $uae, Applied::class, '2026-10-12');
         $this->apply('nimal', $this->jobs['JP-IT-0007'], Applied::class, '2026-10-14');
+
+        $this->seedEmployerPipeline();
     }
 
     /**
+     * ABC Contracting's own live job with applicants at every stage (Module 4), so the employer
+     * pipeline, interviews, offers and shortlists have something to show.
+     */
+    private function seedEmployerPipeline(): void
+    {
+        $job = $this->jobs['AE-MT-0115'] = $this->job([
+            'organization_id' => $this->orgs['abc']->id,
+            'employer_organization_id' => $this->orgs['abc']->id,
+            'public_code' => 'AE-MT-0115',
+            'title' => 'Maintenance Electrician',
+            'occupation' => 'electrician',
+            'min_experience_years' => 4,
+            'language_requirements' => [['code' => 'en', 'level' => 'basic']],
+            'destination_country_code' => 'AE',
+            'destination_city' => 'Dubai',
+            'headcount' => 30,
+            'salary_amount_minor' => 2100_00,
+            'salary_currency' => 'AED',
+            'hours_per_day' => 8,
+            'days_per_week' => 6,
+            'overtime_terms' => 'Paid at 1.25× basic hourly rate',
+            'contract_months' => 24,
+            'accommodation' => BenefitProvision::Provided,
+            'food' => BenefitProvision::Allowance, 'food_details' => 'AED 300 / month',
+            'transport' => BenefitProvision::Provided,
+            'medical' => BenefitProvision::Provided,
+            'airfare' => BenefitProvision::Provided, 'airfare_details' => 'Employer pays (both ways)',
+            'permit_payer' => CostPayer::Employer,
+            'visa_payer' => CostPayer::Employer,
+            'deadline' => '2026-12-15',
+            'status' => Published::class,
+            'published_at' => '2026-09-28 09:00:00',
+            'submitted_at' => '2026-10-15 08:00:00',
+            // Overtime terms changed and were approved again after Rahim applied (product rule 5).
+            'material_change_at' => '2026-10-16 10:00:00',
+        ], ['industrial-wiring', 'maintenance'], []);
+
+        $this->apply('tek', $job, Rejected::class, '2026-10-02', rejection: RejectionReason::RequirementsNotMet);
+        $hasan = $this->apply('hasan', $job, OfferStage::class, '2026-09-30');
+        $hasan->update(['assigned_user_id' => $this->orgUsers['sara@abc-contracting.test']->id]);
+        $this->apply('arjun', $job, Interview::class, '2026-10-05');
+        $this->apply('rahim', $job, Shortlisted::class, '2026-10-08', share: [ApplicationConsentItem::PassportScan, ApplicationConsentItem::PhoneNumber]);
+        $this->apply('nimal', $job, Reviewed::class, '2026-10-10');
+        $this->apply('sunil', $job, Applied::class, '2026-10-15', share: [ApplicationConsentItem::PhoneNumber]);
+
+        $owner = $this->orgUsers['owner@abc-contracting.test'];
+        $shortlist = $this->orgs['abc']->shortlists()->create(['name' => 'Dubai towers — electricians', 'job_id' => $job->id, 'created_by' => $owner->id]);
+        $shortlist->entries()->create(['worker_profile_id' => $this->workers['karim']->id, 'note' => 'Strong cable termination; ask about availability.', 'added_by' => $owner->id]);
+        $shortlist->entries()->create(['worker_profile_id' => $this->workers['ravi']->id, 'note' => null, 'added_by' => $owner->id]);
+    }
+
+    /**
+     * An application with the real dated snapshot, per-item consent, stage history and, where the
+     * stage needs them, interviews and offers (D-062, D-063).
+     *
      * @param  class-string<ApplicationState>  $state
      * @param  array{0: string, 1: string|null}|null  $mobility  current stage key and its due date
+     * @param  list<ApplicationConsentItem>  $share  Sensitive items shared on top of the defaults.
      */
-    private function apply(string $workerKey, JobPosting $job, string $state, string $appliedAt, ?array $mobility = null): void
+    private function apply(string $workerKey, JobPosting $job, string $state, string $appliedAt, ?array $mobility = null, array $share = [], ?RejectionReason $rejection = null): Application
     {
-        $profile = $this->workers[$workerKey]->load(['user', 'occupation', 'experiences', 'skills', 'languages']);
+        $profile = $this->workers[$workerKey]->fresh() ?? $this->workers[$workerKey];
+        $applied = Carbon::parse($appliedAt)->setTime(9, 30);
+        $shared = array_values(array_map(
+            fn (ShareableItemData $item) => $item->item,
+            array_filter(ShareableItems::for($profile), fn (ShareableItemData $item) => $item->available && ($item->sharedByDefault || in_array($item->item, $share, true))),
+        ));
+        $skillShow = in_array(ApplicationConsentItem::SkillShow, $shared, true) ? ShareableItems::skillShow($profile) : null;
+        $scan = in_array(ApplicationConsentItem::PassportScan, $shared, true) ? ShareableItems::passportScan($profile) : null;
+
+        $snapshot = ProfileSnapshotData::capture($profile, $job, $shared);
+        $snapshot->takenAt = $applied->toIso8601String();
 
         $application = Application::query()->create([
             'job_id' => $job->id,
             'worker_profile_id' => $profile->id,
             'status' => $state,
-            'applied_at' => $appliedAt,
+            'applied_at' => $applied,
+            'skill_show_id' => $skillShow?->id,
         ]);
+        $application->snapshot()->create(['taken_at' => $applied, 'data' => $snapshot->toArray()]);
 
-        $application->snapshot()->create([
-            'taken_at' => $appliedAt,
-            'data' => [
-                'name' => $profile->user->name,
-                'headline' => $profile->headline,
-                'occupation' => $profile->occupation?->slug,
-                'years_experience' => $profile->years_experience,
-                'current_country' => $profile->current_country_code,
-                'passport_status' => $profile->passport_status?->value,
-                'availability' => $profile->availability?->value,
-                'skills' => $profile->skills->pluck('slug')->all(),
-                'languages' => $profile->languages->map(fn ($language) => ['code' => $language->language_code, 'proficiency' => $language->proficiency->value])->all(),
-                'experiences' => $profile->experiences->map(fn ($experience) => [
-                    'country' => $experience->country_code,
-                    'role' => $experience->role,
-                    'started_on' => $experience->started_on->toDateString(),
-                    'ended_on' => $experience->ended_on?->toDateString(),
-                ])->all(),
-            ],
-        ]);
-
-        // Passport scan and phone number are never shared by default (product rule 6).
         foreach (ApplicationConsentItem::cases() as $item) {
+            $granted = in_array($item, $shared, true);
             $application->consents()->create([
                 'item' => $item,
-                'granted' => ! in_array($item, [ApplicationConsentItem::PassportScan, ApplicationConsentItem::PhoneNumber], true),
+                'granted' => $granted,
+                'granted_at' => $granted ? $applied : null,
+                'document_id' => $item === ApplicationConsentItem::PassportScan ? $scan?->id : null,
             ]);
         }
 
+        $profile->consents()->create([
+            'purpose' => ConsentPurpose::ApplicationShare,
+            'subject_type' => $application->getMorphClass(),
+            'subject_id' => $application->id,
+            'scope' => ['job' => $job->public_code, 'items' => array_map(fn (ApplicationConsentItem $item) => $item->value, $shared)],
+            'granted_at' => $applied,
+        ]);
+
+        if ($scan !== null) {
+            $profile->consents()->create([
+                'purpose' => ConsentPurpose::DocumentShare,
+                'subject_type' => $application->getMorphClass(),
+                'subject_id' => $application->id,
+                'scope' => ['item' => ApplicationConsentItem::PassportScan->value, 'document' => $scan->id],
+                'granted_at' => $applied,
+            ]);
+        }
+
+        $this->seedHistory($application, $job, $state, $applied, $rejection);
+
         if ($mobility !== null) {
             $this->openMobilityCase($application, $job, ...$mobility);
+        }
+
+        return $application;
+    }
+
+    /**
+     * @param  class-string<ApplicationState>  $state
+     */
+    private function seedHistory(Application $application, JobPosting $job, string $state, Carbon $applied, ?RejectionReason $rejection): void
+    {
+        $path = match ($state::getMorphClass()) {
+            'reviewed' => ['reviewed'],
+            'shortlisted' => ['reviewed', 'shortlisted'],
+            'interview' => ['reviewed', 'shortlisted', 'interview'],
+            'offer' => ['reviewed', 'shortlisted', 'interview', 'selected', 'offer'],
+            'accepted' => ['reviewed', 'shortlisted', 'interview', 'selected', 'offer', 'accepted'],
+            'rejected' => ['reviewed', 'rejected'],
+            default => [],
+        };
+        $recruiter = $job->organization->users()->first();
+        $from = null;
+        $at = $applied;
+
+        foreach (['applied', ...$path] as $index => $to) {
+            $at = $index === 0 ? $applied : $applied->copy()->addDays(3 * $index)->min(now()->subHour());
+            $application->stageEvents()->forceCreate([
+                'from_status' => $from,
+                'to_status' => $to,
+                'actor_user_id' => $to === 'applied' || $to === 'accepted' ? $application->workerProfile->user_id : $recruiter?->id,
+                'reason_code' => $to === 'rejected' ? $rejection?->value : null,
+                'created_at' => $at,
+                'updated_at' => $at,
+            ]);
+            $from = $to;
+        }
+
+        $application->forceFill(['stage_changed_at' => $at])->save();
+
+        if (in_array('interview', $path, true)) {
+            $upcoming = $state === Interview::class;
+            $application->interviews()->create([
+                'scheduled_at' => $upcoming ? now()->addDays(3)->setTime(6, 0) : $applied->copy()->addDays(9)->setTime(6, 0)->min(now()->subDay()),
+                'duration_minutes' => 30,
+                'mode' => InterviewMode::Video,
+                'location' => 'Video call link is sent the day before',
+                'instructions' => 'Keep your Skill Passport and a pen and paper ready.',
+                'outcome' => $upcoming ? null : InterviewOutcome::Passed,
+                'scheduled_by' => $recruiter?->id,
+            ]);
+        }
+
+        if (in_array('offer', $path, true)) {
+            $accepted = $state === Accepted::class;
+            $application->offers()->create([
+                'salary_amount_minor' => (int) $job->salary_amount_minor,
+                'salary_currency' => (string) $job->salary_currency,
+                'salary_period' => $job->salary_period ?? SalaryPeriod::Month,
+                'start_on' => $accepted ? null : now()->addMonths(2)->startOfMonth()->toDateString(),
+                'respond_by' => $accepted ? null : now()->addWeek()->toDateString(),
+                'note' => $accepted ? null : 'Welcome to the maintenance team. Joining in Dubai after your visa is issued.',
+                'status' => $accepted ? OfferStatus::Accepted : OfferStatus::Sent,
+                'responded_at' => $accepted ? $at : null,
+                'sent_by' => $recruiter?->id,
+            ]);
         }
     }
 

@@ -1,5 +1,5 @@
 import { Form, Head, Link } from '@inertiajs/react';
-import { Pencil } from 'lucide-react';
+import { Pencil, Users } from 'lucide-react';
 import JobController from '@/actions/App/Http/Controllers/Organization/JobController';
 import { PageHeader } from '@/components/bs/page-header';
 import { StatusChip } from '@/components/bs/status-chip';
@@ -7,11 +7,14 @@ import { TruthCard } from '@/components/bs/truth-card';
 import InputError from '@/components/input-error';
 import { Button } from '@/components/ui/button';
 import { useTranslation } from '@/lib/i18n';
+import org from '@/routes/org';
 
 type Props = {
     job: App.Domain.Jobs.Data.JobTruthCardData;
     lastDecision: App.Domain.Verification.Data.ReviewDecisionData | null;
     abilities: { update: boolean; submit: boolean; manage: boolean };
+    /** Number of applications, or null when the member cannot see applicants. */
+    applicants: number | null;
 };
 
 /** Which availability moves each status allows (mirrors the job state machine). */
@@ -24,7 +27,7 @@ const MOVES: Record<string, ('pause' | 'resume' | 'close' | 'archive')[]> = {
 };
 
 /** One of the organization's jobs: its Truth Card, review outcome and actions. */
-export default function OrgJob({ job, lastDecision, abilities }: Props) {
+export default function OrgJob({ job, lastDecision, abilities, applicants }: Props) {
     const { t } = useTranslation();
     const status = job.status.value;
     const sentBack = status === 'more_information_requested' || status === 'rejected';
@@ -69,6 +72,14 @@ export default function OrgJob({ job, lastDecision, abilities }: Props) {
                     <TruthCard job={job} preview />
                     <aside className="flex flex-col gap-3 rounded-xl border border-line bg-surface p-4">
                         <h2 className="eyebrow text-muted">{t('jobs.actions')}</h2>
+                        {applicants !== null && (
+                            <Button asChild className="min-h-11">
+                                <Link href={org.jobs.applicants(job.publicCode)}>
+                                    <Users aria-hidden className="size-4" />
+                                    {t('applicants.view', { count: applicants })}
+                                </Link>
+                            </Button>
+                        )}
                         {abilities.update && (
                             <Button asChild variant="outline" className="min-h-11">
                                 <Link

@@ -463,3 +463,131 @@ colour) and the appearance tabs use design tokens instead of the kit's neutral g
 - ABC Contracting has draft job AE-ST-0042 (Steel Fixer) whose recruitment fee is charged to
   workers; it shows the corridor-rule block in the wizard and cannot be submitted until fixed.
 - The existing SA-HV-0021 and PL-WH-0014 reviews populate the job review queue.
+
+## Module 4 — Applications
+
+### D-060 · Module 4 inputs (owner answers, 2026-10-21)
+- **Pipeline per job.** Recruitment projects that group several jobs with a target headcount come
+  later with analytics (Module 9).
+- **Talent search shows the worker's full name** with trade, experience, countries, skills,
+  languages, passport readiness, availability, evidence states and SkillShow. Never the phone
+  number, documents or address (product rule 6).
+- **Worker alerts are in-app only** until Module 5: the application tracker shows status, next
+  step, interviews, offers and job-change notices. Stage events recorded now feed WhatsApp, SMS and
+  email in Module 5.
+- **Review cadence:** once at the end of the module.
+
+### D-061 · Hiring schema
+- `applications` gains the assigned recruiter (shown to the worker as "Handled by"), the SkillShow
+  shared with it, `stage_changed_at`, and `job_change_seen_at` (product rule 5 notice).
+- `application_consents` gains `granted_at`, `revoked_at` and the exact `document_id` shared for
+  document items, so a replaced passport scan is never shared silently. Revoking keeps the row.
+- `application_stage_events` is the application timeline (from, to, actor, reason code, note);
+  rows are never edited. The activity log still records each state change.
+- `interviews` (time, length, in person / video / phone, place or link, instructions, outcome) and
+  `offers` (pay, start date, answer-by date, note, status `sent/accepted/declined/withdrawn`). Offer
+  status is a categorical enum like D-014; the application state machine carries the stage.
+- `shortlists` (named per organization, optionally for a job) and `shortlist_entries` (one per
+  worker per list, with a note). Being on a list gives no extra access to the profile.
+- `RejectionReason` codes: requirements not met, not enough experience, skills not shown,
+  interview not passed, trade assessment not passed, positions filled, not available, other.
+
+### D-062 · Applying and identity documents
+- "I can do this job" opens `/jobs/{code}/apply` for workers when the job is published and its
+  deadline has not passed; a worker who already applied goes to that application instead. Guests
+  still get "Join free to apply". Applying needs a trade on the Skill Passport, nothing more.
+- Shareable items: Skill Passport (always, cannot be switched off), SkillShow (only an approved
+  one), work experience and training certificates (on by default when the worker has any),
+  passport scan and phone number (off by default, flagged sensitive; the scan only once uploaded).
+  Items the worker has nothing for are ignored even if posted.
+- `CreateApplication` stores, in one transaction: the application, a `ProfileSnapshotData` copy
+  (identity, trade, years, passport readiness, availability, skills, languages, destinations, the
+  "X of Y requirements met" at that moment, plus work history and certificates only when shared),
+  one `application_consents` row per item (granted or not), an `application_share` consent and,
+  for a shared scan, a `document_share` consent naming the exact document. Snapshot names are
+  captured in English. Phone numbers and files are never copied into the snapshot; they are read
+  live while the consent is active.
+- Duplicate applications are refused with a message, also when two requests race (unique index).
+- `/passport/documents` holds one passport and one national ID scan (PDF, JPG or PNG, ≤ 10 MB,
+  private disk) as `uploaded_unreviewed` evidence (Module 8 verifies). A new upload of the same
+  type replaces the old one; replacing or deleting a scan revokes every application share of it.
+  Only the passport scan is an application item; national IDs are for mobility cases (Module 6).
+
+### D-063 · Worker application tracker
+- `/applications` lists the worker's applications with status, next step, the next interview and a
+  "job changed" flag. `/applications/{id}` shows the stage list, who handles it (assigned
+  recruiter and organization, else the organization), next step, interviews, offers and what is
+  shared.
+- Stage list order: applied, reviewed, qualified, shortlisted, interview, trade assessment,
+  selected, offer, accepted. Stages the organization moved past show as skipped; a rejected,
+  withdrawn or declined application stops at the stage it reached, marked as blocked. Workers see
+  the rejection reason code, never internal notes or the person who moved the stage.
+- Workers withdraw (any open offer is withdrawn with it), accept or decline the open offer, and
+  stop sharing any item except the Skill Passport. Revoking keeps the consent row with its time.
+  Accepting does not create anything yet; mobility cases arrive in Module 6 (product rule 8).
+- Product rule 5: when a job has a material change after the worker applied, the application
+  shows "This job changed on …" with a link to the Truth Card until the worker taps "I have read
+  it" (`job_change_seen_at`).
+
+### D-064 · Employer applicants and pipeline
+- `/org/jobs/{code}/applicants` is the job's pipeline: stage counts (all stages plus rejected,
+  withdrawn, declined), 50 applicants per page oldest first, each with trade, years, country,
+  "X of Y requirements met" from the snapshot, SkillShow shared, stage, next interview and who
+  handles it. A table on desktop, stacked cards on mobile. Members with `applications.manage`
+  select applicants and move them together; ones that cannot make the move are skipped and
+  counted in the message.
+- Organizations move applicants only to reviewed, qualified, shortlisted, interview, trade
+  assessment and selected. "Offer" happens by sending an offer; accepted, declined and withdrawn
+  are the worker's. Rejecting needs a `RejectionReason` (shown to the worker); the optional note
+  stays internal.
+- `/org/applicants/{id}` shows the snapshot projection with work history and certificates removed
+  once the worker stops sharing them, the approved SkillShow, the phone number and the passport
+  scan only while shared, the stage list, history (with who moved it and internal notes),
+  interviews, offers and the consent list. `SkillShowPolicy` and the private media route allow an
+  organization member only through an application whose consent for that item is active.
+- Any member can be assigned as "Handled by". Interviews (`interviews.manage`: owner, HR admin,
+  recruiter, hiring manager, case officer) are entered in the scheduler's own time zone, stored in
+  UTC, must be in the future, need an address in person; booking one moves the applicant to
+  Interview. Outcomes (passed, not passed, did not attend, cancelled) never move the stage on their
+  own (product rule 14).
+- Offers use the job's currency and pay period, cannot be below the Truth Card salary, need a
+  salary on the job, and only one can wait for an answer at a time. Rejecting or withdrawing
+  withdraws an open offer.
+- The organization dashboard adds applicants, new, shortlisted and upcoming interviews for members
+  who can see applications; job pages link to the pipeline with the applicant count.
+
+### D-065 · Talent search and shortlists
+- `/org/talent` is for members with `talent.search` (owner, HR admin, recruiter; agency owner and
+  case officer) of a verified organization; unverified organizations see a locked page that links
+  to verification. It lists only discoverable workers: "employers and agencies" visibility, an
+  active `discovery` consent, a trade, and an account that still exists.
+- Filters (spec §8): text (name, headline, Passport number, English skill names), trade, minimum
+  years, country of residence, countries worked, language, passport ready, available within 30
+  days, has issuer-verified evidence, has a SkillShow. Results are ordered by last profile update,
+  never by a score or video. Choosing one of the organization's jobs adds "X of Y requirements
+  met" to every card without reordering.
+- Cards and the profile page show name, trade, years, countries, skills, languages, passport
+  readiness, availability, credential titles with their own evidence states, and a SkillShow only
+  when it is approved and visible to employers and agencies. Never a phone number, document, photo
+  or address. Organizations contact workers by inviting them to apply (messaging in Module 5).
+- Applicants who did not choose to be found are not visible here, even to the organization they
+  applied to: their live profile could show items they did not share. They are handled in the
+  pipeline through their snapshot (product rule 6).
+- Shortlists (`shortlists.manage`: owner, HR admin, recruiter, hiring manager, agency owner, case
+  officer) are named per organization, optionally for one of its jobs, with a team note per
+  worker. Only discoverable workers can be added; if a worker later hides their profile the entry
+  stays without any details. Deleting a list is not told to workers.
+
+### D-066 · Module 4 sample data and review
+- Sample applications are built with the real `ProfileSnapshotData`, per-item consents, stage
+  history, interviews and offers, so every seeded application opens in the pipeline.
+- ABC Contracting's own live job AE-MT-0115 (Maintenance Electrician, Dubai) has applicants at
+  every stage: Sunil applied (phone shared), Nimal reviewed, Rahim shortlisted (passport scan and
+  phone shared, sees the "job changed" notice), Arjun with an upcoming video interview, Hasan with
+  an open offer handled by Sara, Tek rejected (requirements not met). ABC also has the shortlist
+  "Dubai towers — electricians" with Karim and Ravi.
+- Rahim's passport document has a placeholder PDF. The seeder sets the media UUID itself because
+  seeding runs without model events.
+- Visual review: employer 96/96 and worker 60/60 clean (en, bn, ur; light, dark; 390, 1440). Review
+  fixes: employer-side wording for shared items and the match note; lighter talent card
+  placeholder.

@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers\Shared;
 
+use App\Domain\Applications\Models\ApplicationConsent;
+use App\Domain\Identity\Models\User;
 use App\Domain\Organization\Models\Organization;
 use App\Domain\Verification\Models\Document;
 use App\Domain\Verification\Models\VerificationRequest;
@@ -28,7 +30,8 @@ class PrivateMediaController extends Controller
 
         $allowed = match (true) {
             $owner instanceof WorkerProfile, $owner instanceof SkillShow, $owner instanceof VoiceAnswer => Gate::allows('view', $owner),
-            $owner instanceof Document => $owner->owner_user_id === $request->user()?->id,
+            // A worker's own file, or a scan shared with an application the viewer can see.
+            $owner instanceof Document => $owner->owner_user_id === $request->user()?->id || $this->sharedWithViewer($owner, $request->user()),
             // Registration evidence: reviewers, and members who may edit the organization.
             $owner instanceof VerificationRequest => Gate::allows('review', Organization::class)
                 || ($owner->subject instanceof Organization && Gate::allows('update', $owner->subject)),
@@ -49,5 +52,21 @@ class PrivateMediaController extends Controller
         }
 
         return redirect()->away($disk->temporaryUrl($media->getPathRelativeToRoot(), now()->addMinutes(5)));
+    }
+
+    /**
+     * Product rule 6: per application, per item, only while the consent is active.
+     */
+    private function sharedWithViewer(Document $document, ?User $viewer): bool
+    {
+        if ($viewer === null || $viewer->isWorker()) {
+            return false;
+        }
+
+        return ApplicationConsent::query()->active()
+            ->where('document_id', $document->id)
+            ->with('application.job.organization')
+            ->get()
+            ->contains(fn (ApplicationConsent $consent) => Gate::forUser($viewer)->allows('view', $consent->application));
     }
 }

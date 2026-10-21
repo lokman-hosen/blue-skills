@@ -4,8 +4,13 @@ namespace App\Providers;
 
 use App\Domain\Applications\Models\Application;
 use App\Domain\Applications\Models\ApplicationConsent;
+use App\Domain\Applications\Models\ApplicationStageEvent;
 use App\Domain\Applications\Models\Consent;
+use App\Domain\Applications\Models\Interview;
+use App\Domain\Applications\Models\Offer;
 use App\Domain\Applications\Models\ProfileSnapshot;
+use App\Domain\Applications\Models\Shortlist;
+use App\Domain\Applications\Models\ShortlistEntry;
 use App\Domain\Config\Models\Country;
 use App\Domain\Config\Models\CountryRule;
 use App\Domain\Config\Models\Language;
@@ -120,6 +125,11 @@ class AppServiceProvider extends ServiceProvider
             'application' => Application::class,
             'application_consent' => ApplicationConsent::class,
             'profile_snapshot' => ProfileSnapshot::class,
+            'application_stage_event' => ApplicationStageEvent::class,
+            'interview' => Interview::class,
+            'offer' => Offer::class,
+            'shortlist' => Shortlist::class,
+            'shortlist_entry' => ShortlistEntry::class,
             'job' => JobPosting::class,
             'job_cost' => JobCost::class,
             'job_mandate' => JobMandate::class,

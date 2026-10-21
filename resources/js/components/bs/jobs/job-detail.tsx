@@ -27,10 +27,20 @@ export type JobDetailProps = {
     match: App.Domain.Jobs.Data.MatchSummaryData | null;
     reportCategories: App.Domain.Trust.Enums.ReportCategory[];
     canReport: boolean;
+    /** The signed-in worker's application to this job, if any. */
+    application?: { id: string } | null;
+    acceptsApplications?: boolean;
 };
 
 /** The Job Truth Card page (spec §5) with matching for workers and a report control. */
-export function JobDetail({ job, match, reportCategories, canReport }: JobDetailProps) {
+export function JobDetail({
+    job,
+    match,
+    reportCategories,
+    canReport,
+    application = null,
+    acceptsApplications = false,
+}: JobDetailProps) {
     const { t } = useTranslation();
     const [reporting, setReporting] = useState(false);
     const isWorker = match !== null;
@@ -48,13 +58,27 @@ export function JobDetail({ job, match, reportCategories, canReport }: JobDetail
                     <TruthCard job={job} onReport={() => setReporting(true)} />
                     <aside className="flex flex-col gap-3 lg:sticky lg:top-20">
                         {match && <MatchSummary match={match} />}
-                        {isWorker ? (
+                        {isWorker && application ? (
+                            <Button asChild variant="outline" className="min-h-12 w-full text-base">
+                                <Link href={worker.applications.show(application.id)}>
+                                    <Check aria-hidden className="size-4" />
+                                    {t('jobs.apply.applied')}
+                                </Link>
+                            </Button>
+                        ) : isWorker && acceptsApplications ? (
+                            <Button asChild className="min-h-12 w-full text-base">
+                                <Link href={worker.apply.create(job.publicCode)}>
+                                    <Check aria-hidden className="size-4" />
+                                    {t('jobs.apply.cta')}
+                                </Link>
+                            </Button>
+                        ) : isWorker ? (
                             <>
                                 <Button disabled className="min-h-12 w-full text-base">
                                     <Check aria-hidden className="size-4" />
                                     {t('jobs.apply.cta')}
                                 </Button>
-                                <p className="text-xs text-muted">{t('jobs.apply.soon')}</p>
+                                <p className="text-xs text-muted">{t('jobs.apply.closed')}</p>
                             </>
                         ) : (
                             <Button asChild className="min-h-12 w-full text-base">
