@@ -456,3 +456,10 @@ colour) and the appearance tabs use design tokens instead of the kit's neutral g
 - "I can do this job" stays disabled until Module 4; guests get "Join free to apply".
 - "Report this job" needs a signed-in user and creates an open `Report` (fake job, unauthorised
   payment, misleading pay or conditions, impersonation, other with a description) for Module 8.
+
+### D-059 · Module 3 sample data
+- Gulf Star Facilities (`owner@gulfstar.test`) is a pending employer with an open registration
+  review, so the organization queue is never empty locally.
+- ABC Contracting has draft job AE-ST-0042 (Steel Fixer) whose recruitment fee is charged to
+  workers; it shows the corridor-rule block in the wizard and cannot be submitted until fixed.
+- The existing SA-HV-0021 and PL-WH-0014 reviews populate the job review queue.

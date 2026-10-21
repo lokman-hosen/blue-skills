@@ -111,11 +111,12 @@ export default function JobWizard(props: Props) {
                                     ) : (
                                         <span
                                             aria-current={current ? 'step' : undefined}
+                                            aria-disabled={current ? undefined : true}
                                             className={cn(
                                                 'inline-flex min-h-11 items-center rounded-full px-3 text-xs font-semibold',
                                                 current
                                                     ? 'bg-brand text-on-brand'
-                                                    : 'border border-line text-muted/70',
+                                                    : 'border border-dashed border-line text-muted',
                                             )}
                                         >
                                             {label}
