@@ -868,3 +868,35 @@ colour) and the appearance tabs use design tokens instead of the kit's neutral g
     managing organization checks files.
 - **Deploy notes for Module 6:** run migrations; re-run `RolesAndPermissionsSeeder` (D-075) and
   `CountryRuleSeeder` (D-075, D-078); make sure the scheduler runs (`jobs:pause-lapsed-mandates`).
+
+### D-082 · Module 7 inputs (owner answers, 2026-10-21)
+- **Invitations:** the institute shares the cohort link, QR code or WhatsApp text itself;
+  BLUESKILLS sends nothing to people who haven't joined. An optional roster (names and phones)
+  only tracks who accepted; a rostered phone is matched only once that worker accepts.
+- **Job-progress sharing** with an institute is off by default. The graduate chooses it when
+  accepting and can change it in Privacy at any time.
+- **Pools:** an institute groups accepted graduates into pools and may publish a pool to verified
+  employers and agencies, who see only members visible to employers and reach them through
+  "invite to apply". Employer and agency shortlists serve as their own talent pools.
+- **Attestations** can be withdrawn by the issuing institute with a reason; the evidence shows as
+  rejected and the worker is told. Workers can hide but not edit them.
+- **Review cadence:** once at the end of the module.
+
+### D-083 · Institute schema
+- `courses` (title, trade, length, description) and `cohorts` (course, name, dates, unique
+  8-character invite code without look-alike characters, open / closed).
+- `cohort_members`: one row per graduate link. The roster name and phone are optional and only
+  for tracking; the worker is set only when they accept. Status invited → accepted | declined;
+  accepted → left. `shares_progress` (off by default) lets the institute follow applications.
+- `training_attestations` and `trade_assessments` (pass / not passed, optional score 0–100):
+  issued or withdrawn with who, when and why. Each is the subject of its own evidence item on the
+  worker's profile; the course title is copied so later course edits don't change an attestation.
+- `talent_pools` and `talent_pool_members`; a pool is visible to employers and agencies only
+  while `published_at` is set.
+- `evidence_items.hidden_at`: the worker hides an issuer's item from their Skill Passport.
+- Who may do what: every institute role sees courses and cohorts; Owners and Trainers manage
+  courses; `cohorts.manage` edits cohorts; `graduates.invite` shares links and keeps the roster;
+  Owners, Trainers and Assessors attest; Owners and Assessors record assessments (both only for
+  accepted graduates of a verified institute); Owners and Placement Officers follow progress of
+  graduates who share it and keep pools. Verified employers and agencies who may search talent
+  browse published pools.

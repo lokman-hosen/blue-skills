@@ -24,7 +24,7 @@ use Spatie\ModelStates\HasStates;
  *
  * @property EvidenceState $status
  */
-#[Fillable(['worker_profile_id', 'type', 'documentable_type', 'documentable_id', 'status', 'verified_by', 'verified_at', 'reason_code'])]
+#[Fillable(['worker_profile_id', 'type', 'documentable_type', 'documentable_id', 'status', 'verified_by', 'verified_at', 'reason_code', 'hidden_at'])]
 #[UseFactory(EvidenceItemFactory::class)]
 class EvidenceItem extends Model
 {
@@ -40,6 +40,7 @@ class EvidenceItem extends Model
             'type' => EvidenceType::class,
             'status' => EvidenceState::class,
             'verified_at' => 'datetime',
+            'hidden_at' => 'datetime',
         ];
     }
 

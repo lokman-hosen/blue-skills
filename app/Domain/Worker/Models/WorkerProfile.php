@@ -7,6 +7,7 @@ use App\Domain\Applications\Models\Application;
 use App\Domain\Applications\Models\Consent;
 use App\Domain\Config\Models\Country;
 use App\Domain\Identity\Models\User;
+use App\Domain\Institute\Models\CohortMember;
 use App\Domain\Jobs\Enums\SalaryPeriod;
 use App\Domain\Taxonomy\Models\Occupation;
 use App\Domain\Taxonomy\Models\Skill;
@@ -188,6 +189,16 @@ class WorkerProfile extends Model implements HasMedia
     public function skillShows(): HasMany
     {
         return $this->hasMany(SkillShow::class);
+    }
+
+    /**
+     * Cohorts the worker was invited to or joined (Module 7).
+     *
+     * @return HasMany<CohortMember, $this>
+     */
+    public function cohortMemberships(): HasMany
+    {
+        return $this->hasMany(CohortMember::class);
     }
 
     /**

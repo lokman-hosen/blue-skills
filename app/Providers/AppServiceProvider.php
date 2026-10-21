@@ -21,6 +21,13 @@ use App\Domain\Identity\Contracts\OtpChannel;
 use App\Domain\Identity\Enums\Permission;
 use App\Domain\Identity\Models\StaffInvitation;
 use App\Domain\Identity\Models\User;
+use App\Domain\Institute\Models\Cohort;
+use App\Domain\Institute\Models\CohortMember;
+use App\Domain\Institute\Models\Course;
+use App\Domain\Institute\Models\TalentPool;
+use App\Domain\Institute\Models\TalentPoolMember;
+use App\Domain\Institute\Models\TradeAssessment;
+use App\Domain\Institute\Models\TrainingAttestation;
 use App\Domain\Jobs\Models\JobCost;
 use App\Domain\Jobs\Models\JobMandate;
 use App\Domain\Jobs\Models\JobPosting;
@@ -165,6 +172,13 @@ class AppServiceProvider extends ServiceProvider
             'mobility_case_event' => MobilityCaseEvent::class,
             'case_document' => CaseDocument::class,
             'report' => Report::class,
+            'course' => Course::class,
+            'cohort' => Cohort::class,
+            'cohort_member' => CohortMember::class,
+            'training_attestation' => TrainingAttestation::class,
+            'trade_assessment' => TradeAssessment::class,
+            'talent_pool' => TalentPool::class,
+            'talent_pool_member' => TalentPoolMember::class,
         ]);
     }
 
