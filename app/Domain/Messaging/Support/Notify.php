@@ -36,6 +36,16 @@ final class Notify
     }
 
     /**
+     * Anyone, outside an application (e.g. an invitation to apply).
+     *
+     * @param  array<string, string|int>  $params
+     */
+    public static function user(User $user, NotificationEvent $event, array $params, string $url): void
+    {
+        $user->notify(new AppNotification($event, $params, $url));
+    }
+
+    /**
      * Members who handle the application: its assignee if set, otherwise everyone who may
      * manage applicants.
      *

@@ -73,6 +73,7 @@ Route::middleware(['auth', 'verified', 'user.type:org'])->prefix('org')->name('o
 Route::middleware(['auth', 'verified', 'user.type:org'])->prefix('org')->name('org.')->group(function () {
     Route::get('talent', [TalentController::class, 'index'])->name('talent.index');
     Route::get('talent/{profile:reference}', [TalentController::class, 'show'])->name('talent.show');
+    Route::post('talent/{profile:reference}/invitations', [TalentController::class, 'invite'])->middleware('throttle:30,1')->name('talent.invite');
 
     Route::controller(ShortlistController::class)->prefix('shortlists')->name('shortlists.')->group(function () {
         Route::get('/', 'index')->name('index');

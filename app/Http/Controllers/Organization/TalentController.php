@@ -2,10 +2,13 @@
 
 namespace App\Http\Controllers\Organization;
 
+use App\Domain\Applications\Actions\InviteToApply;
+use App\Domain\Applications\Data\JobInvitationData;
 use App\Domain\Applications\Data\ShortlistData;
 use App\Domain\Applications\Data\TalentCardData;
 use App\Domain\Applications\Data\TalentProfileData;
 use App\Domain\Applications\Models\Application;
+use App\Domain\Applications\Models\JobInvitation;
 use App\Domain\Applications\Models\Shortlist;
 use App\Domain\Applications\Support\TalentAccess;
 use App\Domain\Applications\Support\TalentSearch;
@@ -13,11 +16,14 @@ use App\Domain\Config\Data\CountryOptionData;
 use App\Domain\Config\Models\Country;
 use App\Domain\Config\Models\Language;
 use App\Domain\Jobs\Models\JobPosting;
+use App\Domain\Jobs\States\Job\Published;
 use App\Domain\Jobs\Support\JobMatch;
 use App\Domain\Taxonomy\Data\TaxonomyOptionData;
 use App\Domain\Taxonomy\Models\Occupation;
 use App\Domain\Worker\Models\WorkerProfile;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Organization\InviteToApplyRequest;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Gate;
 use Inertia\Inertia;
@@ -69,6 +75,26 @@ class TalentController extends Controller
         ]);
     }
 
+    public function invite(InviteToApplyRequest $request, WorkerProfile $profile, InviteToApply $invite): RedirectResponse
+    {
+        $organization = $this->organization($request);
+        Gate::authorize('create', [JobInvitation::class, $organization]);
+
+        $job = $organization->postedJobs()->where('public_code', $request->string('job')->toString())->first();
+        abort_if($job === null, 422);
+
+        $invite->handle(
+            $organization,
+            $job,
+            $profile,
+            $request->filled('note') ? $request->string('note')->trim()->toString() : null,
+            $request->user(),
+        );
+        Inertia::flash('toast', ['type' => 'success', 'message' => __('invitations.sent')]);
+
+        return back();
+    }
+
     public function show(Request $request, WorkerProfile $profile): Response
     {
         $organization = $this->organization($request);
@@ -91,6 +117,13 @@ class TalentController extends Controller
                 ? $organization->shortlists()->with(['job', 'creator'])->withCount('entries')->latest()->get()
                     ->map(fn (Shortlist $shortlist) => ShortlistData::fromShortlist($shortlist))->values()->all()
                 : null,
+            'canInvite' => Gate::allows('create', [JobInvitation::class, $organization]),
+            'openJobs' => $organization->postedJobs()->whereState('status', Published::class)->latest('published_at')->get()
+                ->filter(fn (JobPosting $posting) => $posting->acceptsApplications())
+                ->map(fn (JobPosting $posting) => ['code' => $posting->public_code, 'title' => $posting->title])->values()->all(),
+            'invitations' => JobInvitation::query()->where('organization_id', $organization->id)->where('worker_profile_id', $profile->id)
+                ->with(['job.employer', 'job.destinationCountry', 'job.costs', 'job.occupation', 'organization'])->latest()->get()
+                ->map(fn (JobInvitation $invitation) => JobInvitationData::fromInvitation($invitation))->values()->all(),
             'onShortlists' => $organization->shortlists()->whereHas('entries', fn ($query) => $query->where('worker_profile_id', $profile->id))->pluck('id')->all(),
         ]);
     }

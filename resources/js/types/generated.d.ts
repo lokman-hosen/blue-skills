@@ -63,6 +63,14 @@ declare namespace App {
                     outcome: App.Domain.Applications.Enums.InterviewOutcome | null;
                     upcoming: boolean;
                 };
+                export type JobInvitationData = {
+                    id: string;
+                    job: App.Domain.Jobs.Data.JobListingData;
+                    organization: string;
+                    note: string | null;
+                    status: App.Domain.Applications.Enums.InvitationStatus;
+                    sentAt: string;
+                };
                 export type MemberOptionData = {
                     id: string;
                     name: string;

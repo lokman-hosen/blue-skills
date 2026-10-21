@@ -678,3 +678,14 @@ colour) and the appearance tabs use design tokens instead of the kit's neutral g
   `ne` must be confirmed when submitting):
   en: "You have an update on your BLUESKILLS application for {{1}}. Open the app to see it: {{2}}"
 - SMS text: "BLUESKILLS: {title}. Open: {link}" in the worker's language.
+
+### D-072 · Invitations to apply
+- From a talent profile, members who may search talent invite a discoverable worker to one of
+  the organization's jobs that is open for applications, with an optional note (≤ 300
+  characters). One invitation per job and worker; at most 50 per organization in 24 hours. The
+  worker gets a `job_invitation` alert.
+- Workers see open invitations at the top of My applications with the job, the organization, the
+  note and a reminder that an invitation is not an offer and never needs payment. They read the
+  Truth Card and apply through the normal flow (which marks the invitation applied), or tap "Not
+  interested". Invitations to jobs that stopped taking applications show as expired.
+- No free conversation starts from an invitation; it opens once the worker applies (D-069).

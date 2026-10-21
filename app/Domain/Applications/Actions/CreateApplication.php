@@ -5,7 +5,9 @@ namespace App\Domain\Applications\Actions;
 use App\Domain\Applications\Data\ProfileSnapshotData;
 use App\Domain\Applications\Enums\ApplicationConsentItem;
 use App\Domain\Applications\Enums\ConsentPurpose;
+use App\Domain\Applications\Enums\InvitationStatus;
 use App\Domain\Applications\Models\Application;
+use App\Domain\Applications\Models\JobInvitation;
 use App\Domain\Applications\States\Application\Applied;
 use App\Domain\Applications\Support\ShareableItems;
 use App\Domain\Jobs\Models\JobPosting;
@@ -108,6 +110,13 @@ class CreateApplication
             'to_status' => Applied::getMorphClass(),
             'actor_user_id' => $profile->user_id,
         ]);
+
+        // An invitation to this job is answered by applying (5e).
+        JobInvitation::query()
+            ->where('job_id', $job->id)
+            ->where('worker_profile_id', $profile->id)
+            ->where('status', InvitationStatus::Sent)
+            ->update(['status' => InvitationStatus::Applied, 'responded_at' => $now]);
 
         activity('applications')->performedOn($application)->causedBy($profile->user)
             ->withProperties(['job' => $job->public_code, 'shared' => array_map(fn (ApplicationConsentItem $item) => $item->value, $shared)])

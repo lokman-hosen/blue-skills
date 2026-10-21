@@ -83,6 +83,7 @@ Route::middleware(['auth', 'verified', 'user.type:worker'])->prefix('jobs/{job}/
 // My applications (Module 4).
 Route::middleware(['auth', 'verified', 'user.type:worker'])->prefix('applications')->name('worker.applications.')->controller(ApplicationController::class)->group(function () {
     Route::get('/', 'index')->name('index');
+    Route::post('invitations/{invitation}/decline', 'declineInvitation')->name('invitations.decline');
     Route::get('{application}', 'show')->name('show');
     Route::post('{application}/withdraw', 'withdraw')->name('withdraw');
     Route::post('{application}/offer/{decision}', 'respondToOffer')->whereIn('decision', ['accept', 'decline'])->name('offer');
