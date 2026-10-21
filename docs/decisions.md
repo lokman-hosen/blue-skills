@@ -900,3 +900,24 @@ colour) and the appearance tabs use design tokens instead of the kit's neutral g
   accepted graduates of a verified institute); Owners and Placement Officers follow progress of
   graduates who share it and keep pools. Verified employers and agencies who may search talent
   browse published pools.
+
+### D-084 · Courses, cohorts and graduate invitations
+- Institutes add courses (title, trade, length, description) and cohorts (name, dates). Each
+  cohort has an invite link `/i/{code}`, a QR code (shown on the page and downloadable as SVG for
+  posters; BaconQrCode, already installed with Fortify, is now declared in composer.json) and an
+  editable WhatsApp message the institute copies and sends itself. Closing a cohort stops new
+  graduates joining; those who joined stay.
+- **Roster:** pasted "name, phone" lines (phones read as the institute's country, up to 300 a
+  time, duplicates skipped) only track who joined. A line is matched to a worker when that worker
+  accepts, never before; a decline marks the line declined without naming the profile. Lines
+  nobody answered can be removed; graduates who joined can only leave themselves.
+- **Invite page:** anyone can open it; it names the institute (with "accreditation checked" when
+  verified), the course and cohort, and lists what the institute sees (name, Skill Passport number,
+  SkillShow, what it attests) and never sees (profile edits, documents, phone). A signed-in worker
+  accepts, optionally ticking "let the institute follow my applications" (off by default), or
+  declines. Guests join with their phone; existing workers return to the page after signing in
+  and new workers find a banner on their home page until they answer.
+- **My institutes** on the Privacy page lists institutes the worker joined, with the sharing
+  switch and "Leave this institute", which also takes them out of that institute's pools.
+- Institute members with `graduates.invite` get `graduate_joined`. Every change is in the
+  activity log.

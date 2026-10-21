@@ -7,6 +7,8 @@ use App\Domain\Applications\Models\Application;
 use App\Domain\Identity\Enums\Permission;
 use App\Domain\Identity\Enums\UserType;
 use App\Domain\Identity\Models\User;
+use App\Domain\Institute\Data\CohortInviteData;
+use App\Domain\Institute\Models\Cohort;
 use App\Domain\Jobs\Data\JobCountsData;
 use App\Domain\Jobs\Data\JobListItemData;
 use App\Domain\Jobs\Enums\MandateStatus;
@@ -20,6 +22,7 @@ use App\Domain\Organization\Support\CurrentOrganization;
 use App\Domain\Organization\Support\OrganizationPermissions;
 use App\Domain\Worker\Data\WorkerPassportData;
 use App\Http\Controllers\Organization\ComplianceController;
+use App\Http\Controllers\Public\CohortInviteController;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Gate;
@@ -38,6 +41,7 @@ class DashboardController extends Controller
         return match ($user?->type) {
             UserType::Worker => Inertia::render('worker/home', [
                 'passport' => $user->workerProfile !== null ? WorkerPassportData::fromProfile($user->workerProfile) : null,
+                'cohortInvite' => $this->pendingCohortInvite($request, $user),
             ]),
             UserType::Staff => Inertia::render('admin/overview'),
             // Organization users without a workspace accept an invitation or register one first.
@@ -96,6 +100,23 @@ class DashboardController extends Controller
         };
 
         return $state === null ? null : ['state' => $state, 'expiresOn' => $expires?->toDateString()];
+    }
+
+    /**
+     * A cohort invitation opened before signing up, until the worker answers it (D-082).
+     */
+    private function pendingCohortInvite(Request $request, User $user): ?CohortInviteData
+    {
+        $code = $request->session()->get(CohortInviteController::SESSION_KEY);
+        $cohort = is_string($code) ? Cohort::query()->where('invite_code', $code)->first() : null;
+
+        if ($cohort === null || $user->workerProfile === null) {
+            return null;
+        }
+
+        $answered = $cohort->members()->where('worker_profile_id', $user->workerProfile->id)->exists();
+
+        return $answered ? null : CohortInviteData::fromCohort($cohort);
     }
 
     private function hasPendingInvitation(string $email): bool

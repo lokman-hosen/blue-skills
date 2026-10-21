@@ -7,6 +7,8 @@ use App\Domain\Identity\Actions\RequestPhoneOtp;
 use App\Domain\Identity\Actions\VerifyPhoneOtp;
 use App\Domain\Identity\Enums\OtpPurpose;
 use App\Domain\Identity\Exceptions\PhoneSignInBlocked;
+use App\Domain\Institute\Data\WorkerCohortData;
+use App\Domain\Institute\Models\CohortMember;
 use App\Domain\Worker\Actions\DeleteWorkerAccount;
 use App\Domain\Worker\Actions\UpdateProfileVisibility;
 use App\Domain\Worker\Data\ConsentRecordData;
@@ -43,6 +45,9 @@ class PrivacyController extends Controller
                 ->map(fn (Consent $consent) => ConsentRecordData::fromConsent($consent))
                 ->values()
                 ->all(),
+            // Institutes the worker joined (product rule 11, D-082).
+            'institutes' => $profile->cohortMemberships()->accepted()->with(['cohort.organization', 'cohort.course'])->latest('responded_at')->get()
+                ->map(fn (CohortMember $member) => WorkerCohortData::fromMember($member))->values()->all(),
             'deletionCodeSent' => $request->session()->has(self::DELETION_CHALLENGE),
             'maskedPhone' => substr($phone, 0, 4).str_repeat('•', max(strlen($phone) - 7, 0)).substr($phone, -3),
             'codeLength' => (int) config('blueskills.otp.length'),

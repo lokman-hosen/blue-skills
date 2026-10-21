@@ -7,7 +7,9 @@ use App\Domain\Mobility\Actions\DecideCaseDocument;
 use App\Http\Controllers\Organization\ApplicantController;
 use App\Http\Controllers\Organization\CandidateController;
 use App\Http\Controllers\Organization\CaseDocumentController;
+use App\Http\Controllers\Organization\CohortController;
 use App\Http\Controllers\Organization\ComplianceController;
+use App\Http\Controllers\Organization\CourseController;
 use App\Http\Controllers\Organization\InvitationController;
 use App\Http\Controllers\Organization\JobController;
 use App\Http\Controllers\Organization\LicenceController;
@@ -134,4 +136,22 @@ Route::middleware(['auth', 'verified', 'user.type:org'])->prefix('org/cases/{mob
     Route::post('/', 'store')->name('store');
     Route::post('{document}/file', 'upload')->middleware('throttle:20,1')->name('upload');
     Route::post('{document}/{decision}', 'decide')->whereIn('decision', DecideCaseDocument::DECISIONS)->name('decide');
+});
+
+// Institutes: courses, cohorts and graduate invitations (Module 7, D-082).
+Route::middleware(['auth', 'verified', 'user.type:org'])->prefix('org')->name('org.')->group(function () {
+    Route::get('courses', [CourseController::class, 'index'])->name('courses.index');
+    Route::post('courses', [CourseController::class, 'store'])->name('courses.store');
+    Route::put('courses/{course}', [CourseController::class, 'update'])->name('courses.update');
+    Route::post('courses/{course}/cohorts', [CohortController::class, 'store'])->name('cohorts.store');
+
+    Route::controller(CohortController::class)->prefix('cohorts')->name('cohorts.')->group(function () {
+        Route::get('/', 'index')->name('index');
+        Route::get('{cohort}', 'show')->name('show');
+        Route::put('{cohort}', 'update')->name('update');
+        Route::post('{cohort}/status/{status}', 'status')->whereIn('status', ['open', 'closed'])->name('status');
+        Route::get('{cohort}/qr', 'qr')->name('qr');
+        Route::post('{cohort}/roster', 'roster')->middleware('throttle:20,1')->name('roster');
+        Route::delete('{cohort}/members/{member}', 'removeMember')->scopeBindings()->name('members.destroy');
+    });
 });
