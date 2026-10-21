@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Shared;
 
 use App\Domain\Applications\Models\ApplicationConsent;
 use App\Domain\Identity\Models\User;
+use App\Domain\Jobs\Models\JobMandate;
 use App\Domain\Messaging\Models\Message;
 use App\Domain\Organization\Models\Organization;
 use App\Domain\Verification\Models\Document;
@@ -35,7 +36,11 @@ class PrivateMediaController extends Controller
             $owner instanceof Document => $owner->owner_user_id === $request->user()?->id || $this->sharedWithViewer($owner, $request->user()),
             // Registration evidence: reviewers, and members who may edit the organization.
             $owner instanceof VerificationRequest => Gate::allows('review', Organization::class)
-                || ($owner->subject instanceof Organization && Gate::allows('update', $owner->subject)),
+                || ($owner->subject instanceof Organization && Gate::allows('update', $owner->subject))
+                // Mandate letters: staff reviewers, the agency and the named employer.
+                || ($owner->subject instanceof JobMandate && (Gate::allows('review', JobMandate::class)
+                    || Gate::allows('viewAny', [JobMandate::class, $owner->subject->agency])
+                    || Gate::allows('viewAny', [JobMandate::class, $owner->subject->employer]))),
             // Message attachments: the conversation's parties only.
             $owner instanceof Message => Gate::allows('view', $owner->conversation),
             default => false,

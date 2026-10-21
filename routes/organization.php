@@ -5,6 +5,8 @@ use App\Domain\Jobs\Support\JobWizard;
 use App\Http\Controllers\Organization\ApplicantController;
 use App\Http\Controllers\Organization\InvitationController;
 use App\Http\Controllers\Organization\JobController;
+use App\Http\Controllers\Organization\LicenceController;
+use App\Http\Controllers\Organization\MandateController;
 use App\Http\Controllers\Organization\MessageController;
 use App\Http\Controllers\Organization\OrganizationRegistrationController;
 use App\Http\Controllers\Organization\ShortlistController;
@@ -91,4 +93,19 @@ Route::middleware(['auth', 'verified', 'user.type:org'])->prefix('org')->name('o
     Route::get('messages/{conversation}', 'show')->name('messages.show');
     Route::post('messages/{conversation}', 'store')->middleware('throttle:60,1')->name('messages.store');
     Route::get('applicants/{application}/messages', 'open')->name('applicants.messages');
+});
+
+// Agency licence and mandates (Module 6, D-074).
+Route::middleware(['auth', 'verified', 'user.type:org'])->prefix('org')->name('org.')->group(function () {
+    Route::get('licence', [LicenceController::class, 'edit'])->name('licence.edit');
+    Route::put('licence', [LicenceController::class, 'update'])->name('licence.update');
+
+    Route::controller(MandateController::class)->prefix('mandates')->name('mandates.')->group(function () {
+        Route::get('/', 'index')->name('index');
+        Route::get('new', 'create')->name('create');
+        Route::post('/', 'store')->middleware('throttle:10,1')->name('store');
+        Route::get('{mandate}', 'show')->name('show');
+        Route::post('{mandate}/{answer}', 'respond')->whereIn('answer', ['confirm', 'decline'])->name('respond');
+        Route::post('{mandate}/evidence', 'evidence')->middleware('throttle:20,1')->name('evidence');
+    });
 });

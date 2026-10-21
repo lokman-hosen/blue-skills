@@ -1,5 +1,5 @@
 import { Head, Link } from '@inertiajs/react';
-import { BriefcaseBusiness, LayoutDashboard, Plus } from 'lucide-react';
+import { BriefcaseBusiness, FileCheck, LayoutDashboard, Plus } from 'lucide-react';
 import JobController from '@/actions/App/Http/Controllers/Organization/JobController';
 import { EmptyState } from '@/components/bs/empty-state';
 import { KpiTile } from '@/components/bs/kpi-tile';
@@ -14,6 +14,7 @@ type Props = {
     recentJobs?: App.Domain.Jobs.Data.JobListItemData[];
     canPostJobs?: boolean;
     applicantCounts?: App.Domain.Applications.Data.ApplicantCountsData | null;
+    mandateRequests?: number;
 };
 
 /** Organization overview: where the jobs stand and the latest ones (prototype "Overview"). */
@@ -22,6 +23,7 @@ export default function OrgDashboard({
     recentJobs = [],
     canPostJobs = false,
     applicantCounts = null,
+    mandateRequests = 0,
 }: Props) {
     const { t, formatNumber } = useTranslation();
 
@@ -42,6 +44,15 @@ export default function OrgDashboard({
                         )
                     }
                 />
+                {mandateRequests > 0 && (
+                    <Link
+                        href={org.mandates.index()}
+                        className="flex items-center gap-3 rounded-xl border border-warn/40 bg-warn-soft px-4 py-3 text-sm font-semibold hover:border-warn"
+                    >
+                        <FileCheck aria-hidden className="size-5 shrink-0 text-warn" />
+                        {t('dashboard.mandate_requests', { count: formatNumber(mandateRequests) })}
+                    </Link>
+                )}
                 {counts ? (
                     <>
                         <div className="grid grid-cols-2 gap-3 lg:grid-cols-4">

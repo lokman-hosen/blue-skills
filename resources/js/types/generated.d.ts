@@ -319,6 +319,7 @@ declare namespace App {
                     | 'interviews.manage'
                     | 'talent_pools.manage'
                     | 'mandates.manage'
+                    | 'mandates.confirm'
                     | 'mobility.manage'
                     | 'compliance.review'
                     | 'courses.manage'
@@ -497,6 +498,29 @@ declare namespace App {
                     code: string;
                     level: string;
                 };
+                export type MandateData = {
+                    id: string;
+                    reference: string;
+                    agency: string;
+                    agencyLicence: string | null;
+                    employer: string;
+                    status: App.Support.Data.StatusData;
+                    usable: boolean;
+                    occupations: string[];
+                    destinationCountryCode: string | null;
+                    headcount: number;
+                    validFrom: string | null;
+                    validUntil: string | null;
+                    employerNote: string | null;
+                    employerRespondedAt: string | null;
+                    jobs: number;
+                    evidence: {
+                        name: string;
+                        url: string | null;
+                    }[];
+                    lastDecision: App.Domain.Verification.Data.ReviewDecisionData | null;
+                    createdAt: string | null;
+                };
                 export type MatchRequirementData = {
                     key: string;
                     params: Record<string, string | number>;
@@ -529,7 +553,13 @@ declare namespace App {
                     | 'accommodation'
                     | 'other';
                 export type MandateStatus =
-                    'pending' | 'verified' | 'rejected' | 'expired' | 'revoked';
+                    | 'awaiting_employer'
+                    | 'declined'
+                    | 'pending'
+                    | 'verified'
+                    | 'rejected'
+                    | 'expired'
+                    | 'revoked';
                 export type SalaryPeriod = 'hour' | 'day' | 'week' | 'month';
             }
         }
@@ -597,11 +627,36 @@ declare namespace App {
                     | 'worker_message'
                     | 'new_applicants'
                     | 'application_answered'
-                    | 'organization_message';
+                    | 'organization_message'
+                    | 'mandate_requested'
+                    | 'mandate_answered'
+                    | 'mandate_reviewed';
             }
         }
         namespace Mobility {
             namespace Enums {
+                export type CaseClosedReason =
+                    | 'joined'
+                    | 'worker_withdrew'
+                    | 'employer_cancelled'
+                    | 'visa_refused'
+                    | 'medical_unfit'
+                    | 'other';
+                export type CaseDocumentStatus = 'requested' | 'uploaded' | 'accepted' | 'returned';
+                export type CaseEventAction =
+                    | 'opened'
+                    | 'stage_started'
+                    | 'stage_completed'
+                    | 'stage_blocked'
+                    | 'stage_skipped'
+                    | 'document_requested'
+                    | 'document_uploaded'
+                    | 'document_accepted'
+                    | 'document_returned'
+                    | 'document_revoked'
+                    | 'contract_confirmed'
+                    | 'closed';
+                export type DocumentProvider = 'worker' | 'organization';
                 export type MobilityStageStatus =
                     'pending' | 'in_progress' | 'done' | 'blocked' | 'skipped';
             }
@@ -747,6 +802,9 @@ declare namespace App {
                     | 'salary_implausible'
                     | 'duplicate_job'
                     | 'prohibited_content'
+                    | 'mandate_not_signed'
+                    | 'mandate_scope_mismatch'
+                    | 'licence_expired'
                     | 'more_information_needed';
                 export type VerificationDecision = 'approved' | 'rejected' | 'needs_info';
                 export type VerificationType =

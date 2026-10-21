@@ -21,6 +21,9 @@ enum NotificationEvent: string
     case NewApplicants = 'new_applicants';
     case ApplicationAnswered = 'application_answered';
     case OrganizationMessage = 'organization_message';
+    case MandateRequested = 'mandate_requested';
+    case MandateAnswered = 'mandate_answered';
+    case MandateReviewed = 'mandate_reviewed';
 
     public function forWorkers(): bool
     {
@@ -40,7 +43,10 @@ enum NotificationEvent: string
      */
     public static function organizationEvents(): array
     {
-        return [self::NewApplicants, self::ApplicationAnswered, self::OrganizationMessage];
+        return [
+            self::NewApplicants, self::ApplicationAnswered, self::OrganizationMessage,
+            self::MandateRequested, self::MandateAnswered, self::MandateReviewed,
+        ];
     }
 
     /**
@@ -70,6 +76,9 @@ enum NotificationEvent: string
             self::NewApplicants => 'New applicants (daily)',
             self::ApplicationAnswered => 'Worker accepted, declined or withdrew',
             self::OrganizationMessage => 'New message from a worker',
+            self::MandateRequested => 'An agency asks you to confirm a mandate',
+            self::MandateAnswered => 'The employer answered your mandate request',
+            self::MandateReviewed => 'BLUESKILLS reviewed your mandate',
         };
     }
 }

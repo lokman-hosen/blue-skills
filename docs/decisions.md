@@ -737,3 +737,20 @@ colour) and the appearance tabs use design tokens instead of the kit's neutral g
   Reviewer can view cases but not run them. Re-run `RolesAndPermissionsSeeder` on deploy.
 - The UAE template stage `passport_received` became `passport_submitted` ("Passport submitted for
   visa stamping"); re-run `CountryRuleSeeder` on deploy.
+
+### D-076 · Agency licence page and mandates
+- Agencies see their licence at `/org/licence` (number, expiry, verified, valid) and set the
+  destinations it covers themselves; staff check those against the licence on each mandate review.
+  Changes are written to the activity log.
+- An agency requests a mandate from a **verified employer on BLUESKILLS** with the trades,
+  destination, headcount, validity dates and the signed letter. The request is refused unless the
+  licence is valid for that destination. References look like `MD-2026-4821` (unique per agency).
+- The employer's Owners and HR Admins (`mandates.confirm`) confirm or decline in the app; a
+  decline needs a note. Confirmed mandates join the staff queue at `/admin/mandates`, declined ones
+  stop there.
+- Staff approve, reject or ask for more information with mandate reason codes (letter not signed,
+  scope mismatch, licence expired / out of scope, unreadable, details mismatch). Approval re-checks
+  the licence. "Needs info" keeps the mandate pending; new evidence from the agency puts the review
+  back in review.
+- The mandate letter is visible only to staff reviewers, the agency and the named employer.
+- Notifications: `mandate_requested` (employer), `mandate_answered` and `mandate_reviewed` (agency).

@@ -131,7 +131,12 @@ export const orgNav: Record<App.Domain.Organization.Enums.OrganizationType, NavG
                     icon: LayoutDashboard,
                     href: dashboard(),
                 },
-                { key: 'mandates', label: 'nav.mandates', icon: FileCheck },
+                {
+                    key: 'mandates',
+                    label: 'nav.mandates',
+                    icon: FileCheck,
+                    href: org.mandates.index(),
+                },
                 { key: 'job_orders', label: 'nav.job_orders', icon: BriefcaseBusiness },
                 { key: 'candidates', label: 'nav.candidates', icon: UsersRound },
                 { key: 'mobility', label: 'nav.mobility', icon: Plane },
@@ -146,6 +151,7 @@ export const orgNav: Record<App.Domain.Organization.Enums.OrganizationType, NavG
         },
         {
             items: [
+                { key: 'licence', label: 'nav.licence', icon: IdCard, href: org.licence.edit() },
                 { key: 'team', label: 'nav.team', icon: Users, href: team.index() },
                 { key: 'billing', label: 'nav.billing', icon: CreditCard },
                 ...orgFooter,
@@ -201,6 +207,13 @@ export const adminNav: NavGroup[] = [
                 icon: BriefcaseBusiness,
                 href: admin.jobs.index(),
                 permission: 'jobs.moderate',
+            },
+            {
+                key: 'mandates',
+                label: 'nav.mandate_reviews',
+                icon: FileCheck,
+                href: admin.mandates.index(),
+                permission: 'verifications.review',
             },
             { key: 'trust', label: 'nav.trust', icon: ShieldAlert },
             { key: 'crm', label: 'nav.crm', icon: Building2 },

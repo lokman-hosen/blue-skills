@@ -68,6 +68,8 @@ class NotificationData extends Data
             $rendered[$key] = match ($key) {
                 'reason' => __("rejection_reason.{$value}"),
                 'answer' => __("notification.answer.{$value}"),
+                'decision' => __("review_decision.{$value}"),
+                'mandate_answer' => __("notification.mandate_answer.{$value}"),
                 'at' => CarbonImmutable::parse((string) $value)
                     ->setTimezone($reader->timezone ?: 'UTC')
                     ->locale(app()->getLocale())
