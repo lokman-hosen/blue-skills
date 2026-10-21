@@ -8,9 +8,12 @@ import { cn } from '@/lib/utils';
  */
 export function MatchSummary({
     match,
+    note,
     className,
 }: {
     match: App.Domain.Jobs.Data.MatchSummaryData;
+    /** Explains where the match comes from; defaults to the worker's own wording. */
+    note?: string;
     className?: string;
 }) {
     const { t, formatNumber } = useTranslation();
@@ -41,7 +44,7 @@ export function MatchSummary({
                     </li>
                 ))}
             </ul>
-            <p className="mt-3 text-xs text-muted">{t('jobs.match.note')}</p>
+            <p className="mt-3 text-xs text-muted">{note ?? t('jobs.match.note')}</p>
         </details>
     );
 }

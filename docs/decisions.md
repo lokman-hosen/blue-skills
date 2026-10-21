@@ -577,3 +577,17 @@ colour) and the appearance tabs use design tokens instead of the kit's neutral g
   officer) are named per organization, optionally for one of its jobs, with a team note per
   worker. Only discoverable workers can be added; if a worker later hides their profile the entry
   stays without any details. Deleting a list is not told to workers.
+
+### D-066 · Module 4 sample data and review
+- Sample applications are built with the real `ProfileSnapshotData`, per-item consents, stage
+  history, interviews and offers, so every seeded application opens in the pipeline.
+- ABC Contracting's own live job AE-MT-0115 (Maintenance Electrician, Dubai) has applicants at
+  every stage: Sunil applied (phone shared), Nimal reviewed, Rahim shortlisted (passport scan and
+  phone shared, sees the "job changed" notice), Arjun with an upcoming video interview, Hasan with
+  an open offer handled by Sara, Tek rejected (requirements not met). ABC also has the shortlist
+  "Dubai towers — electricians" with Karim and Ravi.
+- Rahim's passport document has a placeholder PDF. The seeder sets the media UUID itself because
+  seeding runs without model events.
+- Visual review: employer 96/96 and worker 60/60 clean (en, bn, ur; light, dark; 390, 1440). Review
+  fixes: employer-side wording for shared items and the match note; lighter talent card
+  placeholder.

@@ -85,7 +85,12 @@ export default function ApplicantShow({
                             )}
                         </Panel>
 
-                        {snapshot && <MatchSummary match={snapshot.match} />}
+                        {snapshot && (
+                            <MatchSummary
+                                match={snapshot.match}
+                                note={t('applicants.match_note')}
+                            />
+                        )}
 
                         {applicant.skillShow && (
                             <Panel title={t('nav.skillshow')}>
@@ -275,7 +280,7 @@ export default function ApplicantShow({
                             </Panel>
                         )}
 
-                        <Panel title={t('applications.shared.title')}>
+                        <Panel title={t('applicants.shared_title')}>
                             <ul className="flex flex-col gap-1.5 text-sm">
                                 {applicant.consents.map((consent) => (
                                     <li

@@ -1247,5 +1247,7 @@
     "shortlists.removed": "Removed from the list.",
     "shortlists.not_visible": "This worker cannot be added: their profile is not visible to your organization.",
     "shortlists.already_on_list": "This worker is already on this list.",
-    "shortlists.job_not_yours": "Choose one of your organization's jobs."
+    "shortlists.job_not_yours": "Choose one of your organization's jobs.",
+    "applicants.match_note": "From the Skill Passport copy taken when the worker applied. A guide, not a decision.",
+    "applicants.shared_title": "What the worker shares"
 }

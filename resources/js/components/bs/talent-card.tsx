@@ -22,11 +22,12 @@ export function TalentCard({
         <article className="flex min-w-0 gap-3 rounded-xl border border-line bg-surface p-4">
             <Link
                 href={org.talent.show(worker.reference)}
-                className="relative grid h-24 w-18 shrink-0 place-items-center overflow-hidden rounded-lg bg-screen text-on-screen"
+                className="relative grid h-24 w-18 shrink-0 place-items-center overflow-hidden rounded-lg bg-surface-2 text-brand"
                 aria-label={t('talent.open_profile', { name: worker.name })}
             >
                 {worker.skillShowPosterUrl ? (
                     <>
+                        <span aria-hidden className="absolute inset-0 bg-screen" />
                         <img
                             src={worker.skillShowPosterUrl}
                             alt=""

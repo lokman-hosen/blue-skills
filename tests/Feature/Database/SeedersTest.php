@@ -1,6 +1,8 @@
 <?php
 
+use App\Domain\Applications\Data\ProfileSnapshotData;
 use App\Domain\Applications\Models\Application;
+use App\Domain\Applications\Models\Shortlist;
 use App\Domain\Config\Models\Country;
 use App\Domain\Config\Models\Language;
 use App\Domain\Identity\Enums\StaffRole;
@@ -9,15 +11,18 @@ use App\Domain\Jobs\Models\JobPosting;
 use App\Domain\Jobs\States\Job\Published;
 use App\Domain\Organization\Models\Organization;
 use App\Domain\Taxonomy\Models\Skill;
+use App\Domain\Verification\Models\Document;
 use Database\Seeders\CountrySeeder;
 use Database\Seeders\DatabaseSeeder;
 use Database\Seeders\LanguageSeeder;
 use Database\Seeders\RolesAndPermissionsSeeder;
 use Database\Seeders\SuperuserSeeder;
 use Database\Seeders\TaxonomySeeder;
+use Illuminate\Support\Facades\Storage;
 use Spatie\Permission\Models\Role;
 
 it('seeds the reference data and the sample world', function () {
+    Storage::fake('private');
     $this->seed(DatabaseSeeder::class);
 
     expect(Country::query()->pluck('code')->sort()->values()->all())
@@ -27,7 +32,7 @@ it('seeds the reference data and the sample world', function () {
         ->and(Language::query()->where('rtl', true)->pluck('code')->sort()->values()->all())->toBe(['ar', 'ur'])
         ->and(Organization::query()->pluck('display_name'))
         ->toContain('ABC Contracting', 'Northstar Manpower', 'Meghna Technical Training Centre', 'Gulf Star Facilities')
-        ->and(JobPosting::query()->count())->toBe(6)
+        ->and(JobPosting::query()->count())->toBe(7)
         ->and(Application::query()->count())->toBeGreaterThan(0);
 
     $job = JobPosting::query()->where('public_code', 'UAE-EL-0001')->firstOrFail();
@@ -39,6 +44,13 @@ it('seeds the reference data and the sample world', function () {
     $rahim = User::query()->where('name', 'Rahim Uddin')->firstOrFail();
     expect($rahim->isWorker())->toBeTrue()
         ->and($rahim->workerProfile?->voiceAnswers)->toHaveCount(7);
+
+    // Module 4: every sample application carries a snapshot the pipeline can read.
+    $pipeline = JobPosting::query()->where('public_code', 'AE-MT-0115')->firstOrFail();
+    expect($pipeline->applications()->count())->toBe(6)
+        ->and(Application::query()->with('snapshot')->get()->every(fn (Application $application) => ProfileSnapshotData::from($application->snapshot?->data ?? []) instanceof ProfileSnapshotData))->toBeTrue()
+        ->and(Shortlist::query()->sole()->entries)->toHaveCount(2)
+        ->and(Document::query()->where('type', 'passport')->sole()->getFirstMedia(Document::FILE_COLLECTION)?->uuid)->not->toBeNull();
 });
 
 it('creates the local superuser with the superuser staff role', function () {
