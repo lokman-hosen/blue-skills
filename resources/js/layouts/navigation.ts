@@ -50,6 +50,8 @@ export type NavLink = {
     external?: boolean;
     /** Staff permission required to see the item. */
     permission?: string;
+    /** Organization ability (shared `organizationAbilities`) required to see the item. */
+    ability?: 'reviewCompliance' | 'viewCases' | 'viewApplicants' | 'viewMandates';
 };
 
 /** Unread count shown beside a navigation item, from the shared `unread` prop. */
@@ -105,6 +107,13 @@ export const orgNav: Record<App.Domain.Organization.Enums.OrganizationType, NavG
                     icon: Star,
                     href: org.shortlists.index(),
                 },
+                {
+                    key: 'mobility',
+                    label: 'nav.mobility',
+                    icon: Plane,
+                    href: org.cases.index(),
+                    ability: 'viewCases',
+                },
                 { key: 'projects', label: 'nav.projects', icon: FolderKanban },
                 {
                     key: 'messages',
@@ -131,11 +140,40 @@ export const orgNav: Record<App.Domain.Organization.Enums.OrganizationType, NavG
                     icon: LayoutDashboard,
                     href: dashboard(),
                 },
-                { key: 'mandates', label: 'nav.mandates', icon: FileCheck },
-                { key: 'job_orders', label: 'nav.job_orders', icon: BriefcaseBusiness },
-                { key: 'candidates', label: 'nav.candidates', icon: UsersRound },
-                { key: 'mobility', label: 'nav.mobility', icon: Plane },
-                { key: 'compliance', label: 'nav.compliance', icon: ClipboardCheck },
+                {
+                    key: 'mandates',
+                    label: 'nav.mandates',
+                    icon: FileCheck,
+                    href: org.mandates.index(),
+                    ability: 'viewMandates',
+                },
+                {
+                    key: 'job_orders',
+                    label: 'nav.job_orders',
+                    icon: BriefcaseBusiness,
+                    href: org.jobs.index(),
+                },
+                {
+                    key: 'candidates',
+                    label: 'nav.candidates',
+                    icon: UsersRound,
+                    href: org.candidates.index(),
+                    ability: 'viewApplicants',
+                },
+                {
+                    key: 'mobility',
+                    label: 'nav.mobility',
+                    icon: Plane,
+                    href: org.cases.index(),
+                    ability: 'viewCases',
+                },
+                {
+                    key: 'compliance',
+                    label: 'nav.compliance',
+                    icon: ClipboardCheck,
+                    href: org.compliance(),
+                    ability: 'reviewCompliance',
+                },
                 {
                     key: 'messages',
                     label: 'nav.messages',
@@ -146,6 +184,13 @@ export const orgNav: Record<App.Domain.Organization.Enums.OrganizationType, NavG
         },
         {
             items: [
+                {
+                    key: 'licence',
+                    label: 'nav.licence',
+                    icon: IdCard,
+                    href: org.licence.edit(),
+                    ability: 'viewMandates',
+                },
                 { key: 'team', label: 'nav.team', icon: Users, href: team.index() },
                 { key: 'billing', label: 'nav.billing', icon: CreditCard },
                 ...orgFooter,
@@ -201,6 +246,13 @@ export const adminNav: NavGroup[] = [
                 icon: BriefcaseBusiness,
                 href: admin.jobs.index(),
                 permission: 'jobs.moderate',
+            },
+            {
+                key: 'mandates',
+                label: 'nav.mandate_reviews',
+                icon: FileCheck,
+                href: admin.mandates.index(),
+                permission: 'verifications.review',
             },
             { key: 'trust', label: 'nav.trust', icon: ShieldAlert },
             { key: 'crm', label: 'nav.crm', icon: Building2 },

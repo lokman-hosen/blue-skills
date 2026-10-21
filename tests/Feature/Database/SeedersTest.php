@@ -7,10 +7,14 @@ use App\Domain\Config\Models\Country;
 use App\Domain\Config\Models\Language;
 use App\Domain\Identity\Enums\StaffRole;
 use App\Domain\Identity\Models\User;
+use App\Domain\Jobs\Actions\PauseJobsUnderLapsedMandates;
 use App\Domain\Jobs\Models\JobPosting;
+use App\Domain\Jobs\States\Job\Paused;
 use App\Domain\Jobs\States\Job\Published;
 use App\Domain\Messaging\Models\Conversation;
 use App\Domain\Messaging\Support\Unread;
+use App\Domain\Mobility\Data\CaseCountsData;
+use App\Domain\Mobility\Models\MobilityCase;
 use App\Domain\Organization\Models\Organization;
 use App\Domain\Taxonomy\Models\Skill;
 use App\Domain\Verification\Models\Document;
@@ -34,7 +38,7 @@ it('seeds the reference data and the sample world', function () {
         ->and(Language::query()->where('rtl', true)->pluck('code')->sort()->values()->all())->toBe(['ar', 'ur'])
         ->and(Organization::query()->pluck('display_name'))
         ->toContain('ABC Contracting', 'Northstar Manpower', 'Meghna Technical Training Centre', 'Gulf Star Facilities')
-        ->and(JobPosting::query()->count())->toBe(7)
+        ->and(JobPosting::query()->count())->toBe(8)
         ->and(Application::query()->count())->toBeGreaterThan(0);
 
     $job = JobPosting::query()->where('public_code', 'UAE-EL-0001')->firstOrFail();
@@ -52,11 +56,26 @@ it('seeds the reference data and the sample world', function () {
     expect($pipeline->applications()->count())->toBe(6)
         ->and(Application::query()->with('snapshot')->get()->every(fn (Application $application) => ProfileSnapshotData::from($application->snapshot?->data ?? []) instanceof ProfileSnapshotData))->toBeTrue()
         ->and(Shortlist::query()->sole()->entries)->toHaveCount(2)
-        ->and(Document::query()->where('type', 'passport')->sole()->getFirstMedia(Document::FILE_COLLECTION)?->uuid)->not->toBeNull()
+        ->and(Document::query()->where('type', 'passport')->where('owner_user_id', $rahim->id)->sole()->getFirstMedia(Document::FILE_COLLECTION)?->uuid)->not->toBeNull()
         // Module 5: conversations and alerts render.
         ->and(Conversation::query()->count())->toBe(4)
         ->and($rahim->unreadNotifications()->count())->toBe(2)
         ->and(Unread::conversations($rahim, null))->toBe(1);
+
+    // Module 6: Rahim's case has the UAE checklist, his passport scan shared and the medical due.
+    $rahimCase = MobilityCase::query()->where('reference', 'MC-AE-2026-0188')->firstOrFail();
+    expect($rahimCase->documents()->pluck('status', 'type')->map->value->all())
+        ->toBe(['passport' => 'accepted', 'photo' => 'accepted', 'medical' => 'requested', 'contract' => 'accepted']);
+
+    // Agency workspace: one document to check, one stage on hold, and a job paused under an
+    // expired mandate that the daily check leaves alone (D-081).
+    $northstar = Organization::query()->where('display_name', 'Northstar Manpower')->firstOrFail();
+    expect(CaseCountsData::forOrganization($northstar))
+        ->open->toBe(3)
+        ->documentsToCheck->toBe(1)
+        ->onHold->toBe(1)
+        ->and(JobPosting::query()->where('public_code', 'UAE-EL-0004')->firstOrFail()->status->equals(Paused::class))->toBeTrue()
+        ->and(app(PauseJobsUnderLapsedMandates::class)->handle())->toBe(0);
 });
 
 it('creates the local superuser with the superuser staff role', function () {

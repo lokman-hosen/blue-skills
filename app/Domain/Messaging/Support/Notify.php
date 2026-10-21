@@ -7,6 +7,7 @@ use App\Domain\Identity\Enums\Permission;
 use App\Domain\Identity\Models\User;
 use App\Domain\Messaging\Enums\NotificationEvent;
 use App\Domain\Messaging\Notifications\AppNotification;
+use App\Domain\Mobility\Models\MobilityCase;
 use App\Domain\Organization\Models\Organization;
 use App\Domain\Organization\Support\OrganizationPermissions;
 use Illuminate\Support\Collection;
@@ -64,6 +65,33 @@ final class Notify
                 'worker' => $application->workerProfile->user->name,
                 ...$params,
             ], $url ?? route('org.applicants.show', $application, false)));
+        }
+    }
+
+    /**
+     * The people running a mobility case: its handler while they can still manage it, otherwise
+     * every member of the managing organization with `mobility.manage`.
+     *
+     * @param  array<string, string|int>  $params
+     */
+    public static function caseManagers(MobilityCase $case, NotificationEvent $event, array $params = []): void
+    {
+        $organization = $case->managingOrganization;
+
+        if ($organization === null) {
+            return;
+        }
+
+        $recipients = $case->handler !== null && OrganizationPermissions::allows($case->handler, $organization, Permission::MobilityManage)
+            ? collect([$case->handler])
+            : self::members($organization, Permission::MobilityManage);
+
+        foreach ($recipients as $user) {
+            $user->notify(new AppNotification($event, [
+                'reference' => (string) $case->reference,
+                'worker' => (string) $case->application->workerProfile->user?->name,
+                ...$params,
+            ], route('org.cases.show', $case, false)));
         }
     }
 

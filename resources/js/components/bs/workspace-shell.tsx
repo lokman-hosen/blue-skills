@@ -41,13 +41,15 @@ type WorkspaceShellProps = {
  */
 export function WorkspaceShell({ nav, context, children }: WorkspaceShellProps) {
     const { t, dir, formatNumber } = useTranslation();
-    const { sidebarOpen, auth, unread } = usePage().props;
+    const { sidebarOpen, auth, unread, organizationAbilities } = usePage().props;
     const permissions = auth.user?.staffPermissions ?? [];
     const visibleNav = nav
         .map((group) => ({
             ...group,
             items: group.items.filter(
-                (item) => !item.permission || permissions.includes(item.permission),
+                (item) =>
+                    (!item.permission || permissions.includes(item.permission)) &&
+                    (!item.ability || organizationAbilities[item.ability]),
             ),
         }))
         .filter((group) => group.items.length > 0);

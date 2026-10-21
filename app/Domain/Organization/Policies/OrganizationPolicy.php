@@ -5,6 +5,7 @@ namespace App\Domain\Organization\Policies;
 use App\Domain\Identity\Enums\Permission;
 use App\Domain\Identity\Enums\UserType;
 use App\Domain\Identity\Models\User;
+use App\Domain\Organization\Enums\OrganizationType;
 use App\Domain\Organization\Models\Organization;
 use App\Domain\Organization\Support\OrganizationPermissions;
 
@@ -47,6 +48,15 @@ class OrganizationPolicy
     public function manageTeam(User $user, Organization $organization): bool
     {
         return $this->hasPermission($user, $organization, Permission::TeamManage);
+    }
+
+    /**
+     * An agency's compliance overview: licence, mandates and the jobs they back (D-080).
+     */
+    public function reviewCompliance(User $user, Organization $organization): bool
+    {
+        return $organization->type === OrganizationType::Agency
+            && $this->hasPermission($user, $organization, Permission::ComplianceReview);
     }
 
     private function hasPermission(User $user, Organization $organization, Permission $permission): bool

@@ -80,12 +80,14 @@ enum OrganizationRole: string
             Permission::JobsView, Permission::JobsManage, Permission::JobsSubmit,
             Permission::ApplicationsView, Permission::ApplicationsManage,
             Permission::TalentSearch, Permission::ShortlistsManage, Permission::InterviewsManage,
+            // Cases from the organization's own jobs (D-074).
+            Permission::MobilityManage,
         ];
         $admin = [Permission::OrganizationUpdate, Permission::TeamManage, Permission::BillingManage];
 
         return match ($this) {
-            self::Owner => [...$admin, ...$hiring, Permission::TalentPoolsManage],
-            self::HrAdmin => [Permission::TeamManage, ...$hiring, Permission::TalentPoolsManage],
+            self::Owner => [...$admin, ...$hiring, Permission::TalentPoolsManage, Permission::MandatesConfirm],
+            self::HrAdmin => [Permission::TeamManage, ...$hiring, Permission::TalentPoolsManage, Permission::MandatesConfirm],
             self::Recruiter => $hiring,
             self::HiringManager => [
                 Permission::JobsView, Permission::ApplicationsView,
@@ -94,9 +96,9 @@ enum OrganizationRole: string
             self::Viewer => [Permission::JobsView, Permission::ApplicationsView],
             self::AgencyOwner => [
                 ...$admin, ...$hiring, Permission::TalentPoolsManage,
-                Permission::MandatesManage, Permission::MobilityManage, Permission::ComplianceReview,
+                Permission::MandatesManage, Permission::ComplianceReview,
             ],
-            self::CaseOfficer => [...$hiring, Permission::MobilityManage],
+            self::CaseOfficer => $hiring,
             self::ComplianceReviewer => [
                 Permission::JobsView, Permission::ApplicationsView,
                 Permission::MandatesManage, Permission::ComplianceReview,

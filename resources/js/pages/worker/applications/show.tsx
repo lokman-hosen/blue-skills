@@ -6,6 +6,7 @@ import {
     MapPin,
     MessageSquare,
     Phone,
+    Plane,
     Users,
     Video,
 } from 'lucide-react';
@@ -107,6 +108,14 @@ export default function ApplicationShow({ application }: Props) {
                         <p className="rounded-lg bg-ok-soft px-3 py-2 text-sm">
                             {t('applications.accepted_note')}
                         </p>
+                    )}
+                    {application.mobilityCaseId && (
+                        <Button asChild className="min-h-11 w-full">
+                            <Link href={worker.cases.show(application.mobilityCaseId)}>
+                                <Plane aria-hidden className="size-4" />
+                                {t('mobility.open_case')}
+                            </Link>
+                        </Button>
                     )}
                 </section>
 

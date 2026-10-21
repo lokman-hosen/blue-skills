@@ -42,6 +42,7 @@ class WorkerApplicationData extends Data
         public array $consents,
         public ?string $jobChangedAt,
         public ?string $snapshotTakenAt,
+        public ?string $mobilityCaseId,
     ) {}
 
     public static function fromApplication(Application $application): self
@@ -69,6 +70,7 @@ class WorkerApplicationData extends Data
                 ->all(),
             jobChangedAt: $application->hasUnseenJobChange() ? $application->job->material_change_at?->toIso8601String() : null,
             snapshotTakenAt: $application->snapshot?->taken_at?->toIso8601String(),
+            mobilityCaseId: $application->mobilityCase?->id,
         );
     }
 }

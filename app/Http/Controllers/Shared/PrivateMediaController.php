@@ -4,7 +4,10 @@ namespace App\Http\Controllers\Shared;
 
 use App\Domain\Applications\Models\ApplicationConsent;
 use App\Domain\Identity\Models\User;
+use App\Domain\Jobs\Models\JobMandate;
 use App\Domain\Messaging\Models\Message;
+use App\Domain\Mobility\Models\CaseDocument;
+use App\Domain\Mobility\Models\MobilityCase;
 use App\Domain\Organization\Models\Organization;
 use App\Domain\Verification\Models\Document;
 use App\Domain\Verification\Models\VerificationRequest;
@@ -31,11 +34,18 @@ class PrivateMediaController extends Controller
 
         $allowed = match (true) {
             $owner instanceof WorkerProfile, $owner instanceof SkillShow, $owner instanceof VoiceAnswer => Gate::allows('view', $owner),
-            // A worker's own file, or a scan shared with an application the viewer can see.
-            $owner instanceof Document => $owner->owner_user_id === $request->user()?->id || $this->sharedWithViewer($owner, $request->user()),
+            // A worker's own file, a scan shared with an application the viewer can see, or a file
+            // on a mobility case checklist.
+            $owner instanceof Document => $owner->owner_user_id === $request->user()?->id
+                || $this->sharedWithViewer($owner, $request->user())
+                || $this->onViewersCase($owner, $request->user()),
             // Registration evidence: reviewers, and members who may edit the organization.
             $owner instanceof VerificationRequest => Gate::allows('review', Organization::class)
-                || ($owner->subject instanceof Organization && Gate::allows('update', $owner->subject)),
+                || ($owner->subject instanceof Organization && Gate::allows('update', $owner->subject))
+                // Mandate letters: staff reviewers, the agency and the named employer.
+                || ($owner->subject instanceof JobMandate && (Gate::allows('review', JobMandate::class)
+                    || Gate::allows('viewAny', [JobMandate::class, $owner->subject->agency])
+                    || Gate::allows('viewAny', [JobMandate::class, $owner->subject->employer]))),
             // Message attachments: the conversation's parties only.
             $owner instanceof Message => Gate::allows('view', $owner->conversation),
             default => false,
@@ -71,5 +81,42 @@ class PrivateMediaController extends Controller
             ->with('application.job.organization')
             ->get()
             ->contains(fn (ApplicationConsent $consent) => Gate::forUser($viewer)->allows('view', $consent->application));
+    }
+
+    /**
+     * Case checklist files (D-079): the worker sees every file on their case; the managing
+     * organization sees its own files and what the worker is sharing; the employer of an agency
+     * job only items marked for it.
+     */
+    private function onViewersCase(Document $document, ?User $viewer): bool
+    {
+        if ($viewer === null) {
+            return false;
+        }
+
+        return CaseDocument::query()
+            ->where('document_id', $document->id)
+            ->with('mobilityCase.application.workerProfile', 'mobilityCase.managingOrganization', 'mobilityCase.employer')
+            ->get()
+            ->contains(function (CaseDocument $item) use ($viewer): bool {
+                $case = $item->mobilityCase;
+
+                if (! Gate::forUser($viewer)->allows('view', $case)) {
+                    return false;
+                }
+
+                if ($viewer->isWorker()) {
+                    return true;
+                }
+
+                if ($item->fromWorker() && ! $item->isShared()) {
+                    return false;
+                }
+
+                $manager = $case->managingOrganization;
+
+                return ($manager !== null && Gate::forUser($viewer)->allows('viewAny', [MobilityCase::class, $manager]))
+                    || $item->employer_can_view;
+            });
     }
 }

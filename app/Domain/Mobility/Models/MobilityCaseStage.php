@@ -13,7 +13,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
-#[Fillable(['mobility_case_id', 'key', 'position', 'status', 'due_on', 'completed_at', 'completed_by', 'notes'])]
+#[Fillable(['mobility_case_id', 'key', 'position', 'status', 'due_on', 'completed_at', 'completed_by', 'notes', 'next_action', 'blocked_reason'])]
 #[UseFactory(MobilityCaseStageFactory::class)]
 class MobilityCaseStage extends Model
 {

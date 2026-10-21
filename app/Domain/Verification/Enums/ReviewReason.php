@@ -22,6 +22,11 @@ enum ReviewReason: string
     case DuplicateJob = 'duplicate_job';
     case ProhibitedContent = 'prohibited_content';
 
+    // Agency mandates (D-074)
+    case MandateNotSigned = 'mandate_not_signed';
+    case MandateScopeMismatch = 'mandate_scope_mismatch';
+    case LicenceExpired = 'licence_expired';
+
     // Both
     case MoreInformationNeeded = 'more_information_needed';
 
@@ -41,6 +46,9 @@ enum ReviewReason: string
             self::SalaryImplausible => 'Salary looks wrong',
             self::DuplicateJob => 'Duplicate of another job',
             self::ProhibitedContent => 'Prohibited or discriminatory content',
+            self::MandateNotSigned => 'Mandate letter not signed by the employer',
+            self::MandateScopeMismatch => 'Letter does not match the trades, destination or headcount',
+            self::LicenceExpired => 'Agency licence expired or not valid for the destination',
             self::MoreInformationNeeded => 'More information needed',
         };
     }
@@ -64,6 +72,17 @@ enum ReviewReason: string
         return [
             self::UnlawfulWorkerFee, self::ConditionsUnclear, self::SalaryImplausible,
             self::DuplicateJob, self::ProhibitedContent, self::MoreInformationNeeded,
+        ];
+    }
+
+    /**
+     * @return list<self>
+     */
+    public static function forMandates(): array
+    {
+        return [
+            self::MandateNotSigned, self::MandateScopeMismatch, self::LicenceExpired, self::LicenceOutOfScope,
+            self::DocumentUnreadable, self::DetailsMismatch, self::MoreInformationNeeded,
         ];
     }
 }

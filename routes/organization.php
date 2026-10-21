@@ -2,10 +2,18 @@
 
 use App\Domain\Jobs\Actions\ChangeJobAvailability;
 use App\Domain\Jobs\Support\JobWizard;
+use App\Domain\Mobility\Actions\ChangeCaseStage;
+use App\Domain\Mobility\Actions\DecideCaseDocument;
 use App\Http\Controllers\Organization\ApplicantController;
+use App\Http\Controllers\Organization\CandidateController;
+use App\Http\Controllers\Organization\CaseDocumentController;
+use App\Http\Controllers\Organization\ComplianceController;
 use App\Http\Controllers\Organization\InvitationController;
 use App\Http\Controllers\Organization\JobController;
+use App\Http\Controllers\Organization\LicenceController;
+use App\Http\Controllers\Organization\MandateController;
 use App\Http\Controllers\Organization\MessageController;
+use App\Http\Controllers\Organization\MobilityCaseController;
 use App\Http\Controllers\Organization\OrganizationRegistrationController;
 use App\Http\Controllers\Organization\ShortlistController;
 use App\Http\Controllers\Organization\TalentController;
@@ -72,6 +80,7 @@ Route::middleware(['auth', 'verified', 'user.type:org'])->prefix('org')->name('o
 // Talent search and shortlists (Module 4).
 Route::middleware(['auth', 'verified', 'user.type:org'])->prefix('org')->name('org.')->group(function () {
     Route::get('talent', [TalentController::class, 'index'])->name('talent.index');
+    Route::get('candidates', [CandidateController::class, 'index'])->name('candidates.index');
     Route::get('talent/{profile:reference}', [TalentController::class, 'show'])->name('talent.show');
     Route::post('talent/{profile:reference}/invitations', [TalentController::class, 'invite'])->middleware('throttle:30,1')->name('talent.invite');
 
@@ -91,4 +100,38 @@ Route::middleware(['auth', 'verified', 'user.type:org'])->prefix('org')->name('o
     Route::get('messages/{conversation}', 'show')->name('messages.show');
     Route::post('messages/{conversation}', 'store')->middleware('throttle:60,1')->name('messages.store');
     Route::get('applicants/{application}/messages', 'open')->name('applicants.messages');
+});
+
+// Agency licence and mandates (Module 6, D-074).
+Route::middleware(['auth', 'verified', 'user.type:org'])->prefix('org')->name('org.')->group(function () {
+    Route::get('licence', [LicenceController::class, 'edit'])->name('licence.edit');
+    Route::put('licence', [LicenceController::class, 'update'])->name('licence.update');
+    Route::get('compliance', [ComplianceController::class, 'show'])->name('compliance');
+
+    Route::controller(MandateController::class)->prefix('mandates')->name('mandates.')->group(function () {
+        Route::get('/', 'index')->name('index');
+        Route::get('new', 'create')->name('create');
+        Route::post('/', 'store')->middleware('throttle:10,1')->name('store');
+        Route::get('{mandate}', 'show')->name('show');
+        Route::post('{mandate}/{answer}', 'respond')->whereIn('answer', ['confirm', 'decline'])->name('respond');
+        Route::post('{mandate}/evidence', 'evidence')->middleware('throttle:20,1')->name('evidence');
+    });
+});
+
+// Mobility cases (Module 6, product rule 8).
+Route::middleware(['auth', 'verified', 'user.type:org'])->prefix('org/cases')->name('org.cases.')->controller(MobilityCaseController::class)->group(function () {
+    Route::get('/', 'index')->name('index');
+    Route::get('{mobilityCase}', 'show')->name('show');
+    Route::post('{mobilityCase}/close', 'close')->name('close');
+    Route::scopeBindings()->group(function () {
+        Route::post('{mobilityCase}/stages/{stage}/{action}', 'stage')->whereIn('action', ChangeCaseStage::ACTIONS)->name('stages.change');
+        Route::put('{mobilityCase}/stages/{stage}', 'nextAction')->name('stages.update');
+    });
+});
+
+// Case documents (Module 6, product rule 6, D-079).
+Route::middleware(['auth', 'verified', 'user.type:org'])->prefix('org/cases/{mobilityCase}/documents')->name('org.cases.documents.')->controller(CaseDocumentController::class)->scopeBindings()->group(function () {
+    Route::post('/', 'store')->name('store');
+    Route::post('{document}/file', 'upload')->middleware('throttle:20,1')->name('upload');
+    Route::post('{document}/{decision}', 'decide')->whereIn('decision', DecideCaseDocument::DECISIONS)->name('decide');
 });

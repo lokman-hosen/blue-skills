@@ -699,3 +699,172 @@ colour) and the appearance tabs use design tokens instead of the kit's neutral g
   and the ABC owner have sample notifications; one sample WhatsApp delivery is logged.
 - Review fixes: conversations stay open after an accepted offer; the daily digest pluralizes.
 - Visual review: employer 60/60 and worker 48/48 clean (en, bn, ur; light, dark; 390, 1440).
+
+## Module 6 — Agency and mobility
+
+### D-074 · Module 6 inputs (owner answers, 2026-10-21)
+- **Mandates are confirmed by the employer and checked by staff.** The employer must be a
+  verified organization on BLUESKILLS; its Owner or HR Admin confirms the agency's mandate in the
+  app, then staff check the mandate letter and the agency licence. No agency-created employers.
+- **No passport retention.** The UAE stage "Passport received by agency" becomes "Passport
+  submitted for visa stamping", with a fixed note that the passport goes back to the worker right
+  after stamping and that retention can be reported. Templates are updated everywhere.
+- **Staff review of licences and mandates now**, minimal, at `/admin/mandates`, following the
+  organization and job review pattern. Module 8 adds the wider evidence queues.
+- Employer Owners, HR Admins and Recruiters get `mobility.manage` for cases from their own direct
+  jobs; for agency jobs the agency manages the case and the employer can view it.
+- **Review cadence:** once at the end of the module.
+
+### D-075 · Agency and mobility schema
+- `organizations.licence_countries` lists the destinations an agency licence covers. A licence
+  is valid when the agency is verified, `licence_expires_on` is in the future and, for a job or
+  mandate, the destination is listed.
+- `job_mandates` gains its scope (trades as `occupation_ids`, `destination_country_code`), who
+  requested it, and the employer's answer (who, when, note). Status flow: `awaiting_employer` →
+  `pending` (staff review) → `verified` | `rejected`; `declined` when the employer says no;
+  `expired` / `revoked` later. A mandate backs a job only while verified, in date and licensed
+  for the destination. The mandate letter is evidence on the mandate's verification request.
+- `mobility_cases` gains a reference, the managing, employer and agency organizations, the
+  handler ("Handled by"), and a closing reason (joined, worker withdrew, employer cancelled, visa
+  refused, medical test not passed, other). Stages gain the worker's next action and a blocked
+  reason. `mobility_case_events` is the case history (never edited).
+- `case_documents`: one checklist item per document (type, title, requested / uploaded /
+  accepted / returned, provided by the worker or the organization, the file, whether the
+  employer may view it, shared / revoked / decided times, due date). A worker's file is visible to
+  the organizations only while shared and not revoked (product rule 6).
+- New permission `mandates.confirm` for employer Owners and HR Admins. `mobility.manage` now comes
+  with every hiring role (Owner, HR Admin, Recruiter, Agency Owner, Case Officer); a Compliance
+  Reviewer can view cases but not run them. Re-run `RolesAndPermissionsSeeder` on deploy.
+- The UAE template stage `passport_received` became `passport_submitted` ("Passport submitted for
+  visa stamping"); re-run `CountryRuleSeeder` on deploy.
+
+### D-076 · Agency licence page and mandates
+- Agencies see their licence at `/org/licence` (number, expiry, verified, valid) and set the
+  destinations it covers themselves; staff check those against the licence on each mandate review.
+  Changes are written to the activity log.
+- An agency requests a mandate from a **verified employer on BLUESKILLS** with the trades,
+  destination, headcount, validity dates and the signed letter. The request is refused unless the
+  licence is valid for that destination. References look like `MD-2026-4821` (unique per agency).
+- The employer's Owners and HR Admins (`mandates.confirm`) confirm or decline in the app; a
+  decline needs a note. Confirmed mandates join the staff queue at `/admin/mandates`, declined ones
+  stop there.
+- Staff approve, reject or ask for more information with mandate reason codes (letter not signed,
+  scope mismatch, licence expired / out of scope, unreadable, details mismatch). Approval re-checks
+  the licence. "Needs info" keeps the mandate pending; new evidence from the agency puts the review
+  back in review.
+- The mandate letter is visible only to staff reviewers, the agency and the named employer.
+- Notifications: `mandate_requested` (employer), `mandate_answered` and `mandate_reviewed` (agency).
+
+### D-077 · Agency job posting (product rule 10)
+- Agencies post through the same wizard as employers. The first step asks for one of the
+  agency's mandates; the job's employer is the mandate's employer and the agency is shown as the
+  recruiter on the Truth Card. Employers cannot attach a mandate to their own jobs.
+- An agency may start a job only while it holds a **usable** mandate: verified, in date, and under
+  a licence valid for the mandate's destination. Otherwise the jobs page explains how to get one.
+  Agency Owners and Case Officers post; Compliance Reviewers do not.
+- The job must stay inside the mandate: one of its trades, its destination, and no more workers
+  than the places left. Places left = mandate headcount minus the headcount of the agency's other
+  jobs on that mandate that aren't closed, archived or rejected.
+- The same check runs when the requirement step is saved, at the wizard preview, on submission,
+  on a live job's material change and at staff approval, so a mandate that lapses, is revoked or
+  loses its licence cover blocks the job from going (back) live. Live jobs whose mandate lapses
+  are not paused automatically yet; that comes with the agency workspace (6f/6g).
+- Sample data: Northstar's licence covers AE and SA; MD-1107 covers electricians to AE with 300
+  places, MD-1121 HVAC technicians to SA.
+
+### D-078 · Mobility cases
+- **Opening:** accepting an offer opens the case in the same transaction (product rule 8). The
+  case is a separate record with a reference like `MC-AE-2026-0188`. The organization that posted
+  the job runs it (the agency for agency jobs; the employer for direct jobs), and "Handled by" is
+  the application's assignee, otherwise whoever sent the offer. Declined offers open nothing.
+- **Stages** come from the destination's `mobility_stage_template` country rule. A template stage
+  may set `done_on_open` (UAE "Job selected"); the first other stage starts at once. A destination
+  without a template uses a short generic one (contract accepted, medical test, visa, travel,
+  joined) so an accepted offer always opens a case. Re-run `CountryRuleSeeder` on deploy.
+- **Running a case:** only the current stage changes, in template order. The managing
+  organization (members with `mobility.manage`) can mark it done, skip it or put it on hold (both
+  need a reason the worker sees), resume it, and set the worker's next action and due date.
+  Finishing the last stage closes the case as joined. Closing early takes a reason (worker
+  withdrew, employer cancelled, visa refused, medical test not passed, other with a note) and
+  cancels the case; closing as joined needs every stage done or skipped. Closed cases can't reopen.
+- **Who sees what:** the worker sees their case, with the organization's name rather than the
+  staff member's in the history. The employer of an agency job and agency Compliance Reviewers can
+  follow a case but not change it. Other organizations get a 404.
+- Every change writes a case event (never edited) and an activity-log entry with before/after
+  values. Workers get `case_opened`, `case_updated` (stage done, skipped, on hold, resumed, new
+  next action) and `case_closed` alerts on their usual channels.
+- Stage names are translated with `mobility.stage.{key}` and fall back to the template's English
+  label. The UAE passport stage shows the fixed note that the passport goes back to the worker
+  right after stamping (D-074).
+- Case lists for each workspace and the documents checklist follow in 6e and 6f.
+
+### D-079 · Case documents
+- **Checklist:** opening a case adds one item per document in the destination's `document_types`
+  country rule (a passport copy and a signed contract where there is no rule). The contract, work
+  permit and visa come from the managing organization; everything else from the worker. The
+  managing organization can add items (type, name, who provides it, due date, instructions);
+  organization registration documents can't be asked for.
+- **Per-item sharing (product rule 6):** the worker shares a file for one item at a time, by
+  uploading it or, for a passport or ID, by sharing the scan on their Documents page (a passport
+  uploaded on the case becomes that scan). Sharing is recorded with its time and the worker can
+  stop it whenever the item isn't accepted yet; the organizations lose the file at once and the
+  item is needed again. Deleting a scan on the Documents page also stops every case share of it.
+  A replaced case-only file is deleted.
+- **Who sees what:** the worker sees every item and file on their case. The managing organization
+  sees the whole checklist and a worker's file only while it is shared. The employer of an agency
+  job sees only items marked for it: the worker decides for their files (passport and ID default
+  to "agency only", as in the prototype; others default to visible), the agency for its own. Files
+  go through the private-media route, which checks this again.
+- **Checks:** the managing organization accepts a shared file or sends it back with a reason code
+  (hard to read, not the document asked for, expired, pages missing, details mismatch, other with a
+  note). Accepted items can't be replaced or revoked from the case page.
+- **Contract:** the organization uploads it; the worker confirms it or sends it back with what needs
+  changing, and the organization uploads a corrected one. Confirming records who and when; the
+  organization still moves the contract stage itself, so no stage changes without a person doing it.
+  Other organization files (permit, visa) are ready as soon as they are uploaded.
+- Every change writes a case event (now linked to its checklist item) and an activity-log entry
+  with before/after values. Alerts: `case_document` to the worker (needed, added, contract ready,
+  accepted, sent back) and `case_document_answered` to the case handler, else everyone at the
+  managing organization with `mobility.manage` (shared, stopped sharing, contract confirmed or
+  queried).
+
+### D-080 · Agency workspace and mobility lists
+- **Mobility** (`/org/cases`, agencies and employers): every case the organization runs or
+  employs on, open by default, with closed / all, a search by worker name or case number, and
+  shortcuts to what needs attention: shared documents waiting for a check, current stages past
+  their due date, and stages on hold. Each row shows the current stage, a progress bar, the due
+  date and who runs the case; cases an employer only follows are marked as such. Employers get the
+  same list in their navigation.
+- **Job orders** for agencies is the jobs list; agency jobs show the employer and the mandate.
+- **Candidates** (`/org/candidates`): applicants across all of the organization's jobs, from their
+  application snapshots, filtered by job, stage and name or Skill Passport number, with a link to
+  the mobility case once one is open. Same projection as the per-job pipeline (no phone numbers or
+  documents).
+- **Compliance** (`/org/compliance`, Agency Owner and Compliance Reviewer): licence validity (warns
+  60 days before expiry), each verified, expired or revoked mandate with places used/left, live
+  jobs and a 30-day end warning, job orders without a usable mandate, and case attention counts.
+  The agency dashboard warns about the licence and shows mobility tiles; navigation hides links a
+  member can't open (shared `organizationAbilities`).
+- **Lapsed mandates (completes D-077):** a daily job (`jobs:pause-lapsed-mandates`, 00:30 Gulf
+  time) marks verified mandates past their end date as expired and pauses live agency jobs whose
+  mandate can no longer back them (expired, revoked, licence lapsed or not covering the
+  destination). Only the mandate's validity triggers a pause; a headcount overrun is still caught
+  at the next save or review. The agency's members who manage jobs get `job_paused_mandate`; the
+  change is in the activity log with the reason. Resuming an agency job runs the same mandate
+  check, so it stays paused until a usable mandate backs it.
+
+### D-081 · Module 6 sample data and review fixes
+- **Sample data:** Northstar's expired mandate MD-1088 with the job it backed (UAE-EL-0004,
+  paused, the agency owner alerted); Ravi's visa stage on hold for the embassy appointment; a police
+  clearance Northstar asked Karim for, shared and waiting for a check (Imran alerted). With Rahim's
+  medical due, every Mobility shortcut and the compliance page have something to show.
+- **Review fixes:**
+  - Case Officers no longer see Mandates and Licence in the menu or a link on the licence warning;
+    those pages stay with Agency Owners and Compliance Reviewers (D-076).
+  - The Truth Card shows "Job reviewed" for paused and closed jobs too: they passed review before
+    going live, and a material change sends a job back to review with its own status.
+  - An employer following an agency case doesn't see history lines about documents not shared
+    with it, and "documents to check" counts only the cases an organization runs, since only the
+    managing organization checks files.
+- **Deploy notes for Module 6:** run migrations; re-run `RolesAndPermissionsSeeder` (D-075) and
+  `CountryRuleSeeder` (D-075, D-078); make sure the scheduler runs (`jobs:pause-lapsed-mandates`).

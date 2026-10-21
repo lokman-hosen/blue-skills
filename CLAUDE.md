@@ -55,13 +55,13 @@ Worker sign-in is `/join` (phone + code). Locally `OTP_CHANNEL=log` writes the c
 on your machine only (tests always enforce it). Sign-in codes, Voice-to-CV answers and SkillShow videos are
 processed on the queue: run `sail artisan queue:work` (or `composer run dev`). Notifications, WhatsApp/SMS/email
 alerts and live updates also use the queue and the `reverb` Sail service; `sail artisan schedule:work` runs the daily
-new-applicant digest and releases alerts held for workers' quiet hours. WhatsApp and SMS go to the log locally
+new-applicant digest, releases alerts held for workers' quiet hours and pauses agency jobs whose mandate lapsed. WhatsApp and SMS go to the log locally
 (`NOTIFY_WHATSAPP_DRIVER`, `NOTIFY_SMS_DRIVER`). `SPEECH_TO_TEXT_DRIVER=sample`
 answers every recording with the prototype's sample sentence; SkillShow checks need ffmpeg (in Sail).
 Seeded worker Rahim Uddin signs in with `+8801711000001` and has a complete Skill Passport.
 
 Local logins after seeding (password `password`): `superuser@blueskills.test` (staff),
-`owner@abc-contracting.test` (employer Owner, draft job AE-ST-0042, pipeline on AE-MT-0115), `owner@gulfstar.test` (employer waiting for review), `sara@abc-contracting.test` (employer HR Admin), `imran@northstar.test` (agency case officer),
+`owner@abc-contracting.test` (employer Owner, draft job AE-ST-0042, pipeline on AE-MT-0115), `owner@gulfstar.test` (employer waiting for review), `sara@abc-contracting.test` (employer HR Admin), `owner@northstar.test` (agency Owner: licence, mandates, compliance), `imran@northstar.test` (agency case officer: cases MC-AE-2026-0188…0191, police clearance waiting for a check on 0189),
 `nusrat@meghna.test` (institute placement officer). `/_design` is the staff-only component gallery.
 
 Run tests, Pint, PHPStan and `npm run types` before every commit. Never commit failing checks.
@@ -214,7 +214,7 @@ Update this table when a module is done.
 | 3 | Organizations & jobs: employer verification, job wizard, Truth Card, job review, public search | ✓ |
 | 4 | Applications: apply + snapshot + consent, tracker, pipeline, talent search, shortlists | ✓ |
 | 5 | Messaging & notifications: in-app, WhatsApp, SMS, email | ✓ |
-| 6 | Agency & mobility: licence, mandates, mobility cases, documents | ☐ |
+| 6 | Agency & mobility: licence, mandates, mobility cases, documents | ✓ |
 | 7 | Institutes: cohorts, invites, attestation, talent pools | ☐ |
 | 8 | Admin & trust: verification queues, reports, cases, config, taxonomy | ☐ |
 | 9 | CRM, analytics, billing | ☐ |

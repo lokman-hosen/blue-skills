@@ -30,6 +30,7 @@ declare namespace App {
                     canOffer: boolean;
                     jobSalary: App.Support.Data.MoneyData | null;
                     jobSalaryPeriod: App.Domain.Jobs.Enums.SalaryPeriod | null;
+                    mobilityCaseId: string | null;
                 };
                 export type ApplicantListItemData = {
                     id: string;
@@ -45,6 +46,13 @@ declare namespace App {
                     hasSkillShow: boolean;
                     assigneeName: string | null;
                     upcomingInterviewAt: string | null;
+                };
+                export type CandidateListItemData = {
+                    applicant: App.Domain.Applications.Data.ApplicantListItemData;
+                    jobTitle: string;
+                    jobCode: string;
+                    destinationCountryCode: string;
+                    mobilityCaseId: string | null;
                 };
                 export type ConsentItemData = {
                     item: App.Domain.Applications.Enums.ApplicationConsentItem;
@@ -193,6 +201,7 @@ declare namespace App {
                     consents: App.Domain.Applications.Data.ConsentItemData[];
                     jobChangedAt: string | null;
                     snapshotTakenAt: string | null;
+                    mobilityCaseId: string | null;
                 };
                 export type WorkerApplicationListItemData = {
                     id: string;
@@ -319,6 +328,7 @@ declare namespace App {
                     | 'interviews.manage'
                     | 'talent_pools.manage'
                     | 'mandates.manage'
+                    | 'mandates.confirm'
                     | 'mobility.manage'
                     | 'compliance.review'
                     | 'courses.manage'
@@ -383,6 +393,7 @@ declare namespace App {
                 };
                 export type JobFormData = {
                     title: string;
+                    jobMandateId: string | null;
                     occupationId: string;
                     headcount: number;
                     destinationCountryCode: string;
@@ -412,6 +423,7 @@ declare namespace App {
                     skills: App.Domain.Taxonomy.Data.TaxonomyOptionData[];
                     destinations: App.Domain.Jobs.Data.DestinationOptionData[];
                     currencies: string[];
+                    mandates: App.Domain.Jobs.Data.MandateOptionData[];
                 };
                 export type JobListItemData = {
                     code: string;
@@ -428,6 +440,8 @@ declare namespace App {
                     lastDecision: App.Domain.Verification.Data.ReviewDecisionData | null;
                     editable: boolean;
                     applicants: number | null;
+                    employer: string | null;
+                    mandateReference: string | null;
                 };
                 export type JobListingData = {
                     code: string;
@@ -497,6 +511,45 @@ declare namespace App {
                     code: string;
                     level: string;
                 };
+                export type MandateCoverageData = {
+                    mandate: App.Domain.Jobs.Data.MandateData;
+                    placesLeft: number;
+                    liveJobs: number;
+                    expiringSoon: boolean;
+                };
+                export type MandateData = {
+                    id: string;
+                    reference: string;
+                    agency: string;
+                    agencyLicence: string | null;
+                    employer: string;
+                    status: App.Support.Data.StatusData;
+                    usable: boolean;
+                    occupations: string[];
+                    destinationCountryCode: string | null;
+                    headcount: number;
+                    validFrom: string | null;
+                    validUntil: string | null;
+                    employerNote: string | null;
+                    employerRespondedAt: string | null;
+                    jobs: number;
+                    evidence: {
+                        name: string;
+                        url: string | null;
+                    }[];
+                    lastDecision: App.Domain.Verification.Data.ReviewDecisionData | null;
+                    createdAt: string | null;
+                };
+                export type MandateOptionData = {
+                    id: string;
+                    reference: string;
+                    employer: string;
+                    occupationIds: string[];
+                    destinationCountryCode: string | null;
+                    headcountLeft: number;
+                    validUntil: string | null;
+                    usable: boolean;
+                };
                 export type MatchRequirementData = {
                     key: string;
                     params: Record<string, string | number>;
@@ -529,7 +582,13 @@ declare namespace App {
                     | 'accommodation'
                     | 'other';
                 export type MandateStatus =
-                    'pending' | 'verified' | 'rejected' | 'expired' | 'revoked';
+                    | 'awaiting_employer'
+                    | 'declined'
+                    | 'pending'
+                    | 'verified'
+                    | 'rejected'
+                    | 'expired'
+                    | 'revoked';
                 export type SalaryPeriod = 'hour' | 'day' | 'week' | 'month';
             }
         }
@@ -595,13 +654,135 @@ declare namespace App {
                     | 'job_changed'
                     | 'job_invitation'
                     | 'worker_message'
+                    | 'case_opened'
+                    | 'case_updated'
+                    | 'case_closed'
+                    | 'case_document'
                     | 'new_applicants'
                     | 'application_answered'
-                    | 'organization_message';
+                    | 'organization_message'
+                    | 'mandate_requested'
+                    | 'mandate_answered'
+                    | 'mandate_reviewed'
+                    | 'case_document_answered'
+                    | 'job_paused_mandate';
             }
         }
         namespace Mobility {
+            namespace Data {
+                export type CaseCountsData = {
+                    open: number;
+                    documentsToCheck: number;
+                    overdue: number;
+                    onHold: number;
+                };
+                export type CaseDocumentData = {
+                    id: string;
+                    type: App.Domain.Verification.Enums.DocumentType;
+                    title: string;
+                    status: App.Support.Data.StatusData;
+                    providedBy: App.Domain.Mobility.Enums.DocumentProvider;
+                    employerCanView: boolean;
+                    visibleTo: string[];
+                    revoked: boolean;
+                    fileName: string | null;
+                    fileUrl: string | null;
+                    sharedAt: string | null;
+                    decidedAt: string | null;
+                    dueOn: string | null;
+                    returnReason: App.Domain.Mobility.Enums.CaseDocumentReturnReason | null;
+                    note: string | null;
+                };
+                export type CaseEventData = {
+                    id: string;
+                    action: App.Domain.Mobility.Enums.CaseEventAction;
+                    stage: string | null;
+                    document: string | null;
+                    actor: string | null;
+                    note: string | null;
+                    at: string;
+                };
+                export type CaseListItemData = {
+                    id: string;
+                    reference: string;
+                    workerName: string;
+                    jobTitle: string;
+                    jobCode: string;
+                    destinationCountryCode: string;
+                    status: App.Support.Data.StatusData;
+                    stage: string | null;
+                    onHold: boolean;
+                    progress: string[];
+                    dueOn: string | null;
+                    overdue: boolean;
+                    documentsToCheck: number;
+                    managedBy: string;
+                    viewOnly: boolean;
+                };
+                export type CaseStageData = {
+                    id: string;
+                    key: string;
+                    label: string;
+                    status: string;
+                    date: string | null;
+                    dueOn: string | null;
+                    nextAction: string | null;
+                    blockedReason: string | null;
+                };
+                export type MobilityCaseData = {
+                    id: string;
+                    reference: string;
+                    status: App.Support.Data.StatusData;
+                    closedReason: App.Domain.Mobility.Enums.CaseClosedReason | null;
+                    closedAt: string | null;
+                    applicationId: string;
+                    jobTitle: string;
+                    jobCode: string;
+                    destinationCountryCode: string;
+                    destination: string;
+                    employer: string;
+                    agency: string | null;
+                    managedBy: string;
+                    handledBy: string;
+                    workerName: string | null;
+                    current: App.Domain.Mobility.Data.CaseStageData | null;
+                    stages: App.Domain.Mobility.Data.CaseStageData[];
+                    events: App.Domain.Mobility.Data.CaseEventData[];
+                    openedAt: string;
+                };
+            }
             namespace Enums {
+                export type CaseClosedReason =
+                    | 'joined'
+                    | 'worker_withdrew'
+                    | 'employer_cancelled'
+                    | 'visa_refused'
+                    | 'medical_unfit'
+                    | 'other';
+                export type CaseDocumentReturnReason =
+                    | 'unreadable'
+                    | 'wrong_document'
+                    | 'expired'
+                    | 'incomplete'
+                    | 'details_mismatch'
+                    | 'other';
+                export type CaseDocumentStatus = 'requested' | 'uploaded' | 'accepted' | 'returned';
+                export type CaseEventAction =
+                    | 'opened'
+                    | 'stage_started'
+                    | 'stage_completed'
+                    | 'stage_blocked'
+                    | 'stage_skipped'
+                    | 'stage_resumed'
+                    | 'next_action_set'
+                    | 'document_requested'
+                    | 'document_uploaded'
+                    | 'document_accepted'
+                    | 'document_returned'
+                    | 'document_revoked'
+                    | 'contract_confirmed'
+                    | 'closed';
+                export type DocumentProvider = 'worker' | 'organization';
                 export type MobilityStageStatus =
                     'pending' | 'in_progress' | 'done' | 'blocked' | 'skipped';
             }
@@ -747,6 +928,9 @@ declare namespace App {
                     | 'salary_implausible'
                     | 'duplicate_job'
                     | 'prohibited_content'
+                    | 'mandate_not_signed'
+                    | 'mandate_scope_mismatch'
+                    | 'licence_expired'
                     | 'more_information_needed';
                 export type VerificationDecision = 'approved' | 'rejected' | 'needs_info';
                 export type VerificationType =

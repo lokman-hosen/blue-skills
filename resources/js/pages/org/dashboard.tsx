@@ -1,5 +1,12 @@
-import { Head, Link } from '@inertiajs/react';
-import { BriefcaseBusiness, LayoutDashboard, Plus } from 'lucide-react';
+import { Head, Link, usePage } from '@inertiajs/react';
+import {
+    BriefcaseBusiness,
+    CircleAlert,
+    FileCheck,
+    LayoutDashboard,
+    Plane,
+    Plus,
+} from 'lucide-react';
 import JobController from '@/actions/App/Http/Controllers/Organization/JobController';
 import { EmptyState } from '@/components/bs/empty-state';
 import { KpiTile } from '@/components/bs/kpi-tile';
@@ -14,6 +21,9 @@ type Props = {
     recentJobs?: App.Domain.Jobs.Data.JobListItemData[];
     canPostJobs?: boolean;
     applicantCounts?: App.Domain.Applications.Data.ApplicantCountsData | null;
+    mandateRequests?: number;
+    caseCounts?: App.Domain.Mobility.Data.CaseCountsData | null;
+    licenceAlert?: { state: 'invalid' | 'expiring'; expiresOn: string | null } | null;
 };
 
 /** Organization overview: where the jobs stand and the latest ones (prototype "Overview"). */
@@ -22,8 +32,12 @@ export default function OrgDashboard({
     recentJobs = [],
     canPostJobs = false,
     applicantCounts = null,
+    mandateRequests = 0,
+    caseCounts = null,
+    licenceAlert = null,
 }: Props) {
     const { t, formatNumber } = useTranslation();
+    const { organizationAbilities } = usePage().props;
 
     return (
         <>
@@ -42,6 +56,61 @@ export default function OrgDashboard({
                         )
                     }
                 />
+                {mandateRequests > 0 && (
+                    <Link
+                        href={org.mandates.index()}
+                        className="flex items-center gap-3 rounded-xl border border-warn/40 bg-warn-soft px-4 py-3 text-sm font-semibold hover:border-warn"
+                    >
+                        <FileCheck aria-hidden className="size-5 shrink-0 text-warn" />
+                        {t('dashboard.mandate_requests', { count: formatNumber(mandateRequests) })}
+                    </Link>
+                )}
+                {licenceAlert && (
+                    <LicenceAlert
+                        alert={licenceAlert}
+                        canOpen={organizationAbilities.viewMandates}
+                    />
+                )}
+                {caseCounts && caseCounts.open + caseCounts.documentsToCheck > 0 && (
+                    <section className="flex flex-col gap-3">
+                        <div className="flex items-center justify-between gap-2">
+                            <h2 className="flex items-center gap-1.5 eyebrow text-muted">
+                                <Plane aria-hidden className="size-4" />
+                                {t('nav.mobility')}
+                            </h2>
+                            <Link
+                                href={org.cases.index()}
+                                className="inline-flex min-h-11 items-center text-sm font-semibold text-brand"
+                            >
+                                {t('dashboard.cases.all')}
+                            </Link>
+                        </div>
+                        <div className="grid grid-cols-2 gap-3 lg:grid-cols-4">
+                            {(
+                                [
+                                    ['open', null, caseCounts.open],
+                                    ['documents', 'documents', caseCounts.documentsToCheck],
+                                    ['overdue', 'overdue', caseCounts.overdue],
+                                    ['on_hold', 'on_hold', caseCounts.onHold],
+                                ] as const
+                            ).map(([key, attention, value]) => (
+                                <Link
+                                    key={key}
+                                    href={org.cases.index(
+                                        attention ? { query: { attention } } : undefined,
+                                    )}
+                                    className="rounded-xl focus-visible:ring-[3px] focus-visible:ring-ring/50 focus-visible:outline-none"
+                                >
+                                    <KpiTile
+                                        label={t(`dashboard.cases.${key}`)}
+                                        value={formatNumber(value)}
+                                        className="h-full hover:border-brand/60"
+                                    />
+                                </Link>
+                            ))}
+                        </div>
+                    </section>
+                )}
                 {counts ? (
                     <>
                         <div className="grid grid-cols-2 gap-3 lg:grid-cols-4">
@@ -145,5 +214,43 @@ export default function OrgDashboard({
                 )}
             </div>
         </>
+    );
+}
+
+/** Agency licence warning; links to the licence page for members who can open it (D-080). */
+function LicenceAlert({
+    alert,
+    canOpen,
+}: {
+    alert: { state: 'invalid' | 'expiring'; expiresOn: string | null };
+    canOpen: boolean;
+}) {
+    const { t, formatDate } = useTranslation();
+    const invalid = alert.state === 'invalid';
+    const className = invalid
+        ? 'flex items-center gap-3 rounded-xl border border-bad/40 bg-bad-soft px-4 py-3 text-sm font-semibold hover:border-bad'
+        : 'flex items-center gap-3 rounded-xl border border-warn/40 bg-warn-soft px-4 py-3 text-sm font-semibold hover:border-warn';
+    const content = (
+        <>
+            <CircleAlert
+                aria-hidden
+                className={`size-5 shrink-0 ${invalid ? 'text-bad' : 'text-warn'}`}
+            />
+            {invalid
+                ? t('dashboard.licence.invalid')
+                : t('dashboard.licence.expiring', {
+                      date: alert.expiresOn ? formatDate(alert.expiresOn) : '',
+                  })}
+        </>
+    );
+
+    return canOpen ? (
+        <Link href={org.licence.edit()} className={className}>
+            {content}
+        </Link>
+    ) : (
+        <p role="status" className={className}>
+            {content}
+        </p>
     );
 }

@@ -37,6 +37,7 @@ use App\Domain\Jobs\Enums\SalaryPeriod;
 use App\Domain\Jobs\Models\JobMandate;
 use App\Domain\Jobs\Models\JobPosting;
 use App\Domain\Jobs\States\Job\Draft;
+use App\Domain\Jobs\States\Job\Paused;
 use App\Domain\Jobs\States\Job\Published;
 use App\Domain\Jobs\States\Job\UnderReview;
 use App\Domain\Messaging\Enums\DeliveryChannel;
@@ -46,10 +47,15 @@ use App\Domain\Messaging\Enums\NotificationEvent;
 use App\Domain\Messaging\Models\Conversation;
 use App\Domain\Messaging\Models\ConversationRead;
 use App\Domain\Messaging\Models\OutboundMessage;
+use App\Domain\Mobility\Enums\CaseClosedReason;
+use App\Domain\Mobility\Enums\CaseDocumentStatus;
+use App\Domain\Mobility\Enums\CaseEventAction;
+use App\Domain\Mobility\Enums\DocumentProvider;
 use App\Domain\Mobility\Enums\MobilityStageStatus;
 use App\Domain\Mobility\Models\MobilityCase;
 use App\Domain\Mobility\States\MobilityCase\Completed;
 use App\Domain\Mobility\States\MobilityCase\Open as OpenCase;
+use App\Domain\Mobility\Support\CaseChecklist;
 use App\Domain\Organization\Enums\OrganizationType;
 use App\Domain\Organization\Models\Organization;
 use App\Domain\Organization\States\Verification\Pending as PendingOrganization;
@@ -119,6 +125,7 @@ class SampleWorldSeeder extends Seeder
         $this->seedWorkers();
         $this->seedRahimPassport();
         $this->seedApplicationsAndCases();
+        $this->seedAgencyWorkspace();
         $this->seedQueues();
     }
 
@@ -139,6 +146,7 @@ class SampleWorldSeeder extends Seeder
                 'registration_number' => 'RJSC-C-88231',
                 'licence_number' => 'RA-2026-0418',
                 'licence_expires_on' => '2027-03-31',
+                'licence_countries' => ['AE', 'SA'],
             ]],
             'meghna' => [OrganizationType::Institute, 'Meghna Technical Training Centre', 'Meghna Technical Training Centre', 'BD', 'Narayanganj', ['registration_number' => 'BTEB-55120']],
             'xyz' => [OrganizationType::Employer, 'XYZ Logistics Sp. z o.o.', 'XYZ Logistics', 'PL', 'Poznań', ['registration_number' => 'KRS-0000900123']],
@@ -196,7 +204,10 @@ class SampleWorldSeeder extends Seeder
             'employer_organization_id' => $this->orgs['abc']->id,
             'agency_organization_id' => $this->orgs['northstar']->id,
             'reference' => 'MD-1107',
-            'headcount' => 200,
+            'occupation_ids' => [Occupation::query()->where('slug', 'electrician')->value('id')],
+            'destination_country_code' => 'AE',
+            // 200 places go to UAE-EL-0001; the rest let the agency post a second job (6c).
+            'headcount' => 300,
             'valid_from' => '2026-09-01',
             'valid_until' => '2027-03-31',
             'status' => MandateStatus::Verified,
@@ -206,6 +217,8 @@ class SampleWorldSeeder extends Seeder
             'employer_organization_id' => $this->orgs['alnoor']->id,
             'agency_organization_id' => $this->orgs['northstar']->id,
             'reference' => 'MD-1121',
+            'occupation_ids' => [Occupation::query()->where('slug', 'hvac-technician')->value('id')],
+            'destination_country_code' => 'SA',
             'headcount' => 40,
             'valid_from' => '2026-10-01',
             'valid_until' => '2027-04-30',
@@ -869,24 +882,195 @@ class SampleWorldSeeder extends Seeder
         $keys = array_column($template, 'key');
         $currentIndex = $currentStage === 'joined' ? count($keys) : array_search($currentStage, $keys, true);
 
+        $joined = $currentStage === 'joined';
+        $openedAt = Carbon::parse($application->applied_at)->addWeek();
         $case = MobilityCase::query()->create([
             'application_id' => $application->id,
             'template' => $job->destination_country_code,
-            'current_stage' => $currentStage === 'joined' ? null : $currentStage,
-            'status' => $currentStage === 'joined' ? Completed::class : OpenCase::class,
+            // Prototype case MC-UAE-2026-0188, numbered on from there (D-078).
+            'reference' => sprintf('MC-%s-2026-%04d', $job->destination_country_code, 188 + MobilityCase::query()->count()),
+            'managing_organization_id' => $job->organization_id,
+            'employer_organization_id' => $job->employer_organization_id,
+            'agency_organization_id' => $job->agency_organization_id,
+            'handler_user_id' => $application->assigned_user_id,
+            'current_stage' => $joined ? null : $currentStage,
+            'status' => $joined ? Completed::class : OpenCase::class,
+            'closed_reason' => $joined ? CaseClosedReason::Joined : null,
+            'closed_at' => $joined ? $openedAt->copy()->addWeeks(count($keys)) : null,
         ]);
-
-        $completedAt = Carbon::parse($application->applied_at)->addWeek();
+        $case->events()->create(['action' => CaseEventAction::Opened, 'created_at' => $openedAt, 'updated_at' => $openedAt]);
 
         foreach ($keys as $position => $key) {
             $done = $position < $currentIndex;
+            $completedAt = $openedAt->copy()->addWeeks($position);
             $case->stages()->create([
                 'key' => $key,
                 'position' => $position + 1,
                 'status' => $done ? MobilityStageStatus::Done : ($position === $currentIndex ? MobilityStageStatus::InProgress : MobilityStageStatus::Pending),
                 'due_on' => $position === $currentIndex ? $dueOn : null,
-                'completed_at' => $done ? $completedAt->copy()->addWeeks($position) : null,
+                'next_action' => $position === $currentIndex && $key === 'medical'
+                    ? 'Book a medical test at an approved centre in Dhaka, then upload the receipt.'
+                    : null,
+                'completed_at' => $done ? $completedAt : null,
             ]);
+
+            if ($done) {
+                $case->events()->create(['action' => CaseEventAction::StageCompleted, 'stage_key' => $key, 'created_at' => $completedAt, 'updated_at' => $completedAt]);
+            }
+        }
+
+        if ($joined) {
+            $case->events()->create(['action' => CaseEventAction::Closed, 'created_at' => $case->closed_at, 'updated_at' => $case->closed_at]);
+        }
+
+        $this->seedCaseDocuments($case, $keys, (int) $currentIndex, $dueOn, $openedAt);
+    }
+
+    /**
+     * The destination checklist as far as the case has got (D-079): documents for finished
+     * stages are in and accepted, the current stage's document is needed by its due date. The
+     * passport copy is the worker's scan on file, kept from the employer (prototype w-case).
+     *
+     * @param  list<string>  $keys
+     */
+    private function seedCaseDocuments(MobilityCase $case, array $keys, int $currentIndex, ?string $dueOn, Carbon $openedAt): void
+    {
+        $case->loadMissing('application.workerProfile', 'managingOrganization.users');
+        $workerId = $case->application->workerProfile->user_id;
+        $staffId = $case->handler_user_id ?? $case->managingOrganization?->users->first()?->id;
+        $stageFor = [DocumentType::Contract->value => ['contract_accepted', 'contract'], DocumentType::Passport->value => ['passport_submitted'],
+            DocumentType::Medical->value => ['medical'], DocumentType::PoliceClearance->value => ['police_clearance'], DocumentType::WorkPermit->value => ['work_permit'], DocumentType::Visa->value => ['visa']];
+
+        foreach (CaseChecklist::for($case->template) as $type) {
+            $stage = collect($stageFor[$type->value] ?? [])->map(fn (string $key) => array_search($key, $keys, true))->first(fn ($index) => $index !== false);
+            // Items with no stage of their own (photo, certificates) are due with the first one.
+            $position = is_int($stage) ? $stage : 1;
+            $provider = CaseChecklist::provider($type);
+            $done = $position < $currentIndex;
+            $at = $openedAt->copy()->addWeeks($position);
+            $ownerId = $provider === DocumentProvider::Worker ? $workerId : $staffId;
+
+            $document = match (true) {
+                ! $done || $ownerId === null => null,
+                $type === DocumentType::Passport => Document::query()->where('owner_user_id', $workerId)->where('type', DocumentType::Passport)->first()
+                    ?? $this->sampleDocument($workerId, $type, $type->label()),
+                default => $this->sampleDocument($ownerId, $type, CaseChecklist::title($type)),
+            };
+
+            $item = $case->documents()->create([
+                'type' => $type,
+                'title' => CaseChecklist::title($type),
+                'status' => $document !== null ? CaseDocumentStatus::Accepted : CaseDocumentStatus::Requested,
+                'provided_by' => $provider,
+                'document_id' => $document?->id,
+                'employer_can_view' => CaseChecklist::employerCanViewByDefault($type),
+                'shared_at' => $document !== null ? $at : null,
+                'decided_at' => $document !== null ? $at : null,
+                'decided_by' => $document !== null ? ($type === DocumentType::Contract ? $workerId : $staffId) : null,
+                'due_on' => $position === $currentIndex ? $dueOn : null,
+            ]);
+
+            if ($document !== null) {
+                $case->events()->create([
+                    'action' => $type === DocumentType::Contract ? CaseEventAction::ContractConfirmed : CaseEventAction::DocumentAccepted,
+                    'case_document_id' => $item->id,
+                    'actor_user_id' => $type === DocumentType::Contract ? $workerId : $staffId,
+                    'created_at' => $at,
+                    'updated_at' => $at,
+                ]);
+            }
+        }
+    }
+
+    private function sampleDocument(string $ownerId, DocumentType $type, string $title): Document
+    {
+        $document = Document::query()->create(['owner_user_id' => $ownerId, 'type' => $type, 'title' => $title]);
+        $media = $document->addMediaFromString(self::SAMPLE_PDF)
+            ->usingName("{$type->value}-sample.pdf")
+            ->usingFileName("{$type->value}.pdf")
+            ->toMediaCollection(Document::FILE_COLLECTION);
+        $media->forceFill(['uuid' => (string) str()->uuid()])->save();
+
+        return $document;
+    }
+
+    /**
+     * Module 6 workspace states (D-081): a mandate that ended with the job it backed paused by the
+     * daily check, a case on hold, and a shared document waiting for Northstar's check.
+     */
+    private function seedAgencyWorkspace(): void
+    {
+        $imran = $this->orgUsers['imran@northstar.test'];
+        $farhana = $this->orgUsers['owner@northstar.test'];
+
+        $md1088 = JobMandate::query()->create([
+            'employer_organization_id' => $this->orgs['abc']->id,
+            'agency_organization_id' => $this->orgs['northstar']->id,
+            'reference' => 'MD-1088',
+            'occupation_ids' => [Occupation::query()->where('slug', 'electrician')->value('id')],
+            'destination_country_code' => 'AE',
+            'headcount' => 20,
+            'valid_from' => '2026-04-01',
+            'valid_until' => '2026-10-15',
+            'status' => MandateStatus::Expired,
+        ]);
+        $paused = $this->job([
+            'organization_id' => $this->orgs['northstar']->id,
+            'employer_organization_id' => $this->orgs['abc']->id,
+            'agency_organization_id' => $this->orgs['northstar']->id,
+            'job_mandate_id' => $md1088->id,
+            'public_code' => 'UAE-EL-0004',
+            'title' => 'Maintenance Electrician',
+            'occupation' => 'electrician',
+            'min_experience_years' => 3,
+            'destination_country_code' => 'AE',
+            'destination_city' => 'Sharjah',
+            'headcount' => 20,
+            'salary_amount_minor' => 2000_00,
+            'salary_currency' => 'AED',
+            'hours_per_day' => 8,
+            'days_per_week' => 6,
+            'contract_months' => 24,
+            'accommodation' => BenefitProvision::Provided,
+            'permit_payer' => CostPayer::Employer,
+            'visa_payer' => CostPayer::Employer,
+            'status' => Paused::class,
+            'published_at' => '2026-05-02 09:00:00',
+        ], ['maintenance'], []);
+        $paused->verificationRequests()->create([
+            'type' => VerificationType::Job, 'status' => Approved::class, 'decided_by' => $this->verificationOfficer->id,
+            'decision' => VerificationDecision::Approved, 'decided_at' => '2026-05-02 08:00:00',
+        ]);
+        $this->alert($farhana, NotificationEvent::JobPausedMandate, ['job' => $paused->title, 'code' => 'UAE-EL-0004', 'reference' => 'MD-1088'], '/org/jobs/UAE-EL-0004', '2026-10-15 20:30', read: false);
+
+        // Ravi's visa stage waits for the embassy.
+        $ravi = $this->applicationOf('ravi', $this->jobs['UAE-EL-0001'])->mobilityCase;
+        if ($ravi !== null) {
+            $ravi->stages()->where('key', 'visa')->update(['status' => MobilityStageStatus::Blocked, 'blocked_reason' => 'Waiting for the UAE embassy appointment in Dhaka.']);
+            $ravi->events()->create(['action' => CaseEventAction::StageBlocked, 'stage_key' => 'visa', 'actor_user_id' => $imran->id, 'note' => 'Waiting for the UAE embassy appointment in Dhaka.', 'created_at' => '2026-10-19 05:00', 'updated_at' => '2026-10-19 05:00']);
+        }
+
+        // Karim shared the police clearance Northstar asked for; it waits for a check.
+        $karimApplication = $this->applicationOf('karim', $this->jobs['UAE-EL-0001']);
+        $karim = $karimApplication->mobilityCase;
+        if ($karim !== null) {
+            $workerId = $karimApplication->workerProfile->user_id;
+            $document = $this->sampleDocument($workerId, DocumentType::PoliceClearance, 'Police clearance');
+            $item = $karim->documents()->create([
+                'type' => DocumentType::PoliceClearance,
+                'title' => CaseChecklist::title(DocumentType::PoliceClearance),
+                'status' => CaseDocumentStatus::Uploaded,
+                'provided_by' => DocumentProvider::Worker,
+                'document_id' => $document->id,
+                'employer_can_view' => true,
+                'note' => 'From Dhaka Metropolitan Police, issued in the last 3 months.',
+                'requested_by' => $imran->id,
+                'shared_at' => '2026-10-20 06:10',
+                'due_on' => '2026-10-31',
+            ]);
+            $karim->events()->create(['action' => CaseEventAction::DocumentRequested, 'case_document_id' => $item->id, 'actor_user_id' => $imran->id, 'created_at' => '2026-10-17 04:00', 'updated_at' => '2026-10-17 04:00']);
+            $karim->events()->create(['action' => CaseEventAction::DocumentUploaded, 'case_document_id' => $item->id, 'actor_user_id' => $workerId, 'created_at' => '2026-10-20 06:10', 'updated_at' => '2026-10-20 06:10']);
+            $this->alert($imran, NotificationEvent::CaseDocumentAnswered, ['reference' => (string) $karim->reference, 'worker' => 'Karim Ahmed', 'document' => 'Police clearance', 'document_action' => 'shared'], '/org/cases/'.$karim->id, '2026-10-20 06:10', read: false);
         }
     }
 

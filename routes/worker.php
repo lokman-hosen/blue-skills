@@ -1,11 +1,14 @@
 <?php
 
+use App\Domain\Mobility\Actions\AnswerCaseContract;
 use App\Http\Controllers\Worker\ApplicationController;
 use App\Http\Controllers\Worker\ApplyController;
 use App\Http\Controllers\Worker\Auth\PhoneSignInController;
 use App\Http\Controllers\Worker\BasicsController;
+use App\Http\Controllers\Worker\CaseDocumentController;
 use App\Http\Controllers\Worker\DocumentController;
 use App\Http\Controllers\Worker\MessageController;
+use App\Http\Controllers\Worker\MobilityCaseController;
 use App\Http\Controllers\Worker\PassportController;
 use App\Http\Controllers\Worker\PrivacyController;
 use App\Http\Controllers\Worker\SkillShowController;
@@ -97,4 +100,17 @@ Route::middleware(['auth', 'verified', 'user.type:worker'])->prefix('messages')-
     Route::get('/', 'index')->name('index');
     Route::get('{conversation}', 'show')->name('show');
     Route::post('{conversation}', 'store')->middleware('throttle:30,1')->name('store');
+});
+
+// Mobility case after an accepted offer (Module 6, product rule 8).
+Route::middleware(['auth', 'verified', 'user.type:worker'])->prefix('cases')->name('worker.cases.')->controller(MobilityCaseController::class)->group(function () {
+    Route::get('{mobilityCase}', 'show')->name('show');
+});
+
+// Case documents: per-item sharing and the contract (product rule 6, D-079).
+Route::middleware(['auth', 'verified', 'user.type:worker'])->prefix('cases/{mobilityCase}/documents')->name('worker.cases.documents.')->controller(CaseDocumentController::class)->scopeBindings()->group(function () {
+    Route::post('{document}', 'share')->middleware('throttle:20,1')->name('share');
+    Route::put('{document}/visibility', 'visibility')->name('visibility');
+    Route::delete('{document}', 'revoke')->name('revoke');
+    Route::post('{document}/contract/{answer}', 'contract')->whereIn('answer', AnswerCaseContract::ANSWERS)->name('contract');
 });

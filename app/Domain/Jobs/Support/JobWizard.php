@@ -90,6 +90,8 @@ final class JobWizard
                 'destination_city' => self::text($validated['destination_city'] ?? null),
                 'joining_from' => $validated['joining_from'] ?? null,
                 'joining_to' => $validated['joining_to'] ?? null,
+                // Agency jobs only; the request prohibits it for employers (D-077).
+                ...(isset($validated['job_mandate_id']) ? ['job_mandate_id' => $validated['job_mandate_id']] : []),
             ]],
             'skills' => [
                 'attributes' => [

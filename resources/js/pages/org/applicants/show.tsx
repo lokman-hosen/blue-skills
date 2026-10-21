@@ -1,5 +1,5 @@
 import { Head, Link, router, useForm } from '@inertiajs/react';
-import { CalendarClock, FileLock2, Handshake, MessageSquare, Phone } from 'lucide-react';
+import { CalendarClock, FileLock2, Handshake, MessageSquare, Phone, Plane } from 'lucide-react';
 import type { FormEvent, ReactNode } from 'react';
 import { useState } from 'react';
 import { MatchSummary } from '@/components/bs/jobs/match-summary';
@@ -68,6 +68,14 @@ export default function ApplicantShow({
                     actions={
                         <div className="flex flex-wrap items-center gap-2">
                             <StatusChip status={applicant.status} />
+                            {applicant.mobilityCaseId && (
+                                <Button asChild className="min-h-11">
+                                    <Link href={org.cases.show(applicant.mobilityCaseId)}>
+                                        <Plane aria-hidden className="size-4" />
+                                        {t('mobility.open_case')}
+                                    </Link>
+                                </Button>
+                            )}
                             <Button asChild variant="outline" className="min-h-11">
                                 <Link href={org.applicants.messages(applicant.id)}>
                                     <MessageSquare aria-hidden className="size-4" />

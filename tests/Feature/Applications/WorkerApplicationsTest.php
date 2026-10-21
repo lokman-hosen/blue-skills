@@ -74,7 +74,7 @@ it('withdraws an application and any open offer', function () {
     $this->post(route('worker.applications.withdraw', $this->application))->assertSessionHasErrors('status');
 });
 
-it('accepts or declines the open offer', function (string $decision, string $state, OfferStatus $status) {
+it('accepts or declines the open offer', function (string $decision, string $state, OfferStatus $status, bool $opensCase) {
     $this->application->status->transitionTo(OfferStage::class);
     $offer = Offer::factory()->create(['application_id' => $this->application->id]);
 
@@ -83,10 +83,11 @@ it('accepts or declines the open offer', function (string $decision, string $sta
     expect($this->application->fresh()?->status)->toBeInstanceOf($state)
         ->and($offer->fresh()?->status)->toBe($status)
         ->and($offer->fresh()?->responded_at)->not->toBeNull()
-        ->and($this->application->mobilityCase)->toBeNull();
+        // Product rule 8: only an accepted offer opens a mobility case.
+        ->and($this->application->mobilityCase()->exists())->toBe($opensCase);
 })->with([
-    'accept' => ['accept', Accepted::class, OfferStatus::Accepted],
-    'decline' => ['decline', Declined::class, OfferStatus::Declined],
+    'accept' => ['accept', Accepted::class, OfferStatus::Accepted, true],
+    'decline' => ['decline', Declined::class, OfferStatus::Declined, false],
 ]);
 
 it('refuses to answer when no offer is open', function () {

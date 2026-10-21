@@ -11,7 +11,8 @@ use App\Domain\Jobs\Models\JobPosting;
 
 /**
  * What must be true before a job goes to review: the destination's mandatory disclosures are
- * filled in, and every worker-paid cost is allowed on the corridor (D-053, product rule 13).
+ * filled in, every worker-paid cost is allowed on the corridor (D-053, product rule 13) and an
+ * agency job is backed by a usable mandate that covers it (product rule 10).
  */
 final class JobCompliance
 {
@@ -40,7 +41,7 @@ final class JobCompliance
     public static function problems(JobPosting $job): array
     {
         $job->loadMissing(['costs', 'destinationCountry']);
-        $problems = [];
+        $problems = self::mandateProblems($job);
         $country = $job->destinationCountry->name ?? $job->destination_country_code;
 
         foreach (self::mandatoryFields($job->destination_country_code) as $field) {
@@ -92,5 +93,38 @@ final class JobCompliance
             ->value('value');
 
         return array_values(array_unique(array_filter(array_map(fn (string $key) => self::DISCLOSURES[$key] ?? null, $keys ?? []))));
+    }
+
+    /**
+     * An agency job needs a verified, in-date mandate from its employer, under a licence valid
+     * for the destination, covering the trade, destination and headcount (D-077).
+     *
+     * @return array<string, string>
+     */
+    public static function mandateProblems(JobPosting $job): array
+    {
+        if ($job->agency_organization_id === null) {
+            return [];
+        }
+
+        $mandate = $job->mandate;
+
+        if ($mandate === null) {
+            return ['job_mandate_id' => __('jobs.mandate.missing')];
+        }
+
+        if (! $mandate->isUsable() || $mandate->agency_organization_id !== $job->agency_organization_id) {
+            return ['job_mandate_id' => __('jobs.mandate.not_usable', ['reference' => $mandate->reference])];
+        }
+
+        if (! $mandate->covers($job->occupation_id, $job->destination_country_code)) {
+            return ['job_mandate_id' => __('jobs.mandate.out_of_scope', ['reference' => $mandate->reference])];
+        }
+
+        $left = $mandate->headcountLeft($job);
+
+        return $job->headcount > $left
+            ? ['headcount' => __('jobs.mandate.headcount', ['reference' => $mandate->reference, 'left' => $left])]
+            : [];
     }
 }

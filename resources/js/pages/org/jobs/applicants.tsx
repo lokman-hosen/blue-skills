@@ -5,6 +5,7 @@ import JobController from '@/actions/App/Http/Controllers/Organization/JobContro
 import { DataTable } from '@/components/bs/data-table';
 import type { DataTableColumn } from '@/components/bs/data-table';
 import { EmptyState } from '@/components/bs/empty-state';
+import { FilterPill } from '@/components/bs/filter-pill';
 import type { Paginated } from '@/components/bs/jobs/types';
 import { NativeSelect } from '@/components/bs/native-select';
 import { PageHeader } from '@/components/bs/page-header';
@@ -14,7 +15,6 @@ import { Button } from '@/components/ui/button';
 import { Label } from '@/components/ui/label';
 import { Spinner } from '@/components/ui/spinner';
 import { useTranslation } from '@/lib/i18n';
-import { cn } from '@/lib/utils';
 import org from '@/routes/org';
 
 type Applicant = App.Domain.Applications.Data.ApplicantListItemData;
@@ -172,7 +172,7 @@ export default function Applicants({
                 />
 
                 <nav aria-label={t('applicants.stages')} className="flex flex-wrap gap-1.5">
-                    <StageLink
+                    <FilterPill
                         href={org.jobs.applicants.url(job.code)}
                         active={stage === null}
                         label={t('applicants.all')}
@@ -181,7 +181,7 @@ export default function Applicants({
                     {filters
                         .filter((value) => (counts[value] ?? 0) > 0 || movable.includes(value))
                         .map((value) => (
-                            <StageLink
+                            <FilterPill
                                 key={value}
                                 href={org.jobs.applicants.url(job.code, {
                                     query: { stage: value },
@@ -252,36 +252,5 @@ export default function Applicants({
                 <Pager page={applicants} />
             </div>
         </>
-    );
-}
-
-function StageLink({
-    href,
-    active,
-    label,
-    count,
-}: {
-    href: string;
-    active: boolean;
-    label: string;
-    count: string;
-}) {
-    return (
-        <Link
-            href={href}
-            preserveScroll
-            aria-current={active ? 'page' : undefined}
-            className={cn(
-                'inline-flex min-h-11 items-center gap-1.5 rounded-full border px-3 text-sm font-semibold',
-                active
-                    ? 'border-brand bg-brand text-on-brand'
-                    : 'border-line bg-surface hover:border-brand/60',
-            )}
-        >
-            {label}
-            <span className={cn('text-xs tnum', active ? 'opacity-90' : 'text-muted')}>
-                {count}
-            </span>
-        </Link>
     );
 }
