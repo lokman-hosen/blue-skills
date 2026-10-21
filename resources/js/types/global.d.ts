@@ -21,6 +21,10 @@ declare module '@inertiajs/core' {
                 viewCases: boolean;
                 viewApplicants: boolean;
                 viewMandates: boolean;
+                viewCourses: boolean;
+                managePools: boolean;
+                viewPlacements: boolean;
+                browsePools: boolean;
             };
             locale: App.Domain.Config.Data.LocaleData;
             locales: App.Domain.Config.Data.LocaleOptionData[];

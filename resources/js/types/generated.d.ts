@@ -421,6 +421,48 @@ declare namespace App {
                     withdrawn: boolean;
                     withdrawnReason: string | null;
                 };
+                export type PlacementData = {
+                    memberId: string;
+                    name: string;
+                    passportReference: string;
+                    cohort: string;
+                    course: string;
+                    interest: {
+                        organization: string;
+                        job: string;
+                        sentAt: string;
+                    }[];
+                    applications: {
+                        job: string;
+                        jobCode: string;
+                        employer: string;
+                        status: App.Support.Data.StatusData;
+                        appliedAt: string;
+                        caseStatus: App.Support.Data.StatusData | null;
+                    }[];
+                    placed: boolean;
+                };
+                export type PoolMemberData = {
+                    profileId: string;
+                    name: string;
+                    passportReference: string;
+                    occupation: string | null;
+                    visibleToEmployers: boolean;
+                    hasSkillShow: boolean;
+                    attested: boolean;
+                };
+                export type TalentPoolData = {
+                    id: string;
+                    name: string;
+                    description: string | null;
+                    occupationId: string | null;
+                    occupation: string | null;
+                    institute: string;
+                    instituteVerified: boolean;
+                    publishedAt: string | null;
+                    members: number;
+                    visibleMembers: number;
+                };
                 export type WorkerCohortData = {
                     id: string;
                     institute: string;

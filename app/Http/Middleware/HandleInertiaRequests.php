@@ -8,6 +8,8 @@ use App\Domain\Config\Support\LocaleRegistry;
 use App\Domain\Config\Support\Translations;
 use App\Domain\Identity\Data\AuthUserData;
 use App\Domain\Identity\Models\User;
+use App\Domain\Institute\Models\Course;
+use App\Domain\Institute\Models\TalentPool;
 use App\Domain\Jobs\Models\JobMandate;
 use App\Domain\Messaging\Support\Unread;
 use App\Domain\Mobility\Models\MobilityCase;
@@ -74,6 +76,11 @@ class HandleInertiaRequests extends Middleware
                 'reviewCompliance' => $organization !== null && $user->can('reviewCompliance', $organization),
                 'viewCases' => $organization !== null && $user->can('viewAny', [MobilityCase::class, $organization]),
                 'viewMandates' => $organization !== null && $user->can('viewAny', [JobMandate::class, $organization]),
+                // Institutes (Module 7) and browsing their pools.
+                'viewCourses' => $organization !== null && $user->can('viewAny', [Course::class, $organization]),
+                'managePools' => $organization !== null && $user->can('viewAny', [TalentPool::class, $organization]),
+                'viewPlacements' => $organization !== null && $user->can('viewPlacements', $organization),
+                'browsePools' => $organization !== null && $user->can('browse', [TalentPool::class, $organization]),
                 'viewApplicants' => $organization !== null && $user->can('viewAny', [Application::class, $organization]),
             ],
             'organizations' => fn () => $user?->organizations

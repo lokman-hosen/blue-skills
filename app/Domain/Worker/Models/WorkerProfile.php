@@ -5,6 +5,7 @@ namespace App\Domain\Worker\Models;
 use App\Domain\Applications\Enums\ConsentPurpose;
 use App\Domain\Applications\Models\Application;
 use App\Domain\Applications\Models\Consent;
+use App\Domain\Applications\Models\JobInvitation;
 use App\Domain\Config\Models\Country;
 use App\Domain\Identity\Models\User;
 use App\Domain\Institute\Models\CohortMember;
@@ -189,6 +190,16 @@ class WorkerProfile extends Model implements HasMedia
     public function skillShows(): HasMany
     {
         return $this->hasMany(SkillShow::class);
+    }
+
+    /**
+     * Invitations to apply from employers and agencies (Module 4).
+     *
+     * @return HasMany<JobInvitation, $this>
+     */
+    public function jobInvitations(): HasMany
+    {
+        return $this->hasMany(JobInvitation::class);
     }
 
     /**

@@ -938,3 +938,19 @@ colour) and the appearance tabs use design tokens instead of the kit's neutral g
   profiles, application snapshots, the "verified evidence" talent filter and its count. Talent
   profiles and shared credentials now include passed assessments with their issuer.
 - Alerts: `institute_record` to the worker (attested, passed, not passed, withdrawn).
+
+### D-086 · Talent pools, employer interest and placements
+- Institute Owners and Placement Officers (`talent_pools.manage`) create pools (name, trade,
+  short description) and add graduates who accepted one of the institute's cohorts; anyone else
+  is refused. Leaving the institute takes a graduate out of its pools (D-084).
+- **Publishing** needs a verified institute. Verified employers and agencies whose member may
+  search talent see published pools of verified institutes under "Institute pools", with only the
+  graduates who chose to be found by employers (the talent-search rule), shown as talent cards
+  that open the usual talent profile and "invite to apply". Unpublished pools are refused. The
+  institute's pool page says how many of its graduates employers can actually see.
+- **Placements** (`placements.view`: Owners and Placement Officers) lists only graduates who
+  share their progress: invitations to apply from employers and agencies ("employer interest"),
+  their applications with status, and the mobility case status, counting a completed case as
+  joined. Graduates who don't share progress aren't listed at all.
+- Navigation shows Courses, Cohorts, Talent pools and Placements to the institute roles that can
+  open them, and "Institute pools" to employer and agency members who may browse.

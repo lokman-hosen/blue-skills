@@ -11,6 +11,7 @@ use App\Http\Controllers\Organization\CohortController;
 use App\Http\Controllers\Organization\ComplianceController;
 use App\Http\Controllers\Organization\CourseController;
 use App\Http\Controllers\Organization\GraduateRecordController;
+use App\Http\Controllers\Organization\InstitutePoolController;
 use App\Http\Controllers\Organization\InvitationController;
 use App\Http\Controllers\Organization\JobController;
 use App\Http\Controllers\Organization\LicenceController;
@@ -18,8 +19,10 @@ use App\Http\Controllers\Organization\MandateController;
 use App\Http\Controllers\Organization\MessageController;
 use App\Http\Controllers\Organization\MobilityCaseController;
 use App\Http\Controllers\Organization\OrganizationRegistrationController;
+use App\Http\Controllers\Organization\PlacementController;
 use App\Http\Controllers\Organization\ShortlistController;
 use App\Http\Controllers\Organization\TalentController;
+use App\Http\Controllers\Organization\TalentPoolController;
 use App\Http\Controllers\Organization\TeamController;
 use App\Http\Controllers\Organization\VerificationEvidenceController;
 use Illuminate\Support\Facades\Route;
@@ -155,6 +158,20 @@ Route::middleware(['auth', 'verified', 'user.type:org'])->prefix('org')->name('o
         Route::post('{cohort}/roster', 'roster')->middleware('throttle:20,1')->name('roster');
         Route::delete('{cohort}/members/{member}', 'removeMember')->scopeBindings()->name('members.destroy');
     });
+
+    // Talent pools (spec §8, D-082): institutes keep them, verified employers and agencies browse.
+    Route::controller(TalentPoolController::class)->prefix('pools')->name('pools.')->group(function () {
+        Route::get('/', 'index')->name('index');
+        Route::post('/', 'store')->name('store');
+        Route::get('{pool}', 'show')->name('show');
+        Route::put('{pool}', 'update')->name('update');
+        Route::post('{pool}/{state}', 'publish')->whereIn('state', ['publish', 'unpublish'])->name('publish');
+        Route::post('{pool}/members', 'addMembers')->name('members.store');
+        Route::delete('{pool}/members/{profile}', 'removeMember')->name('members.destroy');
+    });
+    Route::get('institute-pools', [InstitutePoolController::class, 'index'])->name('institute-pools.index');
+    Route::get('institute-pools/{pool}', [InstitutePoolController::class, 'show'])->name('institute-pools.show');
+    Route::get('placements', [PlacementController::class, 'index'])->name('placements.index');
 
     // Attestations and assessments for graduates who accepted (product rules 9 and 11).
     Route::controller(GraduateRecordController::class)->group(function () {

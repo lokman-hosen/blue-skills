@@ -59,6 +59,15 @@ class OrganizationPolicy
             && $this->hasPermission($user, $organization, Permission::ComplianceReview);
     }
 
+    /**
+     * An institute's placements page: graduates who share their progress (D-082).
+     */
+    public function viewPlacements(User $user, Organization $organization): bool
+    {
+        return $organization->type === OrganizationType::Institute
+            && $this->hasPermission($user, $organization, Permission::PlacementsView);
+    }
+
     private function hasPermission(User $user, Organization $organization, Permission $permission): bool
     {
         return OrganizationPermissions::allows($user, $organization, $permission);
