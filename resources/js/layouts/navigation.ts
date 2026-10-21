@@ -332,8 +332,20 @@ export const adminNav: NavGroup[] = [
     },
     {
         items: [
-            { key: 'configuration', label: 'nav.configuration', icon: SlidersHorizontal },
-            { key: 'taxonomy', label: 'nav.taxonomy', icon: Tags },
+            {
+                key: 'configuration',
+                label: 'nav.configuration',
+                icon: SlidersHorizontal,
+                href: admin.config.index(),
+                permission: 'config.manage',
+            },
+            {
+                key: 'taxonomy',
+                label: 'nav.taxonomy',
+                icon: Tags,
+                href: admin.taxonomy.index(),
+                permission: 'taxonomy.manage',
+            },
             {
                 key: 'staff',
                 label: 'nav.staff',

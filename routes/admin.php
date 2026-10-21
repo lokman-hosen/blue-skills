@@ -1,6 +1,8 @@
 <?php
 
+use App\Domain\Taxonomy\Actions\SaveTaxonomyItem;
 use App\Http\Controllers\Admin\AppealDecisionController;
+use App\Http\Controllers\Admin\ConfigController;
 use App\Http\Controllers\Admin\EvidenceReviewController;
 use App\Http\Controllers\Admin\JobReviewController;
 use App\Http\Controllers\Admin\MandateReviewController;
@@ -8,6 +10,7 @@ use App\Http\Controllers\Admin\OrganizationReviewController;
 use App\Http\Controllers\Admin\SkillShowModerationController;
 use App\Http\Controllers\Admin\StaffController;
 use App\Http\Controllers\Admin\StaffInvitationAcceptanceController;
+use App\Http\Controllers\Admin\TaxonomyController;
 use App\Http\Controllers\Admin\TrustCaseController;
 use App\Http\Controllers\Admin\TrustReportController;
 use Illuminate\Support\Facades\Route;
@@ -58,6 +61,22 @@ Route::middleware(['auth', 'verified', 'user.type:staff', 'staff.2fa'])->prefix(
             Route::post('{case}/close', 'close')->name('close');
         });
         Route::post('appeals/{appeal}/{decision}', AppealDecisionController::class)->whereIn('decision', ['uphold', 'overturn'])->name('appeals.decide');
+    });
+
+    // Configuration and taxonomy (Module 8, D-093).
+    Route::controller(ConfigController::class)->prefix('config')->name('config.')->group(function () {
+        Route::get('/', 'index')->name('index');
+        Route::get('countries/{country}', 'show')->name('countries.show');
+        Route::put('countries/{country}', 'update')->name('countries.update');
+        Route::put('countries/{country}/rules', 'rules')->name('countries.rules');
+        Route::put('languages/{language}', 'language')->name('languages.update');
+    });
+    Route::controller(TaxonomyController::class)->prefix('taxonomy')->name('taxonomy.')->group(function () {
+        Route::get('/', 'index')->name('index');
+        Route::get('occupations/{occupation}', 'show')->name('occupations.show');
+        Route::post('/', 'store')->name('store');
+        Route::put('{type}/{id}', 'update')->whereIn('type', SaveTaxonomyItem::TYPES)->name('update');
+        Route::delete('{type}/{id}', 'destroy')->whereIn('type', SaveTaxonomyItem::TYPES)->name('destroy');
     });
 
     // Worker evidence (Module 8, D-090).

@@ -1052,3 +1052,20 @@ colour) and the appearance tabs use design tokens instead of the kit's neutral g
   appeal at a time. A trust officer other than the one who suspended upholds or lifts it with a
   note the appellant sees (`appeal_decided`); lifting adds a restore action.
 - Workspace and worker home show a suspension banner linking to appeals.
+
+### D-093 · Configuration and taxonomy
+- **Configuration** (`/admin/config`, `config.manage`, Superusers): each country's currency,
+  whether workers come from it and jobs go to it, and the corridor legal review (who marked it,
+  when). Corridor rules are edited in structured form: who may recruit, the worker cost policy and
+  the notice shown to workers (text); languages, the cost categories a worker may lawfully pay,
+  the disclosures every job must make (the known disclosure keys only) and the documents a
+  mobility case asks for (lists); and the mobility stages (ordered rows with "done when the case
+  opens"). New stages get a key from their label; existing keys never change, and stage changes
+  apply to cases opened afterwards. Language status (offered / in review / planned) is set here.
+- **Taxonomy** (`/admin/taxonomy`, `taxonomy.manage`, Superusers): add and rename sectors,
+  occupations, specializations and skills with a name per launch language (English required,
+  others fall back to it). The slug is set from the English name once and never changes, so
+  filters and links keep working. Only items nothing uses can be removed (workers, jobs, courses,
+  pools, mandates, skills, SkillShows, job requirements); used ones are renamed instead.
+- Every configuration and taxonomy change is written to the activity log with old and new
+  values.

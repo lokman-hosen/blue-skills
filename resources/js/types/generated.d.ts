@@ -240,6 +240,16 @@ declare namespace App {
         }
         namespace Config {
             namespace Data {
+                export type CountryConfigData = {
+                    code: string;
+                    name: string;
+                    currency: string;
+                    source: boolean;
+                    destination: boolean;
+                    legalReviewedAt: string | null;
+                    legalReviewedBy: string | null;
+                    rules: Record<string, any> | null;
+                };
                 export type CountryOptionData = {
                     code: string;
                     name: string;
@@ -1007,6 +1017,14 @@ declare namespace App {
                     sector: string;
                     specializations: App.Domain.Taxonomy.Data.TaxonomyOptionData[];
                     skills: App.Domain.Taxonomy.Data.TaxonomyOptionData[];
+                };
+                export type TaxonomyItemData = {
+                    id: string;
+                    type: string;
+                    slug: string;
+                    names: Record<string, string>;
+                    usage: number;
+                    children: App.Domain.Taxonomy.Data.TaxonomyItemData[];
                 };
                 export type TaxonomyOptionData = {
                     id: string;
