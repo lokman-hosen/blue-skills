@@ -2,6 +2,7 @@
 
 use App\Domain\Jobs\Actions\ChangeJobAvailability;
 use App\Domain\Jobs\Support\JobWizard;
+use App\Http\Controllers\Organization\ApplicantController;
 use App\Http\Controllers\Organization\InvitationController;
 use App\Http\Controllers\Organization\JobController;
 use App\Http\Controllers\Organization\OrganizationRegistrationController;
@@ -47,8 +48,20 @@ Route::middleware(['auth', 'verified', 'user.type:org'])->prefix('org/jobs')->na
     Route::get('new', 'create')->name('create');
     Route::post('/', 'store')->name('store');
     Route::get('{job}', 'show')->name('show');
+    Route::get('{job}/applicants', [ApplicantController::class, 'index'])->name('applicants');
     Route::get('{job}/edit/{step}', 'edit')->whereIn('step', [...JobWizard::STEPS, 'preview'])->name('edit');
     Route::put('{job}/steps/{step}', 'update')->whereIn('step', JobWizard::STEPS)->name('update');
     Route::post('{job}/submit', 'submit')->middleware('throttle:20,1')->name('submit');
     Route::post('{job}/{action}', 'availability')->whereIn('action', ChangeJobAvailability::ACTIONS)->name('availability');
+});
+
+// Applicants, pipeline, interviews and offers (Module 4).
+Route::middleware(['auth', 'verified', 'user.type:org'])->prefix('org')->name('org.')->controller(ApplicantController::class)->group(function () {
+    Route::post('applicants/move', 'move')->middleware('throttle:60,1')->name('applicants.move');
+    Route::get('applicants/{application}', 'show')->name('applicants.show');
+    Route::post('applicants/{application}/reject', 'reject')->name('applicants.reject');
+    Route::put('applicants/{application}/assignee', 'assign')->name('applicants.assign');
+    Route::post('applicants/{application}/interviews', 'scheduleInterview')->name('applicants.interviews.store');
+    Route::put('interviews/{interview}', 'interviewOutcome')->name('interviews.update');
+    Route::post('applicants/{application}/offers', 'sendOffer')->name('applicants.offers.store');
 });

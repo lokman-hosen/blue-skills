@@ -6,6 +6,7 @@ use App\Domain\Applications\Data\StageData;
 use App\Domain\Applications\Models\Application;
 use App\Domain\Applications\Models\ApplicationStageEvent;
 use App\Domain\Applications\States\Application\Accepted;
+use App\Domain\Applications\States\Application\ApplicationState;
 use App\Domain\Applications\States\Application\Declined;
 use App\Domain\Applications\States\Application\Rejected;
 use App\Domain\Applications\States\Application\Withdrawn;
@@ -60,6 +61,19 @@ final class ApplicationStages
         }
 
         return $stages;
+    }
+
+    /**
+     * Pipeline stages the organization can move this applicant to now, in order.
+     *
+     * @return list<string>
+     */
+    public static function nextFor(Application $application): array
+    {
+        return array_values(array_filter(
+            self::MOVABLE,
+            fn (string $stage) => $application->status->canTransitionTo(ApplicationState::resolveStateClass($stage) ?? ''),
+        ));
     }
 
     /**

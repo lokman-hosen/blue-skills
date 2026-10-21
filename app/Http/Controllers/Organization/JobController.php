@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Organization;
 
+use App\Domain\Applications\Models\Application;
 use App\Domain\Jobs\Actions\ChangeJobAvailability;
 use App\Domain\Jobs\Actions\SaveJobStep;
 use App\Domain\Jobs\Actions\SubmitJobForReview;
@@ -37,7 +38,7 @@ class JobController extends Controller
         Gate::authorize('viewAny', [JobPosting::class, $organization]);
 
         $jobs = $organization->postedJobs()
-            ->with(['occupation', 'destinationCountry', 'verificationRequests'])
+            ->with(['occupation', 'destinationCountry', 'verificationRequests'])->withCount('applications')
             ->latest('updated_at')
             ->get();
 
@@ -94,7 +95,7 @@ class JobController extends Controller
 
     public function show(Request $request, JobPosting $job): Response
     {
-        $this->ownJob($request, $job);
+        $organization = $this->ownJob($request, $job);
         Gate::authorize('view', $job);
 
         $review = $job->latestReview();
@@ -102,6 +103,7 @@ class JobController extends Controller
         return Inertia::render('org/jobs/show', [
             'job' => JobTruthCardData::fromJob($job),
             'lastDecision' => $review !== null ? ReviewDecisionData::fromRequest($review) : null,
+            'applicants' => Gate::allows('viewAny', [Application::class, $organization]) ? $job->applications()->count() : null,
             'abilities' => [
                 'update' => Gate::allows('update', $job),
                 'submit' => Gate::allows('submit', $job),

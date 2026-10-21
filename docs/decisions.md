@@ -528,3 +528,30 @@ colour) and the appearance tabs use design tokens instead of the kit's neutral g
 - Product rule 5: when a job has a material change after the worker applied, the application
   shows "This job changed on …" with a link to the Truth Card until the worker taps "I have read
   it" (`job_change_seen_at`).
+
+### D-064 · Employer applicants and pipeline
+- `/org/jobs/{code}/applicants` is the job's pipeline: stage counts (all stages plus rejected,
+  withdrawn, declined), 50 applicants per page oldest first, each with trade, years, country,
+  "X of Y requirements met" from the snapshot, SkillShow shared, stage, next interview and who
+  handles it. A table on desktop, stacked cards on mobile. Members with `applications.manage`
+  select applicants and move them together; ones that cannot make the move are skipped and
+  counted in the message.
+- Organizations move applicants only to reviewed, qualified, shortlisted, interview, trade
+  assessment and selected. "Offer" happens by sending an offer; accepted, declined and withdrawn
+  are the worker's. Rejecting needs a `RejectionReason` (shown to the worker); the optional note
+  stays internal.
+- `/org/applicants/{id}` shows the snapshot projection with work history and certificates removed
+  once the worker stops sharing them, the approved SkillShow, the phone number and the passport
+  scan only while shared, the stage list, history (with who moved it and internal notes),
+  interviews, offers and the consent list. `SkillShowPolicy` and the private media route allow an
+  organization member only through an application whose consent for that item is active.
+- Any member can be assigned as "Handled by". Interviews (`interviews.manage`: owner, HR admin,
+  recruiter, hiring manager, case officer) are entered in the scheduler's own time zone, stored in
+  UTC, must be in the future, need an address in person; booking one moves the applicant to
+  Interview. Outcomes (passed, not passed, did not attend, cancelled) never move the stage on their
+  own (product rule 14).
+- Offers use the job's currency and pay period, cannot be below the Truth Card salary, need a
+  salary on the job, and only one can wait for an answer at a time. Rejecting or withdrawing
+  withdraws an open offer.
+- The organization dashboard adds applicants, new, shortlisted and upcoming interviews for members
+  who can see applications; job pages link to the pipeline with the applicant count.

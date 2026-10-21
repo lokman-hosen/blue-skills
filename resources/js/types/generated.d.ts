@@ -2,6 +2,50 @@ declare namespace App {
     namespace Domain {
         namespace Applications {
             namespace Data {
+                export type ApplicantCountsData = {
+                    total: number;
+                    new: number;
+                    shortlisted: number;
+                    interviewsUpcoming: number;
+                };
+                export type ApplicantData = {
+                    id: string;
+                    jobCode: string;
+                    jobTitle: string;
+                    status: App.Support.Data.StatusData;
+                    closed: boolean;
+                    appliedAt: string;
+                    snapshotTakenAt: string | null;
+                    snapshot: App.Domain.Applications.Data.ProfileSnapshotData | null;
+                    skillShow: App.Domain.Worker.Data.SkillShowData | null;
+                    phone: string | null;
+                    passportScanUrl: string | null;
+                    consents: App.Domain.Applications.Data.ConsentItemData[];
+                    stages: App.Domain.Applications.Data.StageData[];
+                    events: App.Domain.Applications.Data.StageEventData[];
+                    interviews: App.Domain.Applications.Data.InterviewData[];
+                    offers: App.Domain.Applications.Data.OfferData[];
+                    assignee: App.Domain.Applications.Data.MemberOptionData | null;
+                    nextStages: string[];
+                    canOffer: boolean;
+                    jobSalary: App.Support.Data.MoneyData | null;
+                    jobSalaryPeriod: App.Domain.Jobs.Enums.SalaryPeriod | null;
+                };
+                export type ApplicantListItemData = {
+                    id: string;
+                    name: string;
+                    reference: string;
+                    occupation: string | null;
+                    yearsExperience: number | null;
+                    currentCountry: string | null;
+                    status: App.Support.Data.StatusData;
+                    appliedAt: string;
+                    met: number;
+                    total: number;
+                    hasSkillShow: boolean;
+                    assigneeName: string | null;
+                    upcomingInterviewAt: string | null;
+                };
                 export type ConsentItemData = {
                     item: App.Domain.Applications.Enums.ApplicationConsentItem;
                     active: boolean;
@@ -18,6 +62,10 @@ declare namespace App {
                     instructions: string | null;
                     outcome: App.Domain.Applications.Enums.InterviewOutcome | null;
                     upcoming: boolean;
+                };
+                export type MemberOptionData = {
+                    id: string;
+                    name: string;
                 };
                 export type OfferData = {
                     id: string;
@@ -320,6 +368,7 @@ declare namespace App {
                     publishedAt: string | null;
                     lastDecision: App.Domain.Verification.Data.ReviewDecisionData | null;
                     editable: boolean;
+                    applicants: number | null;
                 };
                 export type JobListingData = {
                     code: string;

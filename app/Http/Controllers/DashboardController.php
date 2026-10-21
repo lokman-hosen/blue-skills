@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Domain\Applications\Data\ApplicantCountsData;
+use App\Domain\Applications\Models\Application;
 use App\Domain\Identity\Enums\UserType;
 use App\Domain\Identity\Models\User;
 use App\Domain\Jobs\Data\JobCountsData;
@@ -48,10 +50,13 @@ class DashboardController extends Controller
         return Inertia::render('org/dashboard', [
             'counts' => $canSeeJobs ? JobCountsData::forOrganization($organization) : null,
             'recentJobs' => $canSeeJobs
-                ? $organization->postedJobs()->with(['occupation', 'destinationCountry', 'verificationRequests'])->latest('updated_at')->limit(5)->get()
+                ? $organization->postedJobs()->with(['occupation', 'destinationCountry', 'verificationRequests'])->withCount('applications')->latest('updated_at')->limit(5)->get()
                     ->map(fn (JobPosting $job) => JobListItemData::fromJob($job))->values()->all()
                 : [],
             'canPostJobs' => Gate::forUser($user)->allows('create', [JobPosting::class, $organization]),
+            'applicantCounts' => Gate::forUser($user)->allows('viewAny', [Application::class, $organization])
+                ? ApplicantCountsData::forOrganization($organization)
+                : null,
         ]);
     }
 
