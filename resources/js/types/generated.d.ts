@@ -106,6 +106,22 @@ declare namespace App {
                     detail: string;
                     params: Record<string, string | number>;
                 };
+                export type ShortlistData = {
+                    id: string;
+                    name: string;
+                    jobCode: string | null;
+                    jobTitle: string | null;
+                    entries: number;
+                    createdBy: string | null;
+                    createdAt: string;
+                };
+                export type ShortlistEntryData = {
+                    id: string;
+                    note: string | null;
+                    addedAt: string;
+                    addedBy: string | null;
+                    worker: App.Domain.Applications.Data.TalentCardData | null;
+                };
                 export type StageData = {
                     key: string;
                     status: string;
@@ -119,6 +135,40 @@ declare namespace App {
                     reasonCode: string | null;
                     actorName: string | null;
                     note: string | null;
+                };
+                export type TalentCardData = {
+                    reference: string;
+                    name: string;
+                    headline: string | null;
+                    occupation: string | null;
+                    yearsExperience: number | null;
+                    currentCountry: string | null;
+                    countriesWorked: string[];
+                    skills: string[];
+                    languages: string[];
+                    passportStatus: App.Domain.Worker.Enums.PassportStatus | null;
+                    availability: App.Domain.Worker.Enums.Availability | null;
+                    verifiedEvidence: number;
+                    skillShowPosterUrl: string | null;
+                    match: App.Domain.Jobs.Data.MatchSummaryData | null;
+                };
+                export type TalentProfileData = {
+                    reference: string;
+                    name: string;
+                    headline: string | null;
+                    currentCountry: App.Domain.Config.Data.CountryOptionData | null;
+                    occupation: App.Domain.Taxonomy.Data.TaxonomyOptionData | null;
+                    specialization: App.Domain.Taxonomy.Data.TaxonomyOptionData | null;
+                    yearsExperience: number | null;
+                    passportStatus: App.Domain.Worker.Enums.PassportStatus | null;
+                    passportValidUntilYear: number | null;
+                    availability: App.Domain.Worker.Enums.Availability | null;
+                    skills: App.Domain.Worker.Data.WorkerSkillData[];
+                    languages: App.Domain.Worker.Data.WorkerLanguageData[];
+                    destinations: App.Domain.Config.Data.CountryOptionData[];
+                    experiences: App.Domain.Worker.Data.WorkerExperienceData[];
+                    credentials: App.Domain.Worker.Data.EvidenceSummaryData[];
+                    skillShow: App.Domain.Worker.Data.SkillShowData | null;
                 };
                 export type WorkerApplicationData = {
                     id: string;

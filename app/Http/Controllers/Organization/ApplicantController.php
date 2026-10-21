@@ -21,7 +21,6 @@ use App\Domain\Identity\Enums\Permission;
 use App\Domain\Identity\Models\User;
 use App\Domain\Jobs\Models\JobPosting;
 use App\Domain\Organization\Models\Organization;
-use App\Domain\Organization\Support\CurrentOrganization;
 use App\Domain\Organization\Support\OrganizationPermissions;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Organization\AssignApplicantRequest;
@@ -47,7 +46,7 @@ class ApplicantController extends Controller
     /** Pipeline filters: every stage, plus the end states. */
     public const FILTERS = [...ApplicationStages::ORDER, 'rejected', 'withdrawn', 'declined'];
 
-    public function __construct(private readonly CurrentOrganization $currentOrganization) {}
+    use ResolvesCurrentOrganization;
 
     public function index(Request $request, JobPosting $job): Response
     {
@@ -200,14 +199,6 @@ class ApplicantController extends Controller
         Inertia::flash('toast', ['type' => 'success', 'message' => __('applications.offer.sent')]);
 
         return to_route('org.applicants.show', $application);
-    }
-
-    private function organization(Request $request): Organization
-    {
-        $organization = $this->currentOrganization->resolve($request->user(), $request->session());
-        abort_if($organization === null, 403);
-
-        return $organization;
     }
 
     private function ownJob(Request $request, JobPosting $job): Organization

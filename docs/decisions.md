@@ -555,3 +555,25 @@ colour) and the appearance tabs use design tokens instead of the kit's neutral g
   withdraws an open offer.
 - The organization dashboard adds applicants, new, shortlisted and upcoming interviews for members
   who can see applications; job pages link to the pipeline with the applicant count.
+
+### D-065 · Talent search and shortlists
+- `/org/talent` is for members with `talent.search` (owner, HR admin, recruiter; agency owner and
+  case officer) of a verified organization; unverified organizations see a locked page that links
+  to verification. It lists only discoverable workers: "employers and agencies" visibility, an
+  active `discovery` consent, a trade, and an account that still exists.
+- Filters (spec §8): text (name, headline, Passport number, English skill names), trade, minimum
+  years, country of residence, countries worked, language, passport ready, available within 30
+  days, has issuer-verified evidence, has a SkillShow. Results are ordered by last profile update,
+  never by a score or video. Choosing one of the organization's jobs adds "X of Y requirements
+  met" to every card without reordering.
+- Cards and the profile page show name, trade, years, countries, skills, languages, passport
+  readiness, availability, credential titles with their own evidence states, and a SkillShow only
+  when it is approved and visible to employers and agencies. Never a phone number, document, photo
+  or address. Organizations contact workers by inviting them to apply (messaging in Module 5).
+- Applicants who did not choose to be found are not visible here, even to the organization they
+  applied to: their live profile could show items they did not share. They are handled in the
+  pipeline through their snapshot (product rule 6).
+- Shortlists (`shortlists.manage`: owner, HR admin, recruiter, hiring manager, agency owner, case
+  officer) are named per organization, optionally for one of its jobs, with a team note per
+  worker. Only discoverable workers can be added; if a worker later hides their profile the entry
+  stays without any details. Deleting a list is not told to workers.
