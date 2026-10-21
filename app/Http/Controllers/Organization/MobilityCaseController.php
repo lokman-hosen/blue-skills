@@ -5,12 +5,16 @@ namespace App\Http\Controllers\Organization;
 use App\Domain\Mobility\Actions\ChangeCaseStage;
 use App\Domain\Mobility\Actions\CloseMobilityCase;
 use App\Domain\Mobility\Actions\UpdateCaseNextAction;
+use App\Domain\Mobility\Data\CaseCountsData;
 use App\Domain\Mobility\Data\CaseDocumentData;
+use App\Domain\Mobility\Data\CaseListItemData;
 use App\Domain\Mobility\Data\MobilityCaseData;
 use App\Domain\Mobility\Enums\CaseClosedReason;
 use App\Domain\Mobility\Enums\CaseDocumentReturnReason;
 use App\Domain\Mobility\Models\MobilityCase;
 use App\Domain\Mobility\Models\MobilityCaseStage;
+use App\Domain\Mobility\States\MobilityCase\Open;
+use App\Domain\Mobility\Support\CaseQuery;
 use App\Domain\Verification\Enums\DocumentType;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Organization\ChangeCaseStageRequest;
@@ -31,6 +35,40 @@ use Inertia\Response;
 class MobilityCaseController extends Controller
 {
     use ResolvesCurrentOrganization;
+
+    /**
+     * Every case the organization runs or employs on (prototype a-cases), newest first, narrowed
+     * by state, what needs attention or a worker's name or case reference.
+     */
+    public function index(Request $request): Response
+    {
+        $organization = $this->organization($request);
+        Gate::authorize('viewAny', [MobilityCase::class, $organization]);
+
+        $state = in_array($request->string('state')->toString(), ['closed', 'all'], true) ? $request->string('state')->toString() : 'open';
+        $attention = in_array($request->string('attention')->toString(), CaseQuery::ATTENTION, true) ? $request->string('attention')->toString() : null;
+        $search = $request->string('q')->trim()->limit(80, '')->toString();
+
+        $query = CaseQuery::for($organization)
+            ->when($state === 'open', fn ($query) => $query->whereState('status', Open::class))
+            ->when($state === 'closed', fn ($query) => $query->whereNotState('status', Open::class))
+            ->when($attention !== null, fn ($query) => CaseQuery::needing($query, (string) $attention))
+            ->when($search !== '', fn ($query) => $query->where(fn ($query) => $query
+                ->where('reference', 'ilike', "%{$search}%")
+                ->orWhereHas('application.workerProfile.user', fn ($users) => $users->where('name', 'ilike', "%{$search}%"))));
+
+        $cases = $query
+            ->with(['application.job', 'application.workerProfile.user', 'stages', 'documents', 'managingOrganization'])
+            ->latest()
+            ->paginate(25)
+            ->withQueryString();
+
+        return Inertia::render('org/cases/index', [
+            'cases' => $cases->through(fn (MobilityCase $case) => CaseListItemData::fromCase($case, viewOnly: ! $organization->is($case->managingOrganization))),
+            'counts' => CaseCountsData::forOrganization($organization),
+            'filters' => ['state' => $state, 'attention' => $attention, 'q' => $search],
+        ]);
+    }
 
     public function show(Request $request, MobilityCase $mobilityCase): Response
     {

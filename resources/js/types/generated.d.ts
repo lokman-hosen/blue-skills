@@ -47,6 +47,13 @@ declare namespace App {
                     assigneeName: string | null;
                     upcomingInterviewAt: string | null;
                 };
+                export type CandidateListItemData = {
+                    applicant: App.Domain.Applications.Data.ApplicantListItemData;
+                    jobTitle: string;
+                    jobCode: string;
+                    destinationCountryCode: string;
+                    mobilityCaseId: string | null;
+                };
                 export type ConsentItemData = {
                     item: App.Domain.Applications.Enums.ApplicationConsentItem;
                     active: boolean;
@@ -433,6 +440,8 @@ declare namespace App {
                     lastDecision: App.Domain.Verification.Data.ReviewDecisionData | null;
                     editable: boolean;
                     applicants: number | null;
+                    employer: string | null;
+                    mandateReference: string | null;
                 };
                 export type JobListingData = {
                     code: string;
@@ -501,6 +510,12 @@ declare namespace App {
                 export type LanguageRequirementData = {
                     code: string;
                     level: string;
+                };
+                export type MandateCoverageData = {
+                    mandate: App.Domain.Jobs.Data.MandateData;
+                    placesLeft: number;
+                    liveJobs: number;
+                    expiringSoon: boolean;
                 };
                 export type MandateData = {
                     id: string;
@@ -649,11 +664,18 @@ declare namespace App {
                     | 'mandate_requested'
                     | 'mandate_answered'
                     | 'mandate_reviewed'
-                    | 'case_document_answered';
+                    | 'case_document_answered'
+                    | 'job_paused_mandate';
             }
         }
         namespace Mobility {
             namespace Data {
+                export type CaseCountsData = {
+                    open: number;
+                    documentsToCheck: number;
+                    overdue: number;
+                    onHold: number;
+                };
                 export type CaseDocumentData = {
                     id: string;
                     type: App.Domain.Verification.Enums.DocumentType;
@@ -679,6 +701,23 @@ declare namespace App {
                     actor: string | null;
                     note: string | null;
                     at: string;
+                };
+                export type CaseListItemData = {
+                    id: string;
+                    reference: string;
+                    workerName: string;
+                    jobTitle: string;
+                    jobCode: string;
+                    destinationCountryCode: string;
+                    status: App.Support.Data.StatusData;
+                    stage: string | null;
+                    onHold: boolean;
+                    progress: string[];
+                    dueOn: string | null;
+                    overdue: boolean;
+                    documentsToCheck: number;
+                    managedBy: string;
+                    viewOnly: boolean;
                 };
                 export type CaseStageData = {
                     id: string;

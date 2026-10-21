@@ -5,7 +5,9 @@ use App\Domain\Jobs\Support\JobWizard;
 use App\Domain\Mobility\Actions\ChangeCaseStage;
 use App\Domain\Mobility\Actions\DecideCaseDocument;
 use App\Http\Controllers\Organization\ApplicantController;
+use App\Http\Controllers\Organization\CandidateController;
 use App\Http\Controllers\Organization\CaseDocumentController;
+use App\Http\Controllers\Organization\ComplianceController;
 use App\Http\Controllers\Organization\InvitationController;
 use App\Http\Controllers\Organization\JobController;
 use App\Http\Controllers\Organization\LicenceController;
@@ -78,6 +80,7 @@ Route::middleware(['auth', 'verified', 'user.type:org'])->prefix('org')->name('o
 // Talent search and shortlists (Module 4).
 Route::middleware(['auth', 'verified', 'user.type:org'])->prefix('org')->name('org.')->group(function () {
     Route::get('talent', [TalentController::class, 'index'])->name('talent.index');
+    Route::get('candidates', [CandidateController::class, 'index'])->name('candidates.index');
     Route::get('talent/{profile:reference}', [TalentController::class, 'show'])->name('talent.show');
     Route::post('talent/{profile:reference}/invitations', [TalentController::class, 'invite'])->middleware('throttle:30,1')->name('talent.invite');
 
@@ -103,6 +106,7 @@ Route::middleware(['auth', 'verified', 'user.type:org'])->prefix('org')->name('o
 Route::middleware(['auth', 'verified', 'user.type:org'])->prefix('org')->name('org.')->group(function () {
     Route::get('licence', [LicenceController::class, 'edit'])->name('licence.edit');
     Route::put('licence', [LicenceController::class, 'update'])->name('licence.update');
+    Route::get('compliance', [ComplianceController::class, 'show'])->name('compliance');
 
     Route::controller(MandateController::class)->prefix('mandates')->name('mandates.')->group(function () {
         Route::get('/', 'index')->name('index');
@@ -116,6 +120,7 @@ Route::middleware(['auth', 'verified', 'user.type:org'])->prefix('org')->name('o
 
 // Mobility cases (Module 6, product rule 8).
 Route::middleware(['auth', 'verified', 'user.type:org'])->prefix('org/cases')->name('org.cases.')->controller(MobilityCaseController::class)->group(function () {
+    Route::get('/', 'index')->name('index');
     Route::get('{mobilityCase}', 'show')->name('show');
     Route::post('{mobilityCase}/close', 'close')->name('close');
     Route::scopeBindings()->group(function () {

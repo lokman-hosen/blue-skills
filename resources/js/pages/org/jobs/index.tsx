@@ -78,6 +78,28 @@ export default function OrgJobs({ jobs, canCreate, needsMandate }: Props) {
                                 </Link>
                             ),
                         },
+                        ...(jobs.some((job) => job.mandateReference !== null)
+                            ? [
+                                  {
+                                      key: 'mandate',
+                                      header: t('jobs.column.employer_mandate'),
+                                      cell: (row: App.Domain.Jobs.Data.JobListItemData) =>
+                                          row.mandateReference ? (
+                                              <span>
+                                                  {row.employer}
+                                                  <span
+                                                      className="block font-mono text-xs text-muted"
+                                                      dir="ltr"
+                                                  >
+                                                      {row.mandateReference}
+                                                  </span>
+                                              </span>
+                                          ) : (
+                                              <span className="text-muted">—</span>
+                                          ),
+                                  },
+                              ]
+                            : []),
                         {
                             key: 'destination',
                             header: t('jobs.field.destination'),

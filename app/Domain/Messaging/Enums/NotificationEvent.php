@@ -29,6 +29,7 @@ enum NotificationEvent: string
     case MandateAnswered = 'mandate_answered';
     case MandateReviewed = 'mandate_reviewed';
     case CaseDocumentAnswered = 'case_document_answered';
+    case JobPausedMandate = 'job_paused_mandate';
 
     public function forWorkers(): bool
     {
@@ -53,7 +54,7 @@ enum NotificationEvent: string
     {
         return [
             self::NewApplicants, self::ApplicationAnswered, self::OrganizationMessage,
-            self::MandateRequested, self::MandateAnswered, self::MandateReviewed, self::CaseDocumentAnswered,
+            self::MandateRequested, self::MandateAnswered, self::MandateReviewed, self::CaseDocumentAnswered, self::JobPausedMandate,
         ];
     }
 
@@ -92,6 +93,7 @@ enum NotificationEvent: string
             self::MandateAnswered => 'The employer answered your mandate request',
             self::MandateReviewed => 'BLUESKILLS reviewed your mandate',
             self::CaseDocumentAnswered => 'A worker shared or answered a case document',
+            self::JobPausedMandate => 'A job paused because its mandate lapsed',
         };
     }
 }

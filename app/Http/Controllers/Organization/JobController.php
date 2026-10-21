@@ -40,7 +40,7 @@ class JobController extends Controller
         Gate::authorize('viewAny', [JobPosting::class, $organization]);
 
         $jobs = $organization->postedJobs()
-            ->with(['occupation', 'destinationCountry', 'verificationRequests'])->withCount('applications')
+            ->with(['occupation', 'destinationCountry', 'verificationRequests', 'employer', 'mandate'])->withCount('applications')
             ->latest('updated_at')
             ->get();
 

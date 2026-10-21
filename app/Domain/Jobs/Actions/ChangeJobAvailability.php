@@ -9,6 +9,7 @@ use App\Domain\Jobs\States\Job\Closed;
 use App\Domain\Jobs\States\Job\JobState;
 use App\Domain\Jobs\States\Job\Paused;
 use App\Domain\Jobs\States\Job\Published;
+use App\Domain\Jobs\Support\JobCompliance;
 use Illuminate\Validation\ValidationException;
 use Spatie\ModelStates\Exceptions\CouldNotPerformTransition;
 
@@ -30,6 +31,11 @@ class ChangeJobAvailability
             'archive' => Archived::class,
             default => throw ValidationException::withMessages(['job' => __('jobs.availability.not_allowed')]),
         };
+
+        // An agency job goes live again only under a usable mandate (product rule 10, D-080).
+        if ($action === 'resume' && ($problems = JobCompliance::mandateProblems($job)) !== []) {
+            throw ValidationException::withMessages(['job' => reset($problems)]);
+        }
 
         try {
             $job->status->transitionTo($target);

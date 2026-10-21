@@ -1,5 +1,12 @@
 import { Head, Link } from '@inertiajs/react';
-import { BriefcaseBusiness, FileCheck, LayoutDashboard, Plus } from 'lucide-react';
+import {
+    BriefcaseBusiness,
+    CircleAlert,
+    FileCheck,
+    LayoutDashboard,
+    Plane,
+    Plus,
+} from 'lucide-react';
 import JobController from '@/actions/App/Http/Controllers/Organization/JobController';
 import { EmptyState } from '@/components/bs/empty-state';
 import { KpiTile } from '@/components/bs/kpi-tile';
@@ -15,6 +22,8 @@ type Props = {
     canPostJobs?: boolean;
     applicantCounts?: App.Domain.Applications.Data.ApplicantCountsData | null;
     mandateRequests?: number;
+    caseCounts?: App.Domain.Mobility.Data.CaseCountsData | null;
+    licenceAlert?: { state: 'invalid' | 'expiring'; expiresOn: string | null } | null;
 };
 
 /** Organization overview: where the jobs stand and the latest ones (prototype "Overview"). */
@@ -24,8 +33,10 @@ export default function OrgDashboard({
     canPostJobs = false,
     applicantCounts = null,
     mandateRequests = 0,
+    caseCounts = null,
+    licenceAlert = null,
 }: Props) {
-    const { t, formatNumber } = useTranslation();
+    const { t, formatDate, formatNumber } = useTranslation();
 
     return (
         <>
@@ -52,6 +63,68 @@ export default function OrgDashboard({
                         <FileCheck aria-hidden className="size-5 shrink-0 text-warn" />
                         {t('dashboard.mandate_requests', { count: formatNumber(mandateRequests) })}
                     </Link>
+                )}
+                {licenceAlert && (
+                    <Link
+                        href={org.licence.edit()}
+                        className={
+                            licenceAlert.state === 'invalid'
+                                ? 'flex items-center gap-3 rounded-xl border border-bad/40 bg-bad-soft px-4 py-3 text-sm font-semibold hover:border-bad'
+                                : 'flex items-center gap-3 rounded-xl border border-warn/40 bg-warn-soft px-4 py-3 text-sm font-semibold hover:border-warn'
+                        }
+                    >
+                        <CircleAlert
+                            aria-hidden
+                            className={`size-5 shrink-0 ${licenceAlert.state === 'invalid' ? 'text-bad' : 'text-warn'}`}
+                        />
+                        {licenceAlert.state === 'invalid'
+                            ? t('dashboard.licence.invalid')
+                            : t('dashboard.licence.expiring', {
+                                  date: licenceAlert.expiresOn
+                                      ? formatDate(licenceAlert.expiresOn)
+                                      : '',
+                              })}
+                    </Link>
+                )}
+                {caseCounts && caseCounts.open + caseCounts.documentsToCheck > 0 && (
+                    <section className="flex flex-col gap-3">
+                        <div className="flex items-center justify-between gap-2">
+                            <h2 className="flex items-center gap-1.5 eyebrow text-muted">
+                                <Plane aria-hidden className="size-4" />
+                                {t('nav.mobility')}
+                            </h2>
+                            <Link
+                                href={org.cases.index()}
+                                className="inline-flex min-h-11 items-center text-sm font-semibold text-brand"
+                            >
+                                {t('dashboard.cases.all')}
+                            </Link>
+                        </div>
+                        <div className="grid grid-cols-2 gap-3 lg:grid-cols-4">
+                            {(
+                                [
+                                    ['open', null, caseCounts.open],
+                                    ['documents', 'documents', caseCounts.documentsToCheck],
+                                    ['overdue', 'overdue', caseCounts.overdue],
+                                    ['on_hold', 'on_hold', caseCounts.onHold],
+                                ] as const
+                            ).map(([key, attention, value]) => (
+                                <Link
+                                    key={key}
+                                    href={org.cases.index(
+                                        attention ? { query: { attention } } : undefined,
+                                    )}
+                                    className="rounded-xl focus-visible:ring-[3px] focus-visible:ring-ring/50 focus-visible:outline-none"
+                                >
+                                    <KpiTile
+                                        label={t(`dashboard.cases.${key}`)}
+                                        value={formatNumber(value)}
+                                        className="h-full hover:border-brand/60"
+                                    />
+                                </Link>
+                            ))}
+                        </div>
+                    </section>
                 )}
                 {counts ? (
                     <>

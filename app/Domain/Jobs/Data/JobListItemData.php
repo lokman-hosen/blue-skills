@@ -28,6 +28,9 @@ class JobListItemData extends Data
         public bool $editable,
         /** Set when the list query counted applications. */
         public ?int $applicants = null,
+        /** Agency job orders: the employer and the mandate behind the job (D-080). */
+        public ?string $employer = null,
+        public ?string $mandateReference = null,
     ) {}
 
     public static function fromJob(JobPosting $job): self
@@ -49,6 +52,8 @@ class JobListItemData extends Data
             lastDecision: $review !== null ? ReviewDecisionData::fromRequest($review) : null,
             editable: $job->isEditable(),
             applicants: $job->getAttribute('applications_count'),
+            employer: $job->agency_organization_id !== null ? $job->employer?->display_name : null,
+            mandateReference: $job->mandate?->reference,
         );
     }
 }

@@ -50,6 +50,8 @@ export type NavLink = {
     external?: boolean;
     /** Staff permission required to see the item. */
     permission?: string;
+    /** Organization ability (shared `organizationAbilities`) required to see the item. */
+    ability?: 'reviewCompliance' | 'viewCases' | 'viewApplicants';
 };
 
 /** Unread count shown beside a navigation item, from the shared `unread` prop. */
@@ -105,6 +107,13 @@ export const orgNav: Record<App.Domain.Organization.Enums.OrganizationType, NavG
                     icon: Star,
                     href: org.shortlists.index(),
                 },
+                {
+                    key: 'mobility',
+                    label: 'nav.mobility',
+                    icon: Plane,
+                    href: org.cases.index(),
+                    ability: 'viewCases',
+                },
                 { key: 'projects', label: 'nav.projects', icon: FolderKanban },
                 {
                     key: 'messages',
@@ -137,10 +146,33 @@ export const orgNav: Record<App.Domain.Organization.Enums.OrganizationType, NavG
                     icon: FileCheck,
                     href: org.mandates.index(),
                 },
-                { key: 'job_orders', label: 'nav.job_orders', icon: BriefcaseBusiness },
-                { key: 'candidates', label: 'nav.candidates', icon: UsersRound },
-                { key: 'mobility', label: 'nav.mobility', icon: Plane },
-                { key: 'compliance', label: 'nav.compliance', icon: ClipboardCheck },
+                {
+                    key: 'job_orders',
+                    label: 'nav.job_orders',
+                    icon: BriefcaseBusiness,
+                    href: org.jobs.index(),
+                },
+                {
+                    key: 'candidates',
+                    label: 'nav.candidates',
+                    icon: UsersRound,
+                    href: org.candidates.index(),
+                    ability: 'viewApplicants',
+                },
+                {
+                    key: 'mobility',
+                    label: 'nav.mobility',
+                    icon: Plane,
+                    href: org.cases.index(),
+                    ability: 'viewCases',
+                },
+                {
+                    key: 'compliance',
+                    label: 'nav.compliance',
+                    icon: ClipboardCheck,
+                    href: org.compliance(),
+                    ability: 'reviewCompliance',
+                },
                 {
                     key: 'messages',
                     label: 'nav.messages',

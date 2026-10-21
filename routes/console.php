@@ -1,5 +1,6 @@
 <?php
 
+use App\Domain\Jobs\Actions\PauseJobsUnderLapsedMandates;
 use App\Domain\Messaging\Actions\ReleaseHeldMessages;
 use App\Domain\Messaging\Actions\SendNewApplicantDigests;
 use App\Domain\Worker\Actions\PruneVoiceRecordings;
@@ -29,3 +30,10 @@ Artisan::command('notifications:release-held', function (ReleaseHeldMessages $re
 })->purpose('Send WhatsApp and SMS alerts held during workers\' quiet hours (Module 5)');
 
 Schedule::command('notifications:release-held')->everyFiveMinutes()->onOneServer()->withoutOverlapping();
+
+Artisan::command('jobs:pause-lapsed-mandates', function (PauseJobsUnderLapsedMandates $pause) {
+    $this->info("Paused {$pause->handle()} agency jobs whose mandate lapsed.");
+})->purpose('Expire mandates past their end date and pause live agency jobs they no longer back (D-080)');
+
+// Just after midnight in the Gulf, so a mandate ending yesterday stops backing jobs today.
+Schedule::command('jobs:pause-lapsed-mandates')->dailyAt('20:30')->onOneServer();

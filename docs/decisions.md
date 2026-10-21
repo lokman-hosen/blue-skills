@@ -827,3 +827,28 @@ colour) and the appearance tabs use design tokens instead of the kit's neutral g
   accepted, sent back) and `case_document_answered` to the case handler, else everyone at the
   managing organization with `mobility.manage` (shared, stopped sharing, contract confirmed or
   queried).
+
+### D-080 · Agency workspace and mobility lists
+- **Mobility** (`/org/cases`, agencies and employers): every case the organization runs or
+  employs on, open by default, with closed / all, a search by worker name or case number, and
+  shortcuts to what needs attention: shared documents waiting for a check, current stages past
+  their due date, and stages on hold. Each row shows the current stage, a progress bar, the due
+  date and who runs the case; cases an employer only follows are marked as such. Employers get the
+  same list in their navigation.
+- **Job orders** for agencies is the jobs list; agency jobs show the employer and the mandate.
+- **Candidates** (`/org/candidates`): applicants across all of the organization's jobs, from their
+  application snapshots, filtered by job, stage and name or Skill Passport number, with a link to
+  the mobility case once one is open. Same projection as the per-job pipeline (no phone numbers or
+  documents).
+- **Compliance** (`/org/compliance`, Agency Owner and Compliance Reviewer): licence validity (warns
+  60 days before expiry), each verified, expired or revoked mandate with places used/left, live
+  jobs and a 30-day end warning, job orders without a usable mandate, and case attention counts.
+  The agency dashboard warns about the licence and shows mobility tiles; navigation hides links a
+  member can't open (shared `organizationAbilities`).
+- **Lapsed mandates (completes D-077):** a daily job (`jobs:pause-lapsed-mandates`, 00:30 Gulf
+  time) marks verified mandates past their end date as expired and pauses live agency jobs whose
+  mandate can no longer back them (expired, revoked, licence lapsed or not covering the
+  destination). Only the mandate's validity triggers a pause; a headcount overrun is still caught
+  at the next save or review. The agency's members who manage jobs get `job_paused_mandate`; the
+  change is in the activity log with the reason. Resuming an agency job runs the same mandate
+  check, so it stays paused until a usable mandate backs it.

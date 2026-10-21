@@ -2,12 +2,14 @@
 
 namespace App\Http\Middleware;
 
+use App\Domain\Applications\Models\Application;
 use App\Domain\Config\Data\LocaleData;
 use App\Domain\Config\Support\LocaleRegistry;
 use App\Domain\Config\Support\Translations;
 use App\Domain\Identity\Data\AuthUserData;
 use App\Domain\Identity\Models\User;
 use App\Domain\Messaging\Support\Unread;
+use App\Domain\Mobility\Models\MobilityCase;
 use App\Domain\Organization\Data\OrganizationSummaryData;
 use App\Domain\Organization\Models\Organization;
 use App\Domain\Organization\Support\CurrentOrganization;
@@ -68,6 +70,9 @@ class HandleInertiaRequests extends Middleware
             'organizationAbilities' => [
                 'update' => $organization !== null && $user->can('update', $organization),
                 'manageTeam' => $organization !== null && $user->can('manageTeam', $organization),
+                'reviewCompliance' => $organization !== null && $user->can('reviewCompliance', $organization),
+                'viewCases' => $organization !== null && $user->can('viewAny', [MobilityCase::class, $organization]),
+                'viewApplicants' => $organization !== null && $user->can('viewAny', [Application::class, $organization]),
             ],
             'organizations' => fn () => $user?->organizations
                 ->map(fn (Organization $organization) => OrganizationSummaryData::fromOrganization($organization))
