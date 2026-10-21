@@ -1053,6 +1053,17 @@ declare namespace App {
                     submittedAt: string;
                     decidedAt: string | null;
                 };
+                export type AuditEntryData = {
+                    id: string | number;
+                    at: string;
+                    area: string | null;
+                    event: string;
+                    actor: string | null;
+                    actorEmail: string | null;
+                    subjectType: string | null;
+                    subjectId: string | null;
+                    properties: string;
+                };
                 export type ReportData = {
                     id: string;
                     category: App.Domain.Trust.Enums.ReportCategory;

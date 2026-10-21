@@ -19,6 +19,9 @@ use App\Domain\Mobility\Data\CaseCountsData;
 use App\Domain\Mobility\Models\MobilityCase;
 use App\Domain\Organization\Models\Organization;
 use App\Domain\Taxonomy\Models\Skill;
+use App\Domain\Trust\Models\Appeal;
+use App\Domain\Trust\Models\Report;
+use App\Domain\Trust\Models\TrustCase;
 use App\Domain\Verification\Models\Document;
 use Database\Seeders\CountrySeeder;
 use Database\Seeders\DatabaseSeeder;
@@ -88,6 +91,13 @@ it('seeds the reference data and the sample world', function () {
         ->assessmentsPassed->toBe(1)
         ->and(Cohort::query()->where('invite_code', 'MTTCEW26')->exists())->toBeTrue()
         ->and($meghna->talentPools()->whereNotNull('published_at')->first()?->workers()->count())->toBe(2);
+
+    // Trust: reports waiting (Module 3's and Sunil's), a case that suspended JP-IT-0007 with an appeal waiting (D-094).
+    $case = TrustCase::query()->where('reference', 'TC-2026-0001')->firstOrFail();
+    expect(Report::query()->whereState('status', 'open')->count())->toBe(2)
+        ->and($case->reports()->count())->toBe(2)
+        ->and(JobPosting::query()->where('public_code', 'JP-IT-0007')->firstOrFail()->status->getValue())->toBe('suspended')
+        ->and(Appeal::query()->where('status', 'submitted')->count())->toBe(1);
 });
 
 it('creates the local superuser with the superuser staff role', function () {

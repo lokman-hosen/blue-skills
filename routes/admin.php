@@ -2,6 +2,7 @@
 
 use App\Domain\Taxonomy\Actions\SaveTaxonomyItem;
 use App\Http\Controllers\Admin\AppealDecisionController;
+use App\Http\Controllers\Admin\AuditLogController;
 use App\Http\Controllers\Admin\ConfigController;
 use App\Http\Controllers\Admin\EvidenceReviewController;
 use App\Http\Controllers\Admin\JobReviewController;
@@ -62,6 +63,8 @@ Route::middleware(['auth', 'verified', 'user.type:staff', 'staff.2fa'])->prefix(
         });
         Route::post('appeals/{appeal}/{decision}', AppealDecisionController::class)->whereIn('decision', ['uphold', 'overturn'])->name('appeals.decide');
     });
+
+    Route::get('audit', [AuditLogController::class, 'index'])->name('audit.index');
 
     // Configuration and taxonomy (Module 8, D-093).
     Route::controller(ConfigController::class)->prefix('config')->name('config.')->group(function () {

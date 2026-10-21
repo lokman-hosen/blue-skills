@@ -130,7 +130,7 @@ class SetSuspension
     {
         return TrustAction::query()
             ->where('subject_type', $job->getMorphClass())->where('subject_id', $job->id)
-            ->latest()->orderByDesc('id')->value('action') === TrustActionType::Suspend->value;
+            ->latest()->orderByDesc('id')->first()?->action === TrustActionType::Suspend;
     }
 
     private function tellApplicants(JobPosting $job): void

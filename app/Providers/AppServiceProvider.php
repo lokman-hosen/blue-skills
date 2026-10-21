@@ -126,6 +126,7 @@ class AppServiceProvider extends ServiceProvider
         Gate::define('manageStaff', fn (User $user): bool => $user->hasStaffPermission(Permission::StaffManage->value));
         // Corridor rules, countries and languages; the occupation taxonomy (D-093).
         Gate::define('manageConfig', fn (User $user): bool => $user->hasStaffPermission(Permission::ConfigManage->value));
+        Gate::define('viewAuditLog', fn (User $user): bool => $user->hasStaffPermission(Permission::StaffManage->value));
         Gate::define('manageTaxonomy', fn (User $user): bool => $user->hasStaffPermission(Permission::TaxonomyManage->value));
     }
 

@@ -1069,3 +1069,19 @@ colour) and the appearance tabs use design tokens instead of the kit's neutral g
   pools, mandates, skills, SkillShows, job requirements); used ones are renamed instead.
 - Every configuration and taxonomy change is written to the activity log with old and new
   values.
+
+### D-094 · Audit log, sample data and review fixes
+- **Audit log** (`/admin/audit`, Superusers): every activity-log entry, newest first, filtered by
+  area (trust, verification, config, taxonomy, jobs…), person (name or email), record ID and
+  date range, with the recorded before/after values. A freshly seeded database starts with an
+  empty log because seeding writes records directly; real actions fill it.
+- **Sample data:** a report on UAE-EL-0001 waiting (Sunil: "asked for 20,000 taka"); case
+  TC-2026-0001 that suspended JP-IT-0007 over a misleading dormitory cost, with two reports, an
+  evidence note and Global Facilities' appeal waiting; a dismissed duplicate report; the UAE
+  corridor marked legally reviewed. Rahim's passport scan and work reference wait in the worker
+  documents queue.
+- **Review fix:** "was this job suspended on its own?" compared an enum with a string and was
+  always false, so appeals pages missed suspended jobs and restoring an organization would have
+  restored jobs suspended separately. Fixed with a regression test.
+- **Deploy notes for Module 8:** run migrations; schedule `evidence:expire` (daily) alongside the
+  existing tasks; mark each live corridor's legal review in Configuration.

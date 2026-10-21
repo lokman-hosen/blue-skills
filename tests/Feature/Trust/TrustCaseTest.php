@@ -145,3 +145,19 @@ it('keeps case evidence files to trust staff', function () {
     $this->actingAs(staffUser(StaffRole::VerificationOfficer))->get($url)->assertForbidden();
     $this->actingAs(staffUser(StaffRole::VerificationOfficer))->get(route('admin.trust.cases.show', $case))->assertForbidden();
 });
+
+it('keeps a job suspended on its own when its organization is restored, and lets the employer appeal it', function () {
+    $other = JobPosting::factory()->published()->create(['organization_id' => $this->employer->id, 'employer_organization_id' => $this->employer->id]);
+    $jobCase = TrustCase::factory()->create(['subject_type' => 'job', 'subject_id' => $other->id]);
+    $orgCase = TrustCase::factory()->create(['subject_type' => 'organization', 'subject_id' => $this->employer->id]);
+
+    $this->actingAs($this->officer)->post(route('admin.trust.cases.actions.store', [$jobCase, 'suspend']), ['reason' => 'misleading_conditions', 'note' => 'Wrong dormitory cost.']);
+    actingInOrg($this->owner, $this->employer)->get(route('appeals.index'))
+        ->assertInertia(fn (Assert $page) => $page->has('suspensions', 1)->where('suspensions.0.subject', fn ($label) => str_contains($label, $other->public_code)));
+
+    $this->actingAs($this->officer)->post(route('admin.trust.cases.actions.store', [$orgCase, 'suspend']), ['reason' => 'fake_job', 'note' => 'Checking registration.']);
+    $this->post(route('admin.trust.cases.actions.store', [$orgCase, 'restore']), ['reason' => 'not_a_breach', 'note' => 'Registration fine.']);
+
+    expect($this->job->fresh()?->status->equals(Published::class))->toBeTrue()
+        ->and($other->fresh()?->status->equals(JobSuspended::class))->toBeTrue();
+});

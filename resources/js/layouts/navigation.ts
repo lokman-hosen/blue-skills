@@ -19,6 +19,7 @@ import {
     MessageSquare,
     Palette,
     Plane,
+    ScrollText,
     Search,
     Settings,
     ShieldAlert,
@@ -345,6 +346,13 @@ export const adminNav: NavGroup[] = [
                 icon: Tags,
                 href: admin.taxonomy.index(),
                 permission: 'taxonomy.manage',
+            },
+            {
+                key: 'audit',
+                label: 'nav.audit',
+                icon: ScrollText,
+                href: admin.audit.index(),
+                permission: 'staff.manage',
             },
             {
                 key: 'staff',

@@ -23,8 +23,10 @@ use App\Domain\Applications\States\Application\Reviewed;
 use App\Domain\Applications\States\Application\Shortlisted;
 use App\Domain\Applications\Support\ShareableItems;
 use App\Domain\Config\Enums\CountryRuleKey;
+use App\Domain\Config\Models\Country;
 use App\Domain\Config\Models\CountryRule;
 use App\Domain\Identity\Enums\OrganizationRole;
+use App\Domain\Identity\Enums\Permission;
 use App\Domain\Identity\Enums\StaffRole;
 use App\Domain\Identity\Enums\UserType;
 use App\Domain\Identity\Models\User;
@@ -49,6 +51,7 @@ use App\Domain\Jobs\Models\JobPosting;
 use App\Domain\Jobs\States\Job\Draft;
 use App\Domain\Jobs\States\Job\Paused;
 use App\Domain\Jobs\States\Job\Published;
+use App\Domain\Jobs\States\Job\Suspended as JobSuspended;
 use App\Domain\Jobs\States\Job\UnderReview;
 use App\Domain\Messaging\Enums\DeliveryChannel;
 use App\Domain\Messaging\Enums\DeliveryStatus;
@@ -73,9 +76,20 @@ use App\Domain\Organization\States\Verification\Verified;
 use App\Domain\Taxonomy\Models\Occupation;
 use App\Domain\Taxonomy\Models\Skill;
 use App\Domain\Taxonomy\Models\Specialization;
+use App\Domain\Trust\Enums\AppealStatus;
+use App\Domain\Trust\Enums\CasePriority;
 use App\Domain\Trust\Enums\ReportCategory;
+use App\Domain\Trust\Enums\ReportOutcome;
+use App\Domain\Trust\Enums\TrustActionType;
+use App\Domain\Trust\Enums\TrustReason;
+use App\Domain\Trust\Models\Appeal;
 use App\Domain\Trust\Models\Report;
+use App\Domain\Trust\Models\TrustAction;
+use App\Domain\Trust\Models\TrustCase;
+use App\Domain\Trust\States\Report\Dismissed as DismissedReport;
+use App\Domain\Trust\States\Report\Investigating as InvestigatingReport;
 use App\Domain\Trust\States\Report\Open as OpenReport;
+use App\Domain\Trust\States\TrustCase\ActionTaken;
 use App\Domain\Verification\Enums\DocumentType;
 use App\Domain\Verification\Enums\EvidenceType;
 use App\Domain\Verification\Enums\VerificationDecision;
@@ -137,6 +151,7 @@ class SampleWorldSeeder extends Seeder
         $this->seedApplicationsAndCases();
         $this->seedAgencyWorkspace();
         $this->seedInstitute();
+        $this->seedTrust();
         $this->seedQueues();
     }
 
@@ -1194,6 +1209,85 @@ class SampleWorldSeeder extends Seeder
         ]);
 
         $this->alert($nusrat, NotificationEvent::GraduateJoined, ['worker' => 'Karim Ahmed', 'cohort' => $cohort->name, 'course' => $course->title], '/org/cohorts/'.$cohort->id, '2026-07-03 08:30', read: false);
+    }
+
+    /**
+     * Module 8 (D-094): a report waiting on UAE-EL-0001, a case that suspended JP-IT-0007 with the
+     * employer's appeal waiting for another officer, a dismissed report, and the UAE corridor
+     * marked as legally reviewed.
+     */
+    private function seedTrust(): void
+    {
+        $haddad = User::query()->where('email', 'l.haddad@blueskills.test')->firstOrFail();
+        $superuser = User::query()->where('type', UserType::Staff)->get()->first(fn (User $staff) => $staff->hasStaffPermission(Permission::ConfigManage->value));
+        $japan = $this->jobs['JP-IT-0007'];
+
+        Report::query()->create([
+            'reporter_user_id' => $this->workers['sunil']->user_id,
+            'subject_type' => 'job', 'subject_id' => $this->jobs['UAE-EL-0001']->id,
+            'category' => ReportCategory::UnauthorizedPayment,
+            'description' => 'Someone called me saying they work for this agency and asked for 20,000 taka for visa processing.',
+            'status' => OpenReport::class,
+            'created_at' => '2026-10-20 09:15', 'updated_at' => '2026-10-20 09:15',
+        ]);
+
+        Report::query()->create([
+            'reporter_user_id' => $this->workers['arjun']->user_id,
+            'subject_type' => 'job', 'subject_id' => $this->jobs['AE-MT-0115']->id,
+            'category' => ReportCategory::Other,
+            'description' => 'I think this is posted twice.',
+            'status' => DismissedReport::class,
+            'outcome' => ReportOutcome::NoAction, 'reason_code' => TrustReason::Duplicate,
+            'decided_by' => $haddad->id, 'decided_at' => '2026-10-15 10:00',
+            'created_at' => '2026-10-14 08:00', 'updated_at' => '2026-10-15 10:00',
+        ]);
+
+        $case = TrustCase::query()->create([
+            'reference' => 'TC-2026-0001',
+            'subject_type' => 'job', 'subject_id' => $japan->id,
+            'category' => ReportCategory::MisleadingSalary,
+            'priority' => CasePriority::High,
+            'status' => ActionTaken::class,
+            'summary' => 'Two workers say the dormitory cost is far higher than the Truth Card shows.',
+            'assigned_to' => $haddad->id, 'opened_by' => $haddad->id,
+            'created_at' => '2026-10-16 07:00', 'updated_at' => '2026-10-17 09:00',
+        ]);
+
+        foreach ([['nimal', '2026-10-15 12:00'], ['karim', '2026-10-16 06:30']] as [$key, $at]) {
+            Report::query()->create([
+                'reporter_user_id' => $this->workers[$key]->user_id,
+                'subject_type' => 'job', 'subject_id' => $japan->id,
+                'category' => ReportCategory::MisleadingSalary,
+                'description' => 'The recruiter said the dormitory costs ¥45,000 a month, not ¥20,000 as shown.',
+                'status' => InvestigatingReport::class,
+                'trust_case_id' => $case->id,
+                'created_at' => $at, 'updated_at' => $at,
+            ]);
+        }
+
+        $case->notes()->create(['author_id' => $haddad->id, 'body' => 'Called the employer: they confirm the dormitory rate rose in September and the job was not updated.', 'created_at' => '2026-10-17 08:30', 'updated_at' => '2026-10-17 08:30']);
+
+        $japan->update(['status' => JobSuspended::class]);
+        $suspension = TrustAction::query()->create([
+            'trust_case_id' => $case->id,
+            'subject_type' => 'job', 'subject_id' => $japan->id,
+            'action' => TrustActionType::Suspend,
+            'reason_code' => TrustReason::MisleadingConditions,
+            'note' => 'Suspended until the Truth Card shows the real dormitory cost.',
+            'actor_id' => $haddad->id,
+            'created_at' => '2026-10-17 09:00', 'updated_at' => '2026-10-17 09:00',
+        ]);
+        Appeal::query()->create([
+            'trust_action_id' => $suspension->id,
+            'appellant_user_id' => $this->orgUsers['hr@global-facilities.test']->id,
+            'statement' => 'We have corrected the dormitory cost on our side and will resubmit the job with the new figure. Please lift the suspension.',
+            'status' => AppealStatus::Submitted,
+            'created_at' => '2026-10-18 02:00', 'updated_at' => '2026-10-18 02:00',
+        ]);
+
+        $this->alert($this->workers['nimal']->user, NotificationEvent::JobSuspended, ['job' => $japan->title, 'org' => 'Global Facilities'], '/applications', '2026-10-17 09:00', read: false);
+
+        Country::query()->where('code', 'AE')->update(['legal_reviewed_at' => '2026-10-01 06:00', 'legal_reviewed_by' => $superuser?->id]);
     }
 
     private function seedQueues(): void

@@ -2208,5 +2208,18 @@
     "taxonomy.renamed": "নাম বদলানো হয়েছে।",
     "taxonomy.removed": "সরানো হয়েছে।",
     "taxonomy.errors.taken": "এই ইংরেজি নামে আগেই একটি আছে।",
-    "taxonomy.errors.in_use": "এটি ব্যবহৃত হচ্ছে। সরানোর বদলে নাম বদলান।"
+    "taxonomy.errors.in_use": "এটি ব্যবহৃত হচ্ছে। সরানোর বদলে নাম বদলান।",
+    "nav.audit": "অডিট লগ",
+    "admin.audit.title": "অডিট লগ",
+    "admin.audit.body": "প্রতিটি রেকর্ড করা পরিবর্তন: কে কোন রেকর্ডে কী করেছে, আগের ও পরের মানসহ।",
+    "admin.audit.filter.area": "এলাকা",
+    "admin.audit.filter.actor": "ব্যক্তি (নাম বা ইমেইল)",
+    "admin.audit.filter.subject": "রেকর্ড আইডি",
+    "admin.audit.filter.from": "থেকে",
+    "admin.audit.filter.to": "পর্যন্ত",
+    "admin.audit.all_areas": "সব এলাকা",
+    "admin.audit.system": "সিস্টেম",
+    "admin.audit.details": "বিস্তারিত",
+    "admin.audit.empty_title": "কিছুই মেলেনি",
+    "admin.audit.empty_body": "অন্য ফিল্টার দেখুন।"
 }
