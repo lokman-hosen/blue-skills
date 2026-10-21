@@ -34,6 +34,8 @@ import { dashboard } from '@/routes';
 import admin from '@/routes/admin';
 import design from '@/routes/design';
 import horizon from '@/routes/horizon';
+import jobs from '@/routes/jobs';
+import org from '@/routes/org';
 import { edit as profileSettings } from '@/routes/profile';
 import team from '@/routes/team';
 import worker from '@/routes/worker';
@@ -55,7 +57,7 @@ export type NavGroup = { label?: string; items: NavLink[] };
 // Worker: the first four are the mobile bottom tabs; the rest live in the "More" sheet.
 export const workerPrimaryNav: NavLink[] = [
     { key: 'home', label: 'nav.home', icon: Home, href: dashboard() },
-    { key: 'jobs', label: 'nav.jobs', icon: Search },
+    { key: 'jobs', label: 'nav.jobs', icon: Search, href: jobs.index() },
     { key: 'applications', label: 'nav.applications', icon: ListChecks },
     { key: 'passport', label: 'nav.passport', icon: IdCard, href: worker.passport.show() },
 ];
@@ -82,7 +84,7 @@ export const orgNav: Record<App.Domain.Organization.Enums.OrganizationType, NavG
                     icon: LayoutDashboard,
                     href: dashboard(),
                 },
-                { key: 'jobs', label: 'nav.jobs', icon: BriefcaseBusiness },
+                { key: 'jobs', label: 'nav.jobs', icon: BriefcaseBusiness, href: org.jobs.index() },
                 { key: 'talent', label: 'nav.talent', icon: Search },
                 { key: 'shortlists', label: 'nav.shortlists', icon: Star },
                 { key: 'projects', label: 'nav.projects', icon: FolderKanban },
@@ -151,7 +153,13 @@ export const adminNav: NavGroup[] = [
     {
         items: [
             { key: 'overview', label: 'nav.overview', icon: LayoutDashboard, href: dashboard() },
-            { key: 'verifications', label: 'nav.verifications', icon: ShieldCheck },
+            {
+                key: 'verifications',
+                label: 'nav.verifications',
+                icon: ShieldCheck,
+                href: admin.organizations.index(),
+                permission: 'verifications.review',
+            },
             {
                 key: 'skillshows',
                 label: 'nav.skillshows',
@@ -159,7 +167,13 @@ export const adminNav: NavGroup[] = [
                 href: admin.skillshows.index(),
                 permission: 'skill_shows.moderate',
             },
-            { key: 'jobs', label: 'nav.jobs', icon: BriefcaseBusiness },
+            {
+                key: 'jobs',
+                label: 'nav.job_reviews',
+                icon: BriefcaseBusiness,
+                href: admin.jobs.index(),
+                permission: 'jobs.moderate',
+            },
             { key: 'trust', label: 'nav.trust', icon: ShieldAlert },
             { key: 'crm', label: 'nav.crm', icon: Building2 },
         ],

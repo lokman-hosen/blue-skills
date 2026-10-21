@@ -132,6 +132,14 @@ declare namespace App {
         }
         namespace Jobs {
             namespace Data {
+                export type DestinationOptionData = {
+                    code: string;
+                    name: string;
+                    currency: string;
+                    allowedWorkerCosts: App.Domain.Jobs.Enums.JobCostCategory[];
+                    workerCostPolicy: string | null;
+                    mandatoryFields: string[];
+                };
                 export type JobBenefitData = {
                     key: string;
                     provision: App.Domain.Jobs.Enums.BenefitProvision | null;
@@ -142,6 +150,95 @@ declare namespace App {
                     description: string | null;
                     amount: App.Support.Data.MoneyData;
                     payer: App.Domain.Jobs.Enums.CostPayer;
+                };
+                export type JobCostFormData = {
+                    category: App.Domain.Jobs.Enums.JobCostCategory;
+                    description: string | null;
+                    amount: number;
+                    currency: string;
+                    payer: App.Domain.Jobs.Enums.CostPayer;
+                };
+                export type JobCountsData = {
+                    live: number;
+                    inReview: number;
+                    needsChanges: number;
+                    drafts: number;
+                };
+                export type JobFormData = {
+                    title: string;
+                    occupationId: string;
+                    headcount: number;
+                    destinationCountryCode: string;
+                    destinationCity: string | null;
+                    joiningFrom: string | null;
+                    joiningTo: string | null;
+                    skillIds: string[];
+                    minExperienceYears: number | null;
+                    languageRequirements: App.Domain.Jobs.Data.LanguageRequirementData[];
+                    salaryAmount: number | null;
+                    salaryCurrency: string | null;
+                    salaryPeriod: App.Domain.Jobs.Enums.SalaryPeriod | null;
+                    hoursPerDay: number | null;
+                    daysPerWeek: number | null;
+                    overtimeTerms: string | null;
+                    contractMonths: number | null;
+                    benefits: Record<string, App.Domain.Jobs.Enums.BenefitProvision | null>;
+                    benefitDetails: Record<string, string | null>;
+                    otherBenefits: string | null;
+                    permitPayer: App.Domain.Jobs.Enums.CostPayer | null;
+                    visaPayer: App.Domain.Jobs.Enums.CostPayer | null;
+                    deadline: string | null;
+                    costs: App.Domain.Jobs.Data.JobCostFormData[];
+                };
+                export type JobFormOptionsData = {
+                    occupations: App.Domain.Taxonomy.Data.OccupationOptionData[];
+                    skills: App.Domain.Taxonomy.Data.TaxonomyOptionData[];
+                    destinations: App.Domain.Jobs.Data.DestinationOptionData[];
+                    currencies: string[];
+                };
+                export type JobListItemData = {
+                    code: string;
+                    title: string;
+                    occupation: string | null;
+                    destinationCountryCode: string;
+                    destinationCountryName: string | null;
+                    destinationCity: string | null;
+                    headcount: number;
+                    status: App.Support.Data.StatusData;
+                    deadline: string | null;
+                    updatedAt: string | null;
+                    publishedAt: string | null;
+                    lastDecision: App.Domain.Verification.Data.ReviewDecisionData | null;
+                    editable: boolean;
+                };
+                export type JobListingData = {
+                    code: string;
+                    title: string;
+                    employerName: string;
+                    employerVerified: boolean;
+                    occupation: string | null;
+                    destinationCountryCode: string;
+                    destinationCountryName: string | null;
+                    destinationCity: string | null;
+                    salary: App.Support.Data.MoneyData | null;
+                    salaryPeriod: App.Domain.Jobs.Enums.SalaryPeriod | null;
+                    accommodation: App.Domain.Jobs.Enums.BenefitProvision | null;
+                    workerPaysCosts: boolean;
+                    deadline: string | null;
+                    publishedAt: string | null;
+                    match: App.Domain.Jobs.Data.MatchSummaryData | null;
+                };
+                export type JobReviewItemData = {
+                    reviewId: string;
+                    reviewStatus: App.Support.Data.StatusData;
+                    code: string;
+                    title: string;
+                    employerName: string;
+                    employerVerification: App.Support.Data.StatusData;
+                    destination: string | null;
+                    notes: string | null;
+                    problemCount: number;
+                    submittedAt: string | null;
                 };
                 export type JobTruthCardData = {
                     publicCode: string;
@@ -182,6 +279,16 @@ declare namespace App {
                     code: string;
                     level: string;
                 };
+                export type MatchRequirementData = {
+                    key: string;
+                    params: Record<string, string | number>;
+                    met: boolean;
+                };
+                export type MatchSummaryData = {
+                    met: number;
+                    total: number;
+                    requirements: App.Domain.Jobs.Data.MatchRequirementData[];
+                };
                 export type TruthCardCheckData = {
                     key: string;
                     tone: string;
@@ -221,6 +328,24 @@ declare namespace App {
                     name: string;
                     sizeKb: number;
                     uploadedAt: string | null;
+                    url: string | null;
+                };
+                export type OrganizationReviewData = {
+                    reviewId: string;
+                    reviewStatus: App.Support.Data.StatusData;
+                    organizationId: string;
+                    displayName: string;
+                    legalName: string;
+                    type: App.Domain.Organization.Enums.OrganizationType;
+                    countryCode: string;
+                    city: string | null;
+                    registrationNumber: string | null;
+                    licenceNumber: string | null;
+                    licenceExpiresOn: string | null;
+                    verification: App.Support.Data.StatusData;
+                    flags: string | null;
+                    evidenceCount: number;
+                    submittedAt: string | null;
                 };
                 export type OrganizationSummaryData = {
                     id: string;
@@ -293,6 +418,15 @@ declare namespace App {
             }
         }
         namespace Verification {
+            namespace Data {
+                export type ReviewDecisionData = {
+                    decision: App.Domain.Verification.Enums.VerificationDecision;
+                    reasonCode: string | null;
+                    note: string | null;
+                    decidedAt: string | null;
+                    reviewerName: string | null;
+                };
+            }
             namespace Enums {
                 export type DocumentType =
                     | 'passport'
@@ -317,6 +451,18 @@ declare namespace App {
                     | 'training'
                     | 'trade_assessment'
                     | 'work_experience';
+                export type ReviewReason =
+                    | 'document_unreadable'
+                    | 'document_expired'
+                    | 'details_mismatch'
+                    | 'not_a_registered_business'
+                    | 'licence_out_of_scope'
+                    | 'unlawful_worker_fee'
+                    | 'conditions_unclear'
+                    | 'salary_implausible'
+                    | 'duplicate_job'
+                    | 'prohibited_content'
+                    | 'more_information_needed';
                 export type VerificationDecision = 'approved' | 'rejected' | 'needs_info';
                 export type VerificationType =
                     | 'organization'

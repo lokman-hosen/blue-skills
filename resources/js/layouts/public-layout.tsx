@@ -13,10 +13,11 @@ import type { NavLink } from '@/layouts/navigation';
 import { useTranslation } from '@/lib/i18n';
 import { cn } from '@/lib/utils';
 import { dashboard, home, login } from '@/routes';
+import jobs from '@/routes/jobs';
 
-// Public screens arrive in Module 3; links stay inert until then.
+// Find Jobs is live (Module 3); the other public screens stay inert until their modules ship.
 const publicNav: NavLink[] = [
-    { key: 'find_jobs', label: 'nav.find_jobs', icon: Search },
+    { key: 'find_jobs', label: 'nav.find_jobs', icon: Search, href: jobs.index() },
     { key: 'find_talent', label: 'nav.find_talent', icon: BriefcaseBusiness },
     { key: 'how_it_works', label: 'nav.how_it_works', icon: Info },
     { key: 'safety', label: 'nav.safety', icon: ShieldCheck },

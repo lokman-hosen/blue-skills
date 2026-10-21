@@ -5,8 +5,8 @@ namespace App\Domain\Organization\Policies;
 use App\Domain\Identity\Enums\Permission;
 use App\Domain\Identity\Enums\UserType;
 use App\Domain\Identity\Models\User;
-use App\Domain\Identity\Support\TeamContext;
 use App\Domain\Organization\Models\Organization;
+use App\Domain\Organization\Support\OrganizationPermissions;
 
 class OrganizationPolicy
 {
@@ -15,7 +15,15 @@ class OrganizationPolicy
      */
     public function switchTo(User $user, Organization $organization): bool
     {
-        return $user->memberships()->where('organization_id', $organization->id)->exists();
+        return OrganizationPermissions::isMember($user, $organization);
+    }
+
+    /**
+     * Staff review organization registrations (spec §10).
+     */
+    public function review(User $user, ?Organization $organization = null): bool
+    {
+        return $user->hasStaffPermission(Permission::VerificationsReview->value);
     }
 
     /**
@@ -43,11 +51,6 @@ class OrganizationPolicy
 
     private function hasPermission(User $user, Organization $organization, Permission $permission): bool
     {
-        if (! $this->switchTo($user, $organization)) {
-            return false;
-        }
-
-        return TeamContext::run($organization->id, fn () => $user->unsetRelation('roles')->unsetRelation('permissions')
-            ->checkPermissionTo($permission->value));
+        return OrganizationPermissions::allows($user, $organization, $permission);
     }
 }

@@ -4,8 +4,8 @@ namespace App\Domain\Worker\Actions;
 
 use App\Domain\Worker\Models\WorkerProfile;
 use App\Domain\Worker\Support\ProfileCompletion;
+use App\Support\Money;
 use Illuminate\Support\Facades\DB;
-use NumberFormatter;
 
 /**
  * Passport readiness, availability, destinations and salary expectation.
@@ -26,7 +26,7 @@ class UpdateWorkerPreferences
                 'passport_status' => $fields['passport_status'],
                 'passport_valid_until_year' => $fields['passport_valid_until_year'],
                 'availability' => $fields['availability'],
-                'salary_expectation_minor' => $hasSalary ? self::toMinor((int) $fields['salary_amount'], (string) $fields['salary_currency']) : null,
+                'salary_expectation_minor' => $hasSalary ? Money::toMinor((int) $fields['salary_amount'], (string) $fields['salary_currency']) : null,
                 'salary_currency' => $hasSalary ? $fields['salary_currency'] : null,
                 'salary_period' => $hasSalary ? $fields['salary_period'] : null,
             ]);
@@ -45,16 +45,5 @@ class UpdateWorkerPreferences
         $this->completion->refresh($profile);
 
         return $profile;
-    }
-
-    /**
-     * Whole currency units to the minor unit (JPY has none, OMR has three).
-     */
-    public static function toMinor(int $amount, string $currency): int
-    {
-        $formatter = new NumberFormatter("en@currency={$currency}", NumberFormatter::CURRENCY);
-        $digits = (int) $formatter->getAttribute(NumberFormatter::FRACTION_DIGITS);
-
-        return $amount * 10 ** $digits;
     }
 }

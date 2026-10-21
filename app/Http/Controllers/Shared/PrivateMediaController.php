@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers\Shared;
 
+use App\Domain\Organization\Models\Organization;
 use App\Domain\Verification\Models\Document;
+use App\Domain\Verification\Models\VerificationRequest;
 use App\Domain\Worker\Models\SkillShow;
 use App\Domain\Worker\Models\VoiceAnswer;
 use App\Domain\Worker\Models\WorkerProfile;
@@ -27,6 +29,9 @@ class PrivateMediaController extends Controller
         $allowed = match (true) {
             $owner instanceof WorkerProfile, $owner instanceof SkillShow, $owner instanceof VoiceAnswer => Gate::allows('view', $owner),
             $owner instanceof Document => $owner->owner_user_id === $request->user()?->id,
+            // Registration evidence: reviewers, and members who may edit the organization.
+            $owner instanceof VerificationRequest => Gate::allows('review', Organization::class)
+                || ($owner->subject instanceof Organization && Gate::allows('update', $owner->subject)),
             default => false,
         };
 

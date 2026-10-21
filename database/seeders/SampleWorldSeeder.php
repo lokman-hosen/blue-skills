@@ -24,6 +24,7 @@ use App\Domain\Jobs\Enums\MandateStatus;
 use App\Domain\Jobs\Enums\SalaryPeriod;
 use App\Domain\Jobs\Models\JobMandate;
 use App\Domain\Jobs\Models\JobPosting;
+use App\Domain\Jobs\States\Job\Draft;
 use App\Domain\Jobs\States\Job\Published;
 use App\Domain\Jobs\States\Job\UnderReview;
 use App\Domain\Mobility\Enums\MobilityStageStatus;
@@ -32,6 +33,7 @@ use App\Domain\Mobility\States\MobilityCase\Completed;
 use App\Domain\Mobility\States\MobilityCase\Open as OpenCase;
 use App\Domain\Organization\Enums\OrganizationType;
 use App\Domain\Organization\Models\Organization;
+use App\Domain\Organization\States\Verification\Pending as PendingOrganization;
 use App\Domain\Organization\States\Verification\Verified;
 use App\Domain\Taxonomy\Models\Occupation;
 use App\Domain\Taxonomy\Models\Skill;
@@ -599,6 +601,43 @@ class SampleWorldSeeder extends Seeder
 
     private function seedQueues(): void
     {
+        // A registration waiting for review (Module 3 organization queue).
+        $gulfStar = Organization::query()->create([
+            'type' => OrganizationType::Employer,
+            'legal_name' => 'Gulf Star Facilities Management LLC',
+            'display_name' => 'Gulf Star Facilities',
+            'country_code' => 'AE',
+            'city' => 'Abu Dhabi',
+            'registration_number' => 'ADED-CN-2299871',
+            'verification_status' => PendingOrganization::class,
+            'data_region' => config('blueskills.default_data_region'),
+        ]);
+        $gulfStarOwner = $this->user('Mariam Al Suwaidi', 'owner@gulfstar.test', UserType::Org, 'Asia/Dubai');
+        $gulfStar->users()->attach($gulfStarOwner->id, ['title' => 'Operations Director', 'joined_at' => now()->subDays(3)]);
+        TeamContext::run($gulfStar->id, fn () => $gulfStarOwner->unsetRelation('roles')->assignRole(OrganizationRole::Owner->value));
+        $gulfStar->verificationRequests()->create(['type' => VerificationType::Organization, 'status' => OpenRequest::class]);
+
+        // A draft that cannot be submitted yet: workers would pay a recruitment fee (D-053).
+        $this->job([
+            'organization_id' => $this->orgs['abc']->id,
+            'employer_organization_id' => $this->orgs['abc']->id,
+            'public_code' => 'AE-ST-0042',
+            'title' => 'Steel Fixer',
+            'occupation' => 'steel-fixer',
+            'destination_country_code' => 'AE',
+            'destination_city' => 'Abu Dhabi',
+            'headcount' => 60,
+            'salary_amount_minor' => 1800_00,
+            'salary_currency' => 'AED',
+            'hours_per_day' => 8,
+            'days_per_week' => 6,
+            'contract_months' => 24,
+            'accommodation' => BenefitProvision::Provided,
+            'status' => Draft::class,
+        ], [], [
+            [JobCostCategory::RecruitmentFee, 'Recruitment service fee', 4000_00, 'AED', CostPayer::Worker],
+        ]);
+
         Report::query()->create([
             'reporter_user_id' => $this->workers['sunil']->user_id,
             'subject_type' => $this->jobs['PL-WH-0014']->getMorphClass(),

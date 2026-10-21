@@ -58,7 +58,7 @@ answers every recording with the prototype's sample sentence; SkillShow checks n
 Seeded worker Rahim Uddin signs in with `+8801711000001` and has a complete Skill Passport.
 
 Local logins after seeding (password `password`): `superuser@blueskills.test` (staff),
-`owner@abc-contracting.test` (employer Owner), `sara@abc-contracting.test` (employer HR Admin), `imran@northstar.test` (agency case officer),
+`owner@abc-contracting.test` (employer Owner, draft job AE-ST-0042), `owner@gulfstar.test` (employer waiting for review), `sara@abc-contracting.test` (employer HR Admin), `imran@northstar.test` (agency case officer),
 `nusrat@meghna.test` (institute placement officer). `/_design` is the staff-only component gallery.
 
 Run tests, Pint, PHPStan and `npm run types` before every commit. Never commit failing checks.
@@ -208,7 +208,7 @@ Update this table when a module is done.
 | 0 | Foundation: project, DB core, design system, layouts, CI | ✓ |
 | 1 | Auth & roles: worker OTP, org email + 2FA, staff invites, team roles | ✓ |
 | 2 | Worker profile: onboarding, Skill Passport, Voice-to-CV, SkillShow | ✓ |
-| 3 | Organizations & jobs: employer verification, job wizard, Truth Card, job review, public search | ☐ |
+| 3 | Organizations & jobs: employer verification, job wizard, Truth Card, job review, public search | ✓ |
 | 4 | Applications: apply + snapshot + consent, tracker, pipeline, talent search, shortlists | ☐ |
 | 5 | Messaging & notifications: in-app, WhatsApp, SMS, email | ☐ |
 | 6 | Agency & mobility: licence, mandates, mobility cases, documents | ☐ |

@@ -26,8 +26,8 @@ it('seeds the reference data and the sample world', function () {
         ->toBe(['ar', 'bn', 'en', 'hi', 'ne', 'si', 'ta', 'ur'])
         ->and(Language::query()->where('rtl', true)->pluck('code')->sort()->values()->all())->toBe(['ar', 'ur'])
         ->and(Organization::query()->pluck('display_name'))
-        ->toContain('ABC Contracting', 'Northstar Manpower', 'Meghna Technical Training Centre')
-        ->and(JobPosting::query()->count())->toBe(5)
+        ->toContain('ABC Contracting', 'Northstar Manpower', 'Meghna Technical Training Centre', 'Gulf Star Facilities')
+        ->and(JobPosting::query()->count())->toBe(6)
         ->and(Application::query()->count())->toBeGreaterThan(0);
 
     $job = JobPosting::query()->where('public_code', 'UAE-EL-0001')->firstOrFail();

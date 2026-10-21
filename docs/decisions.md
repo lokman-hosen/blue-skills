@@ -385,3 +385,81 @@ colour) and the appearance tabs use design tokens instead of the kit's neutral g
   anyone in. Deletion revokes every consent, removes recordings, SkillShows, photo and uploaded
   files, hides the Passport and soft deletes the user (D-018), which keeps the number blocked
   (D-037). Application snapshots already shared stay with those applications (product rule 7).
+
+## Module 3 — Organizations and jobs
+
+### D-053 · Module 3 inputs (owner answers, 2026-10-20)
+- **Employer jobs only.** Agencies post jobs in Module 6 together with mandates, because product
+  rule 10 needs a verified licence and a verified mandate. Seeded agency jobs still render.
+- **Search:** indexed Postgres filters and text match now; Scout + Meilisearch when listings grow.
+- **Unlawful worker costs block submission.** The wizard shows the destination's rule, and a job
+  whose worker-paid cost category the country does not allow cannot be submitted. A destination
+  without cost rules allows no worker-paid costs.
+- **Review cadence:** once at the end of the module.
+
+### D-054 · Job review tracking and codes
+- Staff review decisions live on `verification_requests` (type `job` or the organization's type)
+  with decision, reason code, notes, decider and time. `jobs.submitted_at` and
+  `jobs.material_change_at` record the last submission and the last material change.
+- Reason codes are one `ReviewReason` enum with organization and job subsets.
+- Public job codes are `{country}-{trade}-{4 random digits}` (e.g. `AE-EL-4821`), unique, never a
+  counter.
+- Organization permission checks share `OrganizationPermissions::allows()`.
+
+### D-055 · Organization review
+- `/admin/organizations` lists open registrations oldest first for staff with
+  `verifications.review` (superuser, verification officer). Staff open evidence through signed
+  links, then approve, ask for more information or reject. Asking or rejecting needs a reason code;
+  an optional message goes to the organization. Owners get an email for every decision.
+- Approval verifies the organization. Asking for more keeps it pending; when the organization adds a
+  document the review goes back to the reviewer. A rejected organization can send a new review
+  request after fixing its documents.
+- The reviewer's message is stored in `verification_requests.decision_note`, separate from `notes`
+  (intake flags such as free webmail).
+
+### D-056 · Post a Job wizard and job lifecycle for employers
+- Four steps (requirement; skills and languages; employment terms; benefits, permit/visa payers,
+  deadline and itemised costs) then preview and submit. Each step saves; the first creates a draft
+  with its public code. Amounts are entered in whole units and stored as `amount_minor`.
+- Submitting needs a verified organization, the destination's mandatory disclosures (country rule
+  keys mapped to job fields, e.g. AE: salary, accommodation, hours, contract length) and only
+  allowed worker-paid costs. A worker-paid visa or work permit counts as a worker cost.
+- A change to any `JobPosting::MATERIAL_FIELDS` or to the costs of a published or paused job
+  resubmits it for review straight away (it leaves public search until approved); the review notes
+  list the changed fields. Title, headcount, skills, languages, joining window and deadline are not
+  material. A material change that would break the cost rules is refused.
+- Employers pause, resume and close live jobs, and archive drafts and closed jobs, following the
+  job state machine. Viewers and hiring managers see jobs but cannot post. Jobs are only reached
+  through the current organization.
+- The organization dashboard shows live, in-review, needs-changes and draft counts and the latest
+  jobs.
+
+### D-057 · Job review
+- `/admin/jobs` lists submitted jobs oldest first for staff with `jobs.moderate` (superuser,
+  verification officer, trust officer). Each shows the Truth Card exactly as workers will see it,
+  the employer's verification, why a live job came back, and the corridor-rule checks.
+- Staff publish, ask for changes (`more_information_requested`) or reject, with the same reason
+  codes and message flow as organization review. Publishing re-checks the employer and the cost
+  rules and is refused if either fails. The first publication sets `published_at`; republishing
+  after a change keeps it. Employer owners are emailed each decision.
+
+### D-058 · Find Jobs, Truth Card page and matching
+- `/jobs` lists published jobs whose deadline has not passed, 20 per page, newest first or
+  closing soonest. Search matches title, city, job code, employer, trade and skill names
+  (English taxonomy names for now). Filters: destination, trade, "no costs for the worker"
+  (no worker-paid cost item, visa or permit), "accommodation provided", "salary shown".
+- `/jobs/{code}` shows the Truth Card. Jobs that are not published are visible only to their
+  organization and to job moderators; everyone else gets 403.
+- Guests and organization users see the public pages; workers see the same jobs inside their
+  workspace with "X of Y requirements met": trade, minimum experience, each required skill, each
+  language and a ready passport, each listed as met or not. No score or ranking.
+- "I can do this job" stays disabled until Module 4; guests get "Join free to apply".
+- "Report this job" needs a signed-in user and creates an open `Report` (fake job, unauthorised
+  payment, misleading pay or conditions, impersonation, other with a description) for Module 8.
+
+### D-059 · Module 3 sample data
+- Gulf Star Facilities (`owner@gulfstar.test`) is a pending employer with an open registration
+  review, so the organization queue is never empty locally.
+- ABC Contracting has draft job AE-ST-0042 (Steel Fixer) whose recruitment fee is charged to
+  workers; it shows the corridor-rule block in the wizard and cannot be submitted until fixed.
+- The existing SA-HV-0021 and PL-WH-0014 reviews populate the job review queue.
