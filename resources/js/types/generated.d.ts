@@ -1011,6 +1011,16 @@ declare namespace App {
             }
         }
         namespace Trust {
+            namespace Data {
+                export type AdminOverviewData = {
+                    queues: {
+                        key: string;
+                        count: number;
+                    }[];
+                    marketplace: Record<string, number>;
+                    corridorsPendingLegalReview: number;
+                };
+            }
             namespace Enums {
                 export type AppealStatus = 'submitted' | 'upheld' | 'overturned';
                 export type CasePriority = 'low' | 'normal' | 'high' | 'urgent';

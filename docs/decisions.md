@@ -1013,3 +1013,13 @@ colour) and the appearance tabs use design tokens instead of the kit's neutral g
   reviews, so the history shows who decided what.
 - Workers get `evidence_reviewed`. A daily task (`evidence:expire`) marks verified evidence expired
   once its document's expiry date passes (product rule 9).
+
+### D-091 · Staff overview
+- The staff Overview (prototype x-queue) shows a tile for each queue the viewer can work on, with
+  what waits there: employer registrations, agency licences, institute accreditation, mandates,
+  job Truth Cards, worker documents, SkillShows and trust reports. Tiles link to their queue.
+  Staff without a queue permission (e.g. CRM agents) see no queue tiles.
+- Marketplace numbers: workers registered, profiles complete, findable by employers, verified
+  employers / agencies / institutes, live jobs, applications in the last 30 days, offers accepted,
+  open mobility cases and workers joined.
+- A staff-only notice counts destination corridors still waiting for legal review (D-088).
