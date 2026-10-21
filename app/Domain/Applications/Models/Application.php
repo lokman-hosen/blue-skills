@@ -10,6 +10,7 @@ use App\Domain\Applications\States\Application\Rejected;
 use App\Domain\Applications\States\Application\Withdrawn;
 use App\Domain\Identity\Models\User;
 use App\Domain\Jobs\Models\JobPosting;
+use App\Domain\Messaging\Models\Conversation;
 use App\Domain\Mobility\Models\MobilityCase;
 use App\Domain\Worker\Models\SkillShow;
 use App\Domain\Worker\Models\WorkerProfile;
@@ -91,6 +92,14 @@ class Application extends Model
     public function mobilityCase(): HasOne
     {
         return $this->hasOne(MobilityCase::class);
+    }
+
+    /**
+     * @return HasOne<Conversation, $this>
+     */
+    public function conversation(): HasOne
+    {
+        return $this->hasOne(Conversation::class);
     }
 
     /**

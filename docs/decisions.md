@@ -591,3 +591,34 @@ colour) and the appearance tabs use design tokens instead of the kit's neutral g
 - Visual review: employer 96/96 and worker 60/60 clean (en, bn, ur; light, dark; 390, 1440). Review
   fixes: employer-side wording for shared items and the match note; lighter talent card
   placeholder.
+
+## Module 5 — Messaging and notifications
+
+### D-067 · Module 5 inputs (owner answers, 2026-10-21)
+- **Laravel Reverb now** for live messages and notification badges (private channels per
+  conversation and per user), with `laravel-echo` and `pusher-js` on the frontend. Reverb runs as
+  its own Sail service locally and as a separate process on staging and production.
+- **One generic WhatsApp template** ("You have an update on your BLUESKILLS application for
+  {job}. Open the app: {link}") in en, bn, hi, ur and ne; details stay in the app.
+- **Twilio for SMS**, called over its HTTP API (no SDK package). The owner supplies the account
+  SID, auth token and sender per country; locally SMS stays on the `log` driver.
+- **Review cadence:** once at the end of the module.
+
+### D-068 · Messaging schema and Reverb setup
+- `conversations` (one per application, between the worker and the posting organization),
+  `messages` (never edited; worker, organization or system side; private attachments),
+  `conversation_reads` (last read per user, for unread counts), Laravel `notifications` with ULID
+  notifiables, `notification_preferences` (per user, event and channel; no row = on),
+  `outbound_messages` (every WhatsApp, SMS and email attempt with status, provider id, attempts and
+  `send_after` for quiet hours; recipient encrypted) and `job_invitations` (one per job and
+  worker; sent, applied, declined, expired; at most 50 per organization per day).
+- Conversations become read-only 30 days after the application closes. Organization members with
+  `applications.view` read; members with `applications.manage` or `interviews.manage` write.
+- Notification events: workers (shortlisted, interview booked or changed, offer received,
+  application closed, job changed, invitation to apply, new message) use WhatsApp then SMS;
+  organization members (new applicants daily, worker accepted/declined/withdrew, new message) use
+  email. In-app notifications are always on.
+- Reverb 1.12 is the newest stable release and needs `guzzlehttp/psr7` 2.x, so Guzzle went from
+  8.3 to 7.16 (Laravel 13 supports both; our HTTP calls use Laravel's client). Sail runs Reverb as
+  the `reverb` service (host port 8081); the app publishes to `reverb:8080` inside Docker and the
+  browser connects to `localhost:8081`. Tests broadcast to the `null` driver.
