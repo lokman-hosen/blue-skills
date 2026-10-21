@@ -656,3 +656,25 @@ colour) and the appearance tabs use design tokens instead of the kit's neutral g
   applicants in the last 24 hours to members who can see applicants.
 - `/notifications` lists them for every user type; opening one marks it read and follows its
   link (app paths only, never off-site). "Mark all as read" clears the bell.
+
+### D-071 · WhatsApp, SMS and email delivery
+- `AppNotification` also goes through `ExternalChannel`. Worker events: WhatsApp if on for the
+  event, else SMS if on; organization events: email if on and the member has an address. No row
+  in `notification_preferences` means on. `/notifications/preferences` lets each person switch
+  channels per event for their own audience; in-app stays on.
+- Every attempt is an `outbound_messages` row (recipient and payload encrypted). Delivery runs in
+  `DeliverOutboundMessage` (queued, one try): text is rendered in the recipient's language and
+  time zone; a failure is recorded and a failed WhatsApp alert falls back to SMS when SMS is on
+  for the event. No automatic retries, so an outage never floods a worker later.
+- Quiet hours: worker WhatsApp/SMS between 22:00 and 07:00 local time is stored as `held` with
+  `send_after` 07:00 local; `notifications:release-held` runs every five minutes. Email is not
+  held.
+- Drivers: `NOTIFY_WHATSAPP_DRIVER` = `log` | `cloud` (Cloud API, template messages only);
+  `NOTIFY_SMS_DRIVER` = `log` | `twilio` (REST API with basic auth). Twilio picks the sender per
+  destination country from `TWILIO_SENDERS` (JSON), then `TWILIO_MESSAGING_SERVICE_SID`, then
+  `TWILIO_FROM`. The log drivers refuse to run in production.
+- WhatsApp template to submit to Meta (category Utility), name `blueskills_update`, two body
+  parameters, in en, bn, hi, ur and ne (other languages fall back to English; Meta's support for
+  `ne` must be confirmed when submitting):
+  en: "You have an update on your BLUESKILLS application for {{1}}. Open the app to see it: {{2}}"
+- SMS text: "BLUESKILLS: {title}. Open: {link}" in the worker's language.

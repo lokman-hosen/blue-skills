@@ -25,6 +25,12 @@ use App\Domain\Jobs\Models\JobCost;
 use App\Domain\Jobs\Models\JobMandate;
 use App\Domain\Jobs\Models\JobPosting;
 use App\Domain\Jobs\Models\JobSkillRequirement;
+use App\Domain\Messaging\Channels\CloudWhatsAppSender;
+use App\Domain\Messaging\Channels\LogSmsSender;
+use App\Domain\Messaging\Channels\LogWhatsAppSender;
+use App\Domain\Messaging\Channels\TwilioSmsSender;
+use App\Domain\Messaging\Contracts\SmsSender;
+use App\Domain\Messaging\Contracts\WhatsAppSender;
 use App\Domain\Messaging\Models\Conversation;
 use App\Domain\Messaging\Models\Message;
 use App\Domain\Messaging\Models\OutboundMessage;
@@ -79,6 +85,16 @@ class AppServiceProvider extends ServiceProvider
         });
 
         $this->app->bind(ProfileExtractor::class, RuleBasedProfileExtractor::class);
+
+        $this->app->bind(WhatsAppSender::class, fn () => match (config('blueskills.notifications.whatsapp_driver')) {
+            'cloud' => new CloudWhatsAppSender,
+            default => new LogWhatsAppSender,
+        });
+
+        $this->app->bind(SmsSender::class, fn () => match (config('blueskills.notifications.sms_driver')) {
+            'twilio' => new TwilioSmsSender,
+            default => new LogSmsSender,
+        });
     }
 
     /**

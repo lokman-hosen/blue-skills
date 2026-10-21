@@ -79,6 +79,8 @@ return new class extends Migration
             $table->text('recipient');
             $table->string('event', 48);
             $table->string('template', 64)->nullable();
+            // Encrypted event parameters and link, rendered in the recipient's language when sent.
+            $table->text('payload');
             $table->string('status', 16);
             $table->string('provider_id')->nullable();
             $table->text('error')->nullable();

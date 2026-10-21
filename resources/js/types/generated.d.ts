@@ -570,6 +570,10 @@ declare namespace App {
                     read: boolean;
                     createdAt: string;
                 };
+                export type PreferenceRowData = {
+                    event: App.Domain.Messaging.Enums.NotificationEvent;
+                    channels: Record<string, boolean>;
+                };
             }
             namespace Enums {
                 export type DeliveryChannel = 'whatsapp' | 'sms' | 'mail';

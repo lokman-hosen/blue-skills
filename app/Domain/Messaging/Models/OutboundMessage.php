@@ -16,12 +16,14 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Support\Carbon;
 
 /**
- * One WhatsApp, SMS or email delivery, kept for audit and retries. The recipient is encrypted.
+ * One WhatsApp, SMS or email delivery, kept for audit and retries. The recipient and payload
+ * (event parameters and link) are encrypted.
  *
+ * @property array{params: array<string, string|int>, url: string} $payload
  * @property Carbon|null $send_after
  * @property Carbon|null $sent_at
  */
-#[Fillable(['user_id', 'channel', 'recipient', 'event', 'template', 'status', 'provider_id', 'error', 'attempts', 'send_after', 'sent_at'])]
+#[Fillable(['user_id', 'channel', 'recipient', 'event', 'template', 'payload', 'status', 'provider_id', 'error', 'attempts', 'send_after', 'sent_at'])]
 #[UseFactory(OutboundMessageFactory::class)]
 class OutboundMessage extends Model
 {
@@ -36,6 +38,7 @@ class OutboundMessage extends Model
         return [
             'channel' => DeliveryChannel::class,
             'recipient' => 'encrypted',
+            'payload' => 'encrypted:array',
             'event' => NotificationEvent::class,
             'status' => DeliveryStatus::class,
             'attempts' => 'integer',

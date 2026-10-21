@@ -24,6 +24,7 @@ class OutboundMessageFactory extends Factory
             'channel' => DeliveryChannel::WhatsApp,
             'recipient' => '+8801711000099',
             'event' => NotificationEvent::Shortlisted,
+            'payload' => ['params' => ['job' => 'Electrician', 'org' => 'ABC Contracting'], 'url' => '/applications'],
             'status' => DeliveryStatus::Queued,
         ];
     }

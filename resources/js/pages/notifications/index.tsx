@@ -1,5 +1,5 @@
-import { Head, router } from '@inertiajs/react';
-import { Bell } from 'lucide-react';
+import { Head, Link, router } from '@inertiajs/react';
+import { Bell, Settings } from 'lucide-react';
 import { EmptyState } from '@/components/bs/empty-state';
 import type { Paginated } from '@/components/bs/jobs/types';
 import { PageHeader } from '@/components/bs/page-header';
@@ -25,21 +25,29 @@ export default function Notifications({ notifications }: Props) {
                 <PageHeader
                     title={t('nav.notifications')}
                     actions={
-                        hasUnread && (
-                            <Button
-                                variant="outline"
-                                className="min-h-11"
-                                onClick={() =>
-                                    router.post(
-                                        notificationRoutes.readAll.url(),
-                                        {},
-                                        { preserveScroll: true },
-                                    )
-                                }
-                            >
-                                {t('notifications.read_all')}
+                        <div className="flex flex-wrap gap-2">
+                            <Button asChild variant="ghost" className="min-h-11">
+                                <Link href={notificationRoutes.preferences()}>
+                                    <Settings aria-hidden className="size-4" />
+                                    {t('notifications.preferences')}
+                                </Link>
                             </Button>
-                        )
+                            {hasUnread && (
+                                <Button
+                                    variant="outline"
+                                    className="min-h-11"
+                                    onClick={() =>
+                                        router.post(
+                                            notificationRoutes.readAll.url(),
+                                            {},
+                                            { preserveScroll: true },
+                                        )
+                                    }
+                                >
+                                    {t('notifications.read_all')}
+                                </Button>
+                            )}
+                        </div>
                     }
                 />
                 {notifications.data.length === 0 ? (

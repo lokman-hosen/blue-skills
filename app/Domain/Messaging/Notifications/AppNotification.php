@@ -2,6 +2,7 @@
 
 namespace App\Domain\Messaging\Notifications;
 
+use App\Domain\Messaging\Channels\ExternalChannel;
 use App\Domain\Messaging\Enums\NotificationEvent;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
@@ -32,7 +33,7 @@ class AppNotification extends Notification implements ShouldQueue
      */
     public function via(object $notifiable): array
     {
-        return ['database', 'broadcast'];
+        return ['database', 'broadcast', ExternalChannel::class];
     }
 
     /**
