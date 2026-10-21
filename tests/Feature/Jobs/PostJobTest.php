@@ -1,5 +1,7 @@
 <?php
 
+use App\Domain\Applications\Models\Application;
+use App\Domain\Applications\States\Application\Withdrawn;
 use App\Domain\Identity\Enums\OrganizationRole;
 use App\Domain\Identity\Models\User;
 use App\Domain\Jobs\Enums\CostPayer;
@@ -204,4 +206,19 @@ it('shows job counts on the organization dashboard', function () {
         ->where('counts.drafts', 1)
         ->has('recentJobs', 1)
         ->where('canPostJobs', true));
+});
+
+it('tells workers still in the process when a live job changes materially', function () {
+    $job = postCompleteJob($this->hr, $this->employer);
+    $job->forceFill(['status' => Published::class, 'published_at' => now()])->save();
+    $open = Application::factory()->create(['job_id' => $job->id, 'worker_profile_id' => makeWorker()->workerProfile->id]);
+    $withdrawn = Application::factory()->create(['job_id' => $job->id, 'worker_profile_id' => makeWorker()->workerProfile->id, 'status' => Withdrawn::class]);
+
+    $this->put(route('org.jobs.update', [$job, 'terms']), [
+        'salary_amount' => 1800, 'salary_currency' => 'AED', 'salary_period' => 'month',
+        'hours_per_day' => 8, 'days_per_week' => 6, 'contract_months' => 24,
+    ])->assertRedirect(route('org.jobs.show', $job));
+
+    expect($open->workerProfile->user->notifications()->sole()->type)->toBe('job_changed')
+        ->and($withdrawn->workerProfile->user->notifications()->count())->toBe(0);
 });

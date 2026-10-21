@@ -2,6 +2,7 @@
 
 namespace App\Domain\Jobs\Actions;
 
+use App\Domain\Applications\Models\Application;
 use App\Domain\Identity\Models\User;
 use App\Domain\Jobs\Models\JobCost;
 use App\Domain\Jobs\Models\JobPosting;
@@ -9,6 +10,8 @@ use App\Domain\Jobs\States\Job\Draft;
 use App\Domain\Jobs\States\Job\Rejected;
 use App\Domain\Jobs\Support\JobCompliance;
 use App\Domain\Jobs\Support\JobWizard;
+use App\Domain\Messaging\Enums\NotificationEvent;
+use App\Domain\Messaging\Support\Notify;
 use App\Domain\Organization\Models\Organization;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Validation\ValidationException;
@@ -76,6 +79,11 @@ class SaveJobStep
 
                 $job->forceFill(['material_change_at' => now()])->save();
                 $this->submit->handle($job, $actor, materialChanges: $changed);
+
+                // Product rule 5: everyone still in the process hears about it.
+                $job->applications()->with(['workerProfile.user', 'job.organization'])->get()
+                    ->reject(fn (Application $application) => $application->isClosed())
+                    ->each(fn (Application $application) => Notify::worker($application, NotificationEvent::JobChanged));
             }
 
             activity('jobs')->performedOn($job)->causedBy($actor)

@@ -5,6 +5,7 @@ import { useState } from 'react';
 import { LanguageSwitcher } from '@/components/bs/language-switcher';
 import { LiveUpdates } from '@/components/bs/live-updates';
 import { Logo } from '@/components/bs/logo';
+import { NotificationBell } from '@/components/bs/notification-bell';
 import { SkipLink } from '@/components/bs/skip-link';
 import { ThemeToggle } from '@/components/bs/theme-toggle';
 import { TranslationPendingBanner } from '@/components/bs/translation-pending-banner';
@@ -34,9 +35,12 @@ export default function WorkerLayout({ children }: { children: ReactNode }) {
             <LiveUpdates />
 
             <aside className="sticky top-0 hidden h-svh flex-col gap-6 border-e border-line bg-surface p-4 lg:flex">
-                <Link href={dashboard()} aria-label={t('app.home')}>
-                    <Logo />
-                </Link>
+                <div className="flex items-center justify-between gap-2">
+                    <Link href={dashboard()} aria-label={t('app.home')}>
+                        <Logo />
+                    </Link>
+                    <NotificationBell />
+                </div>
                 <nav aria-label={t('nav.main')} className="flex flex-1 flex-col gap-0.5">
                     {workerPrimaryNav.map((item) => (
                         <SideLink
@@ -72,6 +76,7 @@ export default function WorkerLayout({ children }: { children: ReactNode }) {
                     <Link href={dashboard()} aria-label={t('app.home')} className="me-auto">
                         <Logo />
                     </Link>
+                    <NotificationBell />
                     <LanguageSwitcher />
                 </header>
                 <TranslationPendingBanner />

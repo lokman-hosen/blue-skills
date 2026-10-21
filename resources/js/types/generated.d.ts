@@ -561,6 +561,15 @@ declare namespace App {
                     at: string;
                     attachments: App.Domain.Messaging.Data.AttachmentData[];
                 };
+                export type NotificationData = {
+                    id: string;
+                    event: App.Domain.Messaging.Enums.NotificationEvent;
+                    title: string;
+                    body: string;
+                    url: string;
+                    read: boolean;
+                    createdAt: string;
+                };
             }
             namespace Enums {
                 export type DeliveryChannel = 'whatsapp' | 'sms' | 'mail';

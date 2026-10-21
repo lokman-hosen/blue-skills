@@ -3,6 +3,7 @@ import type { ReactNode } from 'react';
 import { LanguageSwitcher } from './language-switcher';
 import { LiveUpdates } from './live-updates';
 import { Logo } from './logo';
+import { NotificationBell } from './notification-bell';
 import { SkipLink } from './skip-link';
 import { ThemeToggle } from './theme-toggle';
 import { TranslationPendingBanner } from './translation-pending-banner';
@@ -155,6 +156,7 @@ export function WorkspaceShell({ nav, context, children }: WorkspaceShellProps) 
                     <SidebarTrigger className="size-11 md:size-9" aria-label={t('common.menu')} />
                     <div className="min-w-0 flex-1">{context}</div>
                     <div className="flex items-center gap-1.5">
+                        <NotificationBell />
                         <LanguageSwitcher />
                         <ThemeToggle />
                     </div>

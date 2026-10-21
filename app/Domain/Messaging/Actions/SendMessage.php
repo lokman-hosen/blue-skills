@@ -4,11 +4,14 @@ namespace App\Domain\Messaging\Actions;
 
 use App\Domain\Identity\Models\User;
 use App\Domain\Messaging\Enums\MessageSide;
+use App\Domain\Messaging\Enums\NotificationEvent;
 use App\Domain\Messaging\Events\MessageSent;
 use App\Domain\Messaging\Models\Conversation;
 use App\Domain\Messaging\Models\Message;
+use App\Domain\Messaging\Support\Notify;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Str;
 
 /**
  * Posts a message, marks the conversation read for the sender, and tells the other side
@@ -45,6 +48,11 @@ class SendMessage
         });
 
         MessageSent::dispatch($message);
+
+        $preview = Str::limit($message->body, 80);
+        $sender->isWorker()
+            ? Notify::handlers($conversation->application, NotificationEvent::OrganizationMessage, ['preview' => $preview], route('org.messages.show', $conversation, false))
+            : Notify::worker($conversation->application, NotificationEvent::WorkerMessage, ['preview' => $preview], route('worker.messages.show', $conversation, false));
 
         return $message;
     }

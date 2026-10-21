@@ -119,6 +119,14 @@ class User extends Authenticatable implements MustVerifyEmail, PasskeyUser
         return $this->isWorker() ? $this->phone_verified_at !== null : parent::hasVerifiedEmail();
     }
 
+    /**
+     * Live notification badges arrive on the user's private channel (Module 5).
+     */
+    public function receivesBroadcastNotificationsOn(): string
+    {
+        return "users.{$this->id}";
+    }
+
     public function isWorker(): bool
     {
         return $this->type === UserType::Worker;

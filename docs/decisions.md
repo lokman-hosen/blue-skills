@@ -640,3 +640,19 @@ colour) and the appearance tabs use design tokens instead of the kit's neutral g
 - Live updates: `MessageSent` broadcasts ids only on `conversations.{id}`,
   `organizations.{id}.inbox` and `users.{id}`; open threads and the navigation badges reload
   their own props. Channel access reuses the conversation policy.
+
+### D-070 · In-app notifications
+- One queued `AppNotification` (after commit) stores the event, its parameters and an app path;
+  titles and bodies are rendered when shown, in the reader's language, with times in the
+  reader's time zone and reason codes in words. Notifications broadcast (ids only) on
+  `users.{id}` so the bell updates live.
+- Workers are told when they are shortlisted, an interview is booked (with its local time), an
+  offer arrives, the application is closed (with the reason), a job they are still in changes
+  materially (product rule 5), and when the organization writes. Moving an applicant to Interview
+  without booking one, and other stage moves, do not alert.
+- Organization alerts go to the application's assigned recruiter, or else to every member with
+  `applications.manage`: the worker accepted, declined or withdrew, or wrote a message.
+  `notifications:new-applicants` runs daily at 06:00 UTC and sends one alert per job with new
+  applicants in the last 24 hours to members who can see applicants.
+- `/notifications` lists them for every user type; opening one marks it read and follows its
+  link (app paths only, never off-site). "Mark all as read" clears the bell.
