@@ -796,6 +796,10 @@ declare namespace App {
                     | 'case_document'
                     | 'institute_record'
                     | 'evidence_reviewed'
+                    | 'job_suspended'
+                    | 'account_suspended'
+                    | 'report_outcome'
+                    | 'appeal_decided'
                     | 'new_applicants'
                     | 'application_answered'
                     | 'organization_message'
@@ -804,7 +808,8 @@ declare namespace App {
                     | 'mandate_reviewed'
                     | 'case_document_answered'
                     | 'job_paused_mandate'
-                    | 'graduate_joined';
+                    | 'graduate_joined'
+                    | 'organization_suspended';
             }
         }
         namespace Mobility {
@@ -1019,6 +1024,74 @@ declare namespace App {
                     }[];
                     marketplace: Record<string, number>;
                     corridorsPendingLegalReview: number;
+                };
+                export type AppealData = {
+                    id: string;
+                    status: App.Support.Data.StatusData;
+                    statement: string;
+                    appellant: string | null;
+                    decisionNote: string | null;
+                    decider: string | null;
+                    submittedAt: string;
+                    decidedAt: string | null;
+                };
+                export type ReportData = {
+                    id: string;
+                    category: App.Domain.Trust.Enums.ReportCategory;
+                    description: string;
+                    status: App.Support.Data.StatusData;
+                    about: string;
+                    subject: string;
+                    excerpt: string | null;
+                    reporter: string | null;
+                    createdAt: string;
+                    caseId: string | null;
+                    caseReference: string | null;
+                    outcome: string | null;
+                    reasonCode: string | null;
+                };
+                export type TrustActionData = {
+                    id: string;
+                    action: App.Domain.Trust.Enums.TrustActionType;
+                    reason: App.Domain.Trust.Enums.TrustReason;
+                    subject: string;
+                    note: string | null;
+                    actor: string | null;
+                    actorId: string | null;
+                    at: string;
+                    appeals: App.Domain.Trust.Data.AppealData[];
+                };
+                export type TrustCaseData = {
+                    summary: App.Domain.Trust.Data.TrustCaseListItemData;
+                    summaryText: string;
+                    assigneeId: string | null;
+                    outcomeCode: string | null;
+                    closedAt: string | null;
+                    reports: App.Domain.Trust.Data.ReportData[];
+                    notes: {
+                        id: string;
+                        body: string;
+                        author: string | null;
+                        at: string;
+                        files: {
+                            name: string;
+                            url: string | null;
+                        }[];
+                    }[];
+                    actions: App.Domain.Trust.Data.TrustActionData[];
+                };
+                export type TrustCaseListItemData = {
+                    id: string;
+                    reference: string;
+                    category: App.Domain.Trust.Enums.ReportCategory;
+                    status: App.Support.Data.StatusData;
+                    priority: App.Support.Data.StatusData;
+                    subjectType: string;
+                    subject: string;
+                    subjectSuspended: boolean;
+                    assignee: string | null;
+                    reports: number;
+                    openedAt: string;
                 };
             }
             namespace Enums {

@@ -9,6 +9,7 @@ use App\Domain\Messaging\Models\Message;
 use App\Domain\Mobility\Models\CaseDocument;
 use App\Domain\Mobility\Models\MobilityCase;
 use App\Domain\Organization\Models\Organization;
+use App\Domain\Trust\Models\TrustCaseNote;
 use App\Domain\Verification\Models\Document;
 use App\Domain\Verification\Models\EvidenceItem;
 use App\Domain\Verification\Models\VerificationRequest;
@@ -48,6 +49,8 @@ class PrivateMediaController extends Controller
                 || ($owner->subject instanceof JobMandate && (Gate::allows('review', JobMandate::class)
                     || Gate::allows('viewAny', [JobMandate::class, $owner->subject->agency])
                     || Gate::allows('viewAny', [JobMandate::class, $owner->subject->employer]))),
+            // Trust case evidence: trust officers only (spec §10).
+            $owner instanceof TrustCaseNote => Gate::allows('view', $owner->trustCase),
             // Message attachments: the conversation's parties only.
             $owner instanceof Message => Gate::allows('view', $owner->conversation),
             default => false,

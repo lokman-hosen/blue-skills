@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Admin\AppealDecisionController;
 use App\Http\Controllers\Admin\EvidenceReviewController;
 use App\Http\Controllers\Admin\JobReviewController;
 use App\Http\Controllers\Admin\MandateReviewController;
@@ -7,6 +8,8 @@ use App\Http\Controllers\Admin\OrganizationReviewController;
 use App\Http\Controllers\Admin\SkillShowModerationController;
 use App\Http\Controllers\Admin\StaffController;
 use App\Http\Controllers\Admin\StaffInvitationAcceptanceController;
+use App\Http\Controllers\Admin\TrustCaseController;
+use App\Http\Controllers\Admin\TrustReportController;
 use Illuminate\Support\Facades\Route;
 
 // Staff management (Module 1D). Staff screens need confirmed 2FA (D-035).
@@ -41,6 +44,22 @@ Route::middleware(['auth', 'verified', 'user.type:staff', 'staff.2fa'])->prefix(
     });
 
     // SkillShow moderation (Module 2, product rule 3).
+    // Trust: reports, cases, suspensions and appeals (Module 8, spec §10).
+    Route::prefix('trust')->name('trust.')->group(function () {
+        Route::get('reports', [TrustReportController::class, 'index'])->name('reports.index');
+        Route::post('reports/{report}/dismiss', [TrustReportController::class, 'dismiss'])->name('reports.dismiss');
+        Route::controller(TrustCaseController::class)->prefix('cases')->name('cases.')->group(function () {
+            Route::get('/', 'index')->name('index');
+            Route::post('/', 'store')->name('store');
+            Route::get('{case}', 'show')->name('show');
+            Route::put('{case}', 'update')->name('update');
+            Route::post('{case}/notes', 'note')->middleware('throttle:30,1')->name('notes.store');
+            Route::post('{case}/actions/{action}', 'action')->whereIn('action', ['suspend', 'restore'])->name('actions.store');
+            Route::post('{case}/close', 'close')->name('close');
+        });
+        Route::post('appeals/{appeal}/{decision}', AppealDecisionController::class)->whereIn('decision', ['uphold', 'overturn'])->name('appeals.decide');
+    });
+
     // Worker evidence (Module 8, D-090).
     Route::controller(EvidenceReviewController::class)->prefix('evidence')->name('evidence.')->group(function () {
         Route::get('/', 'index')->name('index');

@@ -1023,3 +1023,32 @@ colour) and the appearance tabs use design tokens instead of the kit's neutral g
   employers / agencies / institutes, live jobs, applications in the last 30 days, offers accepted,
   open mobility cases and workers joined.
 - A staff-only notice counts destination corridors still waiting for legal review (D-088).
+
+### D-092 · Trust reports, cases, suspensions and appeals
+- **Reports** (`/admin/trust/reports`, Trust Officers and Superusers) show what was reported
+  ("Report this job", "Report message"), who reported it and the message text. An officer
+  dismisses one with a no-action reason (not enough evidence, not against the rules, duplicate,
+  resolved), or opens a case. A report about something that already has an open case joins it.
+  A reported message is about whoever sent it: the worker, or the organization.
+- **Cases** (`/admin/trust/cases`) carry a priority, an assignee, evidence notes with files
+  (screenshots, call logs, payment records; private, trust staff only) and actions. Opening a
+  case assigns it to its opener.
+- **Suspending** takes an action reason and a note, both kept in the case and the audit log:
+  - a **job** must be live or paused; it leaves search and its applicants are told not to pay
+    anyone;
+  - an **organization** must be verified; its live and paused jobs are suspended with it, and its
+    members can still sign in and read but every change in the workspace (jobs, hiring steps,
+    messages, team, mandates) is refused with an explanation;
+  - a **worker** is hidden from search and pools and can't apply.
+  Applications and mobility cases already under way carry on. Lifting a suspension is a restore
+  action; restoring an organization brings back the jobs suspended with it but not jobs that were
+  suspended on their own. Owners are told both ways (`organization_suspended`,
+  `account_suspended`, applicants `job_suspended`).
+- **Closing** a case takes an outcome reason. Its reports close as "action taken" when the case
+  suspended anything, otherwise "no action needed", and each reporter gets only that
+  (`report_outcome`, in-app for organization reporters).
+- **Appeals** (`/appeals`): a suspended worker, or an organization member who may change the
+  organization or its jobs, sees what is suspended and why (no staff names or notes) and sends one
+  appeal at a time. A trust officer other than the one who suspended upholds or lifts it with a
+  note the appellant sees (`appeal_decided`); lifting adds a restore action.
+- Workspace and worker home show a suspension banner linking to appeals.

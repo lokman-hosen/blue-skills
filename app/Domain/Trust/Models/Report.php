@@ -24,6 +24,8 @@ use Spatie\ModelStates\HasStates;
  * case; the reporter is told only the outcome (D-088).
  *
  * @property ReportState $status
+ * @property string $subject_type
+ * @property string $subject_id
  * @property Carbon|null $decided_at
  */
 #[Fillable(['reporter_user_id', 'subject_type', 'subject_id', 'category', 'description', 'status', 'trust_case_id', 'outcome', 'reason_code', 'decided_by', 'decided_at'])]

@@ -33,7 +33,8 @@ class ApplicationPolicy
      */
     public function create(User $user, JobPosting $job): bool
     {
-        return $user->isWorker() && $user->workerProfile !== null;
+        // Suspended workers can't apply (D-088).
+        return $user->isWorker() && $user->workerProfile !== null && ! $user->workerProfile->isSuspended();
     }
 
     /**

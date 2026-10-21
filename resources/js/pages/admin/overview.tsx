@@ -17,6 +17,7 @@ const QUEUE_LINKS: Record<string, NonNullable<InertiaLinkProps['href']> | undefi
     jobs: admin.jobs.index(),
     evidence: admin.evidence.index(),
     skillshows: admin.skillshows.index(),
+    reports: admin.trust.reports.index(),
 };
 
 const MARKETPLACE = [

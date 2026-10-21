@@ -46,6 +46,7 @@ class DashboardController extends Controller
             UserType::Worker => Inertia::render('worker/home', [
                 'passport' => $user->workerProfile !== null ? WorkerPassportData::fromProfile($user->workerProfile) : null,
                 'cohortInvite' => $this->pendingCohortInvite($request, $user),
+                'suspended' => $user->workerProfile?->isSuspended() ?? false,
             ]),
             UserType::Staff => Inertia::render('admin/overview', [
                 'overview' => AdminOverviewData::for($user),

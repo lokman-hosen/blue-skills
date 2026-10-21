@@ -19,6 +19,9 @@ use LogicException;
 /**
  * A suspension or restoration of an organization, job or worker, with its reason code. The
  * history is append-only: lifting a suspension adds a restore action (spec §10).
+ *
+ * @property string $subject_type
+ * @property string $subject_id
  */
 #[Fillable(['trust_case_id', 'subject_type', 'subject_id', 'action', 'reason_code', 'note', 'actor_id'])]
 #[UseFactory(TrustActionFactory::class)]

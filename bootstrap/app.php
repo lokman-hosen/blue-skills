@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Middleware\BlockSuspendedOrganizationChanges;
 use App\Http\Middleware\EnsureOrganizationVerified;
 use App\Http\Middleware\EnsureStaffTwoFactor;
 use App\Http\Middleware\EnsureUserType;
@@ -33,6 +34,7 @@ return Application::configure(basePath: dirname(__DIR__))
             SetLocale::class,
             HandleInertiaRequests::class,
             AddLinkHeadersForPreloadedAssets::class,
+            BlockSuspendedOrganizationChanges::class,
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions): void {

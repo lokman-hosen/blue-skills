@@ -25,6 +25,8 @@ use Spatie\ModelStates\HasStates;
  * notes, suspensions and their appeals, with a reason code on every decision.
  *
  * @property TrustCaseState $status
+ * @property string $subject_type
+ * @property string $subject_id
  * @property Carbon|null $closed_at
  */
 #[Fillable([
