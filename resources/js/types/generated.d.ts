@@ -642,20 +642,40 @@ declare namespace App {
                     | 'case_opened'
                     | 'case_updated'
                     | 'case_closed'
+                    | 'case_document'
                     | 'new_applicants'
                     | 'application_answered'
                     | 'organization_message'
                     | 'mandate_requested'
                     | 'mandate_answered'
-                    | 'mandate_reviewed';
+                    | 'mandate_reviewed'
+                    | 'case_document_answered';
             }
         }
         namespace Mobility {
             namespace Data {
+                export type CaseDocumentData = {
+                    id: string;
+                    type: App.Domain.Verification.Enums.DocumentType;
+                    title: string;
+                    status: App.Support.Data.StatusData;
+                    providedBy: App.Domain.Mobility.Enums.DocumentProvider;
+                    employerCanView: boolean;
+                    visibleTo: string[];
+                    revoked: boolean;
+                    fileName: string | null;
+                    fileUrl: string | null;
+                    sharedAt: string | null;
+                    decidedAt: string | null;
+                    dueOn: string | null;
+                    returnReason: App.Domain.Mobility.Enums.CaseDocumentReturnReason | null;
+                    note: string | null;
+                };
                 export type CaseEventData = {
                     id: string;
                     action: App.Domain.Mobility.Enums.CaseEventAction;
                     stage: string | null;
+                    document: string | null;
                     actor: string | null;
                     note: string | null;
                     at: string;
@@ -699,6 +719,13 @@ declare namespace App {
                     | 'employer_cancelled'
                     | 'visa_refused'
                     | 'medical_unfit'
+                    | 'other';
+                export type CaseDocumentReturnReason =
+                    | 'unreadable'
+                    | 'wrong_document'
+                    | 'expired'
+                    | 'incomplete'
+                    | 'details_mismatch'
                     | 'other';
                 export type CaseDocumentStatus = 'requested' | 'uploaded' | 'accepted' | 'returned';
                 export type CaseEventAction =

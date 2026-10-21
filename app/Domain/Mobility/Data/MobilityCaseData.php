@@ -44,7 +44,7 @@ class MobilityCaseData extends Data
 
     public static function fromCase(MobilityCase $case, bool $forWorker): self
     {
-        $case->loadMissing(['application.job.destinationCountry', 'application.workerProfile.user', 'stages', 'events.actor', 'managingOrganization', 'employer', 'agency', 'handler']);
+        $case->loadMissing(['application.job.destinationCountry', 'application.workerProfile.user', 'stages', 'events.actor', 'events.caseDocument', 'managingOrganization', 'employer', 'agency', 'handler']);
         $managedBy = $case->managingOrganization->display_name ?? $case->employer->display_name ?? '';
         $stages = $case->stages->map(fn (MobilityCaseStage $stage) => CaseStageData::fromStage($stage, $case->template))->values()->all();
 

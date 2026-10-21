@@ -13,7 +13,7 @@ use LogicException;
 /**
  * One step in a case's history. Never edited.
  */
-#[Fillable(['mobility_case_id', 'stage_key', 'action', 'actor_user_id', 'note'])]
+#[Fillable(['mobility_case_id', 'stage_key', 'case_document_id', 'action', 'actor_user_id', 'note'])]
 class MobilityCaseEvent extends Model
 {
     use HasUlids;
@@ -47,5 +47,15 @@ class MobilityCaseEvent extends Model
     public function actor(): BelongsTo
     {
         return $this->belongsTo(User::class, 'actor_user_id');
+    }
+
+    /**
+     * The checklist item a document event is about.
+     *
+     * @return BelongsTo<CaseDocument, $this>
+     */
+    public function caseDocument(): BelongsTo
+    {
+        return $this->belongsTo(CaseDocument::class);
     }
 }

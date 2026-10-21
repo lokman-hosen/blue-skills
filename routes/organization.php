@@ -3,7 +3,9 @@
 use App\Domain\Jobs\Actions\ChangeJobAvailability;
 use App\Domain\Jobs\Support\JobWizard;
 use App\Domain\Mobility\Actions\ChangeCaseStage;
+use App\Domain\Mobility\Actions\DecideCaseDocument;
 use App\Http\Controllers\Organization\ApplicantController;
+use App\Http\Controllers\Organization\CaseDocumentController;
 use App\Http\Controllers\Organization\InvitationController;
 use App\Http\Controllers\Organization\JobController;
 use App\Http\Controllers\Organization\LicenceController;
@@ -120,4 +122,11 @@ Route::middleware(['auth', 'verified', 'user.type:org'])->prefix('org/cases')->n
         Route::post('{mobilityCase}/stages/{stage}/{action}', 'stage')->whereIn('action', ChangeCaseStage::ACTIONS)->name('stages.change');
         Route::put('{mobilityCase}/stages/{stage}', 'nextAction')->name('stages.update');
     });
+});
+
+// Case documents (Module 6, product rule 6, D-079).
+Route::middleware(['auth', 'verified', 'user.type:org'])->prefix('org/cases/{mobilityCase}/documents')->name('org.cases.documents.')->controller(CaseDocumentController::class)->scopeBindings()->group(function () {
+    Route::post('/', 'store')->name('store');
+    Route::post('{document}/file', 'upload')->middleware('throttle:20,1')->name('upload');
+    Route::post('{document}/{decision}', 'decide')->whereIn('decision', DecideCaseDocument::DECISIONS)->name('decide');
 });

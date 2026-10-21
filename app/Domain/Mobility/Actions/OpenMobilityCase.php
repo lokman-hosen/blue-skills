@@ -6,10 +6,12 @@ use App\Domain\Applications\Models\Application;
 use App\Domain\Identity\Models\User;
 use App\Domain\Messaging\Enums\NotificationEvent;
 use App\Domain\Messaging\Support\Notify;
+use App\Domain\Mobility\Enums\CaseDocumentStatus;
 use App\Domain\Mobility\Enums\CaseEventAction;
 use App\Domain\Mobility\Enums\MobilityStageStatus;
 use App\Domain\Mobility\Models\MobilityCase;
 use App\Domain\Mobility\States\MobilityCase\Open;
+use App\Domain\Mobility\Support\CaseChecklist;
 use App\Domain\Mobility\Support\StageTemplate;
 use App\Domain\Organization\Support\OrganizationPermissions;
 use Illuminate\Support\Facades\DB;
@@ -17,7 +19,8 @@ use Illuminate\Support\Facades\DB;
 /**
  * Opens the mobility case when the worker accepts an offer (product rule 8): a separate record
  * from the application, built from the destination's stage template. The organization that
- * posted the job runs it (the agency for agency jobs, D-074).
+ * posted the job runs it (the agency for agency jobs, D-074). Its document checklist comes from
+ * the destination too (D-079).
  */
 class OpenMobilityCase
 {
@@ -71,6 +74,17 @@ class OpenMobilityCase
             }
 
             $case->update(['current_stage' => $current]);
+
+            // The destination's document checklist (D-079).
+            foreach (CaseChecklist::for($job->destination_country_code) as $type) {
+                $case->documents()->create([
+                    'type' => $type,
+                    'title' => CaseChecklist::title($type),
+                    'status' => CaseDocumentStatus::Requested,
+                    'provided_by' => CaseChecklist::provider($type),
+                    'employer_can_view' => CaseChecklist::employerCanViewByDefault($type),
+                ]);
+            }
 
             activity('mobility')->performedOn($case)->causedBy($actor)
                 ->withProperties(['application' => $application->id, 'template' => $case->template, 'managed_by' => $case->managing_organization_id])

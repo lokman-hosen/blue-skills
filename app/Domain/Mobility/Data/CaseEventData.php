@@ -19,6 +19,8 @@ class CaseEventData extends Data
         /** Translated via `mobility.event.{action}`. */
         public CaseEventAction $action,
         public ?string $stage,
+        /** The checklist item a document event is about. */
+        public ?string $document,
         public ?string $actor,
         public ?string $note,
         public string $at,
@@ -32,6 +34,7 @@ class CaseEventData extends Data
             id: $event->id,
             action: $event->action,
             stage: $event->stage_key !== null ? StageTemplate::label($case->template, $event->stage_key) : null,
+            document: $event->caseDocument !== null ? CaseDocumentData::title($event->caseDocument) : null,
             actor: match (true) {
                 ! $actor instanceof User => null,
                 $actor->isWorker() => $actor->name,

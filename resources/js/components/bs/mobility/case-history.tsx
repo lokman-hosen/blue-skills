@@ -21,7 +21,10 @@ export function CaseHistory({ events }: Props) {
                     <li key={event.id} className="flex flex-col gap-0.5 py-2.5 text-sm">
                         <p className="flex flex-wrap justify-between gap-x-3">
                             <span className="font-semibold">
-                                {t(`mobility.event.${event.action}`, { stage: event.stage ?? '' })}
+                                {t(`mobility.event.${event.action}`, {
+                                    stage: event.stage ?? '',
+                                    document: event.document ?? '',
+                                })}
                             </span>
                             <time dateTime={event.at} className="text-xs text-muted">
                                 {formatDate(event.at, { dateStyle: 'medium', timeStyle: 'short' })}

@@ -19,6 +19,7 @@ enum NotificationEvent: string
     case CaseOpened = 'case_opened';
     case CaseUpdated = 'case_updated';
     case CaseClosed = 'case_closed';
+    case CaseDocument = 'case_document';
 
     // Organization members
     case NewApplicants = 'new_applicants';
@@ -27,6 +28,7 @@ enum NotificationEvent: string
     case MandateRequested = 'mandate_requested';
     case MandateAnswered = 'mandate_answered';
     case MandateReviewed = 'mandate_reviewed';
+    case CaseDocumentAnswered = 'case_document_answered';
 
     public function forWorkers(): bool
     {
@@ -40,7 +42,7 @@ enum NotificationEvent: string
     {
         return [
             self::Shortlisted, self::InterviewScheduled, self::OfferReceived, self::ApplicationRejected, self::JobChanged, self::JobInvitation, self::WorkerMessage,
-            self::CaseOpened, self::CaseUpdated, self::CaseClosed,
+            self::CaseOpened, self::CaseUpdated, self::CaseClosed, self::CaseDocument,
         ];
     }
 
@@ -51,7 +53,7 @@ enum NotificationEvent: string
     {
         return [
             self::NewApplicants, self::ApplicationAnswered, self::OrganizationMessage,
-            self::MandateRequested, self::MandateAnswered, self::MandateReviewed,
+            self::MandateRequested, self::MandateAnswered, self::MandateReviewed, self::CaseDocumentAnswered,
         ];
     }
 
@@ -82,12 +84,14 @@ enum NotificationEvent: string
             self::CaseOpened => 'Your mobility case opened',
             self::CaseUpdated => 'Your mobility case moved on',
             self::CaseClosed => 'Your mobility case closed',
+            self::CaseDocument => 'A case document needs you',
             self::NewApplicants => 'New applicants (daily)',
             self::ApplicationAnswered => 'Worker accepted, declined or withdrew',
             self::OrganizationMessage => 'New message from a worker',
             self::MandateRequested => 'An agency asks you to confirm a mandate',
             self::MandateAnswered => 'The employer answered your mandate request',
             self::MandateReviewed => 'BLUESKILLS reviewed your mandate',
+            self::CaseDocumentAnswered => 'A worker shared or answered a case document',
         };
     }
 }

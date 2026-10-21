@@ -5,14 +5,19 @@ namespace App\Http\Controllers\Organization;
 use App\Domain\Mobility\Actions\ChangeCaseStage;
 use App\Domain\Mobility\Actions\CloseMobilityCase;
 use App\Domain\Mobility\Actions\UpdateCaseNextAction;
+use App\Domain\Mobility\Data\CaseDocumentData;
 use App\Domain\Mobility\Data\MobilityCaseData;
 use App\Domain\Mobility\Enums\CaseClosedReason;
+use App\Domain\Mobility\Enums\CaseDocumentReturnReason;
 use App\Domain\Mobility\Models\MobilityCase;
 use App\Domain\Mobility\Models\MobilityCaseStage;
+use App\Domain\Verification\Enums\DocumentType;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Organization\ChangeCaseStageRequest;
 use App\Http\Requests\Organization\CloseMobilityCaseRequest;
+use App\Http\Requests\Organization\StoreCaseDocumentRequest;
 use App\Http\Requests\Organization\UpdateCaseNextActionRequest;
+use App\Http\Requests\Worker\StoreIdentityDocumentRequest;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Gate;
@@ -36,6 +41,16 @@ class MobilityCaseController extends Controller
             'mobilityCase' => MobilityCaseData::fromCase($mobilityCase, forWorker: false),
             'closeReasons' => array_map(fn (CaseClosedReason $reason) => $reason->value, CaseClosedReason::cases()),
             'canManage' => Gate::allows('manage', $mobilityCase),
+            'documents' => CaseDocumentData::forViewer(
+                $mobilityCase,
+                $this->organization($request)->is($mobilityCase->managingOrganization) ? CaseDocumentData::VIEWER_MANAGER : CaseDocumentData::VIEWER_EMPLOYER,
+            ),
+            'documentTypes' => array_values(array_map(
+                fn (DocumentType $type) => $type->value,
+                array_filter(DocumentType::cases(), fn (DocumentType $type) => ! in_array($type, StoreCaseDocumentRequest::EXCLUDED_TYPES, true)),
+            )),
+            'returnReasons' => array_map(fn (CaseDocumentReturnReason $reason) => $reason->value, CaseDocumentReturnReason::cases()),
+            'maxSizeMb' => StoreIdentityDocumentRequest::MAX_KB / 1024,
         ]);
     }
 

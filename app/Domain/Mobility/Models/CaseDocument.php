@@ -78,6 +78,19 @@ class CaseDocument extends Model
     }
 
     /**
+     * @return BelongsTo<User, $this>
+     */
+    public function decider(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'decided_by');
+    }
+
+    public function fromWorker(): bool
+    {
+        return $this->provided_by === DocumentProvider::Worker;
+    }
+
+    /**
      * The file is visible to the case's organizations only while shared and not revoked.
      */
     public function isShared(): bool

@@ -797,3 +797,33 @@ colour) and the appearance tabs use design tokens instead of the kit's neutral g
   label. The UAE passport stage shows the fixed note that the passport goes back to the worker
   right after stamping (D-074).
 - Case lists for each workspace and the documents checklist follow in 6e and 6f.
+
+### D-079 · Case documents
+- **Checklist:** opening a case adds one item per document in the destination's `document_types`
+  country rule (a passport copy and a signed contract where there is no rule). The contract, work
+  permit and visa come from the managing organization; everything else from the worker. The
+  managing organization can add items (type, name, who provides it, due date, instructions);
+  organization registration documents can't be asked for.
+- **Per-item sharing (product rule 6):** the worker shares a file for one item at a time, by
+  uploading it or, for a passport or ID, by sharing the scan on their Documents page (a passport
+  uploaded on the case becomes that scan). Sharing is recorded with its time and the worker can
+  stop it whenever the item isn't accepted yet; the organizations lose the file at once and the
+  item is needed again. Deleting a scan on the Documents page also stops every case share of it.
+  A replaced case-only file is deleted.
+- **Who sees what:** the worker sees every item and file on their case. The managing organization
+  sees the whole checklist and a worker's file only while it is shared. The employer of an agency
+  job sees only items marked for it: the worker decides for their files (passport and ID default
+  to "agency only", as in the prototype; others default to visible), the agency for its own. Files
+  go through the private-media route, which checks this again.
+- **Checks:** the managing organization accepts a shared file or sends it back with a reason code
+  (hard to read, not the document asked for, expired, pages missing, details mismatch, other with a
+  note). Accepted items can't be replaced or revoked from the case page.
+- **Contract:** the organization uploads it; the worker confirms it or sends it back with what needs
+  changing, and the organization uploads a corrected one. Confirming records who and when; the
+  organization still moves the contract stage itself, so no stage changes without a person doing it.
+  Other organization files (permit, visa) are ready as soon as they are uploaded.
+- Every change writes a case event (now linked to its checklist item) and an activity-log entry
+  with before/after values. Alerts: `case_document` to the worker (needed, added, contract ready,
+  accepted, sent back) and `case_document_answered` to the case handler, else everyone at the
+  managing organization with `mobility.manage` (shared, stopped sharing, contract confirmed or
+  queried).

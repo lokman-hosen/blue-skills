@@ -47,11 +47,14 @@ use App\Domain\Messaging\Models\Conversation;
 use App\Domain\Messaging\Models\ConversationRead;
 use App\Domain\Messaging\Models\OutboundMessage;
 use App\Domain\Mobility\Enums\CaseClosedReason;
+use App\Domain\Mobility\Enums\CaseDocumentStatus;
 use App\Domain\Mobility\Enums\CaseEventAction;
+use App\Domain\Mobility\Enums\DocumentProvider;
 use App\Domain\Mobility\Enums\MobilityStageStatus;
 use App\Domain\Mobility\Models\MobilityCase;
 use App\Domain\Mobility\States\MobilityCase\Completed;
 use App\Domain\Mobility\States\MobilityCase\Open as OpenCase;
+use App\Domain\Mobility\Support\CaseChecklist;
 use App\Domain\Organization\Enums\OrganizationType;
 use App\Domain\Organization\Models\Organization;
 use App\Domain\Organization\States\Verification\Pending as PendingOrganization;
@@ -917,6 +920,76 @@ class SampleWorldSeeder extends Seeder
         if ($joined) {
             $case->events()->create(['action' => CaseEventAction::Closed, 'created_at' => $case->closed_at, 'updated_at' => $case->closed_at]);
         }
+
+        $this->seedCaseDocuments($case, $keys, (int) $currentIndex, $dueOn, $openedAt);
+    }
+
+    /**
+     * The destination checklist as far as the case has got (D-079): documents for finished
+     * stages are in and accepted, the current stage's document is needed by its due date. The
+     * passport copy is the worker's scan on file, kept from the employer (prototype w-case).
+     *
+     * @param  list<string>  $keys
+     */
+    private function seedCaseDocuments(MobilityCase $case, array $keys, int $currentIndex, ?string $dueOn, Carbon $openedAt): void
+    {
+        $case->loadMissing('application.workerProfile', 'managingOrganization.users');
+        $workerId = $case->application->workerProfile->user_id;
+        $staffId = $case->handler_user_id ?? $case->managingOrganization?->users->first()?->id;
+        $stageFor = [DocumentType::Contract->value => ['contract_accepted', 'contract'], DocumentType::Passport->value => ['passport_submitted'],
+            DocumentType::Medical->value => ['medical'], DocumentType::PoliceClearance->value => ['police_clearance'], DocumentType::WorkPermit->value => ['work_permit'], DocumentType::Visa->value => ['visa']];
+
+        foreach (CaseChecklist::for($case->template) as $type) {
+            $stage = collect($stageFor[$type->value] ?? [])->map(fn (string $key) => array_search($key, $keys, true))->first(fn ($index) => $index !== false);
+            // Items with no stage of their own (photo, certificates) are due with the first one.
+            $position = is_int($stage) ? $stage : 1;
+            $provider = CaseChecklist::provider($type);
+            $done = $position < $currentIndex;
+            $at = $openedAt->copy()->addWeeks($position);
+            $ownerId = $provider === DocumentProvider::Worker ? $workerId : $staffId;
+
+            $document = match (true) {
+                ! $done || $ownerId === null => null,
+                $type === DocumentType::Passport => Document::query()->where('owner_user_id', $workerId)->where('type', DocumentType::Passport)->first()
+                    ?? $this->sampleDocument($workerId, $type, $type->label()),
+                default => $this->sampleDocument($ownerId, $type, CaseChecklist::title($type)),
+            };
+
+            $item = $case->documents()->create([
+                'type' => $type,
+                'title' => CaseChecklist::title($type),
+                'status' => $document !== null ? CaseDocumentStatus::Accepted : CaseDocumentStatus::Requested,
+                'provided_by' => $provider,
+                'document_id' => $document?->id,
+                'employer_can_view' => CaseChecklist::employerCanViewByDefault($type),
+                'shared_at' => $document !== null ? $at : null,
+                'decided_at' => $document !== null ? $at : null,
+                'decided_by' => $document !== null ? ($type === DocumentType::Contract ? $workerId : $staffId) : null,
+                'due_on' => $position === $currentIndex ? $dueOn : null,
+            ]);
+
+            if ($document !== null) {
+                $case->events()->create([
+                    'action' => $type === DocumentType::Contract ? CaseEventAction::ContractConfirmed : CaseEventAction::DocumentAccepted,
+                    'case_document_id' => $item->id,
+                    'actor_user_id' => $type === DocumentType::Contract ? $workerId : $staffId,
+                    'created_at' => $at,
+                    'updated_at' => $at,
+                ]);
+            }
+        }
+    }
+
+    private function sampleDocument(string $ownerId, DocumentType $type, string $title): Document
+    {
+        $document = Document::query()->create(['owner_user_id' => $ownerId, 'type' => $type, 'title' => $title]);
+        $media = $document->addMediaFromString(self::SAMPLE_PDF)
+            ->usingName("{$type->value}-sample.pdf")
+            ->usingFileName("{$type->value}.pdf")
+            ->toMediaCollection(Document::FILE_COLLECTION);
+        $media->forceFill(['uuid' => (string) str()->uuid()])->save();
+
+        return $document;
     }
 
     private function seedQueues(): void
