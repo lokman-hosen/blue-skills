@@ -23,6 +23,7 @@ use App\Domain\Organization\Models\Organization;
 use App\Domain\Organization\Models\OrganizationInvitation;
 use App\Domain\Organization\Support\CurrentOrganization;
 use App\Domain\Organization\Support\OrganizationPermissions;
+use App\Domain\Trust\Data\AdminOverviewData;
 use App\Domain\Worker\Data\WorkerPassportData;
 use App\Http\Controllers\Organization\ComplianceController;
 use App\Http\Controllers\Public\CohortInviteController;
@@ -45,8 +46,11 @@ class DashboardController extends Controller
             UserType::Worker => Inertia::render('worker/home', [
                 'passport' => $user->workerProfile !== null ? WorkerPassportData::fromProfile($user->workerProfile) : null,
                 'cohortInvite' => $this->pendingCohortInvite($request, $user),
+                'suspended' => $user->workerProfile?->isSuspended() ?? false,
             ]),
-            UserType::Staff => Inertia::render('admin/overview'),
+            UserType::Staff => Inertia::render('admin/overview', [
+                'overview' => AdminOverviewData::for($user),
+            ]),
             // Organization users without a workspace accept an invitation or register one first.
             default => match (true) {
                 $user === null => Inertia::render('org/dashboard'),

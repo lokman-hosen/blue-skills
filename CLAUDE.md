@@ -55,12 +55,12 @@ Worker sign-in is `/join` (phone + code). Locally `OTP_CHANNEL=log` writes the c
 on your machine only (tests always enforce it). Sign-in codes, Voice-to-CV answers and SkillShow videos are
 processed on the queue: run `sail artisan queue:work` (or `composer run dev`). Notifications, WhatsApp/SMS/email
 alerts and live updates also use the queue and the `reverb` Sail service; `sail artisan schedule:work` runs the daily
-new-applicant digest, releases alerts held for workers' quiet hours and pauses agency jobs whose mandate lapsed. WhatsApp and SMS go to the log locally
+new-applicant digest, releases alerts held for workers' quiet hours and pauses agency jobs whose mandate lapsed and marks expired worker evidence. WhatsApp and SMS go to the log locally
 (`NOTIFY_WHATSAPP_DRIVER`, `NOTIFY_SMS_DRIVER`). `SPEECH_TO_TEXT_DRIVER=sample`
 answers every recording with the prototype's sample sentence; SkillShow checks need ffmpeg (in Sail).
 Seeded worker Rahim Uddin signs in with `+8801711000001` and has a complete Skill Passport.
 
-Local logins after seeding (password `password`): `superuser@blueskills.test` (staff),
+Local logins after seeding (password `password`): `superuser@blueskills.test` (staff), `s.rahman@blueskills.test` (verification officer: worker documents), `l.haddad@blueskills.test` (trust officer: case TC-2026-0001; another officer decides its appeal), `hr@global-facilities.test` (employer with a suspended job and an appeal),
 `owner@abc-contracting.test` (employer Owner, draft job AE-ST-0042, pipeline on AE-MT-0115), `owner@gulfstar.test` (employer waiting for review), `sara@abc-contracting.test` (employer HR Admin), `owner@northstar.test` (agency Owner: licence, mandates, compliance), `imran@northstar.test` (agency case officer: cases MC-AE-2026-0188…0191, police clearance waiting for a check on 0189),
 `principal@meghna.test` (institute Owner: courses, cohort 2026 with invite link `/i/MTTCEW26`, pools), `nusrat@meghna.test` (institute placement officer: pools, placements). `/_design` is the staff-only component gallery.
 
@@ -216,7 +216,7 @@ Update this table when a module is done.
 | 5 | Messaging & notifications: in-app, WhatsApp, SMS, email | ✓ |
 | 6 | Agency & mobility: licence, mandates, mobility cases, documents | ✓ |
 | 7 | Institutes: cohorts, invites, attestation, talent pools | ✓ |
-| 8 | Admin & trust: verification queues, reports, cases, config, taxonomy | ☐ |
+| 8 | Admin & trust: verification queues, reports, cases, config, taxonomy | ✓ |
 | 9 | CRM, analytics, billing | ☐ |
 | 10 | Hardening & pilot launch | ☐ |
 

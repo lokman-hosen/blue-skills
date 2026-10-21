@@ -27,6 +27,10 @@ enum ReviewReason: string
     case MandateScopeMismatch = 'mandate_scope_mismatch';
     case LicenceExpired = 'licence_expired';
 
+    // Worker evidence (Module 8)
+    case NotGenuine = 'not_genuine';
+    case WrongDocument = 'wrong_document';
+
     // Both
     case MoreInformationNeeded = 'more_information_needed';
 
@@ -49,6 +53,8 @@ enum ReviewReason: string
             self::MandateNotSigned => 'Mandate letter not signed by the employer',
             self::MandateScopeMismatch => 'Letter does not match the trades, destination or headcount',
             self::LicenceExpired => 'Agency licence expired or not valid for the destination',
+            self::NotGenuine => 'Document appears altered or not genuine',
+            self::WrongDocument => 'Not the document described',
             self::MoreInformationNeeded => 'More information needed',
         };
     }
@@ -84,5 +90,15 @@ enum ReviewReason: string
             self::MandateNotSigned, self::MandateScopeMismatch, self::LicenceExpired, self::LicenceOutOfScope,
             self::DocumentUnreadable, self::DetailsMismatch, self::MoreInformationNeeded,
         ];
+    }
+
+    /**
+     * Why a worker's uploaded evidence isn't verified (D-090).
+     *
+     * @return list<self>
+     */
+    public static function forEvidence(): array
+    {
+        return [self::DocumentUnreadable, self::DocumentExpired, self::DetailsMismatch, self::WrongDocument, self::NotGenuine];
     }
 }

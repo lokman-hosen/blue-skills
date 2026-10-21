@@ -3,6 +3,7 @@
 use App\Domain\Jobs\Actions\PauseJobsUnderLapsedMandates;
 use App\Domain\Messaging\Actions\ReleaseHeldMessages;
 use App\Domain\Messaging\Actions\SendNewApplicantDigests;
+use App\Domain\Verification\Actions\ExpireEvidence;
 use App\Domain\Worker\Actions\PruneVoiceRecordings;
 use Illuminate\Foundation\Inspiring;
 use Illuminate\Support\Facades\Artisan;
@@ -37,3 +38,9 @@ Artisan::command('jobs:pause-lapsed-mandates', function (PauseJobsUnderLapsedMan
 
 // Just after midnight in the Gulf, so a mandate ending yesterday stops backing jobs today.
 Schedule::command('jobs:pause-lapsed-mandates')->dailyAt('20:30')->onOneServer();
+
+Artisan::command('evidence:expire', function (ExpireEvidence $expire) {
+    $this->info("Marked {$expire->handle()} evidence items expired.");
+})->purpose('Mark verified worker evidence expired once its document passes its expiry date (D-090)');
+
+Schedule::command('evidence:expire')->dailyAt('01:00')->onOneServer();

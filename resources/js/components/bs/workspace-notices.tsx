@@ -2,6 +2,7 @@ import { Link, usePage } from '@inertiajs/react';
 import { ShieldAlert, ShieldCheck, X } from 'lucide-react';
 import { useState } from 'react';
 import { useTranslation } from '@/lib/i18n';
+import appeals from '@/routes/appeals';
 import { edit as verificationEvidence } from '@/routes/organizations/verification';
 import { edit as securitySettings } from '@/routes/security';
 
@@ -44,13 +45,22 @@ export function WorkspaceNotices() {
                             t('organization.notice.pending'),
                         )}
                     </p>
-                    {organizationAbilities.update && (
+                    {verification === 'suspended' ? (
                         <Link
-                            href={verificationEvidence()}
+                            href={appeals.index()}
                             className="inline-flex min-h-11 items-center font-semibold text-brand hover:underline"
                         >
-                            {t('organization.notice.add_documents')}
+                            {t('organization.notice.appeal')}
                         </Link>
+                    ) : (
+                        organizationAbilities.update && (
+                            <Link
+                                href={verificationEvidence()}
+                                className="inline-flex min-h-11 items-center font-semibold text-brand hover:underline"
+                            >
+                                {t('organization.notice.add_documents')}
+                            </Link>
+                        )
                     )}
                 </div>
             )}

@@ -21,6 +21,11 @@ enum NotificationEvent: string
     case CaseClosed = 'case_closed';
     case CaseDocument = 'case_document';
     case InstituteRecord = 'institute_record';
+    case EvidenceReviewed = 'evidence_reviewed';
+    case JobSuspended = 'job_suspended';
+    case AccountSuspended = 'account_suspended';
+    case ReportOutcome = 'report_outcome';
+    case AppealDecided = 'appeal_decided';
 
     // Organization members
     case NewApplicants = 'new_applicants';
@@ -32,6 +37,7 @@ enum NotificationEvent: string
     case CaseDocumentAnswered = 'case_document_answered';
     case JobPausedMandate = 'job_paused_mandate';
     case GraduateJoined = 'graduate_joined';
+    case OrganizationSuspended = 'organization_suspended';
 
     public function forWorkers(): bool
     {
@@ -45,7 +51,8 @@ enum NotificationEvent: string
     {
         return [
             self::Shortlisted, self::InterviewScheduled, self::OfferReceived, self::ApplicationRejected, self::JobChanged, self::JobInvitation, self::WorkerMessage,
-            self::CaseOpened, self::CaseUpdated, self::CaseClosed, self::CaseDocument, self::InstituteRecord,
+            self::CaseOpened, self::CaseUpdated, self::CaseClosed, self::CaseDocument, self::InstituteRecord, self::EvidenceReviewed,
+            self::JobSuspended, self::AccountSuspended, self::ReportOutcome, self::AppealDecided,
         ];
     }
 
@@ -57,6 +64,7 @@ enum NotificationEvent: string
         return [
             self::NewApplicants, self::ApplicationAnswered, self::OrganizationMessage,
             self::MandateRequested, self::MandateAnswered, self::MandateReviewed, self::CaseDocumentAnswered, self::JobPausedMandate, self::GraduateJoined,
+            self::OrganizationSuspended,
         ];
     }
 
@@ -89,6 +97,11 @@ enum NotificationEvent: string
             self::CaseClosed => 'Your mobility case closed',
             self::CaseDocument => 'A case document needs you',
             self::InstituteRecord => 'An institute attested your training or recorded a test',
+            self::EvidenceReviewed => 'BLUESKILLS checked a document you uploaded',
+            self::JobSuspended => 'A job you applied to was suspended',
+            self::AccountSuspended => 'Your account was suspended or restored',
+            self::ReportOutcome => 'The outcome of something you reported',
+            self::AppealDecided => 'A decision on your appeal',
             self::NewApplicants => 'New applicants (daily)',
             self::ApplicationAnswered => 'Worker accepted, declined or withdrew',
             self::OrganizationMessage => 'New message from a worker',
@@ -98,6 +111,7 @@ enum NotificationEvent: string
             self::CaseDocumentAnswered => 'A worker shared or answered a case document',
             self::JobPausedMandate => 'A job paused because its mandate lapsed',
             self::GraduateJoined => 'A graduate joined a cohort',
+            self::OrganizationSuspended => 'Your organization or a job was suspended or restored',
         };
     }
 }

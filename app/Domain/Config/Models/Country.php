@@ -14,7 +14,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
-#[Fillable(['code', 'name', 'currency', 'dial_code', 'enabled_as_source', 'enabled_as_destination'])]
+#[Fillable(['code', 'name', 'currency', 'dial_code', 'enabled_as_source', 'enabled_as_destination', 'legal_reviewed_at', 'legal_reviewed_by'])]
 #[RouteKey('code')]
 #[UseFactory(CountryFactory::class)]
 class Country extends Model
@@ -30,6 +30,7 @@ class Country extends Model
         return [
             'enabled_as_source' => 'boolean',
             'enabled_as_destination' => 'boolean',
+            'legal_reviewed_at' => 'datetime',
         ];
     }
 

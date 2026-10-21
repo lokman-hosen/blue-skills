@@ -4,6 +4,7 @@ use App\Http\Controllers\Admin\DesignSystemController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\Public\CohortInviteController;
 use App\Http\Controllers\Public\JobController as PublicJobController;
+use App\Http\Controllers\Shared\AppealController;
 use App\Http\Controllers\Shared\LocaleController;
 use App\Http\Controllers\Shared\MessageReportController;
 use App\Http\Controllers\Shared\NotificationController;
@@ -38,6 +39,10 @@ Route::middleware(['auth', 'verified', 'staff.2fa'])->group(function () {
 
     // In-app notifications (Module 5).
     Route::get('notifications', [NotificationController::class, 'index'])->name('notifications.index');
+
+    // Suspensions and appeals (Module 8, D-088).
+    Route::get('appeals', [AppealController::class, 'index'])->name('appeals.index');
+    Route::post('appeals/{action}', [AppealController::class, 'store'])->middleware('throttle:10,1')->name('appeals.store');
     Route::get('notifications/preferences', [NotificationPreferenceController::class, 'edit'])->name('notifications.preferences');
     Route::put('notifications/preferences', [NotificationPreferenceController::class, 'update'])->name('notifications.preferences.update');
     Route::post('notifications/read-all', [NotificationController::class, 'readAll'])->name('notifications.read-all');

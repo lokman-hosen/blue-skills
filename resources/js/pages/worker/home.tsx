@@ -1,5 +1,5 @@
 import { Head, Link } from '@inertiajs/react';
-import { GraduationCap, IdCard } from 'lucide-react';
+import { GraduationCap, IdCard, ShieldAlert } from 'lucide-react';
 import { EmptyState } from '@/components/bs/empty-state';
 import { PageHeader } from '@/components/bs/page-header';
 import { ProfileCompletionCard } from '@/components/bs/profile-completion-card';
@@ -7,6 +7,7 @@ import { SkillPassportCard } from '@/components/bs/skill-passport-card';
 import { Button } from '@/components/ui/button';
 import { useTranslation } from '@/lib/i18n';
 import { toSkillPassportCard } from '@/lib/passport';
+import appeals from '@/routes/appeals';
 import cohortInviteRoutes from '@/routes/cohort-invite';
 import worker from '@/routes/worker';
 
@@ -14,10 +15,12 @@ type Props = {
     passport: App.Domain.Worker.Data.WorkerPassportData | null;
     /** An institute invitation opened before signing up, until answered (D-082). */
     cohortInvite?: App.Domain.Institute.Data.CohortInviteData | null;
+    /** Hidden from employers and can't apply until the suspension is lifted (D-088). */
+    suspended?: boolean;
 };
 
 /** Worker home: profile progress and the Skill Passport. Jobs arrive in Module 3. */
-export default function WorkerHome({ passport, cohortInvite = null }: Props) {
+export default function WorkerHome({ passport, cohortInvite = null, suspended = false }: Props) {
     const { t } = useTranslation();
 
     return (
@@ -32,6 +35,15 @@ export default function WorkerHome({ passport, cohortInvite = null }: Props) {
                     }
                     description={t('worker.home.body')}
                 />
+                {suspended && (
+                    <Link
+                        href={appeals.index()}
+                        className="flex items-center gap-3 rounded-xl border border-bad/40 bg-bad-soft px-4 py-3 text-sm font-semibold hover:border-bad"
+                    >
+                        <ShieldAlert aria-hidden className="size-5 shrink-0 text-bad" />
+                        {t('worker.home.suspended')}
+                    </Link>
+                )}
                 {cohortInvite && (
                     <Link
                         href={cohortInviteRoutes.show(cohortInvite.code)}

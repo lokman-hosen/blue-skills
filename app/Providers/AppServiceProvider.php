@@ -52,7 +52,11 @@ use App\Domain\Taxonomy\Models\Occupation;
 use App\Domain\Taxonomy\Models\Sector;
 use App\Domain\Taxonomy\Models\Skill;
 use App\Domain\Taxonomy\Models\Specialization;
+use App\Domain\Trust\Models\Appeal;
 use App\Domain\Trust\Models\Report;
+use App\Domain\Trust\Models\TrustAction;
+use App\Domain\Trust\Models\TrustCase;
+use App\Domain\Trust\Models\TrustCaseNote;
 use App\Domain\Verification\Models\Document;
 use App\Domain\Verification\Models\EvidenceItem;
 use App\Domain\Verification\Models\VerificationRequest;
@@ -120,6 +124,10 @@ class AppServiceProvider extends ServiceProvider
     {
         Gate::define('viewDesignSystem', fn (User $user): bool => $user->isStaff());
         Gate::define('manageStaff', fn (User $user): bool => $user->hasStaffPermission(Permission::StaffManage->value));
+        // Corridor rules, countries and languages; the occupation taxonomy (D-093).
+        Gate::define('manageConfig', fn (User $user): bool => $user->hasStaffPermission(Permission::ConfigManage->value));
+        Gate::define('viewAuditLog', fn (User $user): bool => $user->hasStaffPermission(Permission::StaffManage->value));
+        Gate::define('manageTaxonomy', fn (User $user): bool => $user->hasStaffPermission(Permission::TaxonomyManage->value));
     }
 
     /**
@@ -179,6 +187,10 @@ class AppServiceProvider extends ServiceProvider
             'trade_assessment' => TradeAssessment::class,
             'talent_pool' => TalentPool::class,
             'talent_pool_member' => TalentPoolMember::class,
+            'trust_case' => TrustCase::class,
+            'trust_case_note' => TrustCaseNote::class,
+            'trust_action' => TrustAction::class,
+            'appeal' => Appeal::class,
         ]);
     }
 

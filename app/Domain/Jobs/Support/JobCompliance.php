@@ -19,7 +19,8 @@ final class JobCompliance
     /**
      * Country-rule disclosure keys → the job field that discloses them.
      */
-    private const DISCLOSURES = [
+    /** Disclosure keys a corridor can require, and the job field each one needs (D-093). */
+    public const DISCLOSURES = [
         'salary' => 'salary_amount_minor',
         'gross_pay' => 'salary_amount_minor',
         'monthly_pay' => 'salary_amount_minor',

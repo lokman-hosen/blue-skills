@@ -240,6 +240,16 @@ declare namespace App {
         }
         namespace Config {
             namespace Data {
+                export type CountryConfigData = {
+                    code: string;
+                    name: string;
+                    currency: string;
+                    source: boolean;
+                    destination: boolean;
+                    legalReviewedAt: string | null;
+                    legalReviewedBy: string | null;
+                    rules: Record<string, any> | null;
+                };
                 export type CountryOptionData = {
                     code: string;
                     name: string;
@@ -795,6 +805,11 @@ declare namespace App {
                     | 'case_closed'
                     | 'case_document'
                     | 'institute_record'
+                    | 'evidence_reviewed'
+                    | 'job_suspended'
+                    | 'account_suspended'
+                    | 'report_outcome'
+                    | 'appeal_decided'
                     | 'new_applicants'
                     | 'application_answered'
                     | 'organization_message'
@@ -803,7 +818,8 @@ declare namespace App {
                     | 'mandate_reviewed'
                     | 'case_document_answered'
                     | 'job_paused_mandate'
-                    | 'graduate_joined';
+                    | 'graduate_joined'
+                    | 'organization_suspended';
             }
         }
         namespace Mobility {
@@ -1002,6 +1018,14 @@ declare namespace App {
                     specializations: App.Domain.Taxonomy.Data.TaxonomyOptionData[];
                     skills: App.Domain.Taxonomy.Data.TaxonomyOptionData[];
                 };
+                export type TaxonomyItemData = {
+                    id: string;
+                    type: string;
+                    slug: string;
+                    names: Record<string, string>;
+                    usage: number;
+                    children: App.Domain.Taxonomy.Data.TaxonomyItemData[];
+                };
                 export type TaxonomyOptionData = {
                     id: string;
                     slug: string;
@@ -1010,7 +1034,98 @@ declare namespace App {
             }
         }
         namespace Trust {
+            namespace Data {
+                export type AdminOverviewData = {
+                    queues: {
+                        key: string;
+                        count: number;
+                    }[];
+                    marketplace: Record<string, number>;
+                    corridorsPendingLegalReview: number;
+                };
+                export type AppealData = {
+                    id: string;
+                    status: App.Support.Data.StatusData;
+                    statement: string;
+                    appellant: string | null;
+                    decisionNote: string | null;
+                    decider: string | null;
+                    submittedAt: string;
+                    decidedAt: string | null;
+                };
+                export type AuditEntryData = {
+                    id: string | number;
+                    at: string;
+                    area: string | null;
+                    event: string;
+                    actor: string | null;
+                    actorEmail: string | null;
+                    subjectType: string | null;
+                    subjectId: string | null;
+                    properties: string;
+                };
+                export type ReportData = {
+                    id: string;
+                    category: App.Domain.Trust.Enums.ReportCategory;
+                    description: string;
+                    status: App.Support.Data.StatusData;
+                    about: string;
+                    subject: string;
+                    excerpt: string | null;
+                    reporter: string | null;
+                    createdAt: string;
+                    caseId: string | null;
+                    caseReference: string | null;
+                    outcome: string | null;
+                    reasonCode: string | null;
+                };
+                export type TrustActionData = {
+                    id: string;
+                    action: App.Domain.Trust.Enums.TrustActionType;
+                    reason: App.Domain.Trust.Enums.TrustReason;
+                    subject: string;
+                    note: string | null;
+                    actor: string | null;
+                    actorId: string | null;
+                    at: string;
+                    appeals: App.Domain.Trust.Data.AppealData[];
+                };
+                export type TrustCaseData = {
+                    summary: App.Domain.Trust.Data.TrustCaseListItemData;
+                    summaryText: string;
+                    assigneeId: string | null;
+                    outcomeCode: string | null;
+                    closedAt: string | null;
+                    reports: App.Domain.Trust.Data.ReportData[];
+                    notes: {
+                        id: string;
+                        body: string;
+                        author: string | null;
+                        at: string;
+                        files: {
+                            name: string;
+                            url: string | null;
+                        }[];
+                    }[];
+                    actions: App.Domain.Trust.Data.TrustActionData[];
+                };
+                export type TrustCaseListItemData = {
+                    id: string;
+                    reference: string;
+                    category: App.Domain.Trust.Enums.ReportCategory;
+                    status: App.Support.Data.StatusData;
+                    priority: App.Support.Data.StatusData;
+                    subjectType: string;
+                    subject: string;
+                    subjectSuspended: boolean;
+                    assignee: string | null;
+                    reports: number;
+                    openedAt: string;
+                };
+            }
             namespace Enums {
+                export type AppealStatus = 'submitted' | 'upheld' | 'overturned';
+                export type CasePriority = 'low' | 'normal' | 'high' | 'urgent';
                 export type ReportCategory =
                     | 'fake_job'
                     | 'unauthorized_payment'
@@ -1019,10 +1134,40 @@ declare namespace App {
                     | 'harassment'
                     | 'fake_credential'
                     | 'other';
+                export type ReportOutcome = 'action_taken' | 'no_action';
+                export type TrustActionType = 'suspend' | 'restore';
+                export type TrustReason =
+                    | 'fake_job'
+                    | 'unauthorized_payment'
+                    | 'misleading_conditions'
+                    | 'impersonation'
+                    | 'harassment'
+                    | 'fake_credentials'
+                    | 'repeated_breaches'
+                    | 'no_evidence'
+                    | 'not_a_breach'
+                    | 'duplicate'
+                    | 'resolved'
+                    | 'appeal_upheld'
+                    | 'appeal_overturned';
             }
         }
         namespace Verification {
             namespace Data {
+                export type EvidenceReviewData = {
+                    id: string;
+                    type: App.Domain.Verification.Enums.EvidenceType;
+                    title: string | null;
+                    state: App.Support.Data.StatusData;
+                    workerName: string;
+                    passportReference: string;
+                    uploadedAt: string;
+                    expiresOn: string | null;
+                    reviewer: string | null;
+                    fileUrl: string | null;
+                    fileName: string | null;
+                    history: App.Domain.Verification.Data.ReviewDecisionData[];
+                };
                 export type ReviewDecisionData = {
                     decision: App.Domain.Verification.Enums.VerificationDecision;
                     reasonCode: string | null;
@@ -1069,6 +1214,8 @@ declare namespace App {
                     | 'mandate_not_signed'
                     | 'mandate_scope_mismatch'
                     | 'licence_expired'
+                    | 'not_genuine'
+                    | 'wrong_document'
                     | 'more_information_needed';
                 export type VerificationDecision = 'approved' | 'rejected' | 'needs_info';
                 export type VerificationType =

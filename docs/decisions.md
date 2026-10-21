@@ -968,3 +968,120 @@ colour) and the appearance tabs use design tokens instead of the kit's neutral g
 - **Review fix:** organization pages subscribed every member to the organization inbox channel,
   which members without applicant access (all institute roles) are refused; they now subscribe
   only when they may view applicants.
+
+### D-088 · Module 8 inputs (owner answers, 2026-10-21)
+- **Suspension:** a suspended organization's members can still sign in, read-only, to see their
+  data and appeal; they can't post, publish, change jobs or message. Its live jobs are suspended
+  and their applicants told. Existing applications and mobility cases continue. A suspended worker
+  is hidden from talent search and pools and can't apply, but can sign in and appeal.
+- **Reporters** get a short outcome only ("reviewed, action taken" or "reviewed, no action
+  needed"), never details about the other party.
+- **Corridor legal review** is recorded per country. A destination without it shows a staff-only
+  "legal review pending" flag; publishing isn't blocked.
+- **Sensitive files** (passport and ID scans) are opened only by Verification Officers and
+  Superusers while reviewing, and every view is written to the audit log.
+- **Review cadence:** once at the end of the module.
+
+### D-089 · Trust schema
+- `trust_cases`: reference `TC-2026-0001`, subject (organization, job or worker profile),
+  category (the report categories), priority (low / normal / high / urgent), status open →
+  investigating → action taken → closed (a closed case can be reopened), assignee, opener, summary
+  and outcome reason code.
+- `reports` gain the case they belong to, the outcome the reporter is told (action taken / no
+  action), a reason code and who decided when.
+- `trust_case_notes`: evidence notes with files on the private disk; `trust_actions`: suspend /
+  restore with a reason code, append-only; `appeals`: statement, submitted → upheld | overturned,
+  decided by another trust officer than the one who suspended.
+- `worker_profiles.suspended_at` hides a worker from talent search and pools; `countries` record
+  the corridor legal review (who, when).
+- Reason codes (`TrustReason`) cover action (fake job, unauthorized payment, misleading
+  conditions, impersonation, harassment, fake credentials, repeated breaches), no action (no
+  evidence, not a breach, duplicate, resolved) and appeal outcomes.
+- Trust Officers and Superusers (`trust.manage`) run cases.
+
+### D-090 · Worker evidence review
+- `/admin/evidence` (Verification Officers and Superusers) lists the documents workers uploaded
+  (passport and ID scans, certificates, training records, work references) that are uploaded /
+  unreviewed or verification pending, oldest first. Institute attestations and assessments are
+  issued already and never appear here.
+- "Start review" marks the item verification pending and assigns it to the officer; only then
+  does the file open, through the private-media route, and every view is written to the audit
+  log (`document.viewed_by_staff`, D-088). The officer verifies (issuer verified) or rejects with a
+  reason code (unreadable, expired, details mismatch, not the document described, altered or not
+  genuine) and an optional note; "more information" isn't offered: a rejection with its reason
+  tells the worker what to upload again. The decision is a verification request like other staff
+  reviews, so the history shows who decided what.
+- Workers get `evidence_reviewed`. A daily task (`evidence:expire`) marks verified evidence expired
+  once its document's expiry date passes (product rule 9).
+
+### D-091 · Staff overview
+- The staff Overview (prototype x-queue) shows a tile for each queue the viewer can work on, with
+  what waits there: employer registrations, agency licences, institute accreditation, mandates,
+  job Truth Cards, worker documents, SkillShows and trust reports. Tiles link to their queue.
+  Staff without a queue permission (e.g. CRM agents) see no queue tiles.
+- Marketplace numbers: workers registered, profiles complete, findable by employers, verified
+  employers / agencies / institutes, live jobs, applications in the last 30 days, offers accepted,
+  open mobility cases and workers joined.
+- A staff-only notice counts destination corridors still waiting for legal review (D-088).
+
+### D-092 · Trust reports, cases, suspensions and appeals
+- **Reports** (`/admin/trust/reports`, Trust Officers and Superusers) show what was reported
+  ("Report this job", "Report message"), who reported it and the message text. An officer
+  dismisses one with a no-action reason (not enough evidence, not against the rules, duplicate,
+  resolved), or opens a case. A report about something that already has an open case joins it.
+  A reported message is about whoever sent it: the worker, or the organization.
+- **Cases** (`/admin/trust/cases`) carry a priority, an assignee, evidence notes with files
+  (screenshots, call logs, payment records; private, trust staff only) and actions. Opening a
+  case assigns it to its opener.
+- **Suspending** takes an action reason and a note, both kept in the case and the audit log:
+  - a **job** must be live or paused; it leaves search and its applicants are told not to pay
+    anyone;
+  - an **organization** must be verified; its live and paused jobs are suspended with it, and its
+    members can still sign in and read but every change in the workspace (jobs, hiring steps,
+    messages, team, mandates) is refused with an explanation;
+  - a **worker** is hidden from search and pools and can't apply.
+  Applications and mobility cases already under way carry on. Lifting a suspension is a restore
+  action; restoring an organization brings back the jobs suspended with it but not jobs that were
+  suspended on their own. Owners are told both ways (`organization_suspended`,
+  `account_suspended`, applicants `job_suspended`).
+- **Closing** a case takes an outcome reason. Its reports close as "action taken" when the case
+  suspended anything, otherwise "no action needed", and each reporter gets only that
+  (`report_outcome`, in-app for organization reporters).
+- **Appeals** (`/appeals`): a suspended worker, or an organization member who may change the
+  organization or its jobs, sees what is suspended and why (no staff names or notes) and sends one
+  appeal at a time. A trust officer other than the one who suspended upholds or lifts it with a
+  note the appellant sees (`appeal_decided`); lifting adds a restore action.
+- Workspace and worker home show a suspension banner linking to appeals.
+
+### D-093 · Configuration and taxonomy
+- **Configuration** (`/admin/config`, `config.manage`, Superusers): each country's currency,
+  whether workers come from it and jobs go to it, and the corridor legal review (who marked it,
+  when). Corridor rules are edited in structured form: who may recruit, the worker cost policy and
+  the notice shown to workers (text); languages, the cost categories a worker may lawfully pay,
+  the disclosures every job must make (the known disclosure keys only) and the documents a
+  mobility case asks for (lists); and the mobility stages (ordered rows with "done when the case
+  opens"). New stages get a key from their label; existing keys never change, and stage changes
+  apply to cases opened afterwards. Language status (offered / in review / planned) is set here.
+- **Taxonomy** (`/admin/taxonomy`, `taxonomy.manage`, Superusers): add and rename sectors,
+  occupations, specializations and skills with a name per launch language (English required,
+  others fall back to it). The slug is set from the English name once and never changes, so
+  filters and links keep working. Only items nothing uses can be removed (workers, jobs, courses,
+  pools, mandates, skills, SkillShows, job requirements); used ones are renamed instead.
+- Every configuration and taxonomy change is written to the activity log with old and new
+  values.
+
+### D-094 · Audit log, sample data and review fixes
+- **Audit log** (`/admin/audit`, Superusers): every activity-log entry, newest first, filtered by
+  area (trust, verification, config, taxonomy, jobs…), person (name or email), record ID and
+  date range, with the recorded before/after values. A freshly seeded database starts with an
+  empty log because seeding writes records directly; real actions fill it.
+- **Sample data:** a report on UAE-EL-0001 waiting (Sunil: "asked for 20,000 taka"); case
+  TC-2026-0001 that suspended JP-IT-0007 over a misleading dormitory cost, with two reports, an
+  evidence note and Global Facilities' appeal waiting; a dismissed duplicate report; the UAE
+  corridor marked legally reviewed. Rahim's passport scan and work reference wait in the worker
+  documents queue.
+- **Review fix:** "was this job suspended on its own?" compared an enum with a string and was
+  always false, so appeals pages missed suspended jobs and restoring an organization would have
+  restored jobs suspended separately. Fixed with a regression test.
+- **Deploy notes for Module 8:** run migrations; schedule `evidence:expire` (daily) alongside the
+  existing tasks; mark each live corridor's legal review in Configuration.

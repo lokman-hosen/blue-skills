@@ -67,12 +67,17 @@ class NotificationData extends Data
         foreach ($params as $key => $value) {
             $rendered[$key] = match ($key) {
                 'reason' => __("rejection_reason.{$value}"),
+                'trust_reason' => __("trust_reason.{$value}"),
+                'suspension' => __("notification.suspension.{$value}"),
+                'report_outcome' => __("notification.report_outcome.{$value}"),
+                'appeal_status' => __("notification.appeal_status.{$value}"),
                 'answer' => __("notification.answer.{$value}"),
                 'decision' => __("review_decision.{$value}"),
                 'mandate_answer' => __("notification.mandate_answer.{$value}"),
                 'case_action' => __("notification.case_action.{$value}"),
                 'document_action' => __("notification.document_action.{$value}"),
                 'record_action' => __("notification.record_action.{$value}"),
+                'evidence_type' => __("evidence.type.{$value}"),
                 'closed_reason' => __("mobility.closed_reason.{$value}"),
                 'at' => CarbonImmutable::parse((string) $value)
                     ->setTimezone($reader->timezone ?: 'UTC')

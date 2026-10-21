@@ -38,8 +38,7 @@ use Spatie\MediaLibrary\InteractsWithMedia;
 #[Fillable([
     'user_id', 'reference', 'headline', 'occupation_id', 'specialization_id', 'years_experience', 'current_country_code',
     'passport_status', 'passport_valid_until_year', 'availability', 'visibility', 'salary_expectation_minor',
-    'salary_currency', 'salary_period', 'profile_completed_at',
-])]
+    'salary_currency', 'salary_period', 'profile_completed_at', 'suspended_at'])]
 #[UseFactory(WorkerProfileFactory::class)]
 class WorkerProfile extends Model implements HasMedia
 {
@@ -81,6 +80,7 @@ class WorkerProfile extends Model implements HasMedia
             'salary_expectation_minor' => 'integer',
             'salary_period' => SalaryPeriod::class,
             'profile_completed_at' => 'datetime',
+            'suspended_at' => 'datetime',
         ];
     }
 
@@ -240,6 +240,11 @@ class WorkerProfile extends Model implements HasMedia
      * Found in talent search: visible to employers and agencies with an active discovery consent,
      * a trade, and an account that still exists (D-052, product rule 6).
      */
+    public function isSuspended(): bool
+    {
+        return $this->suspended_at !== null;
+    }
+
     public function isDiscoverable(): bool
     {
         return self::query()->whereKey($this->id)->discoverable()->exists();
@@ -252,6 +257,8 @@ class WorkerProfile extends Model implements HasMedia
     protected function discoverable(Builder $query): void
     {
         $query->where('visibility', ProfileVisibility::EmployersAndAgencies)
+            // Suspended workers are hidden from search and pools (D-088).
+            ->whereNull('suspended_at')
             ->whereNotNull('occupation_id')
             ->whereHas('user')
             ->whereHas('consents', fn (Builder $consents) => $consents->where('purpose', ConsentPurpose::Discovery)->whereNull('revoked_at'));
