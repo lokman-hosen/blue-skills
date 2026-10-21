@@ -30,6 +30,7 @@ declare namespace App {
                     canOffer: boolean;
                     jobSalary: App.Support.Data.MoneyData | null;
                     jobSalaryPeriod: App.Domain.Jobs.Enums.SalaryPeriod | null;
+                    mobilityCaseId: string | null;
                 };
                 export type ApplicantListItemData = {
                     id: string;
@@ -193,6 +194,7 @@ declare namespace App {
                     consents: App.Domain.Applications.Data.ConsentItemData[];
                     jobChangedAt: string | null;
                     snapshotTakenAt: string | null;
+                    mobilityCaseId: string | null;
                 };
                 export type WorkerApplicationListItemData = {
                     id: string;
@@ -637,6 +639,9 @@ declare namespace App {
                     | 'job_changed'
                     | 'job_invitation'
                     | 'worker_message'
+                    | 'case_opened'
+                    | 'case_updated'
+                    | 'case_closed'
                     | 'new_applicants'
                     | 'application_answered'
                     | 'organization_message'
@@ -646,6 +651,47 @@ declare namespace App {
             }
         }
         namespace Mobility {
+            namespace Data {
+                export type CaseEventData = {
+                    id: string;
+                    action: App.Domain.Mobility.Enums.CaseEventAction;
+                    stage: string | null;
+                    actor: string | null;
+                    note: string | null;
+                    at: string;
+                };
+                export type CaseStageData = {
+                    id: string;
+                    key: string;
+                    label: string;
+                    status: string;
+                    date: string | null;
+                    dueOn: string | null;
+                    nextAction: string | null;
+                    blockedReason: string | null;
+                };
+                export type MobilityCaseData = {
+                    id: string;
+                    reference: string;
+                    status: App.Support.Data.StatusData;
+                    closedReason: App.Domain.Mobility.Enums.CaseClosedReason | null;
+                    closedAt: string | null;
+                    applicationId: string;
+                    jobTitle: string;
+                    jobCode: string;
+                    destinationCountryCode: string;
+                    destination: string;
+                    employer: string;
+                    agency: string | null;
+                    managedBy: string;
+                    handledBy: string;
+                    workerName: string | null;
+                    current: App.Domain.Mobility.Data.CaseStageData | null;
+                    stages: App.Domain.Mobility.Data.CaseStageData[];
+                    events: App.Domain.Mobility.Data.CaseEventData[];
+                    openedAt: string;
+                };
+            }
             namespace Enums {
                 export type CaseClosedReason =
                     | 'joined'
@@ -661,6 +707,8 @@ declare namespace App {
                     | 'stage_completed'
                     | 'stage_blocked'
                     | 'stage_skipped'
+                    | 'stage_resumed'
+                    | 'next_action_set'
                     | 'document_requested'
                     | 'document_uploaded'
                     | 'document_accepted'

@@ -771,3 +771,29 @@ colour) and the appearance tabs use design tokens instead of the kit's neutral g
   are not paused automatically yet; that comes with the agency workspace (6f/6g).
 - Sample data: Northstar's licence covers AE and SA; MD-1107 covers electricians to AE with 300
   places, MD-1121 HVAC technicians to SA.
+
+### D-078 · Mobility cases
+- **Opening:** accepting an offer opens the case in the same transaction (product rule 8). The
+  case is a separate record with a reference like `MC-AE-2026-0188`. The organization that posted
+  the job runs it (the agency for agency jobs; the employer for direct jobs), and "Handled by" is
+  the application's assignee, otherwise whoever sent the offer. Declined offers open nothing.
+- **Stages** come from the destination's `mobility_stage_template` country rule. A template stage
+  may set `done_on_open` (UAE "Job selected"); the first other stage starts at once. A destination
+  without a template uses a short generic one (contract accepted, medical test, visa, travel,
+  joined) so an accepted offer always opens a case. Re-run `CountryRuleSeeder` on deploy.
+- **Running a case:** only the current stage changes, in template order. The managing
+  organization (members with `mobility.manage`) can mark it done, skip it or put it on hold (both
+  need a reason the worker sees), resume it, and set the worker's next action and due date.
+  Finishing the last stage closes the case as joined. Closing early takes a reason (worker
+  withdrew, employer cancelled, visa refused, medical test not passed, other with a note) and
+  cancels the case; closing as joined needs every stage done or skipped. Closed cases can't reopen.
+- **Who sees what:** the worker sees their case, with the organization's name rather than the
+  staff member's in the history. The employer of an agency job and agency Compliance Reviewers can
+  follow a case but not change it. Other organizations get a 404.
+- Every change writes a case event (never edited) and an activity-log entry with before/after
+  values. Workers get `case_opened`, `case_updated` (stage done, skipped, on hold, resumed, new
+  next action) and `case_closed` alerts on their usual channels.
+- Stage names are translated with `mobility.stage.{key}` and fall back to the template's English
+  label. The UAE passport stage shows the fixed note that the passport goes back to the worker
+  right after stamping (D-074).
+- Case lists for each workspace and the documents checklist follow in 6e and 6f.

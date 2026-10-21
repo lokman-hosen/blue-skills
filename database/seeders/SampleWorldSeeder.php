@@ -46,6 +46,8 @@ use App\Domain\Messaging\Enums\NotificationEvent;
 use App\Domain\Messaging\Models\Conversation;
 use App\Domain\Messaging\Models\ConversationRead;
 use App\Domain\Messaging\Models\OutboundMessage;
+use App\Domain\Mobility\Enums\CaseClosedReason;
+use App\Domain\Mobility\Enums\CaseEventAction;
 use App\Domain\Mobility\Enums\MobilityStageStatus;
 use App\Domain\Mobility\Models\MobilityCase;
 use App\Domain\Mobility\States\MobilityCase\Completed;
@@ -875,24 +877,45 @@ class SampleWorldSeeder extends Seeder
         $keys = array_column($template, 'key');
         $currentIndex = $currentStage === 'joined' ? count($keys) : array_search($currentStage, $keys, true);
 
+        $joined = $currentStage === 'joined';
+        $openedAt = Carbon::parse($application->applied_at)->addWeek();
         $case = MobilityCase::query()->create([
             'application_id' => $application->id,
             'template' => $job->destination_country_code,
-            'current_stage' => $currentStage === 'joined' ? null : $currentStage,
-            'status' => $currentStage === 'joined' ? Completed::class : OpenCase::class,
+            // Prototype case MC-UAE-2026-0188, numbered on from there (D-078).
+            'reference' => sprintf('MC-%s-2026-%04d', $job->destination_country_code, 188 + MobilityCase::query()->count()),
+            'managing_organization_id' => $job->organization_id,
+            'employer_organization_id' => $job->employer_organization_id,
+            'agency_organization_id' => $job->agency_organization_id,
+            'handler_user_id' => $application->assigned_user_id,
+            'current_stage' => $joined ? null : $currentStage,
+            'status' => $joined ? Completed::class : OpenCase::class,
+            'closed_reason' => $joined ? CaseClosedReason::Joined : null,
+            'closed_at' => $joined ? $openedAt->copy()->addWeeks(count($keys)) : null,
         ]);
-
-        $completedAt = Carbon::parse($application->applied_at)->addWeek();
+        $case->events()->create(['action' => CaseEventAction::Opened, 'created_at' => $openedAt, 'updated_at' => $openedAt]);
 
         foreach ($keys as $position => $key) {
             $done = $position < $currentIndex;
+            $completedAt = $openedAt->copy()->addWeeks($position);
             $case->stages()->create([
                 'key' => $key,
                 'position' => $position + 1,
                 'status' => $done ? MobilityStageStatus::Done : ($position === $currentIndex ? MobilityStageStatus::InProgress : MobilityStageStatus::Pending),
                 'due_on' => $position === $currentIndex ? $dueOn : null,
-                'completed_at' => $done ? $completedAt->copy()->addWeeks($position) : null,
+                'next_action' => $position === $currentIndex && $key === 'medical'
+                    ? 'Book a medical test at an approved centre in Dhaka, then upload the receipt.'
+                    : null,
+                'completed_at' => $done ? $completedAt : null,
             ]);
+
+            if ($done) {
+                $case->events()->create(['action' => CaseEventAction::StageCompleted, 'stage_key' => $key, 'created_at' => $completedAt, 'updated_at' => $completedAt]);
+            }
+        }
+
+        if ($joined) {
+            $case->events()->create(['action' => CaseEventAction::Closed, 'created_at' => $case->closed_at, 'updated_at' => $case->closed_at]);
         }
     }
 

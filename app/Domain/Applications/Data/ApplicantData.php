@@ -54,6 +54,7 @@ class ApplicantData extends Data
         public bool $canOffer,
         public ?MoneyData $jobSalary,
         public ?SalaryPeriod $jobSalaryPeriod,
+        public ?string $mobilityCaseId,
     ) {}
 
     public static function fromApplication(Application $application): self
@@ -86,6 +87,7 @@ class ApplicantData extends Data
             canOffer: $application->openOffer() === null && $application->status->canTransitionTo(OfferStage::class),
             jobSalary: $job->salary_amount_minor !== null && $job->salary_currency !== null ? new MoneyData($job->salary_amount_minor, $job->salary_currency) : null,
             jobSalaryPeriod: $job->salary_period,
+            mobilityCaseId: $application->mobilityCase?->id,
         );
     }
 }

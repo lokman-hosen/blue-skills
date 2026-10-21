@@ -16,6 +16,9 @@ enum NotificationEvent: string
     case JobChanged = 'job_changed';
     case JobInvitation = 'job_invitation';
     case WorkerMessage = 'worker_message';
+    case CaseOpened = 'case_opened';
+    case CaseUpdated = 'case_updated';
+    case CaseClosed = 'case_closed';
 
     // Organization members
     case NewApplicants = 'new_applicants';
@@ -35,7 +38,10 @@ enum NotificationEvent: string
      */
     public static function workerEvents(): array
     {
-        return [self::Shortlisted, self::InterviewScheduled, self::OfferReceived, self::ApplicationRejected, self::JobChanged, self::JobInvitation, self::WorkerMessage];
+        return [
+            self::Shortlisted, self::InterviewScheduled, self::OfferReceived, self::ApplicationRejected, self::JobChanged, self::JobInvitation, self::WorkerMessage,
+            self::CaseOpened, self::CaseUpdated, self::CaseClosed,
+        ];
     }
 
     /**
@@ -73,6 +79,9 @@ enum NotificationEvent: string
             self::JobChanged => 'A job you applied to changed',
             self::JobInvitation => 'Invitation to apply',
             self::WorkerMessage => 'New message',
+            self::CaseOpened => 'Your mobility case opened',
+            self::CaseUpdated => 'Your mobility case moved on',
+            self::CaseClosed => 'Your mobility case closed',
             self::NewApplicants => 'New applicants (daily)',
             self::ApplicationAnswered => 'Worker accepted, declined or withdrew',
             self::OrganizationMessage => 'New message from a worker',

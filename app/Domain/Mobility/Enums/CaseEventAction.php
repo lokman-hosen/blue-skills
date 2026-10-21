@@ -12,6 +12,8 @@ enum CaseEventAction: string
     case StageCompleted = 'stage_completed';
     case StageBlocked = 'stage_blocked';
     case StageSkipped = 'stage_skipped';
+    case StageResumed = 'stage_resumed';
+    case NextActionSet = 'next_action_set';
     case DocumentRequested = 'document_requested';
     case DocumentUploaded = 'document_uploaded';
     case DocumentAccepted = 'document_accepted';

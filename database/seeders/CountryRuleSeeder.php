@@ -24,7 +24,8 @@ class CountryRuleSeeder extends Seeder
                 CountryRuleKey::MandatoryDisclosures->value => ['salary', 'accommodation', 'working_hours', 'contract_length'],
                 CountryRuleKey::DocumentTypes->value => ['passport', 'photo', 'medical', 'contract'],
                 CountryRuleKey::MobilityStageTemplate->value => [
-                    ['key' => 'job_selected', 'label' => 'Job selected'],
+                    // Done as soon as the worker accepts the offer and the case opens.
+                    ['key' => 'job_selected', 'label' => 'Job selected', 'done_on_open' => true],
                     ['key' => 'contract_accepted', 'label' => 'Contract accepted'],
                     // D-074: never "received by agency"; the passport goes back right after stamping.
                     ['key' => 'passport_submitted', 'label' => 'Passport submitted for visa stamping'],

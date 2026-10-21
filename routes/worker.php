@@ -6,6 +6,7 @@ use App\Http\Controllers\Worker\Auth\PhoneSignInController;
 use App\Http\Controllers\Worker\BasicsController;
 use App\Http\Controllers\Worker\DocumentController;
 use App\Http\Controllers\Worker\MessageController;
+use App\Http\Controllers\Worker\MobilityCaseController;
 use App\Http\Controllers\Worker\PassportController;
 use App\Http\Controllers\Worker\PrivacyController;
 use App\Http\Controllers\Worker\SkillShowController;
@@ -97,4 +98,9 @@ Route::middleware(['auth', 'verified', 'user.type:worker'])->prefix('messages')-
     Route::get('/', 'index')->name('index');
     Route::get('{conversation}', 'show')->name('show');
     Route::post('{conversation}', 'store')->middleware('throttle:30,1')->name('store');
+});
+
+// Mobility case after an accepted offer (Module 6, product rule 8).
+Route::middleware(['auth', 'verified', 'user.type:worker'])->prefix('cases')->name('worker.cases.')->controller(MobilityCaseController::class)->group(function () {
+    Route::get('{mobilityCase}', 'show')->name('show');
 });

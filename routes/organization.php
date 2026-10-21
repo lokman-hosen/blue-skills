@@ -2,12 +2,14 @@
 
 use App\Domain\Jobs\Actions\ChangeJobAvailability;
 use App\Domain\Jobs\Support\JobWizard;
+use App\Domain\Mobility\Actions\ChangeCaseStage;
 use App\Http\Controllers\Organization\ApplicantController;
 use App\Http\Controllers\Organization\InvitationController;
 use App\Http\Controllers\Organization\JobController;
 use App\Http\Controllers\Organization\LicenceController;
 use App\Http\Controllers\Organization\MandateController;
 use App\Http\Controllers\Organization\MessageController;
+use App\Http\Controllers\Organization\MobilityCaseController;
 use App\Http\Controllers\Organization\OrganizationRegistrationController;
 use App\Http\Controllers\Organization\ShortlistController;
 use App\Http\Controllers\Organization\TalentController;
@@ -107,5 +109,15 @@ Route::middleware(['auth', 'verified', 'user.type:org'])->prefix('org')->name('o
         Route::get('{mandate}', 'show')->name('show');
         Route::post('{mandate}/{answer}', 'respond')->whereIn('answer', ['confirm', 'decline'])->name('respond');
         Route::post('{mandate}/evidence', 'evidence')->middleware('throttle:20,1')->name('evidence');
+    });
+});
+
+// Mobility cases (Module 6, product rule 8).
+Route::middleware(['auth', 'verified', 'user.type:org'])->prefix('org/cases')->name('org.cases.')->controller(MobilityCaseController::class)->group(function () {
+    Route::get('{mobilityCase}', 'show')->name('show');
+    Route::post('{mobilityCase}/close', 'close')->name('close');
+    Route::scopeBindings()->group(function () {
+        Route::post('{mobilityCase}/stages/{stage}/{action}', 'stage')->whereIn('action', ChangeCaseStage::ACTIONS)->name('stages.change');
+        Route::put('{mobilityCase}/stages/{stage}', 'nextAction')->name('stages.update');
     });
 });
