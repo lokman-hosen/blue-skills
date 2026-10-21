@@ -94,8 +94,8 @@ const mobilityStages: Stage[] = [
     { key: 'job_selected', label: 'Job selected', status: 'done', date: '2026-09-12' },
     { key: 'contract_accepted', label: 'Contract accepted', status: 'done', date: '2026-09-20' },
     {
-        key: 'passport_received',
-        label: 'Passport received by agency',
+        key: 'passport_submitted',
+        label: 'Passport submitted for visa stamping',
         status: 'done',
         date: '2026-09-28',
     },

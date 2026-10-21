@@ -699,3 +699,41 @@ colour) and the appearance tabs use design tokens instead of the kit's neutral g
   and the ABC owner have sample notifications; one sample WhatsApp delivery is logged.
 - Review fixes: conversations stay open after an accepted offer; the daily digest pluralizes.
 - Visual review: employer 60/60 and worker 48/48 clean (en, bn, ur; light, dark; 390, 1440).
+
+## Module 6 — Agency and mobility
+
+### D-074 · Module 6 inputs (owner answers, 2026-10-21)
+- **Mandates are confirmed by the employer and checked by staff.** The employer must be a
+  verified organization on BLUESKILLS; its Owner or HR Admin confirms the agency's mandate in the
+  app, then staff check the mandate letter and the agency licence. No agency-created employers.
+- **No passport retention.** The UAE stage "Passport received by agency" becomes "Passport
+  submitted for visa stamping", with a fixed note that the passport goes back to the worker right
+  after stamping and that retention can be reported. Templates are updated everywhere.
+- **Staff review of licences and mandates now**, minimal, at `/admin/mandates`, following the
+  organization and job review pattern. Module 8 adds the wider evidence queues.
+- Employer Owners, HR Admins and Recruiters get `mobility.manage` for cases from their own direct
+  jobs; for agency jobs the agency manages the case and the employer can view it.
+- **Review cadence:** once at the end of the module.
+
+### D-075 · Agency and mobility schema
+- `organizations.licence_countries` lists the destinations an agency licence covers. A licence
+  is valid when the agency is verified, `licence_expires_on` is in the future and, for a job or
+  mandate, the destination is listed.
+- `job_mandates` gains its scope (trades as `occupation_ids`, `destination_country_code`), who
+  requested it, and the employer's answer (who, when, note). Status flow: `awaiting_employer` →
+  `pending` (staff review) → `verified` | `rejected`; `declined` when the employer says no;
+  `expired` / `revoked` later. A mandate backs a job only while verified, in date and licensed
+  for the destination. The mandate letter is evidence on the mandate's verification request.
+- `mobility_cases` gains a reference, the managing, employer and agency organizations, the
+  handler ("Handled by"), and a closing reason (joined, worker withdrew, employer cancelled, visa
+  refused, medical test not passed, other). Stages gain the worker's next action and a blocked
+  reason. `mobility_case_events` is the case history (never edited).
+- `case_documents`: one checklist item per document (type, title, requested / uploaded /
+  accepted / returned, provided by the worker or the organization, the file, whether the
+  employer may view it, shared / revoked / decided times, due date). A worker's file is visible to
+  the organizations only while shared and not revoked (product rule 6).
+- New permission `mandates.confirm` for employer Owners and HR Admins. `mobility.manage` now comes
+  with every hiring role (Owner, HR Admin, Recruiter, Agency Owner, Case Officer); a Compliance
+  Reviewer can view cases but not run them. Re-run `RolesAndPermissionsSeeder` on deploy.
+- The UAE template stage `passport_received` became `passport_submitted` ("Passport submitted for
+  visa stamping"); re-run `CountryRuleSeeder` on deploy.

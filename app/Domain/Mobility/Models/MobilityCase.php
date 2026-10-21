@@ -3,7 +3,11 @@
 namespace App\Domain\Mobility\Models;
 
 use App\Domain\Applications\Models\Application;
+use App\Domain\Identity\Models\User;
+use App\Domain\Mobility\Enums\CaseClosedReason;
 use App\Domain\Mobility\States\MobilityCase\MobilityCaseState;
+use App\Domain\Mobility\States\MobilityCase\Open;
+use App\Domain\Organization\Models\Organization;
 use App\Support\Concerns\LogsStatusChanges;
 use Database\Factories\MobilityCaseFactory;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
@@ -21,7 +25,10 @@ use Spatie\ModelStates\HasStates;
  *
  * @property MobilityCaseState $status
  */
-#[Fillable(['application_id', 'template', 'current_stage', 'status'])]
+#[Fillable([
+    'application_id', 'template', 'current_stage', 'status', 'reference', 'managing_organization_id', 'employer_organization_id',
+    'agency_organization_id', 'handler_user_id', 'closed_reason', 'closed_at',
+])]
 #[UseFactory(MobilityCaseFactory::class)]
 class MobilityCase extends Model
 {
@@ -35,6 +42,8 @@ class MobilityCase extends Model
     {
         return [
             'status' => MobilityCaseState::class,
+            'closed_reason' => CaseClosedReason::class,
+            'closed_at' => 'datetime',
         ];
     }
 
@@ -60,5 +69,67 @@ class MobilityCase extends Model
     public function stages(): HasMany
     {
         return $this->hasMany(MobilityCaseStage::class)->orderBy('position');
+    }
+
+    /**
+     * @return HasMany<MobilityCaseEvent, $this>
+     */
+    public function events(): HasMany
+    {
+        return $this->hasMany(MobilityCaseEvent::class)->orderBy('created_at')->orderBy('id');
+    }
+
+    /**
+     * @return HasMany<CaseDocument, $this>
+     */
+    public function documents(): HasMany
+    {
+        return $this->hasMany(CaseDocument::class)->orderBy('created_at')->orderBy('id');
+    }
+
+    /**
+     * The organization running the case: the agency for agency jobs, else the employer (D-074).
+     *
+     * @return BelongsTo<Organization, $this>
+     */
+    public function managingOrganization(): BelongsTo
+    {
+        return $this->belongsTo(Organization::class, 'managing_organization_id');
+    }
+
+    /**
+     * @return BelongsTo<Organization, $this>
+     */
+    public function employer(): BelongsTo
+    {
+        return $this->belongsTo(Organization::class, 'employer_organization_id');
+    }
+
+    /**
+     * @return BelongsTo<Organization, $this>
+     */
+    public function agency(): BelongsTo
+    {
+        return $this->belongsTo(Organization::class, 'agency_organization_id');
+    }
+
+    /**
+     * The person at the managing organization the worker sees as "Handled by".
+     *
+     * @return BelongsTo<User, $this>
+     */
+    public function handler(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'handler_user_id');
+    }
+
+    public function isOpen(): bool
+    {
+        return $this->status->equals(Open::class);
+    }
+
+    public function currentStage(): ?MobilityCaseStage
+    {
+        return $this->stages->firstWhere('key', $this->current_stage);
     }
 }

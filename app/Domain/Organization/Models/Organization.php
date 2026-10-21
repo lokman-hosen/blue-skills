@@ -33,7 +33,7 @@ use Spatie\ModelStates\HasStates;
  */
 #[Fillable([
     'type', 'legal_name', 'display_name', 'country_code', 'city', 'registration_number',
-    'licence_number', 'licence_expires_on', 'verification_status', 'verified_at', 'data_region',
+    'licence_number', 'licence_expires_on', 'licence_countries', 'verification_status', 'verified_at', 'data_region',
 ])]
 #[UseFactory(OrganizationFactory::class)]
 #[UsePolicy(OrganizationPolicy::class)]
@@ -52,6 +52,7 @@ class Organization extends Model
             'verification_status' => OrganizationVerificationState::class,
             'verified_at' => 'datetime',
             'licence_expires_on' => 'date',
+            'licence_countries' => 'array',
         ];
     }
 
@@ -164,5 +165,23 @@ class Organization extends Model
     public function isVerified(): bool
     {
         return $this->verification_status->equals(Verified::class);
+    }
+
+    /**
+     * A verified agency whose licence has not expired and, when a destination is given, covers
+     * it (product rule 10).
+     */
+    public function hasValidLicence(?string $destinationCountryCode = null): bool
+    {
+        if ($this->type !== OrganizationType::Agency || ! $this->isVerified()) {
+            return false;
+        }
+
+        if ($this->licence_expires_on === null || $this->licence_expires_on->isPast()) {
+            return false;
+        }
+
+        return $destinationCountryCode === null
+            || in_array($destinationCountryCode, $this->licence_countries ?? [], true);
     }
 }

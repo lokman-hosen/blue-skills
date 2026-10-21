@@ -21,7 +21,10 @@ use Illuminate\Database\Eloquent\Relations\MorphMany;
  *
  * @property MandateStatus $status
  */
-#[Fillable(['employer_organization_id', 'agency_organization_id', 'reference', 'headcount', 'valid_from', 'valid_until', 'status'])]
+#[Fillable([
+    'employer_organization_id', 'agency_organization_id', 'reference', 'headcount', 'valid_from', 'valid_until', 'status',
+    'occupation_ids', 'destination_country_code', 'requested_by', 'employer_responded_by', 'employer_responded_at', 'employer_note',
+])]
 #[UseFactory(JobMandateFactory::class)]
 class JobMandate extends Model
 {
@@ -38,6 +41,8 @@ class JobMandate extends Model
             'valid_from' => 'date',
             'valid_until' => 'date',
             'status' => MandateStatus::class,
+            'occupation_ids' => 'array',
+            'employer_responded_at' => 'datetime',
         ];
     }
 
@@ -76,5 +81,30 @@ class JobMandate extends Model
     public function isVerified(): bool
     {
         return $this->status === MandateStatus::Verified;
+    }
+
+    /**
+     * Can back a job today: verified by staff, within its dates, and the agency's licence is
+     * valid for the destination (product rule 10).
+     */
+    public function isUsable(): bool
+    {
+        $today = now()->startOfDay();
+
+        return $this->isVerified()
+            && ($this->valid_from === null || ! $this->valid_from->isAfter($today))
+            && ($this->valid_until === null || ! $this->valid_until->isBefore($today))
+            && $this->agency->hasValidLicence($this->destination_country_code);
+    }
+
+    /**
+     * Whether a job's trade and destination fall inside the mandate's scope.
+     */
+    public function covers(?string $occupationId, ?string $destinationCountryCode): bool
+    {
+        $occupations = $this->occupation_ids ?? [];
+
+        return ($occupations === [] || in_array($occupationId, $occupations, true))
+            && ($this->destination_country_code === null || $this->destination_country_code === $destinationCountryCode);
     }
 }

@@ -26,7 +26,8 @@ class CountryRuleSeeder extends Seeder
                 CountryRuleKey::MobilityStageTemplate->value => [
                     ['key' => 'job_selected', 'label' => 'Job selected'],
                     ['key' => 'contract_accepted', 'label' => 'Contract accepted'],
-                    ['key' => 'passport_received', 'label' => 'Passport received by agency'],
+                    // D-074: never "received by agency"; the passport goes back right after stamping.
+                    ['key' => 'passport_submitted', 'label' => 'Passport submitted for visa stamping'],
                     ['key' => 'medical', 'label' => 'Medical test'],
                     ['key' => 'police_clearance', 'label' => 'Police clearance'],
                     ['key' => 'work_permit', 'label' => 'Work permit'],

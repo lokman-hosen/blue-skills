@@ -18,6 +18,8 @@ enum Permission: string
     case InterviewsManage = 'interviews.manage';
     case TalentPoolsManage = 'talent_pools.manage';
     case MandatesManage = 'mandates.manage';
+    // Employer Owner / HR Admin confirm an agency's mandate (D-074).
+    case MandatesConfirm = 'mandates.confirm';
     case MobilityManage = 'mobility.manage';
     case ComplianceReview = 'compliance.review';
     case CoursesManage = 'courses.manage';

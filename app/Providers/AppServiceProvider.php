@@ -34,7 +34,9 @@ use App\Domain\Messaging\Contracts\WhatsAppSender;
 use App\Domain\Messaging\Models\Conversation;
 use App\Domain\Messaging\Models\Message;
 use App\Domain\Messaging\Models\OutboundMessage;
+use App\Domain\Mobility\Models\CaseDocument;
 use App\Domain\Mobility\Models\MobilityCase;
+use App\Domain\Mobility\Models\MobilityCaseEvent;
 use App\Domain\Mobility\Models\MobilityCaseStage;
 use App\Domain\Organization\Models\Organization;
 use App\Domain\Organization\Models\OrganizationInvitation;
@@ -160,6 +162,8 @@ class AppServiceProvider extends ServiceProvider
             'job_skill_requirement' => JobSkillRequirement::class,
             'mobility_case' => MobilityCase::class,
             'mobility_case_stage' => MobilityCaseStage::class,
+            'mobility_case_event' => MobilityCaseEvent::class,
+            'case_document' => CaseDocument::class,
             'report' => Report::class,
         ]);
     }
