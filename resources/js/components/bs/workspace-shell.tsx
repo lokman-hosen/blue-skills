@@ -1,6 +1,7 @@
 import { Link, usePage } from '@inertiajs/react';
 import type { ReactNode } from 'react';
 import { LanguageSwitcher } from './language-switcher';
+import { LiveUpdates } from './live-updates';
 import { Logo } from './logo';
 import { SkipLink } from './skip-link';
 import { ThemeToggle } from './theme-toggle';
@@ -22,6 +23,7 @@ import {
 } from '@/components/ui/sidebar';
 import { useCurrentUrl } from '@/hooks/use-current-url';
 import type { NavGroup } from '@/layouts/navigation';
+import { navBadge } from '@/layouts/navigation';
 import { useTranslation } from '@/lib/i18n';
 import { dashboard } from '@/routes';
 
@@ -37,8 +39,8 @@ type WorkspaceShellProps = {
  * on phones. The sidebar sits on the reading-start side (right in RTL).
  */
 export function WorkspaceShell({ nav, context, children }: WorkspaceShellProps) {
-    const { t, dir } = useTranslation();
-    const { sidebarOpen, auth } = usePage().props;
+    const { t, dir, formatNumber } = useTranslation();
+    const { sidebarOpen, auth, unread } = usePage().props;
     const permissions = auth.user?.staffPermissions ?? [];
     const visibleNav = nav
         .map((group) => ({
@@ -53,6 +55,7 @@ export function WorkspaceShell({ nav, context, children }: WorkspaceShellProps) 
     return (
         <SidebarProvider defaultOpen={sidebarOpen}>
             <SkipLink />
+            <LiveUpdates />
             <Sidebar side={dir === 'rtl' ? 'right' : 'left'} collapsible="icon">
                 <SidebarHeader>
                     <SidebarMenu>
@@ -99,10 +102,29 @@ export function WorkspaceShell({ nav, context, children }: WorkspaceShellProps) 
                                                         <Link href={item.href} prefetch>
                                                             <item.icon aria-hidden />
                                                             <span>{label}</span>
+                                                            {navBadge(item.key, unread) > 0 && (
+                                                                <span className="sr-only">
+                                                                    {t('nav.unread', {
+                                                                        count: navBadge(
+                                                                            item.key,
+                                                                            unread,
+                                                                        ),
+                                                                    })}
+                                                                </span>
+                                                            )}
                                                         </Link>
                                                     )}
                                                 </SidebarMenuButton>
-                                            ) : (
+                                            ) : null}
+                                            {item.href && navBadge(item.key, unread) > 0 && (
+                                                <SidebarMenuBadge
+                                                    aria-hidden
+                                                    className="rounded-full bg-bad px-1.5 font-bold text-on-brand"
+                                                >
+                                                    {formatNumber(navBadge(item.key, unread))}
+                                                </SidebarMenuBadge>
+                                            )}
+                                            {item.href ? null : (
                                                 <>
                                                     <SidebarMenuButton
                                                         aria-disabled

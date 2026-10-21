@@ -622,3 +622,21 @@ colour) and the appearance tabs use design tokens instead of the kit's neutral g
   8.3 to 7.16 (Laravel 13 supports both; our HTTP calls use Laravel's client). Sail runs Reverb as
   the `reverb` service (host port 8081); the app publishes to `reverb:8080` inside Docker and the
   browser connects to `localhost:8081`. Tests broadcast to the `null` driver.
+
+### D-069 · Conversations
+- A conversation is created the first time either side opens it from the application ("Message
+  the employer") or the applicant page ("Message the worker"). Workers find theirs under
+  Messages; organizations have an inbox per workspace, filterable by job.
+- Messages are text up to 2,000 characters with up to 3 attachments (PDF, JPG, PNG, ≤ 10 MB) on
+  the private disk, served only to the conversation's parties. Workers see organization messages as
+  "member · organization"; the worker's phone number is never part of a conversation.
+- Every thread shows a fixed line that BLUESKILLS and genuine employers never ask for money, and
+  each message from the other side can be reported (someone asked for money, harassment,
+  impersonation, something else) as a Trust report on the message for Module 8. Nothing is
+  scanned or blocked automatically (product rule 14). `reports.description` is required, so an
+  empty description is stored as an empty string.
+- Unread state is per person (`conversation_reads`); message and read times keep microseconds so
+  a reply in the same second as a read still counts. Opening a thread marks it read.
+- Live updates: `MessageSent` broadcasts ids only on `conversations.{id}`,
+  `organizations.{id}.inbox` and `users.{id}`; open threads and the navigation badges reload
+  their own props. Channel access reuses the conversation policy.

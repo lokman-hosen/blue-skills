@@ -1,5 +1,5 @@
-import { Head, router, useForm } from '@inertiajs/react';
-import { CalendarClock, FileLock2, Handshake, Phone } from 'lucide-react';
+import { Head, Link, router, useForm } from '@inertiajs/react';
+import { CalendarClock, FileLock2, Handshake, MessageSquare, Phone } from 'lucide-react';
 import type { FormEvent, ReactNode } from 'react';
 import { useState } from 'react';
 import { MatchSummary } from '@/components/bs/jobs/match-summary';
@@ -65,7 +65,17 @@ export default function ApplicantShow({
                         href: org.jobs.applicants(applicant.jobCode),
                         label: t('applicants.back'),
                     }}
-                    actions={<StatusChip status={applicant.status} />}
+                    actions={
+                        <div className="flex flex-wrap items-center gap-2">
+                            <StatusChip status={applicant.status} />
+                            <Button asChild variant="outline" className="min-h-11">
+                                <Link href={org.applicants.messages(applicant.id)}>
+                                    <MessageSquare aria-hidden className="size-4" />
+                                    {t('messages.message_worker')}
+                                </Link>
+                            </Button>
+                        </div>
+                    }
                 />
 
                 <div className="grid gap-5 lg:grid-cols-[minmax(0,1fr)_minmax(0,360px)] lg:items-start">

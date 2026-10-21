@@ -32,7 +32,8 @@ return new class extends Migration
             // worker | organization | system
             $table->string('side', 16);
             $table->text('body');
-            $table->timestampsTz();
+            // Microseconds, so a reply in the same second as a read still counts as unread.
+            $table->timestampsTz(6);
 
             $table->index(['conversation_id', 'created_at']);
         });
@@ -41,7 +42,7 @@ return new class extends Migration
             $table->ulid('id')->primary();
             $table->foreignUlid('conversation_id')->constrained()->cascadeOnDelete();
             $table->foreignUlid('user_id')->constrained()->cascadeOnDelete();
-            $table->timestampTz('last_read_at');
+            $table->timestampTz('last_read_at', 6);
             $table->timestampsTz();
 
             $table->unique(['conversation_id', 'user_id']);

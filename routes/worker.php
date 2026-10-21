@@ -5,6 +5,7 @@ use App\Http\Controllers\Worker\ApplyController;
 use App\Http\Controllers\Worker\Auth\PhoneSignInController;
 use App\Http\Controllers\Worker\BasicsController;
 use App\Http\Controllers\Worker\DocumentController;
+use App\Http\Controllers\Worker\MessageController;
 use App\Http\Controllers\Worker\PassportController;
 use App\Http\Controllers\Worker\PrivacyController;
 use App\Http\Controllers\Worker\SkillShowController;
@@ -87,4 +88,12 @@ Route::middleware(['auth', 'verified', 'user.type:worker'])->prefix('application
     Route::post('{application}/offer/{decision}', 'respondToOffer')->whereIn('decision', ['accept', 'decline'])->name('offer');
     Route::delete('{application}/items/{item}', 'revokeItem')->name('items.destroy');
     Route::post('{application}/job-change-seen', 'acknowledgeJobChange')->name('job-change-seen');
+    Route::get('{application}/messages', [MessageController::class, 'open'])->name('messages');
+});
+
+// Messages (Module 5).
+Route::middleware(['auth', 'verified', 'user.type:worker'])->prefix('messages')->name('worker.messages.')->controller(MessageController::class)->group(function () {
+    Route::get('/', 'index')->name('index');
+    Route::get('{conversation}', 'show')->name('show');
+    Route::post('{conversation}', 'store')->middleware('throttle:30,1')->name('store');
 });

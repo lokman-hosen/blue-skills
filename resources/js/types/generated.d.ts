@@ -208,6 +208,7 @@ declare namespace App {
                 export type ConsentPurpose = 'discovery' | 'application_share' | 'document_share';
                 export type InterviewMode = 'in_person' | 'video' | 'phone';
                 export type InterviewOutcome = 'passed' | 'not_passed' | 'no_show' | 'cancelled';
+                export type InvitationStatus = 'sent' | 'applied' | 'declined' | 'expired';
                 export type OfferStatus = 'sent' | 'accepted' | 'declined' | 'withdrawn';
                 export type RejectionReason =
                     | 'requirements_not_met'
@@ -522,6 +523,60 @@ declare namespace App {
                 export type MandateStatus =
                     'pending' | 'verified' | 'rejected' | 'expired' | 'revoked';
                 export type SalaryPeriod = 'hour' | 'day' | 'week' | 'month';
+            }
+        }
+        namespace Messaging {
+            namespace Data {
+                export type AttachmentData = {
+                    id: string;
+                    name: string;
+                    size: number;
+                    url: string | null;
+                };
+                export type ConversationData = {
+                    id: string;
+                    applicationId: string;
+                    jobTitle: string;
+                    jobCode: string;
+                    counterpart: string;
+                    writable: boolean;
+                    canPost: boolean;
+                    messages: App.Domain.Messaging.Data.MessageData[];
+                };
+                export type ConversationListItemData = {
+                    id: string;
+                    jobTitle: string;
+                    jobCode: string;
+                    counterpart: string;
+                    preview: string | null;
+                    lastMessageAt: string | null;
+                    unread: number;
+                };
+                export type MessageData = {
+                    id: string;
+                    side: App.Domain.Messaging.Enums.MessageSide;
+                    senderName: string;
+                    mine: boolean;
+                    body: string;
+                    at: string;
+                    attachments: App.Domain.Messaging.Data.AttachmentData[];
+                };
+            }
+            namespace Enums {
+                export type DeliveryChannel = 'whatsapp' | 'sms' | 'mail';
+                export type DeliveryStatus = 'held' | 'queued' | 'sent' | 'failed' | 'skipped';
+                export type MessageSide = 'worker' | 'organization' | 'system';
+                export type NotificationEvent =
+                    | 'shortlisted'
+                    | 'interview_scheduled'
+                    | 'offer_received'
+                    | 'application_rejected'
+                    | 'job_changed'
+                    | 'job_invitation'
+                    | 'worker_message'
+                    | 'new_applicants'
+                    | 'application_answered'
+                    | 'organization_message';
             }
         }
         namespace Mobility {

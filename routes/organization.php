@@ -5,6 +5,7 @@ use App\Domain\Jobs\Support\JobWizard;
 use App\Http\Controllers\Organization\ApplicantController;
 use App\Http\Controllers\Organization\InvitationController;
 use App\Http\Controllers\Organization\JobController;
+use App\Http\Controllers\Organization\MessageController;
 use App\Http\Controllers\Organization\OrganizationRegistrationController;
 use App\Http\Controllers\Organization\ShortlistController;
 use App\Http\Controllers\Organization\TalentController;
@@ -81,4 +82,12 @@ Route::middleware(['auth', 'verified', 'user.type:org'])->prefix('org')->name('o
         Route::post('{shortlist}/entries', 'addEntry')->middleware('throttle:60,1')->name('entries.store');
         Route::delete('{shortlist}/entries/{entry}', 'removeEntry')->name('entries.destroy');
     });
+});
+
+// Inbox (Module 5).
+Route::middleware(['auth', 'verified', 'user.type:org'])->prefix('org')->name('org.')->controller(MessageController::class)->group(function () {
+    Route::get('messages', 'index')->name('messages.index');
+    Route::get('messages/{conversation}', 'show')->name('messages.show');
+    Route::post('messages/{conversation}', 'store')->middleware('throttle:60,1')->name('messages.store');
+    Route::get('applicants/{application}/messages', 'open')->name('applicants.messages');
 });

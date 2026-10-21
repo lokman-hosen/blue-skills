@@ -18,6 +18,9 @@ class ConversationRead extends Model
 {
     use HasUlids;
 
+    /** Microsecond timestamps drive unread counts. */
+    protected $dateFormat = 'Y-m-d H:i:s.uP';
+
     /**
      * @return array<string, string>
      */

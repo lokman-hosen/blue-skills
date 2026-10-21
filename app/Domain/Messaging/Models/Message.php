@@ -26,6 +26,9 @@ class Message extends Model implements HasMedia
     /** @use HasFactory<MessageFactory> */
     use HasFactory, HasUlids, InteractsWithMedia;
 
+    /** Microsecond timestamps drive unread counts. */
+    protected $dateFormat = 'Y-m-d H:i:s.uP';
+
     public const ATTACHMENTS = 'attachments';
 
     protected static function booted(): void
