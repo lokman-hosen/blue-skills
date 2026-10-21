@@ -26,6 +26,9 @@ class CohortMemberData extends Data
         public ?string $respondedAt,
         public bool $sharesProgress,
         public bool $hasSkillShow,
+        public ?IssuedRecordData $attestation = null,
+        /** The latest assessment still issued. */
+        public ?IssuedRecordData $assessment = null,
     ) {}
 
     public static function fromMember(CohortMember $member): self
@@ -42,6 +45,12 @@ class CohortMemberData extends Data
             respondedAt: $member->responded_at?->toIso8601String(),
             sharesProgress: $member->isAccepted() && $member->shares_progress,
             hasSkillShow: $profile !== null && $profile->skillShows->contains(fn (SkillShow $skillShow) => $skillShow->isPublished()),
+            attestation: ($attestation = $member->attestations->sortByDesc('created_at')->first()) !== null
+                ? IssuedRecordData::fromAttestation($attestation)
+                : null,
+            assessment: ($assessment = $member->assessments->sortByDesc('assessed_on')->first()) !== null
+                ? IssuedRecordData::fromAssessment($assessment)
+                : null,
         );
     }
 }

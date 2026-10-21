@@ -1,5 +1,5 @@
 import { router } from '@inertiajs/react';
-import { FileText, Trash2 } from 'lucide-react';
+import { Eye, EyeOff, FileText, Trash2 } from 'lucide-react';
 import type { FormEvent } from 'react';
 import { useState } from 'react';
 import PassportController from '@/actions/App/Http/Controllers/Worker/PassportController';
@@ -72,11 +72,46 @@ export function EvidenceUploadSection({ evidence, types, maxSizeMb }: Props) {
                                 </p>
                                 <p className="text-xs text-muted">
                                     {t(`evidence.type.${item.type}`)}
+                                    {item.issuer &&
+                                        ` · ${t('evidence.issued_by', { issuer: item.issuer })}`}
                                     {item.expiresOn &&
                                         ` · ${t('worker.credential.expires', { date: formatDate(item.expiresOn) })}`}
                                 </p>
+                                {item.reasonCode === 'withdrawn_by_issuer' && (
+                                    <p className="text-xs text-bad">
+                                        {t('evidence.withdrawn_by_issuer')}
+                                    </p>
+                                )}
+                                {item.hidden && (
+                                    <p className="text-xs text-muted">
+                                        {t('evidence.hidden_note')}
+                                    </p>
+                                )}
                             </div>
                             <EvidenceBadge state={item.state as EvidenceState} />
+                            {item.hideable && (
+                                <Button
+                                    variant="ghost"
+                                    className="size-11 shrink-0"
+                                    aria-label={`${item.hidden ? t('evidence.show') : t('evidence.hide')}: ${item.title ?? ''}`}
+                                    aria-pressed={item.hidden}
+                                    onClick={() =>
+                                        router.put(
+                                            PassportController.updateEvidenceVisibility.url(
+                                                item.id,
+                                            ),
+                                            { hidden: !item.hidden },
+                                            { preserveScroll: true },
+                                        )
+                                    }
+                                >
+                                    {item.hidden ? (
+                                        <Eye aria-hidden className="size-4" />
+                                    ) : (
+                                        <EyeOff aria-hidden className="size-4" />
+                                    )}
+                                </Button>
+                            )}
                             {item.removable && (
                                 <ConfirmDialog
                                     trigger={

@@ -5,7 +5,6 @@ namespace App\Domain\Applications\Data;
 use App\Domain\Config\Data\CountryOptionData;
 use App\Domain\Taxonomy\Data\TaxonomyOptionData;
 use App\Domain\Verification\Models\EvidenceItem;
-use App\Domain\Worker\Actions\AddWorkerCredential;
 use App\Domain\Worker\Data\EvidenceSummaryData;
 use App\Domain\Worker\Data\SkillShowData;
 use App\Domain\Worker\Data\WorkerExperienceData;
@@ -84,7 +83,7 @@ class TalentProfileData extends Data
                 ->all(),
             experiences: $profile->experiences->map(fn (WorkerExperience $experience) => WorkerExperienceData::fromExperience($experience))->values()->all(),
             credentials: $profile->evidenceItems
-                ->filter(fn (EvidenceItem $item) => in_array($item->type, AddWorkerCredential::TYPES, true))
+                ->filter(fn (EvidenceItem $item) => EvidenceSummaryData::shownToOrganizations($item))
                 ->map(fn (EvidenceItem $item) => EvidenceSummaryData::fromEvidence($item))
                 ->values()
                 ->all(),

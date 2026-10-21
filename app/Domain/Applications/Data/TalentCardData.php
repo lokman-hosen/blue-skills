@@ -63,7 +63,7 @@ class TalentCardData extends Data
             languages: $profile->languages->map(fn (WorkerLanguage $language) => $language->language->native_name ?? $language->language_code)->values()->all(),
             passportStatus: $profile->passport_status,
             availability: $profile->availability,
-            verifiedEvidence: $profile->evidenceItems->filter(fn (EvidenceItem $item) => $item->status->getValue() === 'issuer_verified')->count(),
+            verifiedEvidence: $profile->evidenceItems->filter(fn (EvidenceItem $item) => $item->hidden_at === null && $item->status->getValue() === 'issuer_verified')->count(),
             skillShowPosterUrl: $skillShow !== null ? MediaUrls::signed($skillShow->getFirstMedia(SkillShow::POSTER_COLLECTION)) : null,
             match: $match,
         );

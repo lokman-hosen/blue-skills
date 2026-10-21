@@ -130,6 +130,11 @@ export function WorkerProjection({
                             >
                                 <span className="min-w-0">
                                     {credential.title ?? t(`evidence.type.${credential.type}`)}
+                                    {credential.issuer && (
+                                        <span className="block text-xs text-muted">
+                                            {t('evidence.issued_by', { issuer: credential.issuer })}
+                                        </span>
+                                    )}
                                 </span>
                                 <EvidenceBadge state={credential.state as EvidenceState} />
                             </li>

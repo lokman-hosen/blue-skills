@@ -20,6 +20,7 @@ enum NotificationEvent: string
     case CaseUpdated = 'case_updated';
     case CaseClosed = 'case_closed';
     case CaseDocument = 'case_document';
+    case InstituteRecord = 'institute_record';
 
     // Organization members
     case NewApplicants = 'new_applicants';
@@ -44,7 +45,7 @@ enum NotificationEvent: string
     {
         return [
             self::Shortlisted, self::InterviewScheduled, self::OfferReceived, self::ApplicationRejected, self::JobChanged, self::JobInvitation, self::WorkerMessage,
-            self::CaseOpened, self::CaseUpdated, self::CaseClosed, self::CaseDocument,
+            self::CaseOpened, self::CaseUpdated, self::CaseClosed, self::CaseDocument, self::InstituteRecord,
         ];
     }
 
@@ -87,6 +88,7 @@ enum NotificationEvent: string
             self::CaseUpdated => 'Your mobility case moved on',
             self::CaseClosed => 'Your mobility case closed',
             self::CaseDocument => 'A case document needs you',
+            self::InstituteRecord => 'An institute attested your training or recorded a test',
             self::NewApplicants => 'New applicants (daily)',
             self::ApplicationAnswered => 'Worker accepted, declined or withdrew',
             self::OrganizationMessage => 'New message from a worker',

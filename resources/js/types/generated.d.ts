@@ -390,6 +390,8 @@ declare namespace App {
                     respondedAt: string | null;
                     sharesProgress: boolean;
                     hasSkillShow: boolean;
+                    attestation: App.Domain.Institute.Data.IssuedRecordData | null;
+                    assessment: App.Domain.Institute.Data.IssuedRecordData | null;
                 };
                 export type CohortSummaryData = {
                     id: string;
@@ -409,6 +411,15 @@ declare namespace App {
                     durationWeeks: number | null;
                     description: string | null;
                     cohorts: App.Domain.Institute.Data.CohortSummaryData[];
+                };
+                export type IssuedRecordData = {
+                    id: string;
+                    title: string;
+                    status: App.Support.Data.StatusData;
+                    date: string;
+                    score: number | null;
+                    withdrawn: boolean;
+                    withdrawnReason: string | null;
                 };
                 export type WorkerCohortData = {
                     id: string;
@@ -728,6 +739,7 @@ declare namespace App {
                     | 'case_updated'
                     | 'case_closed'
                     | 'case_document'
+                    | 'institute_record'
                     | 'new_applicants'
                     | 'application_answered'
                     | 'organization_message'
@@ -1030,6 +1042,10 @@ declare namespace App {
                     reasonCode: string | null;
                     expiresOn: string | null;
                     removable: boolean;
+                    issuer: string | null;
+                    issuedOn: string | null;
+                    hidden: boolean;
+                    hideable: boolean;
                 };
                 export type IdentityDocumentData = {
                     id: string;

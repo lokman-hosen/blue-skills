@@ -43,7 +43,7 @@ final class TalentSearch
             ->when($filters['passport_ready'], fn (Builder $query) => $query->where('passport_status', PassportStatus::Ready))
             ->when($filters['available_soon'], fn (Builder $query) => $query->whereIn('availability', [Availability::Immediately, Availability::Within30Days]))
             ->when($filters['language'], fn (Builder $query, string $code) => $query->whereHas('languages', fn (Builder $language) => $language->where('language_code', $code)))
-            ->when($filters['verified_evidence'], fn (Builder $query) => $query->whereHas('evidenceItems', fn (Builder $evidence) => $evidence->where('status', 'issuer_verified')))
+            ->when($filters['verified_evidence'], fn (Builder $query) => $query->whereHas('evidenceItems', fn (Builder $evidence) => $evidence->where('status', 'issuer_verified')->whereNull('hidden_at')))
             ->when($filters['skillshow'], fn (Builder $query) => $query->whereHas('skillShows', fn (Builder $skillShow) => $skillShow
                 ->where('moderation_status', ModerationStatus::Approved)
                 ->where('visibility', ProfileVisibility::EmployersAndAgencies)))

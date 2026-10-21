@@ -921,3 +921,20 @@ colour) and the appearance tabs use design tokens instead of the kit's neutral g
   switch and "Leave this institute", which also takes them out of that institute's pools.
 - Institute members with `graduates.invite` get `graduate_joined`. Every change is in the
   activity log.
+
+### D-085 · Training attestations and trade assessments
+- Owners, Trainers and Assessors attest that a graduate completed the course (date, optional note);
+  Owners and Assessors record trade assessments (test, pass / not passed, optional score 0–100,
+  date). Only for graduates who accepted, and only once the institute's accreditation is verified.
+  One attestation per cohort place; a withdrawn one can be issued again.
+- An attestation becomes a training evidence item and a **pass** a trade-assessment item, each
+  "issuer verified", naming the institute and its date, with the course title copied at issue.
+  A result that isn't a pass stays with the institute and the graduate only, so it never counts
+  against them with employers. The worker's own experience and credentials are never touched.
+- The issuing institute can withdraw either with a reason: the item becomes rejected with
+  `withdrawn_by_issuer` (evidence may now go issuer verified → rejected) and the worker is told.
+- Workers can hide an institute item from employers and agencies (it stays on their own
+  Skill Passport, marked hidden) but can't delete it. Hidden items are left out of talent
+  profiles, application snapshots, the "verified evidence" talent filter and its count. Talent
+  profiles and shared credentials now include passed assessments with their issuer.
+- Alerts: `institute_record` to the worker (attested, passed, not passed, withdrawn).

@@ -10,6 +10,7 @@ use App\Http\Controllers\Organization\CaseDocumentController;
 use App\Http\Controllers\Organization\CohortController;
 use App\Http\Controllers\Organization\ComplianceController;
 use App\Http\Controllers\Organization\CourseController;
+use App\Http\Controllers\Organization\GraduateRecordController;
 use App\Http\Controllers\Organization\InvitationController;
 use App\Http\Controllers\Organization\JobController;
 use App\Http\Controllers\Organization\LicenceController;
@@ -153,5 +154,13 @@ Route::middleware(['auth', 'verified', 'user.type:org'])->prefix('org')->name('o
         Route::get('{cohort}/qr', 'qr')->name('qr');
         Route::post('{cohort}/roster', 'roster')->middleware('throttle:20,1')->name('roster');
         Route::delete('{cohort}/members/{member}', 'removeMember')->scopeBindings()->name('members.destroy');
+    });
+
+    // Attestations and assessments for graduates who accepted (product rules 9 and 11).
+    Route::controller(GraduateRecordController::class)->group(function () {
+        Route::post('cohorts/{cohort}/members/{member}/attestation', 'attest')->scopeBindings()->name('cohorts.members.attest');
+        Route::post('cohorts/{cohort}/members/{member}/assessments', 'assess')->scopeBindings()->name('cohorts.members.assess');
+        Route::post('attestations/{attestation}/withdraw', 'withdrawAttestation')->name('attestations.withdraw');
+        Route::post('assessments/{assessment}/withdraw', 'withdrawAssessment')->name('assessments.withdraw');
     });
 });

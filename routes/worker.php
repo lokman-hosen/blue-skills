@@ -47,6 +47,7 @@ Route::middleware(['auth', 'verified', 'user.type:worker'])->prefix('passport')-
         Route::delete('photo', 'destroyPhoto')->name('photo.destroy');
         Route::post('evidence', 'storeCredential')->middleware('throttle:20,1')->name('evidence.store');
         Route::delete('evidence/{evidence}', 'destroyCredential')->name('evidence.destroy');
+        Route::put('evidence/{evidence}/visibility', 'updateEvidenceVisibility')->name('evidence.visibility');
     });
 
     Route::controller(PrivacyController::class)->prefix('privacy')->name('privacy.')->group(function () {

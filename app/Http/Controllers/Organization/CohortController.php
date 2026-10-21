@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Organization;
 
+use App\Domain\Identity\Enums\Permission;
 use App\Domain\Institute\Actions\AddRosterLines;
 use App\Domain\Institute\Actions\ChangeCohortStatus;
 use App\Domain\Institute\Actions\RemoveRosterLine;
@@ -13,6 +14,7 @@ use App\Domain\Institute\Models\Cohort;
 use App\Domain\Institute\Models\CohortMember;
 use App\Domain\Institute\Models\Course;
 use App\Domain\Institute\Support\CohortInvite;
+use App\Domain\Organization\Support\OrganizationPermissions;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Organization\AddRosterRequest;
 use App\Http\Requests\Organization\SaveCohortRequest;
@@ -65,7 +67,11 @@ class CohortController extends Controller
             'abilities' => [
                 'manage' => Gate::allows('update', $cohort),
                 'invite' => Gate::allows('invite', $cohort),
+                // Per graduate the policy also needs them to have accepted (product rule 11).
+                'attest' => $cohort->organization->isVerified() && OrganizationPermissions::allows($request->user(), $cohort->organization, Permission::AttestationsIssue),
+                'assess' => $cohort->organization->isVerified() && OrganizationPermissions::allows($request->user(), $cohort->organization, Permission::AssessmentsRecord),
             ],
+            'instituteVerified' => $cohort->organization->isVerified(),
         ]);
     }
 

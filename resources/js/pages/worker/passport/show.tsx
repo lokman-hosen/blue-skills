@@ -230,6 +230,15 @@ export default function PassportShow({ passport }: Props) {
                                     >
                                         <span className="min-w-0 text-[13px] break-words">
                                             {item.title ?? t(`evidence.type.${item.type}`)}
+                                            {item.issuer && (
+                                                <span className="block text-[11.5px] text-muted">
+                                                    {t('evidence.issued_by', {
+                                                        issuer: item.issuer,
+                                                    })}
+                                                    {item.hidden &&
+                                                        ` · ${t('evidence.hidden_short')}`}
+                                                </span>
+                                            )}
                                         </span>
                                         <EvidenceBadge state={item.state as EvidenceState} />
                                     </li>

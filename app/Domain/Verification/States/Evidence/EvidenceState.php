@@ -28,6 +28,8 @@ abstract class EvidenceState extends State
             ->allowTransition(VerificationPending::class, IssuerVerified::class)
             ->allowTransition(VerificationPending::class, Rejected::class)
             ->allowTransition(IssuerVerified::class, Expired::class)
+            // The issuing institute withdraws its attestation (D-082).
+            ->allowTransition(IssuerVerified::class, Rejected::class)
             ->allowTransition(Expired::class, UploadedUnreviewed::class)
             ->allowTransition(Rejected::class, UploadedUnreviewed::class);
     }

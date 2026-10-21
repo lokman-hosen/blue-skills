@@ -11,6 +11,7 @@ use App\Domain\Worker\Actions\AddWorkerCredential;
 use App\Domain\Worker\Actions\DeleteWorkerExperience;
 use App\Domain\Worker\Actions\RemoveWorkerCredential;
 use App\Domain\Worker\Actions\SaveWorkerExperience;
+use App\Domain\Worker\Actions\SetEvidenceHidden;
 use App\Domain\Worker\Actions\SyncWorkerLanguages;
 use App\Domain\Worker\Actions\SyncWorkerSkills;
 use App\Domain\Worker\Actions\UpdatePassportAbout;
@@ -22,6 +23,7 @@ use App\Domain\Worker\Models\WorkerExperience;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Worker\AddWorkerCredentialRequest;
 use App\Http\Requests\Worker\SaveWorkerExperienceRequest;
+use App\Http\Requests\Worker\SetEvidenceHiddenRequest;
 use App\Http\Requests\Worker\SyncWorkerLanguagesRequest;
 use App\Http\Requests\Worker\SyncWorkerSkillsRequest;
 use App\Http\Requests\Worker\UpdatePassportAboutRequest;
@@ -97,8 +99,21 @@ class PassportController extends Controller
         $profile = $this->workerProfile($request);
         Gate::authorize('update', $profile);
         abort_unless($evidence->worker_profile_id === $profile->id, 404);
+        // Institute attestations and assessments can be hidden, not deleted (D-082).
+        abort_if($evidence->isIssuedByInstitute(), 403);
 
         $remove->handle($evidence);
+
+        return $this->saved('evidence');
+    }
+
+    public function updateEvidenceVisibility(SetEvidenceHiddenRequest $request, EvidenceItem $evidence, SetEvidenceHidden $set): RedirectResponse
+    {
+        $profile = $this->workerProfile($request);
+        Gate::authorize('update', $profile);
+        abort_unless($evidence->worker_profile_id === $profile->id, 404);
+
+        $set->handle($profile, $evidence, $request->boolean('hidden'));
 
         return $this->saved('evidence');
     }
