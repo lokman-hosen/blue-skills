@@ -868,3 +868,103 @@ colour) and the appearance tabs use design tokens instead of the kit's neutral g
     managing organization checks files.
 - **Deploy notes for Module 6:** run migrations; re-run `RolesAndPermissionsSeeder` (D-075) and
   `CountryRuleSeeder` (D-075, D-078); make sure the scheduler runs (`jobs:pause-lapsed-mandates`).
+
+### D-082 · Module 7 inputs (owner answers, 2026-10-21)
+- **Invitations:** the institute shares the cohort link, QR code or WhatsApp text itself;
+  BLUESKILLS sends nothing to people who haven't joined. An optional roster (names and phones)
+  only tracks who accepted; a rostered phone is matched only once that worker accepts.
+- **Job-progress sharing** with an institute is off by default. The graduate chooses it when
+  accepting and can change it in Privacy at any time.
+- **Pools:** an institute groups accepted graduates into pools and may publish a pool to verified
+  employers and agencies, who see only members visible to employers and reach them through
+  "invite to apply". Employer and agency shortlists serve as their own talent pools.
+- **Attestations** can be withdrawn by the issuing institute with a reason; the evidence shows as
+  rejected and the worker is told. Workers can hide but not edit them.
+- **Review cadence:** once at the end of the module.
+
+### D-083 · Institute schema
+- `courses` (title, trade, length, description) and `cohorts` (course, name, dates, unique
+  8-character invite code without look-alike characters, open / closed).
+- `cohort_members`: one row per graduate link. The roster name and phone are optional and only
+  for tracking; the worker is set only when they accept. Status invited → accepted | declined;
+  accepted → left. `shares_progress` (off by default) lets the institute follow applications.
+- `training_attestations` and `trade_assessments` (pass / not passed, optional score 0–100):
+  issued or withdrawn with who, when and why. Each is the subject of its own evidence item on the
+  worker's profile; the course title is copied so later course edits don't change an attestation.
+- `talent_pools` and `talent_pool_members`; a pool is visible to employers and agencies only
+  while `published_at` is set.
+- `evidence_items.hidden_at`: the worker hides an issuer's item from their Skill Passport.
+- Who may do what: every institute role sees courses and cohorts; Owners and Trainers manage
+  courses; `cohorts.manage` edits cohorts; `graduates.invite` shares links and keeps the roster;
+  Owners, Trainers and Assessors attest; Owners and Assessors record assessments (both only for
+  accepted graduates of a verified institute); Owners and Placement Officers follow progress of
+  graduates who share it and keep pools. Verified employers and agencies who may search talent
+  browse published pools.
+
+### D-084 · Courses, cohorts and graduate invitations
+- Institutes add courses (title, trade, length, description) and cohorts (name, dates). Each
+  cohort has an invite link `/i/{code}`, a QR code (shown on the page and downloadable as SVG for
+  posters; BaconQrCode, already installed with Fortify, is now declared in composer.json) and an
+  editable WhatsApp message the institute copies and sends itself. Closing a cohort stops new
+  graduates joining; those who joined stay.
+- **Roster:** pasted "name, phone" lines (phones read as the institute's country, up to 300 a
+  time, duplicates skipped) only track who joined. A line is matched to a worker when that worker
+  accepts, never before; a decline marks the line declined without naming the profile. Lines
+  nobody answered can be removed; graduates who joined can only leave themselves.
+- **Invite page:** anyone can open it; it names the institute (with "accreditation checked" when
+  verified), the course and cohort, and lists what the institute sees (name, Skill Passport number,
+  SkillShow, what it attests) and never sees (profile edits, documents, phone). A signed-in worker
+  accepts, optionally ticking "let the institute follow my applications" (off by default), or
+  declines. Guests join with their phone; existing workers return to the page after signing in
+  and new workers find a banner on their home page until they answer.
+- **My institutes** on the Privacy page lists institutes the worker joined, with the sharing
+  switch and "Leave this institute", which also takes them out of that institute's pools.
+- Institute members with `graduates.invite` get `graduate_joined`. Every change is in the
+  activity log.
+
+### D-085 · Training attestations and trade assessments
+- Owners, Trainers and Assessors attest that a graduate completed the course (date, optional note);
+  Owners and Assessors record trade assessments (test, pass / not passed, optional score 0–100,
+  date). Only for graduates who accepted, and only once the institute's accreditation is verified.
+  One attestation per cohort place; a withdrawn one can be issued again.
+- An attestation becomes a training evidence item and a **pass** a trade-assessment item, each
+  "issuer verified", naming the institute and its date, with the course title copied at issue.
+  A result that isn't a pass stays with the institute and the graduate only, so it never counts
+  against them with employers. The worker's own experience and credentials are never touched.
+- The issuing institute can withdraw either with a reason: the item becomes rejected with
+  `withdrawn_by_issuer` (evidence may now go issuer verified → rejected) and the worker is told.
+- Workers can hide an institute item from employers and agencies (it stays on their own
+  Skill Passport, marked hidden) but can't delete it. Hidden items are left out of talent
+  profiles, application snapshots, the "verified evidence" talent filter and its count. Talent
+  profiles and shared credentials now include passed assessments with their issuer.
+- Alerts: `institute_record` to the worker (attested, passed, not passed, withdrawn).
+
+### D-086 · Talent pools, employer interest and placements
+- Institute Owners and Placement Officers (`talent_pools.manage`) create pools (name, trade,
+  short description) and add graduates who accepted one of the institute's cohorts; anyone else
+  is refused. Leaving the institute takes a graduate out of its pools (D-084).
+- **Publishing** needs a verified institute. Verified employers and agencies whose member may
+  search talent see published pools of verified institutes under "Institute pools", with only the
+  graduates who chose to be found by employers (the talent-search rule), shown as talent cards
+  that open the usual talent profile and "invite to apply". Unpublished pools are refused. The
+  institute's pool page says how many of its graduates employers can actually see.
+- **Placements** (`placements.view`: Owners and Placement Officers) lists only graduates who
+  share their progress: invitations to apply from employers and agencies ("employer interest"),
+  their applications with status, and the mobility case status, counting a completed case as
+  joined. Graduates who don't share progress aren't listed at all.
+- Navigation shows Courses, Cohorts, Talent pools and Placements to the institute roles that can
+  open them, and "Institute pools" to employer and agency members who may browse.
+
+### D-087 · Institute workspace, sample data and review fixes
+- **Institute workspace:** the dashboard shows graduates joined (with roster lines waiting),
+  graduates with a SkillShow, training attested and assessments passed, plus the latest cohorts.
+  "Graduates" lists everyone across cohorts (joined / roster waiting / all, by cohort) with the
+  same attest, assess and withdraw controls as a cohort page (prototype i-grads). The separate
+  "Assessments" menu item was dropped: assessments live on the graduates table.
+- **Sample data:** Meghna's Electrical Installation course and 2026 Cohort (invite link
+  `/i/MTTCEW26`). Rahim and Karim joined and were attested; Rahim passed the practical test (82)
+  and shares his progress; two roster lines wait and one declined. The published pool
+  "Electricians ready to travel" holds both, so ABC Contracting sees it under Institute pools.
+- **Review fix:** organization pages subscribed every member to the organization inbox channel,
+  which members without applicant access (all institute roles) are refused; they now subscribe
+  only when they may view applicants.

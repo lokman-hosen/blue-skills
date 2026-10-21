@@ -9,7 +9,6 @@ use App\Domain\Jobs\Models\JobPosting;
 use App\Domain\Jobs\Support\JobMatch;
 use App\Domain\Taxonomy\Data\TaxonomyOptionData;
 use App\Domain\Verification\Models\EvidenceItem;
-use App\Domain\Worker\Actions\AddWorkerCredential;
 use App\Domain\Worker\Data\EvidenceSummaryData;
 use App\Domain\Worker\Data\WorkerExperienceData;
 use App\Domain\Worker\Data\WorkerLanguageData;
@@ -90,7 +89,7 @@ class ProfileSnapshotData extends Data
 
         $credentials = in_array(ApplicationConsentItem::TrainingCertificates, $shared, true)
             ? $profile->evidenceItems
-                ->filter(fn (EvidenceItem $item) => in_array($item->type, AddWorkerCredential::TYPES, true))
+                ->filter(fn (EvidenceItem $item) => EvidenceSummaryData::shownToOrganizations($item))
                 ->map(fn (EvidenceItem $item) => EvidenceSummaryData::fromEvidence($item))
                 ->values()
                 ->all()

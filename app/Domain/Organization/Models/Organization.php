@@ -5,6 +5,9 @@ namespace App\Domain\Organization\Models;
 use App\Domain\Applications\Models\Shortlist;
 use App\Domain\Config\Models\Country;
 use App\Domain\Identity\Models\User;
+use App\Domain\Institute\Models\Cohort;
+use App\Domain\Institute\Models\Course;
+use App\Domain\Institute\Models\TalentPool;
 use App\Domain\Jobs\Models\JobMandate;
 use App\Domain\Jobs\Models\JobPosting;
 use App\Domain\Organization\Enums\OrganizationType;
@@ -107,6 +110,32 @@ class Organization extends Model
     public function postedJobs(): HasMany
     {
         return $this->hasMany(JobPosting::class, 'organization_id');
+    }
+
+    /**
+     * Institutes: the courses they run (Module 7).
+     *
+     * @return HasMany<Course, $this>
+     */
+    public function courses(): HasMany
+    {
+        return $this->hasMany(Course::class);
+    }
+
+    /**
+     * @return HasMany<Cohort, $this>
+     */
+    public function cohorts(): HasMany
+    {
+        return $this->hasMany(Cohort::class);
+    }
+
+    /**
+     * @return HasMany<TalentPool, $this>
+     */
+    public function talentPools(): HasMany
+    {
+        return $this->hasMany(TalentPool::class);
     }
 
     /**

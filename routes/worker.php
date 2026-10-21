@@ -7,6 +7,7 @@ use App\Http\Controllers\Worker\Auth\PhoneSignInController;
 use App\Http\Controllers\Worker\BasicsController;
 use App\Http\Controllers\Worker\CaseDocumentController;
 use App\Http\Controllers\Worker\DocumentController;
+use App\Http\Controllers\Worker\InstituteLinkController;
 use App\Http\Controllers\Worker\MessageController;
 use App\Http\Controllers\Worker\MobilityCaseController;
 use App\Http\Controllers\Worker\PassportController;
@@ -46,6 +47,7 @@ Route::middleware(['auth', 'verified', 'user.type:worker'])->prefix('passport')-
         Route::delete('photo', 'destroyPhoto')->name('photo.destroy');
         Route::post('evidence', 'storeCredential')->middleware('throttle:20,1')->name('evidence.store');
         Route::delete('evidence/{evidence}', 'destroyCredential')->name('evidence.destroy');
+        Route::put('evidence/{evidence}/visibility', 'updateEvidenceVisibility')->name('evidence.visibility');
     });
 
     Route::controller(PrivacyController::class)->prefix('privacy')->name('privacy.')->group(function () {
@@ -105,6 +107,12 @@ Route::middleware(['auth', 'verified', 'user.type:worker'])->prefix('messages')-
 // Mobility case after an accepted offer (Module 6, product rule 8).
 Route::middleware(['auth', 'verified', 'user.type:worker'])->prefix('cases')->name('worker.cases.')->controller(MobilityCaseController::class)->group(function () {
     Route::get('{mobilityCase}', 'show')->name('show');
+});
+
+// Institutes the worker joined (Module 7, product rule 11).
+Route::middleware(['auth', 'verified', 'user.type:worker'])->prefix('institutes')->name('worker.institutes.')->controller(InstituteLinkController::class)->group(function () {
+    Route::put('{member}/sharing', 'sharing')->name('sharing');
+    Route::post('{member}/leave', 'leave')->name('leave');
 });
 
 // Case documents: per-item sharing and the contract (product rule 6, D-079).

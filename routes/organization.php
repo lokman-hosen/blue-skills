@@ -7,7 +7,12 @@ use App\Domain\Mobility\Actions\DecideCaseDocument;
 use App\Http\Controllers\Organization\ApplicantController;
 use App\Http\Controllers\Organization\CandidateController;
 use App\Http\Controllers\Organization\CaseDocumentController;
+use App\Http\Controllers\Organization\CohortController;
 use App\Http\Controllers\Organization\ComplianceController;
+use App\Http\Controllers\Organization\CourseController;
+use App\Http\Controllers\Organization\GraduateController;
+use App\Http\Controllers\Organization\GraduateRecordController;
+use App\Http\Controllers\Organization\InstitutePoolController;
 use App\Http\Controllers\Organization\InvitationController;
 use App\Http\Controllers\Organization\JobController;
 use App\Http\Controllers\Organization\LicenceController;
@@ -15,8 +20,10 @@ use App\Http\Controllers\Organization\MandateController;
 use App\Http\Controllers\Organization\MessageController;
 use App\Http\Controllers\Organization\MobilityCaseController;
 use App\Http\Controllers\Organization\OrganizationRegistrationController;
+use App\Http\Controllers\Organization\PlacementController;
 use App\Http\Controllers\Organization\ShortlistController;
 use App\Http\Controllers\Organization\TalentController;
+use App\Http\Controllers\Organization\TalentPoolController;
 use App\Http\Controllers\Organization\TeamController;
 use App\Http\Controllers\Organization\VerificationEvidenceController;
 use Illuminate\Support\Facades\Route;
@@ -134,4 +141,45 @@ Route::middleware(['auth', 'verified', 'user.type:org'])->prefix('org/cases/{mob
     Route::post('/', 'store')->name('store');
     Route::post('{document}/file', 'upload')->middleware('throttle:20,1')->name('upload');
     Route::post('{document}/{decision}', 'decide')->whereIn('decision', DecideCaseDocument::DECISIONS)->name('decide');
+});
+
+// Institutes: courses, cohorts and graduate invitations (Module 7, D-082).
+Route::middleware(['auth', 'verified', 'user.type:org'])->prefix('org')->name('org.')->group(function () {
+    Route::get('courses', [CourseController::class, 'index'])->name('courses.index');
+    Route::post('courses', [CourseController::class, 'store'])->name('courses.store');
+    Route::put('courses/{course}', [CourseController::class, 'update'])->name('courses.update');
+    Route::post('courses/{course}/cohorts', [CohortController::class, 'store'])->name('cohorts.store');
+
+    Route::controller(CohortController::class)->prefix('cohorts')->name('cohorts.')->group(function () {
+        Route::get('/', 'index')->name('index');
+        Route::get('{cohort}', 'show')->name('show');
+        Route::put('{cohort}', 'update')->name('update');
+        Route::post('{cohort}/status/{status}', 'status')->whereIn('status', ['open', 'closed'])->name('status');
+        Route::get('{cohort}/qr', 'qr')->name('qr');
+        Route::post('{cohort}/roster', 'roster')->middleware('throttle:20,1')->name('roster');
+        Route::delete('{cohort}/members/{member}', 'removeMember')->scopeBindings()->name('members.destroy');
+    });
+
+    // Talent pools (spec §8, D-082): institutes keep them, verified employers and agencies browse.
+    Route::controller(TalentPoolController::class)->prefix('pools')->name('pools.')->group(function () {
+        Route::get('/', 'index')->name('index');
+        Route::post('/', 'store')->name('store');
+        Route::get('{pool}', 'show')->name('show');
+        Route::put('{pool}', 'update')->name('update');
+        Route::post('{pool}/{state}', 'publish')->whereIn('state', ['publish', 'unpublish'])->name('publish');
+        Route::post('{pool}/members', 'addMembers')->name('members.store');
+        Route::delete('{pool}/members/{profile}', 'removeMember')->name('members.destroy');
+    });
+    Route::get('institute-pools', [InstitutePoolController::class, 'index'])->name('institute-pools.index');
+    Route::get('institute-pools/{pool}', [InstitutePoolController::class, 'show'])->name('institute-pools.show');
+    Route::get('placements', [PlacementController::class, 'index'])->name('placements.index');
+    Route::get('graduates', [GraduateController::class, 'index'])->name('graduates.index');
+
+    // Attestations and assessments for graduates who accepted (product rules 9 and 11).
+    Route::controller(GraduateRecordController::class)->group(function () {
+        Route::post('cohorts/{cohort}/members/{member}/attestation', 'attest')->scopeBindings()->name('cohorts.members.attest');
+        Route::post('cohorts/{cohort}/members/{member}/assessments', 'assess')->scopeBindings()->name('cohorts.members.assess');
+        Route::post('attestations/{attestation}/withdraw', 'withdrawAttestation')->name('attestations.withdraw');
+        Route::post('assessments/{assessment}/withdraw', 'withdrawAssessment')->name('assessments.withdraw');
+    });
 });

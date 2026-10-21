@@ -1,5 +1,5 @@
 import { Head, Link } from '@inertiajs/react';
-import { IdCard } from 'lucide-react';
+import { GraduationCap, IdCard } from 'lucide-react';
 import { EmptyState } from '@/components/bs/empty-state';
 import { PageHeader } from '@/components/bs/page-header';
 import { ProfileCompletionCard } from '@/components/bs/profile-completion-card';
@@ -7,14 +7,17 @@ import { SkillPassportCard } from '@/components/bs/skill-passport-card';
 import { Button } from '@/components/ui/button';
 import { useTranslation } from '@/lib/i18n';
 import { toSkillPassportCard } from '@/lib/passport';
+import cohortInviteRoutes from '@/routes/cohort-invite';
 import worker from '@/routes/worker';
 
 type Props = {
     passport: App.Domain.Worker.Data.WorkerPassportData | null;
+    /** An institute invitation opened before signing up, until answered (D-082). */
+    cohortInvite?: App.Domain.Institute.Data.CohortInviteData | null;
 };
 
 /** Worker home: profile progress and the Skill Passport. Jobs arrive in Module 3. */
-export default function WorkerHome({ passport }: Props) {
+export default function WorkerHome({ passport, cohortInvite = null }: Props) {
     const { t } = useTranslation();
 
     return (
@@ -29,6 +32,18 @@ export default function WorkerHome({ passport }: Props) {
                     }
                     description={t('worker.home.body')}
                 />
+                {cohortInvite && (
+                    <Link
+                        href={cohortInviteRoutes.show(cohortInvite.code)}
+                        className="flex items-center gap-3 rounded-xl border border-brand/40 bg-brand-soft px-4 py-3 text-sm font-semibold hover:border-brand"
+                    >
+                        <GraduationCap aria-hidden className="size-5 shrink-0 text-brand" />
+                        {t('worker.home.cohort_invite', {
+                            institute: cohortInvite.institute,
+                            course: cohortInvite.course,
+                        })}
+                    </Link>
+                )}
                 {passport ? (
                     <div className="grid gap-5 lg:grid-cols-[minmax(0,1fr)_minmax(0,380px)] lg:items-start">
                         {passport.completion.next !== null ? (

@@ -20,6 +20,7 @@ enum NotificationEvent: string
     case CaseUpdated = 'case_updated';
     case CaseClosed = 'case_closed';
     case CaseDocument = 'case_document';
+    case InstituteRecord = 'institute_record';
 
     // Organization members
     case NewApplicants = 'new_applicants';
@@ -30,6 +31,7 @@ enum NotificationEvent: string
     case MandateReviewed = 'mandate_reviewed';
     case CaseDocumentAnswered = 'case_document_answered';
     case JobPausedMandate = 'job_paused_mandate';
+    case GraduateJoined = 'graduate_joined';
 
     public function forWorkers(): bool
     {
@@ -43,7 +45,7 @@ enum NotificationEvent: string
     {
         return [
             self::Shortlisted, self::InterviewScheduled, self::OfferReceived, self::ApplicationRejected, self::JobChanged, self::JobInvitation, self::WorkerMessage,
-            self::CaseOpened, self::CaseUpdated, self::CaseClosed, self::CaseDocument,
+            self::CaseOpened, self::CaseUpdated, self::CaseClosed, self::CaseDocument, self::InstituteRecord,
         ];
     }
 
@@ -54,7 +56,7 @@ enum NotificationEvent: string
     {
         return [
             self::NewApplicants, self::ApplicationAnswered, self::OrganizationMessage,
-            self::MandateRequested, self::MandateAnswered, self::MandateReviewed, self::CaseDocumentAnswered, self::JobPausedMandate,
+            self::MandateRequested, self::MandateAnswered, self::MandateReviewed, self::CaseDocumentAnswered, self::JobPausedMandate, self::GraduateJoined,
         ];
     }
 
@@ -86,6 +88,7 @@ enum NotificationEvent: string
             self::CaseUpdated => 'Your mobility case moved on',
             self::CaseClosed => 'Your mobility case closed',
             self::CaseDocument => 'A case document needs you',
+            self::InstituteRecord => 'An institute attested your training or recorded a test',
             self::NewApplicants => 'New applicants (daily)',
             self::ApplicationAnswered => 'Worker accepted, declined or withdrew',
             self::OrganizationMessage => 'New message from a worker',
@@ -94,6 +97,7 @@ enum NotificationEvent: string
             self::MandateReviewed => 'BLUESKILLS reviewed your mandate',
             self::CaseDocumentAnswered => 'A worker shared or answered a case document',
             self::JobPausedMandate => 'A job paused because its mandate lapsed',
+            self::GraduateJoined => 'A graduate joined a cohort',
         };
     }
 }

@@ -3,13 +3,17 @@
 namespace App\Domain\Verification\Models;
 
 use App\Domain\Identity\Models\User;
+use App\Domain\Institute\Models\TradeAssessment;
+use App\Domain\Institute\Models\TrainingAttestation;
 use App\Domain\Verification\Enums\EvidenceType;
 use App\Domain\Verification\States\Evidence\EvidenceState;
 use App\Domain\Worker\Models\WorkerProfile;
 use App\Support\Concerns\LogsStatusChanges;
 use Database\Factories\EvidenceItemFactory;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
+use Illuminate\Database\Eloquent\Attributes\Scope;
 use Illuminate\Database\Eloquent\Attributes\UseFactory;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Concerns\HasUlids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -24,7 +28,7 @@ use Spatie\ModelStates\HasStates;
  *
  * @property EvidenceState $status
  */
-#[Fillable(['worker_profile_id', 'type', 'documentable_type', 'documentable_id', 'status', 'verified_by', 'verified_at', 'reason_code'])]
+#[Fillable(['worker_profile_id', 'type', 'documentable_type', 'documentable_id', 'status', 'verified_by', 'verified_at', 'reason_code', 'hidden_at'])]
 #[UseFactory(EvidenceItemFactory::class)]
 class EvidenceItem extends Model
 {
@@ -40,6 +44,7 @@ class EvidenceItem extends Model
             'type' => EvidenceType::class,
             'status' => EvidenceState::class,
             'verified_at' => 'datetime',
+            'hidden_at' => 'datetime',
         ];
     }
 
@@ -73,5 +78,24 @@ class EvidenceItem extends Model
     public function verificationRequests(): MorphMany
     {
         return $this->morphMany(VerificationRequest::class, 'subject');
+    }
+
+    /**
+     * Issued by an institute (attestation or assessment): the worker may hide it but not change it.
+     */
+    public function isIssuedByInstitute(): bool
+    {
+        return $this->documentable instanceof TrainingAttestation || $this->documentable instanceof TradeAssessment;
+    }
+
+    /**
+     * Shown to employers: not hidden by the worker.
+     *
+     * @param  Builder<self>  $query
+     */
+    #[Scope]
+    protected function shown(Builder $query): void
+    {
+        $query->whereNull('hidden_at');
     }
 }

@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Admin\DesignSystemController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\Public\CohortInviteController;
 use App\Http\Controllers\Public\JobController as PublicJobController;
 use App\Http\Controllers\Shared\LocaleController;
 use App\Http\Controllers\Shared\MessageReportController;
@@ -16,6 +17,13 @@ Route::inertia('/', 'public/home')->name('home');
 // Find Jobs and the Job Truth Card (Module 3). Published jobs are public.
 Route::get('jobs', [PublicJobController::class, 'index'])->name('jobs.index');
 Route::get('jobs/{job}', [PublicJobController::class, 'show'])->name('jobs.show');
+
+// Cohort invitations from training institutes (Module 7, D-082).
+Route::get('i/{code}', [CohortInviteController::class, 'show'])->name('cohort-invite.show');
+Route::middleware(['auth', 'verified', 'user.type:worker'])->group(function () {
+    Route::post('i/{code}/accept', [CohortInviteController::class, 'accept'])->name('cohort-invite.accept');
+    Route::post('i/{code}/decline', [CohortInviteController::class, 'decline'])->name('cohort-invite.decline');
+});
 Route::post('jobs/{job}/report', [PublicJobController::class, 'report'])->middleware(['auth', 'throttle:5,1'])->name('jobs.report');
 
 Route::post('locale', [LocaleController::class, 'update'])->name('locale.update');

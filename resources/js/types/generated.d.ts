@@ -357,6 +357,142 @@ declare namespace App {
                 export type UserType = 'worker' | 'org' | 'staff';
             }
         }
+        namespace Institute {
+            namespace Data {
+                export type CohortData = {
+                    summary: App.Domain.Institute.Data.CohortSummaryData;
+                    courseId: string;
+                    inviteCode: string;
+                    inviteUrl: string;
+                    whatsappText: string;
+                    qrSvg: string;
+                    skillShows: number;
+                    members: App.Domain.Institute.Data.CohortMemberData[];
+                };
+                export type CohortInviteData = {
+                    code: string;
+                    institute: string;
+                    instituteVerified: boolean;
+                    course: string;
+                    occupation: string | null;
+                    cohort: string;
+                    startsOn: string | null;
+                    endsOn: string | null;
+                    open: boolean;
+                };
+                export type CohortMemberData = {
+                    id: string;
+                    cohortId: string;
+                    cohortName: string;
+                    courseTitle: string;
+                    cohortEndsOn: string | null;
+                    name: string;
+                    status: App.Support.Data.StatusData;
+                    source: string;
+                    rosterPhone: string | null;
+                    passportReference: string | null;
+                    respondedAt: string | null;
+                    sharesProgress: boolean;
+                    hasSkillShow: boolean;
+                    attestation: App.Domain.Institute.Data.IssuedRecordData | null;
+                    assessment: App.Domain.Institute.Data.IssuedRecordData | null;
+                };
+                export type CohortSummaryData = {
+                    id: string;
+                    name: string;
+                    courseTitle: string;
+                    startsOn: string | null;
+                    endsOn: string | null;
+                    status: App.Support.Data.StatusData;
+                    joined: number;
+                    invited: number;
+                };
+                export type CourseData = {
+                    id: string;
+                    title: string;
+                    occupationId: string | null;
+                    occupation: string | null;
+                    durationWeeks: number | null;
+                    description: string | null;
+                    cohorts: App.Domain.Institute.Data.CohortSummaryData[];
+                };
+                export type InstituteCountsData = {
+                    openCohorts: number;
+                    graduates: number;
+                    rosterWaiting: number;
+                    skillShows: number;
+                    attested: number;
+                    assessmentsPassed: number;
+                    sharingProgress: number;
+                };
+                export type IssuedRecordData = {
+                    id: string;
+                    title: string;
+                    status: App.Support.Data.StatusData;
+                    date: string;
+                    score: number | null;
+                    withdrawn: boolean;
+                    withdrawnReason: string | null;
+                };
+                export type PlacementData = {
+                    memberId: string;
+                    name: string;
+                    passportReference: string;
+                    cohort: string;
+                    course: string;
+                    interest: {
+                        organization: string;
+                        job: string;
+                        sentAt: string;
+                    }[];
+                    applications: {
+                        job: string;
+                        jobCode: string;
+                        employer: string;
+                        status: App.Support.Data.StatusData;
+                        appliedAt: string;
+                        caseStatus: App.Support.Data.StatusData | null;
+                    }[];
+                    placed: boolean;
+                };
+                export type PoolMemberData = {
+                    profileId: string;
+                    name: string;
+                    passportReference: string;
+                    occupation: string | null;
+                    visibleToEmployers: boolean;
+                    hasSkillShow: boolean;
+                    attested: boolean;
+                };
+                export type TalentPoolData = {
+                    id: string;
+                    name: string;
+                    description: string | null;
+                    occupationId: string | null;
+                    occupation: string | null;
+                    institute: string;
+                    instituteVerified: boolean;
+                    publishedAt: string | null;
+                    members: number;
+                    visibleMembers: number;
+                };
+                export type WorkerCohortData = {
+                    id: string;
+                    institute: string;
+                    course: string;
+                    cohort: string;
+                    sharesProgress: boolean;
+                    joinedAt: string | null;
+                };
+            }
+            namespace Enums {
+                export type AssessmentResult = 'pass' | 'fail';
+                export type CohortMemberSource = 'roster' | 'link';
+                export type CohortMemberStatus = 'invited' | 'accepted' | 'declined' | 'left';
+                export type CohortStatus = 'open' | 'closed';
+                export type IssuedRecordStatus = 'issued' | 'withdrawn';
+            }
+        }
         namespace Jobs {
             namespace Data {
                 export type DestinationOptionData = {
@@ -658,6 +794,7 @@ declare namespace App {
                     | 'case_updated'
                     | 'case_closed'
                     | 'case_document'
+                    | 'institute_record'
                     | 'new_applicants'
                     | 'application_answered'
                     | 'organization_message'
@@ -665,7 +802,8 @@ declare namespace App {
                     | 'mandate_answered'
                     | 'mandate_reviewed'
                     | 'case_document_answered'
-                    | 'job_paused_mandate';
+                    | 'job_paused_mandate'
+                    | 'graduate_joined';
             }
         }
         namespace Mobility {
@@ -959,6 +1097,10 @@ declare namespace App {
                     reasonCode: string | null;
                     expiresOn: string | null;
                     removable: boolean;
+                    issuer: string | null;
+                    issuedOn: string | null;
+                    hidden: boolean;
+                    hideable: boolean;
                 };
                 export type IdentityDocumentData = {
                     id: string;

@@ -2,7 +2,6 @@ import type { InertiaLinkProps } from '@inertiajs/react';
 import type { LucideIcon } from 'lucide-react';
 import {
     Activity,
-    Award,
     BookOpen,
     BriefcaseBusiness,
     Building2,
@@ -51,7 +50,15 @@ export type NavLink = {
     /** Staff permission required to see the item. */
     permission?: string;
     /** Organization ability (shared `organizationAbilities`) required to see the item. */
-    ability?: 'reviewCompliance' | 'viewCases' | 'viewApplicants' | 'viewMandates';
+    ability?:
+        | 'reviewCompliance'
+        | 'viewCases'
+        | 'viewApplicants'
+        | 'viewMandates'
+        | 'viewCourses'
+        | 'managePools'
+        | 'viewPlacements'
+        | 'browsePools';
 };
 
 /** Unread count shown beside a navigation item, from the shared `unread` prop. */
@@ -108,6 +115,13 @@ export const orgNav: Record<App.Domain.Organization.Enums.OrganizationType, NavG
                     href: org.shortlists.index(),
                 },
                 {
+                    key: 'institute_pools',
+                    label: 'nav.institute_pools',
+                    icon: GraduationCap,
+                    href: org.institutePools.index(),
+                    ability: 'browsePools',
+                },
+                {
                     key: 'mobility',
                     label: 'nav.mobility',
                     icon: Plane,
@@ -161,6 +175,13 @@ export const orgNav: Record<App.Domain.Organization.Enums.OrganizationType, NavG
                     ability: 'viewApplicants',
                 },
                 {
+                    key: 'institute_pools',
+                    label: 'nav.institute_pools',
+                    icon: GraduationCap,
+                    href: org.institutePools.index(),
+                    ability: 'browsePools',
+                },
+                {
                     key: 'mobility',
                     label: 'nav.mobility',
                     icon: Plane,
@@ -206,11 +227,41 @@ export const orgNav: Record<App.Domain.Organization.Enums.OrganizationType, NavG
                     icon: LayoutDashboard,
                     href: dashboard(),
                 },
-                { key: 'courses', label: 'nav.courses', icon: BookOpen },
-                { key: 'cohorts', label: 'nav.cohorts', icon: GraduationCap },
-                { key: 'graduates', label: 'nav.graduates', icon: UsersRound },
-                { key: 'assessments', label: 'nav.assessments', icon: Award },
-                { key: 'talent_pools', label: 'nav.talent_pools', icon: Star },
+                {
+                    key: 'courses',
+                    label: 'nav.courses',
+                    icon: BookOpen,
+                    href: org.courses.index(),
+                    ability: 'viewCourses',
+                },
+                {
+                    key: 'cohorts',
+                    label: 'nav.cohorts',
+                    icon: GraduationCap,
+                    href: org.cohorts.index(),
+                    ability: 'viewCourses',
+                },
+                {
+                    key: 'graduates',
+                    label: 'nav.graduates',
+                    icon: UsersRound,
+                    href: org.graduates.index(),
+                    ability: 'viewCourses',
+                },
+                {
+                    key: 'talent_pools',
+                    label: 'nav.talent_pools',
+                    icon: Star,
+                    href: org.pools.index(),
+                    ability: 'managePools',
+                },
+                {
+                    key: 'placements',
+                    label: 'nav.placements',
+                    icon: Plane,
+                    href: org.placements.index(),
+                    ability: 'viewPlacements',
+                },
             ],
         },
         {

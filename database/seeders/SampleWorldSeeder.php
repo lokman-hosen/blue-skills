@@ -29,6 +29,16 @@ use App\Domain\Identity\Enums\StaffRole;
 use App\Domain\Identity\Enums\UserType;
 use App\Domain\Identity\Models\User;
 use App\Domain\Identity\Support\TeamContext;
+use App\Domain\Institute\Enums\AssessmentResult;
+use App\Domain\Institute\Enums\CohortMemberSource;
+use App\Domain\Institute\Enums\CohortMemberStatus;
+use App\Domain\Institute\Enums\CohortStatus;
+use App\Domain\Institute\Enums\IssuedRecordStatus;
+use App\Domain\Institute\Models\Cohort;
+use App\Domain\Institute\Models\Course;
+use App\Domain\Institute\Models\TalentPool;
+use App\Domain\Institute\Models\TradeAssessment;
+use App\Domain\Institute\Models\TrainingAttestation;
 use App\Domain\Jobs\Enums\BenefitProvision;
 use App\Domain\Jobs\Enums\CostPayer;
 use App\Domain\Jobs\Enums\JobCostCategory;
@@ -126,6 +136,7 @@ class SampleWorldSeeder extends Seeder
         $this->seedRahimPassport();
         $this->seedApplicationsAndCases();
         $this->seedAgencyWorkspace();
+        $this->seedInstitute();
         $this->seedQueues();
     }
 
@@ -1072,6 +1083,117 @@ class SampleWorldSeeder extends Seeder
             $karim->events()->create(['action' => CaseEventAction::DocumentUploaded, 'case_document_id' => $item->id, 'actor_user_id' => $workerId, 'created_at' => '2026-10-20 06:10', 'updated_at' => '2026-10-20 06:10']);
             $this->alert($imran, NotificationEvent::CaseDocumentAnswered, ['reference' => (string) $karim->reference, 'worker' => 'Karim Ahmed', 'document' => 'Police clearance', 'document_action' => 'shared'], '/org/cases/'.$karim->id, '2026-10-20 06:10', read: false);
         }
+    }
+
+    /**
+     * Module 7 (D-087): Meghna's electrical course and 2026 cohort (invite link /i/MTTCEW26). Rahim
+     * and Karim joined and were attested; Rahim passed the practical test and shares his progress.
+     * Two roster lines still wait and one declined. The published pool shows both graduates.
+     */
+    private function seedInstitute(): void
+    {
+        $meghna = $this->orgs['meghna'];
+        $principal = $this->orgUsers['principal@meghna.test'];
+        $nusrat = $this->orgUsers['nusrat@meghna.test'];
+
+        $course = Course::query()->create([
+            'organization_id' => $meghna->id,
+            'title' => 'Electrical Installation',
+            'occupation_id' => Occupation::query()->where('slug', 'electrician')->value('id'),
+            'duration_weeks' => 24,
+            'description' => 'Wiring, distribution boards and site safety, with a practical test at the end.',
+        ]);
+        $cohort = Cohort::query()->create([
+            'organization_id' => $meghna->id,
+            'course_id' => $course->id,
+            'name' => '2026 Cohort',
+            'starts_on' => '2026-01-10',
+            'ends_on' => '2026-06-30',
+            'invite_code' => 'MTTCEW26',
+            'status' => CohortStatus::Open,
+            'created_by' => $principal->id,
+        ]);
+
+        $graduates = [
+            ['rahim', true, '2026-07-02 05:00'],
+            ['karim', false, '2026-07-03 08:30'],
+        ];
+
+        foreach ($graduates as [$key, $shares, $joinedAt]) {
+            $profile = $this->workers[$key];
+            $member = $cohort->members()->create([
+                'worker_profile_id' => $profile->id,
+                'roster_name' => $profile->user?->name,
+                'roster_phone' => $profile->user?->phone,
+                'status' => CohortMemberStatus::Accepted,
+                'source' => CohortMemberSource::Roster,
+                'shares_progress' => $shares,
+                'responded_at' => $joinedAt,
+            ]);
+
+            $attestation = TrainingAttestation::query()->create([
+                'organization_id' => $meghna->id,
+                'cohort_member_id' => $member->id,
+                'worker_profile_id' => $profile->id,
+                'course_title' => $course->title,
+                'completed_on' => '2026-06-30',
+                'status' => IssuedRecordStatus::Issued,
+                'issued_by' => $principal->id,
+            ]);
+            $attestation->evidence()->create([
+                'worker_profile_id' => $profile->id,
+                'type' => EvidenceType::Training,
+                'status' => IssuerVerified::class,
+                'verified_by' => $principal->id,
+                'verified_at' => '2026-07-05 06:00',
+            ]);
+        }
+
+        $rahimMember = $cohort->members()->where('worker_profile_id', $this->workers['rahim']->id)->firstOrFail();
+        $assessment = TradeAssessment::query()->create([
+            'organization_id' => $meghna->id,
+            'cohort_member_id' => $rahimMember->id,
+            'worker_profile_id' => $rahimMember->worker_profile_id,
+            'occupation_id' => $course->occupation_id,
+            'title' => 'Electrical Installation practical test',
+            'result' => AssessmentResult::Pass,
+            'score' => 82,
+            'assessed_on' => '2026-06-20',
+            'status' => IssuedRecordStatus::Issued,
+            'assessed_by' => $principal->id,
+        ]);
+        $assessment->evidence()->create([
+            'worker_profile_id' => $rahimMember->worker_profile_id,
+            'type' => EvidenceType::TradeAssessment,
+            'status' => IssuerVerified::class,
+            'verified_by' => $principal->id,
+            'verified_at' => '2026-06-20 10:00',
+        ]);
+
+        foreach ([['Shahin Alam', '+8801711000020', CohortMemberStatus::Invited], ['Jamal Hossain', '+8801711000021', CohortMemberStatus::Invited], ['Rubel Mia', '+8801711000022', CohortMemberStatus::Declined]] as [$name, $phone, $status]) {
+            $cohort->members()->create([
+                'roster_name' => $name,
+                'roster_phone' => $phone,
+                'status' => $status,
+                'source' => CohortMemberSource::Roster,
+                'responded_at' => $status === CohortMemberStatus::Declined ? '2026-07-04 09:00' : null,
+            ]);
+        }
+
+        $pool = TalentPool::query()->create([
+            'organization_id' => $meghna->id,
+            'name' => 'Electricians ready to travel',
+            'description' => 'Attested 2026 graduates with passports ready.',
+            'occupation_id' => $course->occupation_id,
+            'published_at' => '2026-07-10 06:00',
+            'created_by' => $nusrat->id,
+        ]);
+        $pool->workers()->attach([
+            $this->workers['rahim']->id => ['id' => (string) str()->ulid(), 'added_by' => $nusrat->id],
+            $this->workers['karim']->id => ['id' => (string) str()->ulid(), 'added_by' => $nusrat->id],
+        ]);
+
+        $this->alert($nusrat, NotificationEvent::GraduateJoined, ['worker' => 'Karim Ahmed', 'cohort' => $cohort->name, 'course' => $course->title], '/org/cohorts/'.$cohort->id, '2026-07-03 08:30', read: false);
     }
 
     private function seedQueues(): void
