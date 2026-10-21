@@ -968,3 +968,33 @@ colour) and the appearance tabs use design tokens instead of the kit's neutral g
 - **Review fix:** organization pages subscribed every member to the organization inbox channel,
   which members without applicant access (all institute roles) are refused; they now subscribe
   only when they may view applicants.
+
+### D-088 · Module 8 inputs (owner answers, 2026-10-21)
+- **Suspension:** a suspended organization's members can still sign in, read-only, to see their
+  data and appeal; they can't post, publish, change jobs or message. Its live jobs are suspended
+  and their applicants told. Existing applications and mobility cases continue. A suspended worker
+  is hidden from talent search and pools and can't apply, but can sign in and appeal.
+- **Reporters** get a short outcome only ("reviewed, action taken" or "reviewed, no action
+  needed"), never details about the other party.
+- **Corridor legal review** is recorded per country. A destination without it shows a staff-only
+  "legal review pending" flag; publishing isn't blocked.
+- **Sensitive files** (passport and ID scans) are opened only by Verification Officers and
+  Superusers while reviewing, and every view is written to the audit log.
+- **Review cadence:** once at the end of the module.
+
+### D-089 · Trust schema
+- `trust_cases`: reference `TC-2026-0001`, subject (organization, job or worker profile),
+  category (the report categories), priority (low / normal / high / urgent), status open →
+  investigating → action taken → closed (a closed case can be reopened), assignee, opener, summary
+  and outcome reason code.
+- `reports` gain the case they belong to, the outcome the reporter is told (action taken / no
+  action), a reason code and who decided when.
+- `trust_case_notes`: evidence notes with files on the private disk; `trust_actions`: suspend /
+  restore with a reason code, append-only; `appeals`: statement, submitted → upheld | overturned,
+  decided by another trust officer than the one who suspended.
+- `worker_profiles.suspended_at` hides a worker from talent search and pools; `countries` record
+  the corridor legal review (who, when).
+- Reason codes (`TrustReason`) cover action (fake job, unauthorized payment, misleading
+  conditions, impersonation, harassment, fake credentials, repeated breaches), no action (no
+  evidence, not a breach, duplicate, resolved) and appeal outcomes.
+- Trust Officers and Superusers (`trust.manage`) run cases.
