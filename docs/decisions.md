@@ -998,3 +998,18 @@ colour) and the appearance tabs use design tokens instead of the kit's neutral g
   conditions, impersonation, harassment, fake credentials, repeated breaches), no action (no
   evidence, not a breach, duplicate, resolved) and appeal outcomes.
 - Trust Officers and Superusers (`trust.manage`) run cases.
+
+### D-090 · Worker evidence review
+- `/admin/evidence` (Verification Officers and Superusers) lists the documents workers uploaded
+  (passport and ID scans, certificates, training records, work references) that are uploaded /
+  unreviewed or verification pending, oldest first. Institute attestations and assessments are
+  issued already and never appear here.
+- "Start review" marks the item verification pending and assigns it to the officer; only then
+  does the file open, through the private-media route, and every view is written to the audit
+  log (`document.viewed_by_staff`, D-088). The officer verifies (issuer verified) or rejects with a
+  reason code (unreadable, expired, details mismatch, not the document described, altered or not
+  genuine) and an optional note; "more information" isn't offered: a rejection with its reason
+  tells the worker what to upload again. The decision is a verification request like other staff
+  reviews, so the history shows who decided what.
+- Workers get `evidence_reviewed`. A daily task (`evidence:expire`) marks verified evidence expired
+  once its document's expiry date passes (product rule 9).

@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Admin\EvidenceReviewController;
 use App\Http\Controllers\Admin\JobReviewController;
 use App\Http\Controllers\Admin\MandateReviewController;
 use App\Http\Controllers\Admin\OrganizationReviewController;
@@ -40,6 +41,14 @@ Route::middleware(['auth', 'verified', 'user.type:staff', 'staff.2fa'])->prefix(
     });
 
     // SkillShow moderation (Module 2, product rule 3).
+    // Worker evidence (Module 8, D-090).
+    Route::controller(EvidenceReviewController::class)->prefix('evidence')->name('evidence.')->group(function () {
+        Route::get('/', 'index')->name('index');
+        Route::get('{evidence}', 'show')->name('show');
+        Route::post('{evidence}/start', 'start')->name('start');
+        Route::patch('{evidence}', 'decide')->name('decide');
+    });
+
     Route::controller(SkillShowModerationController::class)->prefix('skillshows')->name('skillshows.')->group(function () {
         Route::get('/', 'index')->name('index');
         Route::patch('{skillShow}', 'update')->name('update');

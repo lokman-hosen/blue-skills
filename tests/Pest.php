@@ -1,6 +1,7 @@
 <?php
 
 use App\Domain\Identity\Enums\OrganizationRole;
+use App\Domain\Identity\Enums\StaffRole;
 use App\Domain\Identity\Models\User;
 use App\Domain\Identity\Support\TeamContext;
 use App\Domain\Organization\Models\Organization;
@@ -40,4 +41,10 @@ function orgMember(Organization $organization, OrganizationRole $role): User
 function actingInOrg(User $user, Organization $organization)
 {
     return test()->actingAs($user)->withSession([CurrentOrganization::SESSION_KEY => $organization->id]);
+}
+
+/** A staff member with two-factor set up and one staff role (needs RolesAndPermissionsSeeder). */
+function staffUser(StaffRole $role): User
+{
+    return User::factory()->staff()->withTwoFactor()->create()->assignStaffRole($role);
 }

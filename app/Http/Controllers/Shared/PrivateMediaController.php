@@ -10,6 +10,7 @@ use App\Domain\Mobility\Models\CaseDocument;
 use App\Domain\Mobility\Models\MobilityCase;
 use App\Domain\Organization\Models\Organization;
 use App\Domain\Verification\Models\Document;
+use App\Domain\Verification\Models\EvidenceItem;
 use App\Domain\Verification\Models\VerificationRequest;
 use App\Domain\Worker\Models\SkillShow;
 use App\Domain\Worker\Models\VoiceAnswer;
@@ -38,7 +39,8 @@ class PrivateMediaController extends Controller
             // on a mobility case checklist.
             $owner instanceof Document => $owner->owner_user_id === $request->user()?->id
                 || $this->sharedWithViewer($owner, $request->user())
-                || $this->onViewersCase($owner, $request->user()),
+                || $this->onViewersCase($owner, $request->user())
+                || $this->underStaffReview($owner, $request->user()),
             // Registration evidence: reviewers, and members who may edit the organization.
             $owner instanceof VerificationRequest => Gate::allows('review', Organization::class)
                 || ($owner->subject instanceof Organization && Gate::allows('update', $owner->subject))
@@ -118,5 +120,28 @@ class PrivateMediaController extends Controller
                 return ($manager !== null && Gate::forUser($viewer)->allows('viewAny', [MobilityCase::class, $manager]))
                     || $item->employer_can_view;
             });
+    }
+
+    /**
+     * A Verification Officer or Superuser opens a worker's file while reviewing it; every view
+     * is written to the audit log (D-088).
+     */
+    private function underStaffReview(Document $document, ?User $viewer): bool
+    {
+        if ($viewer === null || ! $viewer->isStaff()) {
+            return false;
+        }
+
+        $item = $document->evidenceItems()->get()->first(fn (EvidenceItem $item) => Gate::forUser($viewer)->allows('viewFile', $item));
+
+        if ($item === null) {
+            return false;
+        }
+
+        activity('verification')->performedOn($item)->causedBy($viewer)
+            ->withProperties(['document' => $document->id, 'type' => $document->type->value])
+            ->log('document.viewed_by_staff');
+
+        return true;
     }
 }

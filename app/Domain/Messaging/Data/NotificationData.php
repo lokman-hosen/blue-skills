@@ -73,6 +73,7 @@ class NotificationData extends Data
                 'case_action' => __("notification.case_action.{$value}"),
                 'document_action' => __("notification.document_action.{$value}"),
                 'record_action' => __("notification.record_action.{$value}"),
+                'evidence_type' => __("evidence.type.{$value}"),
                 'closed_reason' => __("mobility.closed_reason.{$value}"),
                 'at' => CarbonImmutable::parse((string) $value)
                     ->setTimezone($reader->timezone ?: 'UTC')

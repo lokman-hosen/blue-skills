@@ -795,6 +795,7 @@ declare namespace App {
                     | 'case_closed'
                     | 'case_document'
                     | 'institute_record'
+                    | 'evidence_reviewed'
                     | 'new_applicants'
                     | 'application_answered'
                     | 'organization_message'
@@ -1011,6 +1012,8 @@ declare namespace App {
         }
         namespace Trust {
             namespace Enums {
+                export type AppealStatus = 'submitted' | 'upheld' | 'overturned';
+                export type CasePriority = 'low' | 'normal' | 'high' | 'urgent';
                 export type ReportCategory =
                     | 'fake_job'
                     | 'unauthorized_payment'
@@ -1019,10 +1022,40 @@ declare namespace App {
                     | 'harassment'
                     | 'fake_credential'
                     | 'other';
+                export type ReportOutcome = 'action_taken' | 'no_action';
+                export type TrustActionType = 'suspend' | 'restore';
+                export type TrustReason =
+                    | 'fake_job'
+                    | 'unauthorized_payment'
+                    | 'misleading_conditions'
+                    | 'impersonation'
+                    | 'harassment'
+                    | 'fake_credentials'
+                    | 'repeated_breaches'
+                    | 'no_evidence'
+                    | 'not_a_breach'
+                    | 'duplicate'
+                    | 'resolved'
+                    | 'appeal_upheld'
+                    | 'appeal_overturned';
             }
         }
         namespace Verification {
             namespace Data {
+                export type EvidenceReviewData = {
+                    id: string;
+                    type: App.Domain.Verification.Enums.EvidenceType;
+                    title: string | null;
+                    state: App.Support.Data.StatusData;
+                    workerName: string;
+                    passportReference: string;
+                    uploadedAt: string;
+                    expiresOn: string | null;
+                    reviewer: string | null;
+                    fileUrl: string | null;
+                    fileName: string | null;
+                    history: App.Domain.Verification.Data.ReviewDecisionData[];
+                };
                 export type ReviewDecisionData = {
                     decision: App.Domain.Verification.Enums.VerificationDecision;
                     reasonCode: string | null;
@@ -1069,6 +1102,8 @@ declare namespace App {
                     | 'mandate_not_signed'
                     | 'mandate_scope_mismatch'
                     | 'licence_expired'
+                    | 'not_genuine'
+                    | 'wrong_document'
                     | 'more_information_needed';
                 export type VerificationDecision = 'approved' | 'rejected' | 'needs_info';
                 export type VerificationType =

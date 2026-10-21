@@ -1,7 +1,6 @@
 <?php
 
 use App\Domain\Identity\Enums\StaffRole;
-use App\Domain\Identity\Models\User;
 use App\Domain\Taxonomy\Models\Occupation;
 use App\Domain\Trust\Models\Appeal;
 use App\Domain\Trust\Models\TrustAction;
@@ -17,14 +16,6 @@ beforeEach(function () {
     $this->seed([CountrySeeder::class, RolesAndPermissionsSeeder::class]);
 });
 
-function staffWith(StaffRole $role): User
-{
-    $user = User::factory()->staff()->create();
-    $user->assignStaffRole($role);
-
-    return $user;
-}
-
 it('numbers cases and keeps actions and notes immutable', function () {
     $first = TrustCase::factory()->create();
     $second = TrustCase::factory()->create();
@@ -37,9 +28,9 @@ it('numbers cases and keeps actions and notes immutable', function () {
 });
 
 it('lets trust officers run cases and keeps appeals away from the officer who suspended', function () {
-    $officer = staffWith(StaffRole::TrustOfficer);
-    $other = staffWith(StaffRole::TrustOfficer);
-    $verifier = staffWith(StaffRole::VerificationOfficer);
+    $officer = staffUser(StaffRole::TrustOfficer);
+    $other = staffUser(StaffRole::TrustOfficer);
+    $verifier = staffUser(StaffRole::VerificationOfficer);
     $appeal = Appeal::factory()->create(['trust_action_id' => TrustAction::factory()->create(['actor_id' => $officer->id])]);
 
     expect(Gate::forUser($officer)->allows('viewAny', TrustCase::class))->toBeTrue()

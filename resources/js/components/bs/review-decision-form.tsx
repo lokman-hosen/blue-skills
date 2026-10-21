@@ -17,9 +17,12 @@ type Decision = App.Domain.Verification.Enums.VerificationDecision;
 export function ReviewDecisionForm({
     action,
     reasons,
+    allowNeedsInfo = true,
 }: {
     action: string;
     reasons: App.Domain.Verification.Enums.ReviewReason[];
+    /** Worker evidence is verified or rejected only (D-090). */
+    allowNeedsInfo?: boolean;
 }) {
     const { t } = useTranslation();
     const form = useForm<{ decision: Decision | ''; reason: string; note: string }>({
@@ -75,21 +78,27 @@ export function ReviewDecisionForm({
                 .map(([key, message]) => (
                     <InputError key={key} message={message} />
                 ))}
-            <div className="grid gap-2 sm:grid-cols-3">
+            <div
+                className={
+                    allowNeedsInfo ? 'grid gap-2 sm:grid-cols-3' : 'grid gap-2 sm:grid-cols-2'
+                }
+            >
                 <Button type="submit" className="min-h-11" disabled={form.processing}>
                     {form.processing ? <Spinner /> : <Check aria-hidden className="size-4" />}
                     {t('admin.review.approve')}
                 </Button>
-                <Button
-                    type="button"
-                    variant="outline"
-                    className="min-h-11"
-                    disabled={form.processing || form.data.reason === ''}
-                    onClick={submit('needs_info')}
-                >
-                    <CircleHelp aria-hidden className="size-4" />
-                    {t('admin.review.request_info')}
-                </Button>
+                {allowNeedsInfo && (
+                    <Button
+                        type="button"
+                        variant="outline"
+                        className="min-h-11"
+                        disabled={form.processing || form.data.reason === ''}
+                        onClick={submit('needs_info')}
+                    >
+                        <CircleHelp aria-hidden className="size-4" />
+                        {t('admin.review.request_info')}
+                    </Button>
+                )}
                 <Button
                     type="button"
                     variant="outline"

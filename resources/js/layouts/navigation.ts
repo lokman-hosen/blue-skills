@@ -285,6 +285,13 @@ export const adminNav: NavGroup[] = [
                 permission: 'verifications.review',
             },
             {
+                key: 'evidence',
+                label: 'nav.evidence_reviews',
+                icon: FileCheck,
+                href: admin.evidence.index(),
+                permission: 'verifications.review',
+            },
+            {
                 key: 'skillshows',
                 label: 'nav.skillshows',
                 icon: Video,
