@@ -35,7 +35,7 @@ the spec wins; on visuals, the HTML design wins.
 ## Commands
 
 ```bash
-./vendor/bin/sail up -d          # pgsql, redis, mailpit, meilisearch; app on http://localhost:8080
+./vendor/bin/sail up -d          # pgsql, redis, mailpit, meilisearch, reverb (:8081); app on http://localhost:8080
 ./vendor/bin/sail artisan …      # host PHP has no pdo_pgsql/redis; run artisan and Pest in Sail
 ./vendor/bin/sail php vendor/bin/pest --parallel
 composer run dev                 # app + vite + queue + logs
@@ -53,7 +53,10 @@ npm run design:review -- --phone=+8801711000001 --pages=/passport  # as a worker
 Worker sign-in is `/join` (phone + code). Locally `OTP_CHANNEL=log` writes the code to
 `storage/logs/laravel.log`; `BLUESKILLS_ENFORCE_STAFF_2FA=false` in `.env` skips the staff 2FA requirement
 on your machine only (tests always enforce it). Sign-in codes, Voice-to-CV answers and SkillShow videos are
-processed on the queue: run `sail artisan queue:work` (or `composer run dev`). `SPEECH_TO_TEXT_DRIVER=sample`
+processed on the queue: run `sail artisan queue:work` (or `composer run dev`). Notifications, WhatsApp/SMS/email
+alerts and live updates also use the queue and the `reverb` Sail service; `sail artisan schedule:work` runs the daily
+new-applicant digest and releases alerts held for workers' quiet hours. WhatsApp and SMS go to the log locally
+(`NOTIFY_WHATSAPP_DRIVER`, `NOTIFY_SMS_DRIVER`). `SPEECH_TO_TEXT_DRIVER=sample`
 answers every recording with the prototype's sample sentence; SkillShow checks need ffmpeg (in Sail).
 Seeded worker Rahim Uddin signs in with `+8801711000001` and has a complete Skill Passport.
 
@@ -210,7 +213,7 @@ Update this table when a module is done.
 | 2 | Worker profile: onboarding, Skill Passport, Voice-to-CV, SkillShow | ✓ |
 | 3 | Organizations & jobs: employer verification, job wizard, Truth Card, job review, public search | ✓ |
 | 4 | Applications: apply + snapshot + consent, tracker, pipeline, talent search, shortlists | ✓ |
-| 5 | Messaging & notifications: in-app, WhatsApp, SMS, email | ☐ |
+| 5 | Messaging & notifications: in-app, WhatsApp, SMS, email | ✓ |
 | 6 | Agency & mobility: licence, mandates, mobility cases, documents | ☐ |
 | 7 | Institutes: cohorts, invites, attestation, talent pools | ☐ |
 | 8 | Admin & trust: verification queues, reports, cases, config, taxonomy | ☐ |

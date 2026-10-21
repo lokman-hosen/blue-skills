@@ -7,6 +7,7 @@ use App\Domain\Applications\Models\ApplicationConsent;
 use App\Domain\Applications\Models\ApplicationStageEvent;
 use App\Domain\Applications\Models\Consent;
 use App\Domain\Applications\Models\Interview;
+use App\Domain\Applications\Models\JobInvitation;
 use App\Domain\Applications\Models\Offer;
 use App\Domain\Applications\Models\ProfileSnapshot;
 use App\Domain\Applications\Models\Shortlist;
@@ -24,6 +25,15 @@ use App\Domain\Jobs\Models\JobCost;
 use App\Domain\Jobs\Models\JobMandate;
 use App\Domain\Jobs\Models\JobPosting;
 use App\Domain\Jobs\Models\JobSkillRequirement;
+use App\Domain\Messaging\Channels\CloudWhatsAppSender;
+use App\Domain\Messaging\Channels\LogSmsSender;
+use App\Domain\Messaging\Channels\LogWhatsAppSender;
+use App\Domain\Messaging\Channels\TwilioSmsSender;
+use App\Domain\Messaging\Contracts\SmsSender;
+use App\Domain\Messaging\Contracts\WhatsAppSender;
+use App\Domain\Messaging\Models\Conversation;
+use App\Domain\Messaging\Models\Message;
+use App\Domain\Messaging\Models\OutboundMessage;
 use App\Domain\Mobility\Models\MobilityCase;
 use App\Domain\Mobility\Models\MobilityCaseStage;
 use App\Domain\Organization\Models\Organization;
@@ -75,6 +85,16 @@ class AppServiceProvider extends ServiceProvider
         });
 
         $this->app->bind(ProfileExtractor::class, RuleBasedProfileExtractor::class);
+
+        $this->app->bind(WhatsAppSender::class, fn () => match (config('blueskills.notifications.whatsapp_driver')) {
+            'cloud' => new CloudWhatsAppSender,
+            default => new LogWhatsAppSender,
+        });
+
+        $this->app->bind(SmsSender::class, fn () => match (config('blueskills.notifications.sms_driver')) {
+            'twilio' => new TwilioSmsSender,
+            default => new LogSmsSender,
+        });
     }
 
     /**
@@ -130,6 +150,10 @@ class AppServiceProvider extends ServiceProvider
             'offer' => Offer::class,
             'shortlist' => Shortlist::class,
             'shortlist_entry' => ShortlistEntry::class,
+            'job_invitation' => JobInvitation::class,
+            'conversation' => Conversation::class,
+            'message' => Message::class,
+            'outbound_message' => OutboundMessage::class,
             'job' => JobPosting::class,
             'job_cost' => JobCost::class,
             'job_mandate' => JobMandate::class,

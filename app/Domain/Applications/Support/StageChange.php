@@ -2,9 +2,12 @@
 
 namespace App\Domain\Applications\Support;
 
+use App\Domain\Applications\Enums\RejectionReason;
 use App\Domain\Applications\Models\Application;
 use App\Domain\Applications\States\Application\ApplicationState;
 use App\Domain\Identity\Models\User;
+use App\Domain\Messaging\Enums\NotificationEvent;
+use App\Domain\Messaging\Support\Notify;
 use Illuminate\Validation\ValidationException;
 use Spatie\ModelStates\Exceptions\CouldNotPerformTransition;
 
@@ -41,5 +44,21 @@ final class StageChange
         activity('applications')->performedOn($application)->causedBy($actor)
             ->withProperties(['from' => $from, 'to' => $target::getMorphClass(), 'reason_code' => $reasonCode])
             ->log('application.stage_changed');
+
+        self::notify($application, $target::getMorphClass(), $reasonCode);
+    }
+
+    /**
+     * Stage alerts (D-060: in-app; WhatsApp, SMS and email from Module 5). Interviews and offers
+     * alert from their own actions, which carry the details.
+     */
+    private static function notify(Application $application, string $to, ?string $reasonCode): void
+    {
+        match ($to) {
+            'shortlisted' => Notify::worker($application, NotificationEvent::Shortlisted),
+            'rejected' => Notify::worker($application, NotificationEvent::ApplicationRejected, ['reason' => $reasonCode ?? RejectionReason::Other->value]),
+            'accepted', 'declined', 'withdrawn' => Notify::handlers($application, NotificationEvent::ApplicationAnswered, ['answer' => $to]),
+            default => null,
+        };
     }
 }

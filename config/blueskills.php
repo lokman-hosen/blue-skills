@@ -38,6 +38,18 @@ return [
     ],
 
     /*
+    | Alerts outside the app (Module 5, D-067). Drivers are `log` locally; production uses
+    | `cloud` (WhatsApp Cloud API) and `twilio`. Workers get no WhatsApp or SMS during quiet
+    | hours in their own time zone; those wait until the end of quiet hours.
+    */
+    'notifications' => [
+        'whatsapp_driver' => env('NOTIFY_WHATSAPP_DRIVER', 'log'),
+        'sms_driver' => env('NOTIFY_SMS_DRIVER', 'log'),
+        'quiet_from' => 22,
+        'quiet_until' => 7,
+    ],
+
+    /*
     | Voice-to-CV (Module 2, D-047). `speech_to_text` is `sample` locally (returns the
     | prototype's answers) or `none` (typing only) until a provider driver is added.
     | Recordings are deleted once the answer is confirmed or discarded, and after

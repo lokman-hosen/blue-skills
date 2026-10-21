@@ -19,6 +19,7 @@ declare module '@inertiajs/core' {
             locales: App.Domain.Config.Data.LocaleOptionData[];
             translations: Record<string, string>;
             sidebarOpen: boolean;
+            unread: { messages: number; notifications: number } | null;
             [key: string]: unknown;
         };
     }

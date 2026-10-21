@@ -7,6 +7,7 @@ use App\Domain\Config\Support\LocaleRegistry;
 use App\Domain\Config\Support\Translations;
 use App\Domain\Identity\Data\AuthUserData;
 use App\Domain\Identity\Models\User;
+use App\Domain\Messaging\Support\Unread;
 use App\Domain\Organization\Data\OrganizationSummaryData;
 use App\Domain\Organization\Models\Organization;
 use App\Domain\Organization\Support\CurrentOrganization;
@@ -79,6 +80,11 @@ class HandleInertiaRequests extends Middleware
             ),
             'locales' => fn () => $this->locales->available()->all(),
             'translations' => fn () => $this->translations->for($locale),
+            // Navigation badges, refreshed live through Reverb (Module 5).
+            'unread' => fn () => $user !== null ? [
+                'messages' => Unread::conversations($user, $organization),
+                'notifications' => $user->unreadNotifications()->count(),
+            ] : null,
             'sidebarOpen' => ! $request->hasCookie('sidebar_state') || $request->cookie('sidebar_state') === 'true',
         ];
     }

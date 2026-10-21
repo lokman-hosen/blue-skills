@@ -3,14 +3,16 @@ import { LogOut, Menu } from 'lucide-react';
 import type { ReactNode } from 'react';
 import { useState } from 'react';
 import { LanguageSwitcher } from '@/components/bs/language-switcher';
+import { LiveUpdates } from '@/components/bs/live-updates';
 import { Logo } from '@/components/bs/logo';
+import { NotificationBell } from '@/components/bs/notification-bell';
 import { SkipLink } from '@/components/bs/skip-link';
 import { ThemeToggle } from '@/components/bs/theme-toggle';
 import { TranslationPendingBanner } from '@/components/bs/translation-pending-banner';
 import { Sheet, SheetContent, SheetHeader, SheetTitle } from '@/components/ui/sheet';
 import { useCurrentUrl } from '@/hooks/use-current-url';
 import type { NavLink } from '@/layouts/navigation';
-import { workerPrimaryNav, workerSecondaryNav } from '@/layouts/navigation';
+import { navBadge, workerPrimaryNav, workerSecondaryNav } from '@/layouts/navigation';
 import { useTranslation } from '@/lib/i18n';
 import { cn } from '@/lib/utils';
 import { dashboard, logout } from '@/routes';
@@ -20,27 +22,42 @@ import { dashboard, logout } from '@/routes';
  */
 export default function WorkerLayout({ children }: { children: ReactNode }) {
     const { t } = useTranslation();
-    const { auth } = usePage().props;
+    const { auth, unread } = usePage().props;
     const { isCurrentOrParentUrl } = useCurrentUrl();
     const [moreOpen, setMoreOpen] = useState(false);
     const isActive = (item: NavLink) => item.href !== undefined && isCurrentOrParentUrl(item.href);
     const moreActive = workerSecondaryNav.some(isActive);
+    const moreBadge = workerSecondaryNav.reduce((sum, item) => sum + navBadge(item.key, unread), 0);
 
     return (
         <div className="min-h-svh bg-bg lg:grid lg:grid-cols-[248px_minmax(0,1fr)]">
             <SkipLink />
+            <LiveUpdates />
 
             <aside className="sticky top-0 hidden h-svh flex-col gap-6 border-e border-line bg-surface p-4 lg:flex">
-                <Link href={dashboard()} aria-label={t('app.home')}>
-                    <Logo />
-                </Link>
+                <div className="flex items-center justify-between gap-2">
+                    <Link href={dashboard()} aria-label={t('app.home')}>
+                        <Logo />
+                    </Link>
+                    <NotificationBell />
+                </div>
                 <nav aria-label={t('nav.main')} className="flex flex-1 flex-col gap-0.5">
                     {workerPrimaryNav.map((item) => (
-                        <SideLink key={item.key} item={item} active={isActive(item)} />
+                        <SideLink
+                            key={item.key}
+                            item={item}
+                            active={isActive(item)}
+                            count={navBadge(item.key, unread)}
+                        />
                     ))}
                     <hr className="my-2 border-line" />
                     {workerSecondaryNav.map((item) => (
-                        <SideLink key={item.key} item={item} active={isActive(item)} />
+                        <SideLink
+                            key={item.key}
+                            item={item}
+                            active={isActive(item)}
+                            count={navBadge(item.key, unread)}
+                        />
                     ))}
                 </nav>
                 <div className="flex flex-col gap-2 border-t border-line pt-4">
@@ -59,6 +76,7 @@ export default function WorkerLayout({ children }: { children: ReactNode }) {
                     <Link href={dashboard()} aria-label={t('app.home')} className="me-auto">
                         <Logo />
                     </Link>
+                    <NotificationBell />
                     <LanguageSwitcher />
                 </header>
                 <TranslationPendingBanner />
@@ -87,8 +105,19 @@ export default function WorkerLayout({ children }: { children: ReactNode }) {
                         moreActive ? 'text-brand' : 'text-muted',
                     )}
                 >
-                    <Menu aria-hidden className="size-5" />
+                    <span className="relative">
+                        <Menu aria-hidden className="size-5" />
+                        {moreBadge > 0 && (
+                            <span
+                                aria-hidden
+                                className="absolute -end-1 -top-1 size-2.5 rounded-full bg-bad ring-2 ring-surface"
+                            />
+                        )}
+                    </span>
                     <span className="max-w-full truncate">{t('common.more')}</span>
+                    {moreBadge > 0 && (
+                        <span className="sr-only">{t('nav.unread', { count: moreBadge })}</span>
+                    )}
                 </button>
             </nav>
 
@@ -103,6 +132,7 @@ export default function WorkerLayout({ children }: { children: ReactNode }) {
                                 key={item.key}
                                 item={item}
                                 active={isActive(item)}
+                                count={navBadge(item.key, unread)}
                                 onNavigate={() => setMoreOpen(false)}
                             />
                         ))}
@@ -131,10 +161,12 @@ export default function WorkerLayout({ children }: { children: ReactNode }) {
 function SideLink({
     item,
     active,
+    count = 0,
     onNavigate,
 }: {
     item: NavLink;
     active: boolean;
+    count?: number;
     onNavigate?: () => void;
 }) {
     const { t } = useTranslation();
@@ -163,7 +195,8 @@ function SideLink({
             )}
         >
             <item.icon aria-hidden className="size-4.5 shrink-0" />
-            {t(item.label)}
+            <span className="flex-1">{t(item.label)}</span>
+            {count > 0 && <CountBadge count={count} />}
         </Link>
     );
 }
@@ -195,5 +228,16 @@ function TabLink({ item, active }: { item: NavLink; active: boolean }) {
         >
             {content}
         </Link>
+    );
+}
+
+function CountBadge({ count }: { count: number }) {
+    const { t, formatNumber } = useTranslation();
+
+    return (
+        <span className="rounded-full bg-bad px-1.5 text-[11px] leading-5 font-bold text-on-brand">
+            <span aria-hidden>{formatNumber(count)}</span>
+            <span className="sr-only">{t('nav.unread', { count })}</span>
+        </span>
     );
 }

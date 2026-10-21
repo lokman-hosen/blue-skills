@@ -52,6 +52,14 @@ export type NavLink = {
     permission?: string;
 };
 
+/** Unread count shown beside a navigation item, from the shared `unread` prop. */
+export function navBadge(
+    key: string,
+    unread: { messages: number; notifications: number } | null,
+): number {
+    return key === 'messages' ? (unread?.messages ?? 0) : 0;
+}
+
 export type NavGroup = { label?: string; items: NavLink[] };
 
 // Worker: the first four are the mobile bottom tabs; the rest live in the "More" sheet.
@@ -69,7 +77,7 @@ export const workerPrimaryNav: NavLink[] = [
 
 export const workerSecondaryNav: NavLink[] = [
     { key: 'skillshow', label: 'nav.skillshow', icon: Video, href: worker.skillshow.edit() },
-    { key: 'messages', label: 'nav.messages', icon: MessageSquare },
+    { key: 'messages', label: 'nav.messages', icon: MessageSquare, href: worker.messages.index() },
     { key: 'documents', label: 'nav.documents', icon: FileText, href: worker.documents.index() },
     { key: 'privacy', label: 'nav.privacy', icon: ShieldCheck, href: worker.privacy.show() },
     { key: 'settings', label: 'nav.settings', icon: Settings, href: profileSettings() },
@@ -98,7 +106,12 @@ export const orgNav: Record<App.Domain.Organization.Enums.OrganizationType, NavG
                     href: org.shortlists.index(),
                 },
                 { key: 'projects', label: 'nav.projects', icon: FolderKanban },
-                { key: 'messages', label: 'nav.messages', icon: MessageSquare },
+                {
+                    key: 'messages',
+                    label: 'nav.messages',
+                    icon: MessageSquare,
+                    href: org.messages.index(),
+                },
             ],
         },
         {
@@ -123,7 +136,12 @@ export const orgNav: Record<App.Domain.Organization.Enums.OrganizationType, NavG
                 { key: 'candidates', label: 'nav.candidates', icon: UsersRound },
                 { key: 'mobility', label: 'nav.mobility', icon: Plane },
                 { key: 'compliance', label: 'nav.compliance', icon: ClipboardCheck },
-                { key: 'messages', label: 'nav.messages', icon: MessageSquare },
+                {
+                    key: 'messages',
+                    label: 'nav.messages',
+                    icon: MessageSquare,
+                    href: org.messages.index(),
+                },
             ],
         },
         {

@@ -1,5 +1,14 @@
 import { Head, Link, router } from '@inertiajs/react';
-import { CalendarClock, CircleAlert, Handshake, MapPin, Video, Phone, Users } from 'lucide-react';
+import {
+    CalendarClock,
+    CircleAlert,
+    Handshake,
+    MapPin,
+    MessageSquare,
+    Phone,
+    Users,
+    Video,
+} from 'lucide-react';
 import { ConfirmDialog } from '@/components/bs/confirm-dialog';
 import { PageHeader } from '@/components/bs/page-header';
 import { StageTracker } from '@/components/bs/stage-tracker';
@@ -76,6 +85,12 @@ export default function ApplicationShow({ application }: Props) {
                             {t(`applications.next.${application.nextStep}`)}
                         </p>
                     </div>
+                    <Button asChild variant="outline" className="min-h-11 self-start">
+                        <Link href={worker.applications.messages(application.id)}>
+                            <MessageSquare aria-hidden className="size-4" />
+                            {t('messages.message_employer')}
+                        </Link>
+                    </Button>
                     <StageTracker
                         stages={application.stages.map((stage) => ({
                             key: stage.key,

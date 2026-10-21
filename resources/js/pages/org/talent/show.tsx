@@ -4,6 +4,7 @@ import type { FormEvent, ReactNode } from 'react';
 import { NativeSelect } from '@/components/bs/native-select';
 import { PageHeader } from '@/components/bs/page-header';
 import { SkillShowPlayer } from '@/components/bs/skill-show-player';
+import { StatusChip } from '@/components/bs/status-chip';
 import { WorkerProjection } from '@/components/bs/worker-projection';
 import InputError from '@/components/input-error';
 import { Button } from '@/components/ui/button';
@@ -18,13 +19,24 @@ type Props = {
     applications: { id: string; jobCode: string; jobTitle: string }[];
     shortlists: App.Domain.Applications.Data.ShortlistData[] | null;
     onShortlists: string[];
+    canInvite: boolean;
+    openJobs: { code: string; title: string }[];
+    invitations: App.Domain.Applications.Data.JobInvitationData[];
 };
 
 /**
  * A discoverable worker's professional projection (product rule 1). Contact happens through an
  * application; phone numbers and documents are never shown here (product rule 6).
  */
-export default function TalentShow({ profile, applications, shortlists, onShortlists }: Props) {
+export default function TalentShow({
+    profile,
+    applications,
+    shortlists,
+    onShortlists,
+    canInvite,
+    openJobs,
+    invitations,
+}: Props) {
     const { t } = useTranslation();
 
     return (
@@ -50,6 +62,14 @@ export default function TalentShow({ profile, applications, shortlists, onShortl
                             <Panel title={t('nav.skillshow')}>
                                 <SkillShowPlayer skillShow={profile.skillShow} />
                             </Panel>
+                        )}
+                        {(canInvite || invitations.length > 0) && (
+                            <InvitePanel
+                                reference={profile.reference}
+                                canInvite={canInvite}
+                                openJobs={openJobs}
+                                invitations={invitations}
+                            />
                         )}
                         {shortlists && (
                             <ShortlistPanel
@@ -185,6 +205,100 @@ function ShortlistPanel({
                         {t('shortlists.create')}
                     </Button>
                 </form>
+            )}
+        </Panel>
+    );
+}
+
+function InvitePanel({
+    reference,
+    canInvite,
+    openJobs,
+    invitations,
+}: {
+    reference: string;
+    canInvite: boolean;
+    openJobs: { code: string; title: string }[];
+    invitations: App.Domain.Applications.Data.JobInvitationData[];
+}) {
+    const { t, formatDate } = useTranslation();
+    const invited = invitations.map((invitation) => invitation.job.code);
+    const available = openJobs.filter((job) => !invited.includes(job.code));
+    const form = useForm({ job: available[0]?.code ?? '', note: '' });
+
+    const submit = (event: FormEvent) => {
+        event.preventDefault();
+        form.post(org.talent.invite.url(reference), {
+            preserveScroll: true,
+            onSuccess: () => form.reset('note'),
+        });
+    };
+
+    return (
+        <Panel title={t('invitations.invite_title')}>
+            {invitations.length > 0 && (
+                <ul className="flex flex-col gap-1.5 text-sm">
+                    {invitations.map((invitation) => (
+                        <li
+                            key={invitation.id}
+                            className="flex flex-wrap items-center justify-between gap-2"
+                        >
+                            <span className="min-w-0">
+                                {invitation.job.title}
+                                <span className="block text-xs text-muted">
+                                    {formatDate(invitation.sentAt)}
+                                </span>
+                            </span>
+                            <StatusChip
+                                icon={false}
+                                label={t(`invitation_status.${invitation.status}`)}
+                                tone={
+                                    invitation.status === 'applied'
+                                        ? 'ok'
+                                        : invitation.status === 'sent'
+                                          ? 'stamp'
+                                          : 'neutral'
+                                }
+                            />
+                        </li>
+                    ))}
+                </ul>
+            )}
+            {canInvite && available.length > 0 && (
+                <form onSubmit={submit} className="flex flex-col gap-2" noValidate>
+                    <Label htmlFor="invite-job">{t('invitations.job')}</Label>
+                    <NativeSelect
+                        id="invite-job"
+                        value={form.data.job}
+                        onChange={(event) => form.setData('job', event.target.value)}
+                    >
+                        {available.map((job) => (
+                            <option key={job.code} value={job.code}>
+                                {job.title} · {job.code}
+                            </option>
+                        ))}
+                    </NativeSelect>
+                    <Label htmlFor="invite-note" className="text-xs">
+                        {t('invitations.note')} ({t('common.optional')})
+                    </Label>
+                    <textarea
+                        id="invite-note"
+                        rows={2}
+                        maxLength={300}
+                        value={form.data.note}
+                        onChange={(event) => form.setData('note', event.target.value)}
+                        className="w-full rounded-md border border-input bg-surface px-3 py-2 text-base shadow-xs outline-none focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50 md:text-sm"
+                    />
+                    <InputError message={form.errors.job ?? form.errors.note} />
+                    <p className="text-xs text-muted">{t('invitations.org_note')}</p>
+                    <Button type="submit" className="min-h-11" disabled={form.processing}>
+                        {form.processing && <Spinner />}
+                        {t('invitations.send')}
+                    </Button>
+                </form>
+            )}
+            {canInvite && available.length === 0 && invitations.length === 0 && (
+                <p className="text-sm text-muted">{t('invitations.no_open_jobs')}</p>
             )}
         </Panel>
     );

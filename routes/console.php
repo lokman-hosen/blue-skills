@@ -1,5 +1,7 @@
 <?php
 
+use App\Domain\Messaging\Actions\ReleaseHeldMessages;
+use App\Domain\Messaging\Actions\SendNewApplicantDigests;
 use App\Domain\Worker\Actions\PruneVoiceRecordings;
 use Illuminate\Foundation\Inspiring;
 use Illuminate\Support\Facades\Artisan;
@@ -14,3 +16,16 @@ Artisan::command('voice:prune-recordings', function (PruneVoiceRecordings $prune
 })->purpose('Delete Voice-to-CV recordings older than the retention period (D-047)');
 
 Schedule::command('voice:prune-recordings')->dailyAt('03:15')->onOneServer();
+
+Artisan::command('notifications:new-applicants', function (SendNewApplicantDigests $digests) {
+    $this->info("Sent {$digests->handle(now()->subDay())} new-applicant digests.");
+})->purpose('Tell organizations about yesterday\'s applicants, one alert per job (Module 5)');
+
+// 06:00 UTC is mid-morning in the Gulf and early afternoon in South Asia.
+Schedule::command('notifications:new-applicants')->dailyAt('06:00')->onOneServer();
+
+Artisan::command('notifications:release-held', function (ReleaseHeldMessages $release) {
+    $this->info("Released {$release->handle()} alerts held for quiet hours.");
+})->purpose('Send WhatsApp and SMS alerts held during workers\' quiet hours (Module 5)');
+
+Schedule::command('notifications:release-held')->everyFiveMinutes()->onOneServer()->withoutOverlapping();

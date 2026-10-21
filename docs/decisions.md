@@ -591,3 +591,111 @@ colour) and the appearance tabs use design tokens instead of the kit's neutral g
 - Visual review: employer 96/96 and worker 60/60 clean (en, bn, ur; light, dark; 390, 1440). Review
   fixes: employer-side wording for shared items and the match note; lighter talent card
   placeholder.
+
+## Module 5 — Messaging and notifications
+
+### D-067 · Module 5 inputs (owner answers, 2026-10-21)
+- **Laravel Reverb now** for live messages and notification badges (private channels per
+  conversation and per user), with `laravel-echo` and `pusher-js` on the frontend. Reverb runs as
+  its own Sail service locally and as a separate process on staging and production.
+- **One generic WhatsApp template** ("You have an update on your BLUESKILLS application for
+  {job}. Open the app: {link}") in en, bn, hi, ur and ne; details stay in the app.
+- **Twilio for SMS**, called over its HTTP API (no SDK package). The owner supplies the account
+  SID, auth token and sender per country; locally SMS stays on the `log` driver.
+- **Review cadence:** once at the end of the module.
+
+### D-068 · Messaging schema and Reverb setup
+- `conversations` (one per application, between the worker and the posting organization),
+  `messages` (never edited; worker, organization or system side; private attachments),
+  `conversation_reads` (last read per user, for unread counts), Laravel `notifications` with ULID
+  notifiables, `notification_preferences` (per user, event and channel; no row = on),
+  `outbound_messages` (every WhatsApp, SMS and email attempt with status, provider id, attempts and
+  `send_after` for quiet hours; recipient encrypted) and `job_invitations` (one per job and
+  worker; sent, applied, declined, expired; at most 50 per organization per day).
+- Conversations become read-only 30 days after the application closes. Organization members with
+  `applications.view` read; members with `applications.manage` or `interviews.manage` write.
+- Notification events: workers (shortlisted, interview booked or changed, offer received,
+  application closed, job changed, invitation to apply, new message) use WhatsApp then SMS;
+  organization members (new applicants daily, worker accepted/declined/withdrew, new message) use
+  email. In-app notifications are always on.
+- Reverb 1.12 is the newest stable release and needs `guzzlehttp/psr7` 2.x, so Guzzle went from
+  8.3 to 7.16 (Laravel 13 supports both; our HTTP calls use Laravel's client). Sail runs Reverb as
+  the `reverb` service (host port 8081); the app publishes to `reverb:8080` inside Docker and the
+  browser connects to `localhost:8081`. Tests broadcast to the `null` driver.
+
+### D-069 · Conversations
+- A conversation is created the first time either side opens it from the application ("Message
+  the employer") or the applicant page ("Message the worker"). Workers find theirs under
+  Messages; organizations have an inbox per workspace, filterable by job.
+- A conversation becomes read-only 30 days after the application was rejected, withdrawn or
+  declined. An accepted offer keeps it open, because recruitment and mobility continue.
+- Messages are text up to 2,000 characters with up to 3 attachments (PDF, JPG, PNG, ≤ 10 MB) on
+  the private disk, served only to the conversation's parties. Workers see organization messages as
+  "member · organization"; the worker's phone number is never part of a conversation.
+- Every thread shows a fixed line that BLUESKILLS and genuine employers never ask for money, and
+  each message from the other side can be reported (someone asked for money, harassment,
+  impersonation, something else) as a Trust report on the message for Module 8. Nothing is
+  scanned or blocked automatically (product rule 14). `reports.description` is required, so an
+  empty description is stored as an empty string.
+- Unread state is per person (`conversation_reads`); message and read times keep microseconds so
+  a reply in the same second as a read still counts. Opening a thread marks it read.
+- Live updates: `MessageSent` broadcasts ids only on `conversations.{id}`,
+  `organizations.{id}.inbox` and `users.{id}`; open threads and the navigation badges reload
+  their own props. Channel access reuses the conversation policy.
+
+### D-070 · In-app notifications
+- One queued `AppNotification` (after commit) stores the event, its parameters and an app path;
+  titles and bodies are rendered when shown, in the reader's language, with times in the
+  reader's time zone and reason codes in words. Notifications broadcast (ids only) on
+  `users.{id}` so the bell updates live.
+- Workers are told when they are shortlisted, an interview is booked (with its local time), an
+  offer arrives, the application is closed (with the reason), a job they are still in changes
+  materially (product rule 5), and when the organization writes. Moving an applicant to Interview
+  without booking one, and other stage moves, do not alert.
+- Organization alerts go to the application's assigned recruiter, or else to every member with
+  `applications.manage`: the worker accepted, declined or withdrew, or wrote a message.
+  `notifications:new-applicants` runs daily at 06:00 UTC and sends one alert per job with new
+  applicants in the last 24 hours to members who can see applicants.
+- `/notifications` lists them for every user type; opening one marks it read and follows its
+  link (app paths only, never off-site). "Mark all as read" clears the bell.
+
+### D-071 · WhatsApp, SMS and email delivery
+- `AppNotification` also goes through `ExternalChannel`. Worker events: WhatsApp if on for the
+  event, else SMS if on; organization events: email if on and the member has an address. No row
+  in `notification_preferences` means on. `/notifications/preferences` lets each person switch
+  channels per event for their own audience; in-app stays on.
+- Every attempt is an `outbound_messages` row (recipient and payload encrypted). Delivery runs in
+  `DeliverOutboundMessage` (queued, one try): text is rendered in the recipient's language and
+  time zone; a failure is recorded and a failed WhatsApp alert falls back to SMS when SMS is on
+  for the event. No automatic retries, so an outage never floods a worker later.
+- Quiet hours: worker WhatsApp/SMS between 22:00 and 07:00 local time is stored as `held` with
+  `send_after` 07:00 local; `notifications:release-held` runs every five minutes. Email is not
+  held.
+- Drivers: `NOTIFY_WHATSAPP_DRIVER` = `log` | `cloud` (Cloud API, template messages only);
+  `NOTIFY_SMS_DRIVER` = `log` | `twilio` (REST API with basic auth). Twilio picks the sender per
+  destination country from `TWILIO_SENDERS` (JSON), then `TWILIO_MESSAGING_SERVICE_SID`, then
+  `TWILIO_FROM`. The log drivers refuse to run in production.
+- WhatsApp template to submit to Meta (category Utility), name `blueskills_update`, two body
+  parameters, in en, bn, hi, ur and ne (other languages fall back to English; Meta's support for
+  `ne` must be confirmed when submitting):
+  en: "You have an update on your BLUESKILLS application for {{1}}. Open the app to see it: {{2}}"
+- SMS text: "BLUESKILLS: {title}. Open: {link}" in the worker's language.
+
+### D-072 · Invitations to apply
+- From a talent profile, members who may search talent invite a discoverable worker to one of
+  the organization's jobs that is open for applications, with an optional note (≤ 300
+  characters). One invitation per job and worker; at most 50 per organization in 24 hours. The
+  worker gets a `job_invitation` alert.
+- Workers see open invitations at the top of My applications with the job, the organization, the
+  note and a reminder that an invitation is not an offer and never needs payment. They read the
+  Truth Card and apply through the normal flow (which marks the invitation applied), or tap "Not
+  interested". Invitations to jobs that stopped taking applications show as expired.
+- No free conversation starts from an invitation; it opens once the worker applies (D-069).
+
+### D-073 · Module 5 sample data and review
+- Sample conversations: Rahim and Northstar about the medical test (from the prototype, without
+  its line about the agency keeping the passport), and on ABC's AE-MT-0115 with Hasan (unread for
+  Sara), Arjun and Rahim (unread for Rahim). ABC invited Karim to AE-MT-0115. Rahim, Karim, Sara
+  and the ABC owner have sample notifications; one sample WhatsApp delivery is logged.
+- Review fixes: conversations stay open after an accepted offer; the daily digest pluralizes.
+- Visual review: employer 60/60 and worker 48/48 clean (en, bn, ur; light, dark; 390, 1440).

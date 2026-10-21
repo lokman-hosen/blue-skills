@@ -8,6 +8,8 @@ use App\Domain\Applications\Models\Offer;
 use App\Domain\Applications\States\Application\Offer as OfferStage;
 use App\Domain\Applications\Support\StageChange;
 use App\Domain\Identity\Models\User;
+use App\Domain\Messaging\Enums\NotificationEvent;
+use App\Domain\Messaging\Support\Notify;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Validation\ValidationException;
 
@@ -55,6 +57,8 @@ class SendOffer
             activity('applications')->performedOn($application)->causedBy($actor)
                 ->withProperties(['offer' => $offer->id, 'salary_amount_minor' => $offer->salary_amount_minor, 'currency' => $offer->salary_currency])
                 ->log('offer.sent');
+
+            Notify::worker($application, NotificationEvent::OfferReceived);
 
             return $offer;
         });

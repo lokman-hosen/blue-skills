@@ -4,6 +4,9 @@ use App\Http\Controllers\Admin\DesignSystemController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\Public\JobController as PublicJobController;
 use App\Http\Controllers\Shared\LocaleController;
+use App\Http\Controllers\Shared\MessageReportController;
+use App\Http\Controllers\Shared\NotificationController;
+use App\Http\Controllers\Shared\NotificationPreferenceController;
 use App\Http\Controllers\Shared\PrivateMediaController;
 use App\Http\Controllers\Shared\SwitchOrganizationController;
 use Illuminate\Support\Facades\Route;
@@ -17,11 +20,20 @@ Route::post('jobs/{job}/report', [PublicJobController::class, 'report'])->middle
 
 Route::post('locale', [LocaleController::class, 'update'])->name('locale.update');
 
+Route::post('messages/{message}/report', MessageReportController::class)->middleware(['auth', 'throttle:10,1'])->name('messages.report');
+
 Route::middleware(['auth', 'verified', 'staff.2fa'])->group(function () {
     Route::get('dashboard', DashboardController::class)->name('dashboard');
 
     Route::post('organizations/{organization}/switch', SwitchOrganizationController::class)
         ->name('organizations.switch');
+
+    // In-app notifications (Module 5).
+    Route::get('notifications', [NotificationController::class, 'index'])->name('notifications.index');
+    Route::get('notifications/preferences', [NotificationPreferenceController::class, 'edit'])->name('notifications.preferences');
+    Route::put('notifications/preferences', [NotificationPreferenceController::class, 'update'])->name('notifications.preferences.update');
+    Route::post('notifications/read-all', [NotificationController::class, 'readAll'])->name('notifications.read-all');
+    Route::post('notifications/{notification}/open', [NotificationController::class, 'open'])->whereUuid('notification')->name('notifications.open');
 });
 
 // Private media: signed, short-lived link plus a policy check on the owning model.
