@@ -37,6 +37,7 @@ use App\Domain\Jobs\Enums\SalaryPeriod;
 use App\Domain\Jobs\Models\JobMandate;
 use App\Domain\Jobs\Models\JobPosting;
 use App\Domain\Jobs\States\Job\Draft;
+use App\Domain\Jobs\States\Job\Paused;
 use App\Domain\Jobs\States\Job\Published;
 use App\Domain\Jobs\States\Job\UnderReview;
 use App\Domain\Messaging\Enums\DeliveryChannel;
@@ -124,6 +125,7 @@ class SampleWorldSeeder extends Seeder
         $this->seedWorkers();
         $this->seedRahimPassport();
         $this->seedApplicationsAndCases();
+        $this->seedAgencyWorkspace();
         $this->seedQueues();
     }
 
@@ -990,6 +992,86 @@ class SampleWorldSeeder extends Seeder
         $media->forceFill(['uuid' => (string) str()->uuid()])->save();
 
         return $document;
+    }
+
+    /**
+     * Module 6 workspace states (D-081): a mandate that ended with the job it backed paused by the
+     * daily check, a case on hold, and a shared document waiting for Northstar's check.
+     */
+    private function seedAgencyWorkspace(): void
+    {
+        $imran = $this->orgUsers['imran@northstar.test'];
+        $farhana = $this->orgUsers['owner@northstar.test'];
+
+        $md1088 = JobMandate::query()->create([
+            'employer_organization_id' => $this->orgs['abc']->id,
+            'agency_organization_id' => $this->orgs['northstar']->id,
+            'reference' => 'MD-1088',
+            'occupation_ids' => [Occupation::query()->where('slug', 'electrician')->value('id')],
+            'destination_country_code' => 'AE',
+            'headcount' => 20,
+            'valid_from' => '2026-04-01',
+            'valid_until' => '2026-10-15',
+            'status' => MandateStatus::Expired,
+        ]);
+        $paused = $this->job([
+            'organization_id' => $this->orgs['northstar']->id,
+            'employer_organization_id' => $this->orgs['abc']->id,
+            'agency_organization_id' => $this->orgs['northstar']->id,
+            'job_mandate_id' => $md1088->id,
+            'public_code' => 'UAE-EL-0004',
+            'title' => 'Maintenance Electrician',
+            'occupation' => 'electrician',
+            'min_experience_years' => 3,
+            'destination_country_code' => 'AE',
+            'destination_city' => 'Sharjah',
+            'headcount' => 20,
+            'salary_amount_minor' => 2000_00,
+            'salary_currency' => 'AED',
+            'hours_per_day' => 8,
+            'days_per_week' => 6,
+            'contract_months' => 24,
+            'accommodation' => BenefitProvision::Provided,
+            'permit_payer' => CostPayer::Employer,
+            'visa_payer' => CostPayer::Employer,
+            'status' => Paused::class,
+            'published_at' => '2026-05-02 09:00:00',
+        ], ['maintenance'], []);
+        $paused->verificationRequests()->create([
+            'type' => VerificationType::Job, 'status' => Approved::class, 'decided_by' => $this->verificationOfficer->id,
+            'decision' => VerificationDecision::Approved, 'decided_at' => '2026-05-02 08:00:00',
+        ]);
+        $this->alert($farhana, NotificationEvent::JobPausedMandate, ['job' => $paused->title, 'code' => 'UAE-EL-0004', 'reference' => 'MD-1088'], '/org/jobs/UAE-EL-0004', '2026-10-15 20:30', read: false);
+
+        // Ravi's visa stage waits for the embassy.
+        $ravi = $this->applicationOf('ravi', $this->jobs['UAE-EL-0001'])->mobilityCase;
+        if ($ravi !== null) {
+            $ravi->stages()->where('key', 'visa')->update(['status' => MobilityStageStatus::Blocked, 'blocked_reason' => 'Waiting for the UAE embassy appointment in Dhaka.']);
+            $ravi->events()->create(['action' => CaseEventAction::StageBlocked, 'stage_key' => 'visa', 'actor_user_id' => $imran->id, 'note' => 'Waiting for the UAE embassy appointment in Dhaka.', 'created_at' => '2026-10-19 05:00', 'updated_at' => '2026-10-19 05:00']);
+        }
+
+        // Karim shared the police clearance Northstar asked for; it waits for a check.
+        $karimApplication = $this->applicationOf('karim', $this->jobs['UAE-EL-0001']);
+        $karim = $karimApplication->mobilityCase;
+        if ($karim !== null) {
+            $workerId = $karimApplication->workerProfile->user_id;
+            $document = $this->sampleDocument($workerId, DocumentType::PoliceClearance, 'Police clearance');
+            $item = $karim->documents()->create([
+                'type' => DocumentType::PoliceClearance,
+                'title' => CaseChecklist::title(DocumentType::PoliceClearance),
+                'status' => CaseDocumentStatus::Uploaded,
+                'provided_by' => DocumentProvider::Worker,
+                'document_id' => $document->id,
+                'employer_can_view' => true,
+                'note' => 'From Dhaka Metropolitan Police, issued in the last 3 months.',
+                'requested_by' => $imran->id,
+                'shared_at' => '2026-10-20 06:10',
+                'due_on' => '2026-10-31',
+            ]);
+            $karim->events()->create(['action' => CaseEventAction::DocumentRequested, 'case_document_id' => $item->id, 'actor_user_id' => $imran->id, 'created_at' => '2026-10-17 04:00', 'updated_at' => '2026-10-17 04:00']);
+            $karim->events()->create(['action' => CaseEventAction::DocumentUploaded, 'case_document_id' => $item->id, 'actor_user_id' => $workerId, 'created_at' => '2026-10-20 06:10', 'updated_at' => '2026-10-20 06:10']);
+            $this->alert($imran, NotificationEvent::CaseDocumentAnswered, ['reference' => (string) $karim->reference, 'worker' => 'Karim Ahmed', 'document' => 'Police clearance', 'document_action' => 'shared'], '/org/cases/'.$karim->id, '2026-10-20 06:10', read: false);
+        }
     }
 
     private function seedQueues(): void

@@ -52,7 +52,7 @@ class MobilityCaseController extends Controller
         $query = CaseQuery::for($organization)
             ->when($state === 'open', fn ($query) => $query->whereState('status', Open::class))
             ->when($state === 'closed', fn ($query) => $query->whereNotState('status', Open::class))
-            ->when($attention !== null, fn ($query) => CaseQuery::needing($query, (string) $attention))
+            ->when($attention !== null, fn ($query) => CaseQuery::needing($query, (string) $attention, $organization))
             ->when($search !== '', fn ($query) => $query->where(fn ($query) => $query
                 ->where('reference', 'ilike', "%{$search}%")
                 ->orWhereHas('application.workerProfile.user', fn ($users) => $users->where('name', 'ilike', "%{$search}%"))));
@@ -75,13 +75,15 @@ class MobilityCaseController extends Controller
         $this->ownCase($request, $mobilityCase);
         Gate::authorize('view', $mobilityCase);
 
+        $managing = $this->organization($request)->is($mobilityCase->managingOrganization);
+
         return Inertia::render('org/cases/show', [
-            'mobilityCase' => MobilityCaseData::fromCase($mobilityCase, forWorker: false),
+            'mobilityCase' => MobilityCaseData::fromCase($mobilityCase, forWorker: false, employerOnly: ! $managing),
             'closeReasons' => array_map(fn (CaseClosedReason $reason) => $reason->value, CaseClosedReason::cases()),
             'canManage' => Gate::allows('manage', $mobilityCase),
             'documents' => CaseDocumentData::forViewer(
                 $mobilityCase,
-                $this->organization($request)->is($mobilityCase->managingOrganization) ? CaseDocumentData::VIEWER_MANAGER : CaseDocumentData::VIEWER_EMPLOYER,
+                $managing ? CaseDocumentData::VIEWER_MANAGER : CaseDocumentData::VIEWER_EMPLOYER,
             ),
             'documentTypes' => array_values(array_map(
                 fn (DocumentType $type) => $type->value,

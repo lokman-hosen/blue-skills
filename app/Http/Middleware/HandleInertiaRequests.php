@@ -8,6 +8,7 @@ use App\Domain\Config\Support\LocaleRegistry;
 use App\Domain\Config\Support\Translations;
 use App\Domain\Identity\Data\AuthUserData;
 use App\Domain\Identity\Models\User;
+use App\Domain\Jobs\Models\JobMandate;
 use App\Domain\Messaging\Support\Unread;
 use App\Domain\Mobility\Models\MobilityCase;
 use App\Domain\Organization\Data\OrganizationSummaryData;
@@ -72,6 +73,7 @@ class HandleInertiaRequests extends Middleware
                 'manageTeam' => $organization !== null && $user->can('manageTeam', $organization),
                 'reviewCompliance' => $organization !== null && $user->can('reviewCompliance', $organization),
                 'viewCases' => $organization !== null && $user->can('viewAny', [MobilityCase::class, $organization]),
+                'viewMandates' => $organization !== null && $user->can('viewAny', [JobMandate::class, $organization]),
                 'viewApplicants' => $organization !== null && $user->can('viewAny', [Application::class, $organization]),
             ],
             'organizations' => fn () => $user?->organizations

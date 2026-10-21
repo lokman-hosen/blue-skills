@@ -59,6 +59,7 @@ it('lists the agency\'s cases and what needs attention, and lets the employer fo
         ->assertInertia(fn (Assert $page) => $page->component('org/cases/index')
             ->has('cases.data', 2)
             ->where('counts.open', 2)
+            ->where('counts.documentsToCheck', 1)
             ->where('counts.overdue', 1)
             ->where('counts.onHold', 1)
             ->where('cases.data.0.viewOnly', false));
@@ -71,7 +72,10 @@ it('lists the agency\'s cases and what needs attention, and lets the employer fo
         ->assertInertia(fn (Assert $page) => $page->has('cases.data', 0));
 
     actingInOrg($this->employerOwner, $this->employer)->get(route('org.cases.index'))
-        ->assertInertia(fn (Assert $page) => $page->has('cases.data', 2)->where('cases.data.0.viewOnly', true)->where('cases.data.0.managedBy', 'Northstar'));
+        ->assertInertia(fn (Assert $page) => $page->has('cases.data', 2)->where('cases.data.0.viewOnly', true)->where('cases.data.0.managedBy', 'Northstar')
+            // Only the agency checks shared files (D-081).
+            ->where('counts.documentsToCheck', 0)
+            ->where('counts.overdue', 1));
 
     $institute = Organization::factory()->institute()->verified()->create();
     actingInOrg(orgMember($institute, OrganizationRole::Trainer), $institute)->get(route('org.cases.index'))->assertForbidden();
@@ -114,7 +118,11 @@ it('shows compliance to agency owners and compliance reviewers only', function (
 
     actingInOrg(orgMember($this->agency, OrganizationRole::ComplianceReviewer), $this->agency)->get(route('org.compliance'))->assertOk();
     actingInOrg($this->officer, $this->agency)->get(route('org.compliance'))->assertForbidden();
-    $this->get(route('org.cases.index'))->assertInertia(fn (Assert $page) => $page->where('organizationAbilities.reviewCompliance', false));
+    // Case officers don't see links they can't open (D-081).
+    $this->get(route('org.cases.index'))->assertInertia(fn (Assert $page) => $page
+        ->where('organizationAbilities.reviewCompliance', false)
+        ->where('organizationAbilities.viewMandates', false));
+    $this->get(route('org.licence.edit'))->assertForbidden();
     actingInOrg($this->employerOwner, $this->employer)->get(route('org.compliance'))->assertForbidden();
 });
 
@@ -131,6 +139,11 @@ it('expires lapsed mandates and pauses the live jobs they backed', function () {
 
     actingInOrg($this->agencyOwner, $this->agency)->get(route('org.compliance'))
         ->assertInertia(fn (Assert $page) => $page->has('uncoveredJobs', 1)->where('uncoveredJobs.0.mandateReference', $this->mandate->reference));
+
+    // The Truth Card still says the job was reviewed, and that the mandate isn't valid.
+    $this->get(route('org.jobs.show', $this->job))->assertInertia(fn (Assert $page) => $page
+        ->where('job.checks', fn ($checks) => collect($checks)->pluck('key')->contains('job_reviewed')
+            && collect($checks)->pluck('key')->contains('mandate_not_valid')));
 
     // It can't go live again until a usable mandate backs it.
     $this->post(route('org.jobs.availability', [$this->job, 'resume']))->assertSessionHasErrors('job');

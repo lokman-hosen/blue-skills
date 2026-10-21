@@ -95,7 +95,9 @@ it('shares a worker file per item and stops at once when the worker revokes it',
         ->assertInertia(fn (Assert $page) => $page->where('documents.2.visibleTo', ['Northstar'])->whereNot('documents.2.fileUrl', null));
     $this->get($url)->assertOk();
     actingInOrg($this->employerHr, $this->employer)->get(route('org.cases.show', $this->case))
-        ->assertInertia(fn (Assert $page) => $page->has('documents', 2)->where('documents.0.type', 'photo'));
+        ->assertInertia(fn (Assert $page) => $page->has('documents', 2)->where('documents.0.type', 'photo')
+            // Nor does its history mention the medical file (D-081).
+            ->where('mobilityCase.events', fn ($events) => collect($events)->every(fn ($event) => $event['document'] !== 'Medical certificate')));
     $this->get($url)->assertForbidden();
 
     $this->actingAs($this->worker)->put(route('worker.cases.documents.visibility', [$this->case, $medical]), ['employer_can_view' => true])->assertRedirect();

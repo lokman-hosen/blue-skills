@@ -60,7 +60,7 @@ class CaseListItemData extends Data
             progress: $case->stages->map(fn (MobilityCaseStage $stage) => CaseStageData::fromStage($stage, $case->template)->status)->values()->all(),
             dueOn: $current?->due_on?->toDateString(),
             overdue: $current?->due_on !== null && $current->due_on->isBefore(now()->startOfDay()),
-            documentsToCheck: $case->documents
+            documentsToCheck: $viewOnly ? 0 : $case->documents
                 ->filter(fn (CaseDocument $item) => $item->fromWorker() && $item->status === CaseDocumentStatus::Uploaded && $item->isShared())
                 ->count(),
             managedBy: (string) $case->managingOrganization?->display_name,

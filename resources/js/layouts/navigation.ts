@@ -51,7 +51,7 @@ export type NavLink = {
     /** Staff permission required to see the item. */
     permission?: string;
     /** Organization ability (shared `organizationAbilities`) required to see the item. */
-    ability?: 'reviewCompliance' | 'viewCases' | 'viewApplicants';
+    ability?: 'reviewCompliance' | 'viewCases' | 'viewApplicants' | 'viewMandates';
 };
 
 /** Unread count shown beside a navigation item, from the shared `unread` prop. */
@@ -145,6 +145,7 @@ export const orgNav: Record<App.Domain.Organization.Enums.OrganizationType, NavG
                     label: 'nav.mandates',
                     icon: FileCheck,
                     href: org.mandates.index(),
+                    ability: 'viewMandates',
                 },
                 {
                     key: 'job_orders',
@@ -183,7 +184,13 @@ export const orgNav: Record<App.Domain.Organization.Enums.OrganizationType, NavG
         },
         {
             items: [
-                { key: 'licence', label: 'nav.licence', icon: IdCard, href: org.licence.edit() },
+                {
+                    key: 'licence',
+                    label: 'nav.licence',
+                    icon: IdCard,
+                    href: org.licence.edit(),
+                    ability: 'viewMandates',
+                },
                 { key: 'team', label: 'nav.team', icon: Users, href: team.index() },
                 { key: 'billing', label: 'nav.billing', icon: CreditCard },
                 ...orgFooter,

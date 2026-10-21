@@ -1,4 +1,4 @@
-import { Head, Link } from '@inertiajs/react';
+import { Head, Link, usePage } from '@inertiajs/react';
 import {
     BriefcaseBusiness,
     CircleAlert,
@@ -36,7 +36,8 @@ export default function OrgDashboard({
     caseCounts = null,
     licenceAlert = null,
 }: Props) {
-    const { t, formatDate, formatNumber } = useTranslation();
+    const { t, formatNumber } = useTranslation();
+    const { organizationAbilities } = usePage().props;
 
     return (
         <>
@@ -65,26 +66,10 @@ export default function OrgDashboard({
                     </Link>
                 )}
                 {licenceAlert && (
-                    <Link
-                        href={org.licence.edit()}
-                        className={
-                            licenceAlert.state === 'invalid'
-                                ? 'flex items-center gap-3 rounded-xl border border-bad/40 bg-bad-soft px-4 py-3 text-sm font-semibold hover:border-bad'
-                                : 'flex items-center gap-3 rounded-xl border border-warn/40 bg-warn-soft px-4 py-3 text-sm font-semibold hover:border-warn'
-                        }
-                    >
-                        <CircleAlert
-                            aria-hidden
-                            className={`size-5 shrink-0 ${licenceAlert.state === 'invalid' ? 'text-bad' : 'text-warn'}`}
-                        />
-                        {licenceAlert.state === 'invalid'
-                            ? t('dashboard.licence.invalid')
-                            : t('dashboard.licence.expiring', {
-                                  date: licenceAlert.expiresOn
-                                      ? formatDate(licenceAlert.expiresOn)
-                                      : '',
-                              })}
-                    </Link>
+                    <LicenceAlert
+                        alert={licenceAlert}
+                        canOpen={organizationAbilities.viewMandates}
+                    />
                 )}
                 {caseCounts && caseCounts.open + caseCounts.documentsToCheck > 0 && (
                     <section className="flex flex-col gap-3">
@@ -229,5 +214,43 @@ export default function OrgDashboard({
                 )}
             </div>
         </>
+    );
+}
+
+/** Agency licence warning; links to the licence page for members who can open it (D-080). */
+function LicenceAlert({
+    alert,
+    canOpen,
+}: {
+    alert: { state: 'invalid' | 'expiring'; expiresOn: string | null };
+    canOpen: boolean;
+}) {
+    const { t, formatDate } = useTranslation();
+    const invalid = alert.state === 'invalid';
+    const className = invalid
+        ? 'flex items-center gap-3 rounded-xl border border-bad/40 bg-bad-soft px-4 py-3 text-sm font-semibold hover:border-bad'
+        : 'flex items-center gap-3 rounded-xl border border-warn/40 bg-warn-soft px-4 py-3 text-sm font-semibold hover:border-warn';
+    const content = (
+        <>
+            <CircleAlert
+                aria-hidden
+                className={`size-5 shrink-0 ${invalid ? 'text-bad' : 'text-warn'}`}
+            />
+            {invalid
+                ? t('dashboard.licence.invalid')
+                : t('dashboard.licence.expiring', {
+                      date: alert.expiresOn ? formatDate(alert.expiresOn) : '',
+                  })}
+        </>
+    );
+
+    return canOpen ? (
+        <Link href={org.licence.edit()} className={className}>
+            {content}
+        </Link>
+    ) : (
+        <p role="status" className={className}>
+            {content}
+        </p>
     );
 }

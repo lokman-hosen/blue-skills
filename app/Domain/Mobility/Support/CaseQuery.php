@@ -29,15 +29,18 @@ final class CaseQuery
     }
 
     /**
+     * Shared documents wait for the organization running the case, so only its own cases count
+     * for "documents"; an employer following an agency case still sees overdue and held stages.
+     *
      * @param  Builder<MobilityCase>  $query
      * @return Builder<MobilityCase>
      */
-    public static function needing(Builder $query, string $attention): Builder
+    public static function needing(Builder $query, string $attention, Organization $organization): Builder
     {
         $query->whereState('status', Open::class);
 
         return match ($attention) {
-            'documents' => $query->whereHas('documents', fn (Builder $documents) => $documents
+            'documents' => $query->where('managing_organization_id', $organization->id)->whereHas('documents', fn (Builder $documents) => $documents
                 ->where('provided_by', DocumentProvider::Worker)
                 ->where('status', CaseDocumentStatus::Uploaded)
                 ->whereNotNull('shared_at')

@@ -852,3 +852,19 @@ colour) and the appearance tabs use design tokens instead of the kit's neutral g
   at the next save or review. The agency's members who manage jobs get `job_paused_mandate`; the
   change is in the activity log with the reason. Resuming an agency job runs the same mandate
   check, so it stays paused until a usable mandate backs it.
+
+### D-081 · Module 6 sample data and review fixes
+- **Sample data:** Northstar's expired mandate MD-1088 with the job it backed (UAE-EL-0004,
+  paused, the agency owner alerted); Ravi's visa stage on hold for the embassy appointment; a police
+  clearance Northstar asked Karim for, shared and waiting for a check (Imran alerted). With Rahim's
+  medical due, every Mobility shortcut and the compliance page have something to show.
+- **Review fixes:**
+  - Case Officers no longer see Mandates and Licence in the menu or a link on the licence warning;
+    those pages stay with Agency Owners and Compliance Reviewers (D-076).
+  - The Truth Card shows "Job reviewed" for paused and closed jobs too: they passed review before
+    going live, and a material change sends a job back to review with its own status.
+  - An employer following an agency case doesn't see history lines about documents not shared
+    with it, and "documents to check" counts only the cases an organization runs, since only the
+    managing organization checks files.
+- **Deploy notes for Module 6:** run migrations; re-run `RolesAndPermissionsSeeder` (D-075) and
+  `CountryRuleSeeder` (D-075, D-078); make sure the scheduler runs (`jobs:pause-lapsed-mandates`).

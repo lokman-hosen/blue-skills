@@ -20,6 +20,7 @@ declare module '@inertiajs/core' {
                 reviewCompliance: boolean;
                 viewCases: boolean;
                 viewApplicants: boolean;
+                viewMandates: boolean;
             };
             locale: App.Domain.Config.Data.LocaleData;
             locales: App.Domain.Config.Data.LocaleOptionData[];

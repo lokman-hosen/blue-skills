@@ -42,7 +42,11 @@ class MobilityCaseData extends Data
         public string $openedAt,
     ) {}
 
-    public static function fromCase(MobilityCase $case, bool $forWorker): self
+    /**
+     * @param  bool  $employerOnly  The viewer's organization follows an agency case: document events
+     *                              for items not shared with the employer are left out (D-079).
+     */
+    public static function fromCase(MobilityCase $case, bool $forWorker, bool $employerOnly = false): self
     {
         $case->loadMissing(['application.job.destinationCountry', 'application.workerProfile.user', 'stages', 'events.actor', 'events.caseDocument', 'managingOrganization', 'employer', 'agency', 'handler']);
         $managedBy = $case->managingOrganization->display_name ?? $case->employer->display_name ?? '';
@@ -69,7 +73,9 @@ class MobilityCaseData extends Data
             workerName: $forWorker ? null : $case->application->workerProfile->user?->name,
             current: collect($stages)->first(fn (CaseStageData $stage) => $stage->key === $case->current_stage),
             stages: $stages,
-            events: $case->events->reverse()->map(fn (MobilityCaseEvent $event) => CaseEventData::fromEvent($event, $case, $forWorker))->values()->all(),
+            events: $case->events->reverse()
+                ->reject(fn (MobilityCaseEvent $event) => $employerOnly && $event->caseDocument !== null && ! $event->caseDocument->employer_can_view)
+                ->map(fn (MobilityCaseEvent $event) => CaseEventData::fromEvent($event, $case, $forWorker))->values()->all(),
             openedAt: $case->created_at?->toIso8601String() ?? '',
         );
     }

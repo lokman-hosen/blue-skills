@@ -7,7 +7,9 @@ use App\Domain\Jobs\Enums\MandateStatus;
 use App\Domain\Jobs\Enums\SalaryPeriod;
 use App\Domain\Jobs\Models\JobCost;
 use App\Domain\Jobs\Models\JobPosting;
+use App\Domain\Jobs\States\Job\Closed;
 use App\Domain\Jobs\States\Job\Draft;
+use App\Domain\Jobs\States\Job\Paused;
 use App\Domain\Jobs\States\Job\Published;
 use App\Domain\Organization\Models\Organization;
 use App\Domain\Taxonomy\Models\Skill;
@@ -144,7 +146,9 @@ class JobTruthCardData extends Data
         }
 
         $checks[] = match (true) {
-            $job->status->equals(Published::class) => new TruthCardCheckData('job_reviewed', 'ok'),
+            // Paused and closed jobs were reviewed before they went live; a material change sends
+            // a job back to review with its own status (product rule 5).
+            $job->status->equals(Published::class, Paused::class, Closed::class) => new TruthCardCheckData('job_reviewed', 'ok'),
             $job->status->equals(Draft::class) => new TruthCardCheckData('job_not_reviewed', 'warn'),
             default => new TruthCardCheckData('job_under_review', 'warn'),
         };

@@ -23,9 +23,9 @@ class CaseCountsData extends Data
     {
         return new self(
             open: CaseQuery::for($organization)->whereState('status', Open::class)->count(),
-            documentsToCheck: CaseQuery::needing(CaseQuery::for($organization), 'documents')->count(),
-            overdue: CaseQuery::needing(CaseQuery::for($organization), 'overdue')->count(),
-            onHold: CaseQuery::needing(CaseQuery::for($organization), 'on_hold')->count(),
+            documentsToCheck: CaseQuery::needing(CaseQuery::for($organization), 'documents', $organization)->count(),
+            overdue: CaseQuery::needing(CaseQuery::for($organization), 'overdue', $organization)->count(),
+            onHold: CaseQuery::needing(CaseQuery::for($organization), 'on_hold', $organization)->count(),
         );
     }
 }
