@@ -68,6 +68,8 @@ class JobController extends Controller
                 ReportCategory::Impersonation, ReportCategory::Other,
             ],
             'canReport' => $request->user() !== null,
+            'application' => $profile?->applications()->where('job_id', $job->id)->first()?->only(['id']),
+            'acceptsApplications' => $job->acceptsApplications(),
         ]);
     }
 

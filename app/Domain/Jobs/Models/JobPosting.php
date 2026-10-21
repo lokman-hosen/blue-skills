@@ -206,6 +206,15 @@ class JobPosting extends Model
         return $this->status->equals(Draft::class, MoreInformationRequested::class, Rejected::class, Published::class, Paused::class);
     }
 
+    /**
+     * Published and the deadline (if any) has not passed.
+     */
+    public function acceptsApplications(): bool
+    {
+        return $this->status->equals(Published::class)
+            && ($this->deadline === null || ! $this->deadline->isPast() || $this->deadline->isToday());
+    }
+
     public function isLive(): bool
     {
         return $this->status->equals(Published::class, Paused::class);

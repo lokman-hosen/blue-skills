@@ -491,3 +491,40 @@ colour) and the appearance tabs use design tokens instead of the kit's neutral g
   worker per list, with a note). Being on a list gives no extra access to the profile.
 - `RejectionReason` codes: requirements not met, not enough experience, skills not shown,
   interview not passed, trade assessment not passed, positions filled, not available, other.
+
+### D-062 · Applying and identity documents
+- "I can do this job" opens `/jobs/{code}/apply` for workers when the job is published and its
+  deadline has not passed; a worker who already applied goes to that application instead. Guests
+  still get "Join free to apply". Applying needs a trade on the Skill Passport, nothing more.
+- Shareable items: Skill Passport (always, cannot be switched off), SkillShow (only an approved
+  one), work experience and training certificates (on by default when the worker has any),
+  passport scan and phone number (off by default, flagged sensitive; the scan only once uploaded).
+  Items the worker has nothing for are ignored even if posted.
+- `CreateApplication` stores, in one transaction: the application, a `ProfileSnapshotData` copy
+  (identity, trade, years, passport readiness, availability, skills, languages, destinations, the
+  "X of Y requirements met" at that moment, plus work history and certificates only when shared),
+  one `application_consents` row per item (granted or not), an `application_share` consent and,
+  for a shared scan, a `document_share` consent naming the exact document. Snapshot names are
+  captured in English. Phone numbers and files are never copied into the snapshot; they are read
+  live while the consent is active.
+- Duplicate applications are refused with a message, also when two requests race (unique index).
+- `/passport/documents` holds one passport and one national ID scan (PDF, JPG or PNG, ≤ 10 MB,
+  private disk) as `uploaded_unreviewed` evidence (Module 8 verifies). A new upload of the same
+  type replaces the old one; replacing or deleting a scan revokes every application share of it.
+  Only the passport scan is an application item; national IDs are for mobility cases (Module 6).
+
+### D-063 · Worker application tracker
+- `/applications` lists the worker's applications with status, next step, the next interview and a
+  "job changed" flag. `/applications/{id}` shows the stage list, who handles it (assigned
+  recruiter and organization, else the organization), next step, interviews, offers and what is
+  shared.
+- Stage list order: applied, reviewed, qualified, shortlisted, interview, trade assessment,
+  selected, offer, accepted. Stages the organization moved past show as skipped; a rejected,
+  withdrawn or declined application stops at the stage it reached, marked as blocked. Workers see
+  the rejection reason code, never internal notes or the person who moved the stage.
+- Workers withdraw (any open offer is withdrawn with it), accept or decline the open offer, and
+  stop sharing any item except the Skill Passport. Revoking keeps the consent row with its time.
+  Accepting does not create anything yet; mobility cases arrive in Module 6 (product rule 8).
+- Product rule 5: when a job has a material change after the worker applied, the application
+  shows "This job changed on …" with a link to the Truth Card until the worker taps "I have read
+  it" (`job_change_seen_at`).

@@ -1,6 +1,104 @@
 declare namespace App {
     namespace Domain {
         namespace Applications {
+            namespace Data {
+                export type ConsentItemData = {
+                    item: App.Domain.Applications.Enums.ApplicationConsentItem;
+                    active: boolean;
+                    grantedAt: string | null;
+                    revokedAt: string | null;
+                    revocable: boolean;
+                };
+                export type InterviewData = {
+                    id: string;
+                    scheduledAt: string;
+                    durationMinutes: number;
+                    mode: App.Domain.Applications.Enums.InterviewMode;
+                    location: string | null;
+                    instructions: string | null;
+                    outcome: App.Domain.Applications.Enums.InterviewOutcome | null;
+                    upcoming: boolean;
+                };
+                export type OfferData = {
+                    id: string;
+                    salary: App.Support.Data.MoneyData;
+                    salaryPeriod: App.Domain.Jobs.Enums.SalaryPeriod;
+                    startOn: string | null;
+                    respondBy: string | null;
+                    note: string | null;
+                    status: App.Domain.Applications.Enums.OfferStatus;
+                    sentAt: string;
+                    respondedAt: string | null;
+                };
+                export type ProfileSnapshotData = {
+                    reference: string;
+                    name: string;
+                    headline: string | null;
+                    currentCountry: App.Domain.Config.Data.CountryOptionData | null;
+                    occupation: App.Domain.Taxonomy.Data.TaxonomyOptionData | null;
+                    specialization: App.Domain.Taxonomy.Data.TaxonomyOptionData | null;
+                    yearsExperience: number | null;
+                    passportStatus: App.Domain.Worker.Enums.PassportStatus | null;
+                    passportValidUntilYear: number | null;
+                    availability: App.Domain.Worker.Enums.Availability | null;
+                    skills: App.Domain.Worker.Data.WorkerSkillData[];
+                    languages: App.Domain.Worker.Data.WorkerLanguageData[];
+                    destinations: App.Domain.Config.Data.CountryOptionData[];
+                    experiences: App.Domain.Worker.Data.WorkerExperienceData[];
+                    credentials: App.Domain.Worker.Data.EvidenceSummaryData[];
+                    match: App.Domain.Jobs.Data.MatchSummaryData;
+                    takenAt: string;
+                };
+                export type ShareableItemData = {
+                    item: App.Domain.Applications.Enums.ApplicationConsentItem;
+                    required: boolean;
+                    sensitive: boolean;
+                    available: boolean;
+                    sharedByDefault: boolean;
+                    detail: string;
+                    params: Record<string, string | number>;
+                };
+                export type StageData = {
+                    key: string;
+                    status: string;
+                    date: string | null;
+                };
+                export type StageEventData = {
+                    id: string;
+                    from: string | null;
+                    to: string;
+                    at: string;
+                    reasonCode: string | null;
+                    actorName: string | null;
+                    note: string | null;
+                };
+                export type WorkerApplicationData = {
+                    id: string;
+                    job: App.Domain.Jobs.Data.JobListingData;
+                    status: App.Support.Data.StatusData;
+                    appliedAt: string;
+                    closed: boolean;
+                    handledBy: string;
+                    nextStep: string;
+                    stages: App.Domain.Applications.Data.StageData[];
+                    events: App.Domain.Applications.Data.StageEventData[];
+                    interviews: App.Domain.Applications.Data.InterviewData[];
+                    offers: App.Domain.Applications.Data.OfferData[];
+                    consents: App.Domain.Applications.Data.ConsentItemData[];
+                    jobChangedAt: string | null;
+                    snapshotTakenAt: string | null;
+                };
+                export type WorkerApplicationListItemData = {
+                    id: string;
+                    job: App.Domain.Jobs.Data.JobListingData;
+                    status: App.Support.Data.StatusData;
+                    appliedAt: string;
+                    nextStep: string;
+                    upcomingInterviewAt: string | null;
+                    jobChanged: boolean;
+                    closed: boolean;
+                };
+            }
             namespace Enums {
                 export type ApplicationConsentItem =
                     | 'skill_passport'
@@ -10,6 +108,18 @@ declare namespace App {
                     | 'passport_scan'
                     | 'phone_number';
                 export type ConsentPurpose = 'discovery' | 'application_share' | 'document_share';
+                export type InterviewMode = 'in_person' | 'video' | 'phone';
+                export type InterviewOutcome = 'passed' | 'not_passed' | 'no_show' | 'cancelled';
+                export type OfferStatus = 'sent' | 'accepted' | 'declined' | 'withdrawn';
+                export type RejectionReason =
+                    | 'requirements_not_met'
+                    | 'experience_insufficient'
+                    | 'skills_not_shown'
+                    | 'interview_not_passed'
+                    | 'assessment_not_passed'
+                    | 'positions_filled'
+                    | 'not_available'
+                    | 'other';
             }
         }
         namespace Config {
@@ -490,6 +600,15 @@ declare namespace App {
                     reasonCode: string | null;
                     expiresOn: string | null;
                     removable: boolean;
+                };
+                export type IdentityDocumentData = {
+                    id: string;
+                    type: App.Domain.Verification.Enums.DocumentType;
+                    expiresOn: string | null;
+                    uploadedAt: string;
+                    state: string | null;
+                    fileUrl: string | null;
+                    sharedWith: string[];
                 };
                 export type ProfileCompletionData = {
                     percent: number;
