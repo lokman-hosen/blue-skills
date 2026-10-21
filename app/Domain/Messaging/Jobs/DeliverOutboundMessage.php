@@ -70,7 +70,7 @@ class DeliverOutboundMessage implements ShouldQueue
                 [$params['job'] ?? $title, $link],
             ),
             DeliveryChannel::Sms => $sms->send($message->recipient, __('notification.sms', ['title' => $title, 'link' => $link])),
-            DeliveryChannel::Mail => $this->mail($message, $user, $title, __("notification.{$event}.body", $params), $link),
+            DeliveryChannel::Mail => $this->mail($message, $user, $title, NotificationData::body($message->event, $message->payload['params'], $user), $link),
         };
     }
 

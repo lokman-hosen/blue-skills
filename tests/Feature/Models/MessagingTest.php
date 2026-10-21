@@ -1,6 +1,7 @@
 <?php
 
 use App\Domain\Applications\Models\JobInvitation;
+use App\Domain\Applications\States\Application\Accepted;
 use App\Domain\Applications\States\Application\Rejected;
 use App\Domain\Identity\Enums\OrganizationRole;
 use App\Domain\Messaging\Enums\DeliveryChannel;
@@ -67,3 +68,10 @@ it('stores delivery recipients encrypted and invitations once per job and worker
     $invitation = JobInvitation::factory()->create();
     JobInvitation::factory()->create(['job_id' => $invitation->job_id, 'worker_profile_id' => $invitation->worker_profile_id]);
 })->throws(UniqueConstraintViolationException::class);
+
+it('keeps the conversation open after an accepted offer', function () {
+    $conversation = Conversation::factory()->create();
+    $conversation->application->update(['status' => Accepted::class, 'stage_changed_at' => now()->subDays(90)]);
+
+    expect($conversation->fresh()?->isWritable())->toBeTrue();
+});

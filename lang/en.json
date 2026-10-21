@@ -1300,7 +1300,7 @@
     "notification.worker_message.title": "New message from :org",
     "notification.worker_message.body": ":preview",
     "notification.new_applicants.title": "New applicants for :job",
-    "notification.new_applicants.body": ":count new applicants since yesterday.",
+    "notification.new_applicants.body": "{1} 1 new applicant since yesterday.|[2,*] :count new applicants since yesterday.",
     "notification.application_answered.title": ":worker answered",
     "notification.application_answered.body": ":worker :answer :job.",
     "notification.answer.accepted": "accepted the offer for",

@@ -8,9 +8,11 @@ use App\Domain\Applications\Enums\ApplicationConsentItem;
 use App\Domain\Applications\Enums\ConsentPurpose;
 use App\Domain\Applications\Enums\InterviewMode;
 use App\Domain\Applications\Enums\InterviewOutcome;
+use App\Domain\Applications\Enums\InvitationStatus;
 use App\Domain\Applications\Enums\OfferStatus;
 use App\Domain\Applications\Enums\RejectionReason;
 use App\Domain\Applications\Models\Application;
+use App\Domain\Applications\Models\JobInvitation;
 use App\Domain\Applications\States\Application\Accepted;
 use App\Domain\Applications\States\Application\ApplicationState;
 use App\Domain\Applications\States\Application\Applied;
@@ -37,6 +39,13 @@ use App\Domain\Jobs\Models\JobPosting;
 use App\Domain\Jobs\States\Job\Draft;
 use App\Domain\Jobs\States\Job\Published;
 use App\Domain\Jobs\States\Job\UnderReview;
+use App\Domain\Messaging\Enums\DeliveryChannel;
+use App\Domain\Messaging\Enums\DeliveryStatus;
+use App\Domain\Messaging\Enums\MessageSide;
+use App\Domain\Messaging\Enums\NotificationEvent;
+use App\Domain\Messaging\Models\Conversation;
+use App\Domain\Messaging\Models\ConversationRead;
+use App\Domain\Messaging\Models\OutboundMessage;
 use App\Domain\Mobility\Enums\MobilityStageStatus;
 use App\Domain\Mobility\Models\MobilityCase;
 use App\Domain\Mobility\States\MobilityCase\Completed;
@@ -544,6 +553,126 @@ class SampleWorldSeeder extends Seeder
         $this->apply('nimal', $this->jobs['JP-IT-0007'], Applied::class, '2026-10-14');
 
         $this->seedEmployerPipeline();
+        $this->seedConversationsAndAlerts();
+    }
+
+    /**
+     * Module 5: conversations, in-app notifications, an invitation and a delivery log, so the
+     * Messages, inbox and notification pages have something to show (D-073).
+     */
+    private function seedConversationsAndAlerts(): void
+    {
+        $imran = $this->orgUsers['imran@northstar.test'];
+        $sara = $this->orgUsers['sara@abc-contracting.test'];
+        $owner = $this->orgUsers['owner@abc-contracting.test'];
+        $uae = $this->jobs['UAE-EL-0001'];
+        $abc = $this->jobs['AE-MT-0115'];
+
+        // Prototype "Messages": Rahim and Northstar about the medical test (UAE-EL-0001).
+        $this->conversation($this->applicationOf('rahim', $uae), [
+            [$imran, 'Your contract is accepted. Next step is the medical test. I have shared the list of approved centres in Dhaka.', '2026-10-14 04:12'],
+            [null, 'Thank you. I will book this week.', '2026-10-14 04:40'],
+            [$imran, 'Good. Upload the receipt in Documents after the test.', '2026-10-14 04:43'],
+        ], workerReadAt: '2026-10-14 05:00', orgReader: $imran);
+
+        // ABC's pipeline: Hasan's offer, Arjun's interview and an unread note to Rahim.
+        $this->conversation($this->applicationOf('hasan', $abc), [
+            [$sara, 'We have sent you an offer. Please read it and answer by next week.', '2026-10-15 07:00'],
+            [null, 'Thank you. Is accommodation shared or single?', '2026-10-16 03:20'],
+        ], workerReadAt: '2026-10-15 08:00', orgReader: null);
+        $this->conversation($this->applicationOf('arjun', $abc), [
+            [$owner, 'Your video interview is booked. The link comes the day before.', '2026-10-18 06:30'],
+            [null, 'Thank you, I will be ready.', '2026-10-18 09:10'],
+        ], workerReadAt: '2026-10-18 09:10', orgReader: $owner);
+        $this->conversation($this->applicationOf('rahim', $abc), [
+            [$owner, 'Please bring your training certificate to the interview.', '2026-10-20 05:15'],
+        ], workerReadAt: null, orgReader: $owner);
+
+        // Karim is on ABC's shortlist and was invited to apply.
+        JobInvitation::query()->create([
+            'job_id' => $abc->id,
+            'worker_profile_id' => $this->workers['karim']->id,
+            'organization_id' => $this->orgs['abc']->id,
+            'invited_by' => $owner->id,
+            'note' => 'Your cable termination work fits our maintenance team in Dubai.',
+            'status' => InvitationStatus::Sent,
+        ]);
+
+        $rahim = $this->workers['rahim']->user;
+        $this->alert($rahim, NotificationEvent::JobChanged, ['job' => $abc->title, 'org' => 'ABC Contracting'], '/applications/'.$this->applicationOf('rahim', $abc)->id, '2026-10-16 10:05', read: false);
+        $this->alert($rahim, NotificationEvent::Shortlisted, ['job' => $abc->title, 'org' => 'ABC Contracting'], '/applications/'.$this->applicationOf('rahim', $abc)->id, '2026-10-14 09:30', read: true);
+        $this->alert($rahim, NotificationEvent::WorkerMessage, ['job' => $abc->title, 'org' => 'ABC Contracting', 'preview' => 'Please bring your training certificate to the interview.'], '/messages/'.$this->applicationOf('rahim', $abc)->conversation?->id, '2026-10-20 05:15', read: false);
+        $this->alert($this->workers['karim']->user, NotificationEvent::JobInvitation, ['job' => $abc->title, 'org' => 'ABC Contracting'], '/applications', '2026-10-20 08:00', read: false);
+        $this->alert($sara, NotificationEvent::OrganizationMessage, ['job' => $abc->title, 'worker' => 'Hasan Ali', 'preview' => 'Thank you. Is accommodation shared or single?'], '/org/messages/'.$this->applicationOf('hasan', $abc)->conversation?->id, '2026-10-16 03:20', read: false);
+        $this->alert($owner, NotificationEvent::NewApplicants, ['job' => $abc->title, 'count' => 1], '/org/jobs/AE-MT-0115/applicants?stage=applied', '2026-10-16 06:00', read: false);
+
+        OutboundMessage::query()->create([
+            'user_id' => $rahim->id,
+            'channel' => DeliveryChannel::WhatsApp,
+            'recipient' => (string) $rahim->phone,
+            'event' => NotificationEvent::JobChanged,
+            'template' => 'blueskills_update',
+            'payload' => ['params' => ['job' => $abc->title, 'org' => 'ABC Contracting'], 'url' => '/applications'],
+            'status' => DeliveryStatus::Sent,
+            'provider_id' => 'sample',
+            'attempts' => 1,
+            'sent_at' => '2026-10-16 10:05',
+        ]);
+    }
+
+    private function applicationOf(string $workerKey, JobPosting $job): Application
+    {
+        return Application::query()->where('job_id', $job->id)->where('worker_profile_id', $this->workers[$workerKey]->id)->firstOrFail();
+    }
+
+    /**
+     * @param  list<array{0: User|null, 1: string, 2: string}>  $messages  sender (null = the worker), text, UTC time
+     */
+    private function conversation(Application $application, array $messages, ?string $workerReadAt, ?User $orgReader): void
+    {
+        $conversation = Conversation::query()->create([
+            'application_id' => $application->id,
+            'organization_id' => $application->job->organization_id,
+            'worker_profile_id' => $application->worker_profile_id,
+        ]);
+        $workerUserId = $application->workerProfile->user_id;
+        $last = null;
+
+        foreach ($messages as [$sender, $body, $at]) {
+            $last = Carbon::parse($at, 'UTC');
+            $conversation->messages()->forceCreate([
+                'sender_user_id' => $sender === null ? $workerUserId : $sender->id,
+                'side' => $sender === null ? MessageSide::Worker : MessageSide::Organization,
+                'body' => $body,
+                'created_at' => $last,
+                'updated_at' => $last,
+            ]);
+        }
+
+        $conversation->update(['last_message_at' => $last]);
+
+        if ($workerReadAt !== null) {
+            ConversationRead::query()->create(['conversation_id' => $conversation->id, 'user_id' => $workerUserId, 'last_read_at' => Carbon::parse($workerReadAt, 'UTC')]);
+        }
+
+        if ($orgReader !== null) {
+            ConversationRead::query()->create(['conversation_id' => $conversation->id, 'user_id' => $orgReader->id, 'last_read_at' => $last]);
+        }
+    }
+
+    /**
+     * @param  array<string, string|int>  $params
+     */
+    private function alert(User $user, NotificationEvent $event, array $params, string $url, string $at, bool $read): void
+    {
+        $user->notifications()->create([
+            'id' => (string) str()->uuid(),
+            'type' => $event->value,
+            'data' => ['event' => $event->value, 'params' => $params, 'url' => $url],
+            'read_at' => $read ? Carbon::parse($at, 'UTC')->addHour() : null,
+            'created_at' => Carbon::parse($at, 'UTC'),
+            'updated_at' => Carbon::parse($at, 'UTC'),
+        ]);
     }
 
     /**

@@ -33,11 +33,25 @@ class NotificationData extends Data
             id: $notification->id,
             event: $event,
             title: __("notification.{$event->value}.title", self::params($data['params'], $reader)),
-            body: __("notification.{$event->value}.body", self::params($data['params'], $reader)),
+            body: self::body($event, $data['params'], $reader),
             url: $data['url'],
             read: $notification->read_at !== null,
             createdAt: $notification->created_at?->toIso8601String() ?? '',
         );
+    }
+
+    /**
+     * Counts pick the right plural form.
+     *
+     * @param  array<string, string|int>  $params
+     */
+    public static function body(NotificationEvent $event, array $params, User $reader): string
+    {
+        $key = "notification.{$event->value}.body";
+
+        return array_key_exists('count', $params)
+            ? trans_choice($key, (int) $params['count'], self::params($params, $reader))
+            : __($key, self::params($params, $reader));
     }
 
     /**

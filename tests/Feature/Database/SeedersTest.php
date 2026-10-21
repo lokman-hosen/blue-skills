@@ -9,6 +9,8 @@ use App\Domain\Identity\Enums\StaffRole;
 use App\Domain\Identity\Models\User;
 use App\Domain\Jobs\Models\JobPosting;
 use App\Domain\Jobs\States\Job\Published;
+use App\Domain\Messaging\Models\Conversation;
+use App\Domain\Messaging\Support\Unread;
 use App\Domain\Organization\Models\Organization;
 use App\Domain\Taxonomy\Models\Skill;
 use App\Domain\Verification\Models\Document;
@@ -50,7 +52,11 @@ it('seeds the reference data and the sample world', function () {
     expect($pipeline->applications()->count())->toBe(6)
         ->and(Application::query()->with('snapshot')->get()->every(fn (Application $application) => ProfileSnapshotData::from($application->snapshot?->data ?? []) instanceof ProfileSnapshotData))->toBeTrue()
         ->and(Shortlist::query()->sole()->entries)->toHaveCount(2)
-        ->and(Document::query()->where('type', 'passport')->sole()->getFirstMedia(Document::FILE_COLLECTION)?->uuid)->not->toBeNull();
+        ->and(Document::query()->where('type', 'passport')->sole()->getFirstMedia(Document::FILE_COLLECTION)?->uuid)->not->toBeNull()
+        // Module 5: conversations and alerts render.
+        ->and(Conversation::query()->count())->toBe(4)
+        ->and($rahim->unreadNotifications()->count())->toBe(2)
+        ->and(Unread::conversations($rahim, null))->toBe(1);
 });
 
 it('creates the local superuser with the superuser staff role', function () {

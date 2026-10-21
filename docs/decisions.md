@@ -627,6 +627,8 @@ colour) and the appearance tabs use design tokens instead of the kit's neutral g
 - A conversation is created the first time either side opens it from the application ("Message
   the employer") or the applicant page ("Message the worker"). Workers find theirs under
   Messages; organizations have an inbox per workspace, filterable by job.
+- A conversation becomes read-only 30 days after the application was rejected, withdrawn or
+  declined. An accepted offer keeps it open, because recruitment and mobility continue.
 - Messages are text up to 2,000 characters with up to 3 attachments (PDF, JPG, PNG, ≤ 10 MB) on
   the private disk, served only to the conversation's parties. Workers see organization messages as
   "member · organization"; the worker's phone number is never part of a conversation.
@@ -689,3 +691,11 @@ colour) and the appearance tabs use design tokens instead of the kit's neutral g
   Truth Card and apply through the normal flow (which marks the invitation applied), or tap "Not
   interested". Invitations to jobs that stopped taking applications show as expired.
 - No free conversation starts from an invitation; it opens once the worker applies (D-069).
+
+### D-073 · Module 5 sample data and review
+- Sample conversations: Rahim and Northstar about the medical test (from the prototype, without
+  its line about the agency keeping the passport), and on ABC's AE-MT-0115 with Hasan (unread for
+  Sara), Arjun and Rahim (unread for Rahim). ABC invited Karim to AE-MT-0115. Rahim, Karim, Sara
+  and the ABC owner have sample notifications; one sample WhatsApp delivery is logged.
+- Review fixes: conversations stay open after an accepted offer; the daily digest pluralizes.
+- Visual review: employer 60/60 and worker 48/48 clean (en, bn, ur; light, dark; 390, 1440).

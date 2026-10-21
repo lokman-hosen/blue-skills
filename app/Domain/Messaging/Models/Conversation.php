@@ -3,6 +3,9 @@
 namespace App\Domain\Messaging\Models;
 
 use App\Domain\Applications\Models\Application;
+use App\Domain\Applications\States\Application\Declined;
+use App\Domain\Applications\States\Application\Rejected;
+use App\Domain\Applications\States\Application\Withdrawn;
 use App\Domain\Organization\Models\Organization;
 use App\Domain\Worker\Models\WorkerProfile;
 use Database\Factories\ConversationFactory;
@@ -80,13 +83,14 @@ class Conversation extends Model
     }
 
     /**
-     * Read-only once the application has been closed for OPEN_DAYS_AFTER_CLOSE days.
+     * Read-only once the application was rejected, withdrawn or declined OPEN_DAYS_AFTER_CLOSE
+     * days ago. An accepted offer stays open: recruitment and mobility continue (product rule 8).
      */
     public function isWritable(): bool
     {
         $application = $this->application;
 
-        if (! $application->isClosed()) {
+        if (! $application->status->equals(Rejected::class, Withdrawn::class, Declined::class)) {
             return true;
         }
 

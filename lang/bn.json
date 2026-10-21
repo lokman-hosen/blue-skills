@@ -1300,7 +1300,7 @@
     "notification.worker_message.title": ":org থেকে নতুন বার্তা",
     "notification.worker_message.body": ":preview",
     "notification.new_applicants.title": ":job-এর নতুন আবেদনকারী",
-    "notification.new_applicants.body": "গতকাল থেকে :count জন নতুন আবেদনকারী।",
+    "notification.new_applicants.body": "{1} গতকাল থেকে ১ জন নতুন আবেদনকারী।|[2,*] গতকাল থেকে :count জন নতুন আবেদনকারী।",
     "notification.application_answered.title": ":worker উত্তর দিয়েছেন",
     "notification.application_answered.body": ":worker :job — :answer।",
     "notification.answer.accepted": "অফার গ্রহণ করেছেন",
