@@ -116,7 +116,7 @@ export default function CampaignShow({
                         </div>
                     }
                 />
-                <div className="grid gap-5 lg:grid-cols-[minmax(0,1fr)_20rem]">
+                <div className="grid items-start gap-5 lg:grid-cols-[minmax(0,1fr)_20rem]">
                     <div className="flex min-w-0 flex-col gap-5">
                         <RangeForm
                             range={range}
@@ -221,7 +221,7 @@ export default function CampaignShow({
 
 function Panel({ title, children }: { title: string; children: ReactNode }) {
     return (
-        <section className="flex flex-col gap-3 self-start rounded-2xl border border-line bg-surface p-4 sm:p-5">
+        <section className="flex flex-col gap-3 rounded-2xl border border-line bg-surface p-4 sm:p-5">
             <h2 className="eyebrow text-muted">{title}</h2>
             {children}
         </section>

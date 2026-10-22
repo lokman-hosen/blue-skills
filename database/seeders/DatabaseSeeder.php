@@ -25,7 +25,7 @@ class DatabaseSeeder extends Seeder
         ]);
 
         if (! app()->isProduction()) {
-            $this->call(SampleWorldSeeder::class);
+            $this->call([SampleWorldSeeder::class, CrmAndBillingSampleSeeder::class]);
         }
     }
 }

@@ -21,7 +21,7 @@ export function InvoiceDocument({
     const summary = invoice.summary;
 
     return (
-        <article className="flex flex-col gap-5 rounded-2xl border border-line bg-surface p-5 sm:p-8 print:border-0 print:p-0">
+        <article className="flex min-w-0 flex-col gap-5 rounded-2xl border border-line bg-surface p-5 sm:p-8 print:border-0 print:p-0">
             <header className="flex flex-wrap items-start justify-between gap-4">
                 <div className="flex flex-col gap-2">
                     <Logo />
@@ -74,18 +74,24 @@ export function InvoiceDocument({
                 </div>
             </dl>
 
-            <div className="overflow-x-auto">
-                <table className="w-full min-w-[32rem] text-sm">
+            <div>
+                <table className="w-full text-sm">
                     <caption className="sr-only">{t('billing.invoice.lines')}</caption>
                     <thead>
                         <tr className="border-b border-line text-start text-xs text-muted">
                             <th scope="col" className="py-2 text-start font-medium">
                                 {t('billing.invoice.description')}
                             </th>
-                            <th scope="col" className="py-2 text-end font-medium">
+                            <th
+                                scope="col"
+                                className="hidden py-2 text-end font-medium sm:table-cell"
+                            >
                                 {t('billing.invoice.quantity')}
                             </th>
-                            <th scope="col" className="py-2 text-end font-medium">
+                            <th
+                                scope="col"
+                                className="hidden py-2 text-end font-medium sm:table-cell"
+                            >
                                 {t('billing.invoice.unit')}
                             </th>
                             <th scope="col" className="py-2 text-end font-medium">
@@ -112,6 +118,10 @@ export function InvoiceDocument({
                             <tr key={line.id} className="border-b border-line">
                                 <td className="py-2.5">
                                     {line.description}
+                                    <span className="block text-xs text-muted tnum sm:hidden">
+                                        {formatNumber(line.quantity)} ×{' '}
+                                        {formatMoney(line.unitAmount)}
+                                    </span>
                                     {line.credits > 0 && (
                                         <span className="block text-xs text-muted">
                                             {t('billing.invoice.credits_included', {
@@ -120,10 +130,10 @@ export function InvoiceDocument({
                                         </span>
                                     )}
                                 </td>
-                                <td className="py-2.5 text-end tnum">
+                                <td className="hidden py-2.5 text-end tnum sm:table-cell">
                                     {formatNumber(line.quantity)}
                                 </td>
-                                <td className="py-2.5 text-end tnum">
+                                <td className="hidden py-2.5 text-end tnum sm:table-cell">
                                     {formatMoney(line.unitAmount)}
                                 </td>
                                 <td className="py-2.5 text-end tnum">{formatMoney(line.amount)}</td>
@@ -144,39 +154,19 @@ export function InvoiceDocument({
                             </tr>
                         ))}
                     </tbody>
-                    <tfoot className="text-sm">
-                        <tr>
-                            <th
-                                scope="row"
-                                colSpan={3}
-                                className="pt-3 text-end font-normal text-muted"
-                            >
-                                {t('billing.invoice.subtotal')}
-                            </th>
-                            <td className="pt-3 text-end tnum">{formatMoney(invoice.subtotal)}</td>
-                        </tr>
-                        <tr>
-                            <th
-                                scope="row"
-                                colSpan={3}
-                                className="pt-1 text-end font-normal text-muted"
-                            >
-                                {t('billing.invoice.vat', {
-                                    rate: formatNumber(invoice.taxRatePercent),
-                                })}
-                            </th>
-                            <td className="pt-1 text-end tnum">{formatMoney(invoice.tax)}</td>
-                        </tr>
-                        <tr>
-                            <th scope="row" colSpan={3} className="pt-2 text-end font-semibold">
-                                {t('billing.invoice.total')}
-                            </th>
-                            <td className="pt-2 text-end font-display text-lg font-bold tnum">
-                                {formatMoney(summary.total)}
-                            </td>
-                        </tr>
-                    </tfoot>
                 </table>
+                <dl className="ms-auto mt-3 grid w-full max-w-xs grid-cols-[1fr_auto] gap-x-6 gap-y-1 text-sm">
+                    <dt className="text-muted">{t('billing.invoice.subtotal')}</dt>
+                    <dd className="text-end tnum">{formatMoney(invoice.subtotal)}</dd>
+                    <dt className="text-muted">
+                        {t('billing.invoice.vat', { rate: formatNumber(invoice.taxRatePercent) })}
+                    </dt>
+                    <dd className="text-end tnum">{formatMoney(invoice.tax)}</dd>
+                    <dt className="pt-1 font-semibold">{t('billing.invoice.total')}</dt>
+                    <dd className="pt-1 text-end font-display text-lg font-bold tnum">
+                        {formatMoney(summary.total)}
+                    </dd>
+                </dl>
             </div>
 
             <footer className="flex flex-col gap-1.5 border-t border-line pt-4 text-sm">

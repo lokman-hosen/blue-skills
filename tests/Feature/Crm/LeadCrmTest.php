@@ -1,6 +1,8 @@
 <?php
 
+use App\Domain\Applications\Models\Application;
 use App\Domain\Crm\Enums\ContactOutcome;
+use App\Domain\Crm\Enums\ConversionStage;
 use App\Domain\Crm\Enums\FollowUpStatus;
 use App\Domain\Crm\Enums\LeadSource;
 use App\Domain\Crm\Models\Lead;
@@ -109,4 +111,16 @@ it('updates the follow-up but keeps an opted-out worker do-not-contact', functio
     $this->actingAs($this->agent)->put(route('admin.crm.leads.update', $optedOut), ['follow_up_status' => 'contacted'])
         ->assertSessionHasErrors('follow_up_status');
     expect($optedOut->fresh()?->follow_up_status)->toBe(FollowUpStatus::DoNotContact);
+});
+
+it('ticks only the stages the worker really reached', function () {
+    $profile = WorkerProfile::factory()->create(['profile_completed_at' => now()]);
+    Application::factory()->create(['worker_profile_id' => $profile->id]);
+    $lead = Lead::factory()->forWorker($profile->user)->create(['conversion_stage' => ConversionStage::Applied]);
+
+    $this->actingAs($this->agent)->get(route('admin.crm.leads.show', $lead))
+        ->assertInertia(fn (Assert $page) => $page
+            ->where('lead.progress.1', ['stage' => 'profile_complete', 'reached' => true])
+            ->where('lead.progress.2', ['stage' => 'qualified', 'reached' => false])
+            ->where('lead.progress.3', ['stage' => 'applied', 'reached' => true]));
 });

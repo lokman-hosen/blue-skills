@@ -26,8 +26,13 @@ export function FunnelBars({ funnel }: { funnel: Funnel }) {
             {FUNNEL_STEPS.map((step, index) => {
                 const value = funnel[step];
                 const previous = index > 0 ? funnel[FUNNEL_STEPS[index - 1]] : null;
+                const ratio = previous !== null && previous > 0 ? (value / previous) * 100 : null;
                 const share =
-                    previous !== null && previous > 0 ? Math.round((value / previous) * 100) : null;
+                    ratio === null
+                        ? null
+                        : ratio > 0 && ratio < 1
+                          ? '<1'
+                          : formatNumber(Math.round(ratio));
 
                 return (
                     <li key={step} className="flex flex-col gap-1">
@@ -37,9 +42,7 @@ export function FunnelBars({ funnel }: { funnel: Funnel }) {
                                 <span className="font-semibold">{formatNumber(value)}</span>
                                 {share !== null && (
                                     <span className="ms-2 text-xs text-muted">
-                                        {t('marketing.of_previous', {
-                                            percent: formatNumber(share),
-                                        })}
+                                        {t('marketing.of_previous', { percent: share })}
                                     </span>
                                 )}
                             </span>

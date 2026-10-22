@@ -49,6 +49,27 @@ final class LeadProgress
     }
 
     /**
+     * Which stages the worker has actually reached, each checked on its own: someone can apply
+     * without being qualified, so stages aren't assumed from the furthest one.
+     *
+     * @return array<string, bool> keyed by ConversionStage value, without Prospect
+     */
+    public static function reached(?User $user): array
+    {
+        $profile = $user?->workerProfile;
+        $check = fn (callable $scope) => $profile !== null && $scope(WorkerProfile::query()->whereKey($profile->id))->exists();
+
+        return [
+            ConversionStage::Registered->value => $user !== null,
+            ConversionStage::ProfileComplete->value => $profile?->profile_completed_at !== null,
+            ConversionStage::Qualified->value => $check(self::qualified(...)),
+            ConversionStage::Applied->value => $check(self::applied(...)),
+            ConversionStage::Selected->value => $check(self::selected(...)),
+            ConversionStage::Deployed->value => $check(self::deployed(...)),
+        ];
+    }
+
+    /**
      * @param  Builder<WorkerProfile>  $profiles
      * @return Builder<WorkerProfile>
      */

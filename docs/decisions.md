@@ -1264,3 +1264,23 @@ colour) and the appearance tabs use design tokens instead of the kit's neutral g
   inviting a member needs a free seat (members plus pending invitations); talent search needs a
   plan that includes it. While off, pages say limits are counted but not enforced.
 - **Admin overview:** finance staff get "Overdue invoices".
+
+### D-103 · Module 9 sample data, review fixes and deploy notes
+- **Sample data** (`CrmAndBillingSampleSeeder`, after `SampleWorldSeeder`): CRM agent
+  `m.akter@blueskills.test` and finance officer `r.nair@blueskills.test`; campaigns Dhaka job fair
+  2026 (`/c/DHAKA-JOB-FAIR-2026`), Facebook Bangladesh electricians (job search), Meghna graduates
+  2026 (partner institute) and a paused Nepal FM radio spot, each with 30 days of visits; a lead
+  for every sample worker (stage worked out from their real progress, mixed follow-ups, some due
+  today or overdue) and three job-fair prospects (one do-not-contact); project RP-0042 "200
+  Electricians — Dubai" on ABC Contracting with AE-MT-0115 and AE-ST-0042; sample plans marked
+  "not approved for launch"; ABC on Employer Standard (September invoice paid with 15 credits, one
+  used, October invoice waiting), Northstar on Agency Professional (overdue invoice, goodwill
+  credits, a draft).
+- **Review fixes:** the lead page ticked every stage up to the furthest one (an applicant showed
+  as "qualified"); each stage is now checked on its own (`LeadProgress::reached`). Invoice lines fit
+  a 390px screen (quantity × price folds under the description; totals moved out of the table).
+  Funnel shares under 1% read "<1%". Side panels no longer shrink in flex columns.
+- **Deploy notes for Module 9:** run migrations; re-run `RolesAndPermissionsSeeder`
+  (`projects.manage`); keep `BLUESKILLS_BILLING_ENFORCE=false` until pricing is approved; set
+  `BILLING_PAYMENT_INSTRUCTIONS` (bank details) before issuing real invoices; `BILLING_PROVIDER`
+  stays `manual`. No new scheduled tasks.

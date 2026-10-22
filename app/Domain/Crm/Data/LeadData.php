@@ -7,6 +7,7 @@ use App\Domain\Crm\Enums\FollowUpStatus;
 use App\Domain\Crm\Enums\LeadSource;
 use App\Domain\Crm\Models\Lead;
 use App\Domain\Crm\Models\LeadContactAttempt;
+use App\Domain\Crm\Support\LeadProgress;
 use App\Support\Data\StatusData;
 use Spatie\LaravelData\Data;
 
@@ -46,7 +47,7 @@ class LeadData extends Data
     {
         $lead->loadMissing(['user.workerProfile', 'campaign', 'partner', 'contactAttempts.staff']);
         $profile = $lead->user?->workerProfile;
-        $reached = $lead->conversion_stage->rank();
+        $reached = LeadProgress::reached($lead->user);
 
         return new self(
             id: $lead->id,
@@ -67,7 +68,7 @@ class LeadData extends Data
             lastContactedAt: $lead->last_contacted_at?->toIso8601String(),
             createdAt: $lead->created_at?->toIso8601String() ?? '',
             progress: array_values(array_map(
-                fn (ConversionStage $stage) => ['stage' => $stage, 'reached' => $stage->rank() <= $reached],
+                fn (ConversionStage $stage) => ['stage' => $stage, 'reached' => $reached[$stage->value]],
                 array_filter(ConversionStage::cases(), fn (ConversionStage $stage) => $stage !== ConversionStage::Prospect),
             )),
             attempts: $lead->contactAttempts->map(fn (LeadContactAttempt $attempt) => ContactAttemptData::fromAttempt($attempt))->values()->all(),

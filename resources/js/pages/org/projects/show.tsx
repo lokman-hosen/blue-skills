@@ -162,7 +162,7 @@ export default function ProjectShow({
                     </div>
                 </section>
 
-                <div className="grid gap-5 lg:grid-cols-[minmax(0,1fr)_18rem]">
+                <div className="grid items-start gap-5 lg:grid-cols-[minmax(0,1fr)_18rem]">
                     <Panel title={t('projects.jobs')}>
                         <DataTable<Job>
                             caption={t('projects.jobs')}
@@ -244,7 +244,7 @@ export default function ProjectShow({
 
 function Panel({ title, children }: { title: string; children: ReactNode }) {
     return (
-        <section className="flex min-w-0 flex-col gap-3 self-start rounded-2xl border border-line bg-surface p-4 sm:p-5">
+        <section className="flex min-w-0 flex-col gap-3 rounded-2xl border border-line bg-surface p-4 sm:p-5">
             <h2 className="eyebrow text-muted">{title}</h2>
             {children}
         </section>

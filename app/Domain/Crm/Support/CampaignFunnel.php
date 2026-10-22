@@ -60,7 +60,7 @@ final class CampaignFunnel
                 ->tap(fn (Builder $query) => $scope($query, 'leads.campaign_id'));
 
             return $step($profiles)->groupBy('leads.campaign_id')
-                ->selectRaw('leads.campaign_id as campaign_key, count(distinct worker_profiles.id) as total')
+                ->selectRaw("coalesce(leads.campaign_id, '') as campaign_key, count(distinct worker_profiles.id) as total")
                 ->pluck('total', 'campaign_key')
                 ->mapWithKeys(fn ($total, $key) => [(string) $key => (int) $total]);
         };

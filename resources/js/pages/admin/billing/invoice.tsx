@@ -37,7 +37,7 @@ export default function InvoiceShow({ invoice, paymentMethods }: Props) {
                     }}
                 />
                 {errors.invoice && <InputError message={errors.invoice} />}
-                <div className="grid gap-5 lg:grid-cols-[minmax(0,1fr)_20rem]">
+                <div className="grid items-start gap-5 lg:grid-cols-[minmax(0,1fr)_20rem]">
                     <InvoiceDocument
                         invoice={invoice}
                         onRemoveLine={
@@ -96,7 +96,7 @@ export default function InvoiceShow({ invoice, paymentMethods }: Props) {
 
 function Panel({ title, children }: { title: string; children: ReactNode }) {
     return (
-        <section className="flex flex-col gap-3 self-start rounded-2xl border border-line bg-surface p-4 sm:p-5">
+        <section className="flex flex-col gap-3 rounded-2xl border border-line bg-surface p-4 sm:p-5">
             <h2 className="eyebrow text-muted">{title}</h2>
             {children}
         </section>
