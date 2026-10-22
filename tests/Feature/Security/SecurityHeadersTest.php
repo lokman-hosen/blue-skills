@@ -73,3 +73,14 @@ it('limits worker sign-in per device rather than per network', function () {
         ->and($network->key)->toBe($sameNetwork->key)
         ->and($network->maxAttempts)->toBe(300);
 });
+
+it('sees the visitor behind a trusted proxy, and HTTPS from the forwarded scheme', function () {
+    config(['trustedproxy.proxies' => '*']);
+
+    $response = $this->withServerVariables(['REMOTE_ADDR' => '10.0.0.5'])
+        ->withHeaders(['X-Forwarded-For' => '203.0.113.9', 'X-Forwarded-Proto' => 'https'])
+        ->get('/jobs');
+
+    $response->assertHeader('Strict-Transport-Security');
+    expect(request()->ip())->toBe('203.0.113.9');
+});

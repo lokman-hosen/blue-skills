@@ -60,6 +60,7 @@ use App\Domain\Mobility\Models\MobilityCaseStage;
 use App\Domain\Organization\Models\Organization;
 use App\Domain\Organization\Models\OrganizationInvitation;
 use App\Domain\Organization\Models\OrganizationMember;
+use App\Domain\Organization\Models\PilotInvite;
 use App\Domain\Taxonomy\Models\Occupation;
 use App\Domain\Taxonomy\Models\Sector;
 use App\Domain\Taxonomy\Models\Skill;
@@ -189,6 +190,7 @@ class AppServiceProvider extends ServiceProvider
             'organization' => Organization::class,
             'organization_member' => OrganizationMember::class,
             'organization_invitation' => OrganizationInvitation::class,
+            'pilot_invite' => PilotInvite::class,
             'country' => Country::class,
             'country_rule' => CountryRule::class,
             'language' => Language::class,

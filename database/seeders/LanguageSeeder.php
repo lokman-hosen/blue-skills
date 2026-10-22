@@ -22,7 +22,7 @@ class LanguageSeeder extends Seeder
         ];
 
         foreach ($languages as [$code, $native, $english, $rtl, $status]) {
-            Language::query()->updateOrCreate(['code' => $code], [
+            Language::query()->firstOrCreate(['code' => $code], [
                 'native_name' => $native,
                 'english_name' => $english,
                 'rtl' => $rtl,

@@ -4,6 +4,7 @@ import { LanguageSwitcher } from './language-switcher';
 import { LiveUpdates } from './live-updates';
 import { Logo } from './logo';
 import { NotificationBell } from './notification-bell';
+import { PilotBanner } from './pilot-banner';
 import { SkipLink } from './skip-link';
 import { ThemeToggle } from './theme-toggle';
 import { TranslationPendingBanner } from './translation-pending-banner';
@@ -158,6 +159,7 @@ export function WorkspaceShell({ nav, context, children }: WorkspaceShellProps) 
                 </SidebarFooter>
             </Sidebar>
             <SidebarInset className="min-w-0 bg-bg">
+                <PilotBanner />
                 <header className="sticky top-0 z-30 flex min-h-14 flex-wrap items-center gap-x-2 gap-y-1 border-b border-line bg-surface/95 px-3 py-1.5 backdrop-blur print:hidden">
                     <SidebarTrigger className="size-11 md:size-9" aria-label={t('common.menu')} />
                     <div className="min-w-0 flex-1">{context}</div>

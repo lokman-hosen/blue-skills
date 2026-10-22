@@ -58,26 +58,26 @@ class TaxonomySeeder extends Seeder
         $order = 0;
 
         foreach (self::TREE as $sectorName => $occupations) {
-            $sector = Sector::query()->updateOrCreate(
+            $sector = Sector::query()->firstOrCreate(
                 ['slug' => Str::slug($sectorName)],
                 ['name' => ['en' => $sectorName], 'sort_order' => $order++],
             );
 
             foreach ($occupations as $occupationName => [$specializations, $skills]) {
-                $occupation = Occupation::query()->updateOrCreate(
+                $occupation = Occupation::query()->firstOrCreate(
                     ['slug' => Str::slug($occupationName)],
                     ['sector_id' => $sector->id, 'name' => ['en' => $occupationName]],
                 );
 
                 foreach ($specializations as $name) {
-                    Specialization::query()->updateOrCreate(
+                    Specialization::query()->firstOrCreate(
                         ['occupation_id' => $occupation->id, 'slug' => Str::slug($name)],
                         ['name' => ['en' => $name]],
                     );
                 }
 
                 foreach ($skills as $name) {
-                    Skill::query()->updateOrCreate(
+                    Skill::query()->firstOrCreate(
                         ['slug' => Str::slug($name)],
                         ['occupation_id' => $occupation->id, 'name' => ['en' => $name]],
                     );
@@ -86,7 +86,7 @@ class TaxonomySeeder extends Seeder
         }
 
         foreach (self::SHARED_SKILLS as $name) {
-            Skill::query()->updateOrCreate(['slug' => Str::slug($name)], ['occupation_id' => null, 'name' => ['en' => $name]]);
+            Skill::query()->firstOrCreate(['slug' => Str::slug($name)], ['occupation_id' => null, 'name' => ['en' => $name]]);
         }
     }
 }

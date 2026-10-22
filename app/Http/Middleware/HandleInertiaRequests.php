@@ -104,6 +104,8 @@ class HandleInertiaRequests extends Middleware
                 'messages' => Unread::conversations($user, $organization),
                 'notifications' => $user->unreadNotifications()->count(),
             ] : null,
+            // Pilot notice on every page (D-108).
+            'pilot' => (bool) config('blueskills.pilot.enabled'),
             'sidebarOpen' => ! $request->hasCookie('sidebar_state') || $request->cookie('sidebar_state') === 'true',
         ];
     }

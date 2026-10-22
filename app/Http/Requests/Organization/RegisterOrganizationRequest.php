@@ -32,6 +32,7 @@ class RegisterOrganizationRequest extends FormRequest
             'licence_number' => ['nullable', 'required_if:type,agency', 'string', 'max:80'],
             'licence_expires_on' => ['nullable', 'required_if:type,agency', 'date', 'after:today'],
             'title' => ['nullable', 'string', 'max:120'],
+            'pilot_code' => [config('blueskills.pilot.enabled') ? 'required' : 'nullable', 'string', 'max:32'],
         ];
     }
 
@@ -47,6 +48,7 @@ class RegisterOrganizationRequest extends FormRequest
             licenceNumber: $this->filled('licence_number') ? $this->string('licence_number')->trim()->toString() : null,
             licenceExpiresOn: $this->filled('licence_expires_on') ? $this->string('licence_expires_on')->toString() : null,
             title: $this->filled('title') ? $this->string('title')->trim()->toString() : null,
+            pilotCode: $this->filled('pilot_code') ? $this->string('pilot_code')->toString() : null,
         );
     }
 }

@@ -6,6 +6,7 @@ import { LanguageSwitcher } from '@/components/bs/language-switcher';
 import { LiveUpdates } from '@/components/bs/live-updates';
 import { Logo } from '@/components/bs/logo';
 import { NotificationBell } from '@/components/bs/notification-bell';
+import { PilotBanner } from '@/components/bs/pilot-banner';
 import { SkipLink } from '@/components/bs/skip-link';
 import { ThemeToggle } from '@/components/bs/theme-toggle';
 import { TranslationPendingBanner } from '@/components/bs/translation-pending-banner';
@@ -72,6 +73,7 @@ export default function WorkerLayout({ children }: { children: ReactNode }) {
             </aside>
 
             <div className="flex min-w-0 flex-col">
+                <PilotBanner />
                 <header className="sticky top-0 z-30 flex min-h-14 items-center gap-2 border-b border-line bg-surface/95 px-3 backdrop-blur lg:hidden">
                     <Link href={dashboard()} aria-label={t('app.home')} className="me-auto">
                         <Logo />

@@ -1383,3 +1383,27 @@ colour) and the appearance tabs use design tokens instead of the kit's neutral g
   responses, because they hold personal data. Bump `VERSION` in `sw.js` when the offline page
   changes.
 - New `errors.*` keys and the offline page's Bangla are drafts in `docs/translation-todo.md`.
+
+### D-108 · Pilot mode, safe seeding, first superuser and the launch checklist (10f)
+- **Pilot mode** (`BLUESKILLS_PILOT`, off by default). While on, every page shows a pilot notice
+  and an organization registers only with a **pilot invite code**. Codes are `PILOT-XXXXXX`
+  (no 0/O/1/I/L), issued at Admin › Organizations › Pilot invite codes by staff who review
+  organizations (`verifications.review`), for a named partner, optionally one organization
+  type, a number of uses (1–50) and an end date. Codes are handed over by staff; nothing is
+  sent. Redeeming locks the code row; unknown, used-up, expired and revoked codes get one
+  message, a code for another type gets its own. Revoking keeps earlier registrations. The
+  organization keeps `pilot_invite_id`; staff verification is unchanged. Account sign-up and
+  worker registration need no code.
+- **Corridors:** no new mechanism. Jobs already need a destination staff enabled; in pilot mode
+  `CountrySeeder` opens only `blueskills.pilot.destinations` (AE) on a new database.
+- **Seeding is safe on every deploy:** the reference seeders (countries, corridor rules,
+  languages, taxonomy) used `updateOrCreate`, so re-seeding would have undone staff edits
+  (corridor switches, rules, Bangla taxonomy names). They now only add what is missing. A
+  separate production seeder isn't needed: `DatabaseSeeder` already skips sample data in
+  production.
+- **`blueskills:create-superuser`** (email argument, `--name`, password prompted, production
+  password rules) creates the first staff superuser without putting a password in `.env`.
+- **Trusted proxies** (`TRUSTED_PROXIES` → `config/trustedproxy.php`): behind Cloudflare the app
+  otherwise sees one proxy IP for everyone (breaking per-IP limits) and misses HTTPS.
+- **`docs/launch-checklist.md`** collects approvals, provider accounts, server, environment,
+  first and later deploys, pilot set-up, staging checks and what is still not built.

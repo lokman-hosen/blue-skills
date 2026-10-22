@@ -69,13 +69,10 @@ it('shows a standalone page for server errors and the Inertia page for Inertia v
 });
 
 it('shows the maintenance page while the site is down', function () {
-    $this->artisan('down');
+    // `artisan down` would take down the parallel test processes too, so raise its 503 directly.
+    Route::middleware('web')->get('/_test/down', fn () => abort(503));
 
-    try {
-        $this->get('/')->assertServiceUnavailable()->assertSee(__('errors.503.title'), false);
-    } finally {
-        $this->artisan('up');
-    }
+    $this->get('/_test/down')->assertServiceUnavailable()->assertSee(__('errors.503.title'), false);
 });
 
 it('keeps JSON errors as JSON', function () {

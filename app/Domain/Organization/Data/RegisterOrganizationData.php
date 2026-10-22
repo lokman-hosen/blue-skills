@@ -17,5 +17,7 @@ class RegisterOrganizationData extends Data
         public ?string $licenceNumber,
         public ?string $licenceExpiresOn,
         public ?string $title,
+        // Required while the pilot is on (D-108).
+        public ?string $pilotCode = null,
     ) {}
 }

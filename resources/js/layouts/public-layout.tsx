@@ -4,6 +4,7 @@ import { BriefcaseBusiness, Info, Search, ShieldCheck } from 'lucide-react';
 import type { ReactNode } from 'react';
 import { LanguageSwitcher } from '@/components/bs/language-switcher';
 import { Logo } from '@/components/bs/logo';
+import { PilotBanner } from '@/components/bs/pilot-banner';
 import { SkipLink } from '@/components/bs/skip-link';
 import { ThemeToggle } from '@/components/bs/theme-toggle';
 import { TranslationPendingBanner } from '@/components/bs/translation-pending-banner';
@@ -39,6 +40,7 @@ export default function PublicLayout({ children }: { children: ReactNode }) {
     return (
         <div className="flex min-h-svh flex-col bg-bg">
             <SkipLink />
+            <PilotBanner />
             <header className="sticky top-0 z-30 border-b border-line bg-surface/95 backdrop-blur">
                 <div className="mx-auto flex min-h-14 max-w-[1400px] items-center gap-3 py-2 gutter">
                     <Link href={home()} aria-label={t('app.home')} className="me-auto lg:me-4">

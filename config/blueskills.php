@@ -86,6 +86,17 @@ return [
     'enforce_staff_two_factor' => (bool) env('BLUESKILLS_ENFORCE_STAFF_2FA', true),
 
     /*
+    | Pilot with selected partners (D-108). While on, organizations register with a pilot
+    | invite code from staff and every page shows a pilot notice. Workers sign up freely.
+    | `destinations` are the corridors CountrySeeder switches on for a new database; staff
+    | change them later under Admin › Countries.
+    */
+    'pilot' => [
+        'enabled' => (bool) env('BLUESKILLS_PILOT', false),
+        'destinations' => ['AE'],
+    ],
+
+    /*
     | Response headers (D-105). The Content Security Policy is enforced in production and sent
     | report-only elsewhere, so a blocked source shows up in the browser console first. Extra
     | sources are space separated: `media_sources` for a private disk on another host (S3

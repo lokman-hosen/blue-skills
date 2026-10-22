@@ -8,7 +8,9 @@ use Illuminate\Database\Seeder;
 class CountrySeeder extends Seeder
 {
     /**
-     * Launch corridors: South Asian source countries and GCC/EU/East Asia destinations.
+     * Launch corridors: South Asian source countries and GCC/EU/East Asia destinations. Only
+     * adds missing countries, so re-seeding never undoes what staff switched on or off (D-108);
+     * in pilot mode a new database opens only the pilot destinations.
      */
     public function run(): void
     {
@@ -28,12 +30,12 @@ class CountrySeeder extends Seeder
         ];
 
         foreach ($countries as [$code, $name, $currency, $dialCode, $source, $destination]) {
-            Country::query()->updateOrCreate(['code' => $code], [
+            Country::query()->firstOrCreate(['code' => $code], [
                 'name' => $name,
                 'currency' => $currency,
                 'dial_code' => $dialCode,
                 'enabled_as_source' => $source,
-                'enabled_as_destination' => $destination,
+                'enabled_as_destination' => $destination && (! config('blueskills.pilot.enabled') || in_array($code, config('blueskills.pilot.destinations'), true)),
             ]);
         }
     }
