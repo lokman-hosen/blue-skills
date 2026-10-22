@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Worker\Auth;
 
 use App\Domain\Config\Data\CountryOptionData;
 use App\Domain\Config\Models\Country;
+use App\Domain\Crm\Support\LeadAttribution;
 use App\Domain\Identity\Actions\FindWorkerForPhone;
 use App\Domain\Identity\Actions\RegisterWorker;
 use App\Domain\Identity\Actions\RequestPhoneOtp;
@@ -152,12 +153,18 @@ class PhoneSignInController extends Controller
         // Someone may have registered this number since the code was verified.
         try {
             $worker = $findWorker->handle($phone)
-                ?? $registerWorker->handle($phone, $request->string('name')->trim()->toString(), $request->string('country')->toString(), app()->getLocale());
+                ?? $registerWorker->handle(
+                    $phone,
+                    $request->string('name')->trim()->toString(),
+                    $request->string('country')->toString(),
+                    app()->getLocale(),
+                    LeadAttribution::fromSession($request->session()),
+                );
         } catch (PhoneSignInBlocked) {
             throw ValidationException::withMessages(['name' => __('auth.phone.blocked')]);
         }
 
-        $request->session()->forget([self::VERIFIED_PHONE, self::VERIFIED_AT]);
+        $request->session()->forget([self::VERIFIED_PHONE, self::VERIFIED_AT, LeadAttribution::SESSION_KEY]);
         Auth::login($worker, remember: true);
         $request->session()->regenerate();
 

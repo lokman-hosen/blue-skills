@@ -2221,5 +2221,9 @@
     "admin.audit.system": "System",
     "admin.audit.details": "Details",
     "admin.audit.empty_title": "Nothing matches",
-    "admin.audit.empty_body": "Try other filters."
+    "admin.audit.empty_body": "Try other filters.",
+    "privacy.staff_contact.title": "Calls from BLUESKILLS",
+    "privacy.staff_contact.label": "BLUESKILLS may contact me about my profile",
+    "privacy.staff_contact.hint": "Our team may call or message you to help finish your Skill Passport or apply. Employers never get your number from this.",
+    "privacy.staff_contact.saved": "Saved."
 }

@@ -2221,5 +2221,9 @@
     "admin.audit.system": "সিস্টেম",
     "admin.audit.details": "বিস্তারিত",
     "admin.audit.empty_title": "কিছুই মেলেনি",
-    "admin.audit.empty_body": "অন্য ফিল্টার দেখুন।"
+    "admin.audit.empty_body": "অন্য ফিল্টার দেখুন।",
+    "privacy.staff_contact.title": "BLUESKILLS থেকে কল",
+    "privacy.staff_contact.label": "আমার প্রোফাইল নিয়ে BLUESKILLS আমার সাথে যোগাযোগ করতে পারে",
+    "privacy.staff_contact.hint": "আপনার স্কিল পাসপোর্ট শেষ করতে বা আবেদন করতে সাহায্যের জন্য আমাদের দল আপনাকে কল বা মেসেজ করতে পারে। এর মাধ্যমে নিয়োগকর্তারা কখনো আপনার নম্বর পান না।",
+    "privacy.staff_contact.saved": "সংরক্ষিত হয়েছে।"
 }

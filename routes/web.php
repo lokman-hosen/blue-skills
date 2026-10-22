@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Admin\DesignSystemController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\Public\CampaignLinkController;
 use App\Http\Controllers\Public\CohortInviteController;
 use App\Http\Controllers\Public\JobController as PublicJobController;
 use App\Http\Controllers\Shared\AppealController;
@@ -18,6 +19,9 @@ Route::inertia('/', 'public/home')->name('home');
 // Find Jobs and the Job Truth Card (Module 3). Published jobs are public.
 Route::get('jobs', [PublicJobController::class, 'index'])->name('jobs.index');
 Route::get('jobs/{job}', [PublicJobController::class, 'show'])->name('jobs.show');
+
+// Campaign links (Module 9, D-096): count the visit and remember the campaign for sign-up.
+Route::get('c/{code}', [CampaignLinkController::class, 'show'])->middleware('throttle:60,1')->name('campaign-link.show');
 
 // Cohort invitations from training institutes (Module 7, D-082).
 Route::get('i/{code}', [CohortInviteController::class, 'show'])->name('cohort-invite.show');

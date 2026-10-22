@@ -53,6 +53,7 @@ Route::middleware(['auth', 'verified', 'user.type:worker'])->prefix('passport')-
     Route::controller(PrivacyController::class)->prefix('privacy')->name('privacy.')->group(function () {
         Route::get('/', 'show')->name('show');
         Route::put('visibility', 'updateVisibility')->name('visibility.update');
+        Route::put('staff-contact', 'updateStaffContact')->name('staff-contact.update');
         Route::post('delete-code', 'sendDeletionCode')->middleware('throttle:5,1')->name('deletion-code.store');
         Route::delete('account', 'destroy')->middleware('throttle:10,1')->name('account.destroy');
     });

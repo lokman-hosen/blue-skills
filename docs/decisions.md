@@ -1134,3 +1134,27 @@ colour) and the appearance tabs use design tokens instead of the kit's neutral g
 - Billing settings in `config/blueskills.php` → `billing` (`BLUESKILLS_BILLING_ENFORCE`, off).
 - Organization billing page: Owners / Agency Owners (`billing.manage`), not institutes yet.
   Analytics: anyone with `applications.view`.
+
+### D-097 · Campaign links and lead capture
+- **Campaign link** `/c/{code}` (case-insensitive, throttled): a running campaign (active, between
+  its start and end dates) counts one visit per browser session per day and, for someone not
+  signed in, remembers the campaign in the session. It sends people to sign-up (`/join`) or job
+  search; signed-in users go to job search. Paused, ended or not-yet-started campaigns still
+  redirect but count and attribute nothing; an unknown code goes home.
+- **Attribution** is the last campaign link opened in the session; without one, an institute invite
+  in the session (`/i/{code}`) credits that institute; otherwise "signed up directly".
+- **Every worker who signs up becomes a lead** inside the registration transaction. A hand-entered
+  lead with the same phone number is linked to the new account (keeping its original source)
+  instead of creating a second lead.
+- **Lead stage** moves forward only. It is refreshed on the queue (unique per worker, after
+  commit) when a profile is completed, evidence or a SkillShow is checked, or an application or
+  mobility case changes. Definitions (`LeadProgress`, shared with the campaign funnel): profile
+  complete = passport completed; qualified = profile complete plus at least one issuer-verified
+  evidence item or approved SkillShow; applied = any application; selected = an application
+  reached Selected, Offer, Accepted or Declined; deployed = a mobility case closed as joined.
+- **Privacy → "Calls from BLUESKILLS"**: turning it off marks the lead do-not-contact and clears
+  the next follow-up; turning it back on returns the lead to "new". The worker's choice wins over
+  an agent's. Both are written to the `crm` activity log.
+- **Local Postgres** runs with `max_locks_per_transaction=256` (compose.yaml): eight parallel Pest
+  workers each drop all tables at once and the default ran out of shared lock memory. CI runners
+  use four workers; raise it there too if the error appears.

@@ -22,6 +22,7 @@ use App\Domain\Config\Models\Language;
 use App\Domain\Crm\Models\Campaign;
 use App\Domain\Crm\Models\Lead;
 use App\Domain\Crm\Models\LeadContactAttempt;
+use App\Domain\Crm\Support\LeadStageWatcher;
 use App\Domain\Identity\Channels\LogOtpChannel;
 use App\Domain\Identity\Channels\WhatsAppCloudOtpChannel;
 use App\Domain\Identity\Contracts\OtpChannel;
@@ -125,6 +126,7 @@ class AppServiceProvider extends ServiceProvider
     {
         $this->configureDefaults();
         $this->configureMorphMap();
+        LeadStageWatcher::register();
         $this->configureGates();
     }
 
