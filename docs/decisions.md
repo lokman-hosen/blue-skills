@@ -1197,3 +1197,25 @@ colour) and the appearance tabs use design tokens instead of the kit's neutral g
   invites.
 - **Admin overview:** CRM staff get a "Lead follow-ups due" tile (next follow-up today or
   earlier) linking to the CRM's Due today view.
+
+### D-100 · Recruitment projects
+- **`/org/projects`** (employers; anyone with `jobs.view` reads, `projects.manage` changes): a
+  project has a name, target headcount, destination, source countries, optional target date, its
+  jobs and a team (organization members). References run per organization (`RP-0001`). A job is
+  in at most one project; choosing a job that is already in another project is refused with its
+  name rather than moving it silently. Editing the job list releases jobs that were unticked.
+- **Stage counts** (deck slide 18): Applied → Qualified → Interview → Selected → Visa and travel
+  → Joined. A stage counts every applicant who ever reached it or a later stage, from the current
+  status or the stage history, so skipping a stage or a later rejection doesn't remove anyone
+  from the earlier counts. Visa and travel = an open or completed mobility case; Joined = a case
+  closed as joined. The page shows joined against the target, each job's positions, applicants
+  and joined, and the team.
+- **Bulk actions across the project's jobs:** the project page lists every applicant of its jobs
+  (filter by status) with the same select-and-move bar as a job pipeline (existing
+  `org.applicants.move`), plus **bulk reject** (`org.applicants.reject-many`, new) with one reason
+  the workers see; applicants who can't be rejected any more are skipped and counted. Both need
+  `applications.manage` on every selected application.
+- Completing or cancelling a project doesn't touch its jobs or applications; a completed project
+  can be reopened, a cancelled one can't. Suspended organizations can't change projects (existing
+  workspace lock).
+- Agencies don't have projects yet (the deck puts Projects in the employer workspace).

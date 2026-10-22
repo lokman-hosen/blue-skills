@@ -57,6 +57,9 @@ export type NavLink = {
         | 'reviewCompliance'
         | 'viewCases'
         | 'viewApplicants'
+        | 'viewProjects'
+        | 'viewAnalytics'
+        | 'viewBilling'
         | 'viewMandates'
         | 'viewCourses'
         | 'managePools'
@@ -131,7 +134,13 @@ export const orgNav: Record<App.Domain.Organization.Enums.OrganizationType, NavG
                     href: org.cases.index(),
                     ability: 'viewCases',
                 },
-                { key: 'projects', label: 'nav.projects', icon: FolderKanban },
+                {
+                    key: 'projects',
+                    label: 'nav.projects',
+                    icon: FolderKanban,
+                    href: org.projects.index(),
+                    ability: 'viewProjects',
+                },
                 {
                     key: 'messages',
                     label: 'nav.messages',

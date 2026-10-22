@@ -41,6 +41,7 @@ use App\Domain\Jobs\Models\JobMandate;
 use App\Domain\Jobs\Models\JobPosting;
 use App\Domain\Jobs\Models\JobSkillRequirement;
 use App\Domain\Jobs\Models\RecruitmentProject;
+use App\Domain\Jobs\Models\RecruitmentProjectMember;
 use App\Domain\Messaging\Channels\CloudWhatsAppSender;
 use App\Domain\Messaging\Channels\LogSmsSender;
 use App\Domain\Messaging\Channels\LogWhatsAppSender;
@@ -205,6 +206,7 @@ class AppServiceProvider extends ServiceProvider
             'lead' => Lead::class,
             'lead_contact_attempt' => LeadContactAttempt::class,
             'recruitment_project' => RecruitmentProject::class,
+            'recruitment_project_member' => RecruitmentProjectMember::class,
             'plan' => Plan::class,
             'organization_subscription' => OrganizationSubscription::class,
             'invoice' => Invoice::class,

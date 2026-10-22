@@ -20,6 +20,9 @@ declare module '@inertiajs/core' {
                 reviewCompliance: boolean;
                 viewCases: boolean;
                 viewApplicants: boolean;
+                viewProjects: boolean;
+                viewAnalytics: boolean;
+                viewBilling: boolean;
                 viewMandates: boolean;
                 viewCourses: boolean;
                 managePools: boolean;

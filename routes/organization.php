@@ -21,6 +21,7 @@ use App\Http\Controllers\Organization\MessageController;
 use App\Http\Controllers\Organization\MobilityCaseController;
 use App\Http\Controllers\Organization\OrganizationRegistrationController;
 use App\Http\Controllers\Organization\PlacementController;
+use App\Http\Controllers\Organization\RecruitmentProjectController;
 use App\Http\Controllers\Organization\ShortlistController;
 use App\Http\Controllers\Organization\TalentController;
 use App\Http\Controllers\Organization\TalentPoolController;
@@ -76,12 +77,22 @@ Route::middleware(['auth', 'verified', 'user.type:org'])->prefix('org/jobs')->na
 // Applicants, pipeline, interviews and offers (Module 4).
 Route::middleware(['auth', 'verified', 'user.type:org'])->prefix('org')->name('org.')->controller(ApplicantController::class)->group(function () {
     Route::post('applicants/move', 'move')->middleware('throttle:60,1')->name('applicants.move');
+    Route::post('applicants/reject', 'rejectMany')->middleware('throttle:60,1')->name('applicants.reject-many');
     Route::get('applicants/{application}', 'show')->name('applicants.show');
     Route::post('applicants/{application}/reject', 'reject')->name('applicants.reject');
     Route::put('applicants/{application}/assignee', 'assign')->name('applicants.assign');
     Route::post('applicants/{application}/interviews', 'scheduleInterview')->name('applicants.interviews.store');
     Route::put('interviews/{interview}', 'interviewOutcome')->name('interviews.update');
     Route::post('applicants/{application}/offers', 'sendOffer')->name('applicants.offers.store');
+});
+
+// Recruitment projects: bulk hiring across jobs (Module 9, spec §6).
+Route::middleware(['auth', 'verified', 'user.type:org'])->prefix('org/projects')->name('org.projects.')->controller(RecruitmentProjectController::class)->group(function () {
+    Route::get('/', 'index')->name('index');
+    Route::post('/', 'store')->name('store');
+    Route::get('{project}', 'show')->name('show');
+    Route::put('{project}', 'update')->name('update');
+    Route::post('{project}/{action}', 'status')->whereIn('action', ['complete', 'cancel', 'reopen'])->name('status');
 });
 
 // Talent search and shortlists (Module 4).

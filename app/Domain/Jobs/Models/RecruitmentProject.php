@@ -78,11 +78,13 @@ class RecruitmentProject extends Model
     /**
      * The assigned team.
      *
-     * @return BelongsToMany<User, $this>
+     * @return BelongsToMany<User, $this, RecruitmentProjectMember>
      */
     public function members(): BelongsToMany
     {
-        return $this->belongsToMany(User::class, 'recruitment_project_members')->withTimestamps();
+        return $this->belongsToMany(User::class, 'recruitment_project_members')
+            ->using(RecruitmentProjectMember::class)
+            ->withTimestamps();
     }
 
     public function isActive(): bool

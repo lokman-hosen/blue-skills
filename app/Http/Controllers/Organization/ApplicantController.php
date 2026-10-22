@@ -6,6 +6,7 @@ use App\Domain\Applications\Actions\AssignApplication;
 use App\Domain\Applications\Actions\MoveApplications;
 use App\Domain\Applications\Actions\RecordInterviewOutcome;
 use App\Domain\Applications\Actions\RejectApplication;
+use App\Domain\Applications\Actions\RejectApplications;
 use App\Domain\Applications\Actions\ScheduleInterview;
 use App\Domain\Applications\Actions\SendOffer;
 use App\Domain\Applications\Data\ApplicantData;
@@ -27,6 +28,7 @@ use App\Http\Requests\Organization\AssignApplicantRequest;
 use App\Http\Requests\Organization\InterviewOutcomeRequest;
 use App\Http\Requests\Organization\MoveApplicantsRequest;
 use App\Http\Requests\Organization\RejectApplicantRequest;
+use App\Http\Requests\Organization\RejectApplicantsRequest;
 use App\Http\Requests\Organization\ScheduleInterviewRequest;
 use App\Http\Requests\Organization\SendOfferRequest;
 use App\Support\Money;
@@ -143,6 +145,39 @@ class ApplicantController extends Controller
         Inertia::flash('toast', ['type' => 'success', 'message' => __('applications.rejected')]);
 
         return to_route('org.applicants.show', $application);
+    }
+
+    /**
+     * Reject many applicants at once, across one job or a recruitment project's jobs.
+     */
+    public function rejectMany(RejectApplicantsRequest $request, RejectApplications $reject): RedirectResponse
+    {
+        $organization = $this->organization($request);
+
+        /** @var list<string> $ids */
+        $ids = $request->array('application_ids');
+        $applications = Application::query()
+            ->whereIn('id', $ids)
+            ->whereHas('job', fn ($query) => $query->where('organization_id', $organization->id))
+            ->get();
+
+        abort_if($applications->count() !== count(array_unique($ids)), 404);
+        $applications->each(fn (Application $application) => Gate::authorize('manage', $application));
+
+        $result = $reject->handle(
+            $applications,
+            RejectionReason::from($request->string('reason')->toString()),
+            $request->filled('note') ? $request->string('note')->trim()->toString() : null,
+            $request->user(),
+        );
+        Inertia::flash('toast', [
+            'type' => 'success',
+            'message' => $result['skipped'] > 0
+                ? __('applications.stage.rejected_some', ['rejected' => $result['rejected'], 'skipped' => $result['skipped']])
+                : trans_choice('applications.stage.rejected', $result['rejected'], ['count' => $result['rejected']]),
+        ]);
+
+        return back();
     }
 
     public function assign(AssignApplicantRequest $request, Application $application, AssignApplication $assign): RedirectResponse

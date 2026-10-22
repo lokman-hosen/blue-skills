@@ -824,6 +824,38 @@ declare namespace App {
                     total: number;
                     requirements: App.Domain.Jobs.Data.MatchRequirementData[];
                 };
+                export type RecruitmentProjectData = {
+                    summary: App.Domain.Jobs.Data.RecruitmentProjectListItemData;
+                    stages: {
+                        key: string;
+                        count: number;
+                    }[];
+                    jobs: {
+                        id: string;
+                        code: string;
+                        title: string;
+                        status: App.Support.Data.StatusData;
+                        headcount: number;
+                        applicants: number;
+                        joined: number;
+                    }[];
+                    team: {
+                        id: string;
+                        name: string;
+                    }[];
+                };
+                export type RecruitmentProjectListItemData = {
+                    id: string;
+                    reference: string;
+                    name: string;
+                    status: App.Support.Data.StatusData;
+                    targetHeadcount: number;
+                    joined: number;
+                    jobs: number;
+                    destinationCountryCode: string | null;
+                    sourceCountryCodes: string[];
+                    targetDate: string | null;
+                };
                 export type TruthCardCheckData = {
                     key: string;
                     tone: string;
