@@ -1362,3 +1362,24 @@ colour) and the appearance tabs use design tokens instead of the kit's neutral g
   with `--email`, workspace pages; prints p50/p95/max per page. For staging; local numbers
   reflect Sail's single development server. The worker apply flow isn't covered (each apply
   needs its own phone sign-in).
+
+### D-107 · Error pages, offline page and installable app (10e)
+- **Error pages:** 403, 404 and 429 render `public/error` (Inertia, public layout, en/bn/RTL):
+  what went wrong, what to do, "Go to my dashboard" (signed in) or "Go to the home page", and
+  "Go back". Exception messages are never shown. Unknown URLs hit a fallback route, so the page
+  knows who is signed in; errors raised before the Inertia middleware (a missing record in
+  route binding, a rate limit) get the locale and shared props in `App\Support\ErrorPage`, with
+  a translations-only fallback if the database is the problem.
+- **419** (expired form) goes back to the page with a toast instead of an error page.
+- **500 and 503** for full page loads are standalone Blade pages (`resources/views/errors/`)
+  that need no database, session or JavaScript; an Inertia visit that fails with 500 gets the
+  Inertia page. Local debug keeps Laravel's trace page. JSON requests keep JSON errors.
+- **Brand icons:** the favicon and touch icon were still the starter kit's Laravel logo. They are
+  now the BLUESKILLS mark (the `IdCard` tile from `components/bs/logo.tsx`), plus 192/512 and
+  maskable 512 PNGs for the manifest.
+- **Installable app:** `manifest.webmanifest` (standalone, brand colours, start `/?source=app`).
+  `sw.js` is registered from production builds only and does one thing: when a full page load
+  fails, it shows `offline.html` (en + bn, no JavaScript). It never caches pages or API
+  responses, because they hold personal data. Bump `VERSION` in `sw.js` when the offline page
+  changes.
+- New `errors.*` keys and the offline page's Bangla are drafts in `docs/translation-todo.md`.

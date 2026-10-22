@@ -2615,5 +2615,21 @@
     "notification_event.invoice_issued": "A new invoice from BLUESKILLS",
     "notification.invoice_issued.title": "Invoice :number",
     "notification.invoice_issued.body": "BLUESKILLS sent an invoice for :amount. Open Billing to see and pay it.",
-    "admin.overview.queue.invoices_overdue": "Overdue invoices"
+    "admin.overview.queue.invoices_overdue": "Overdue invoices",
+    "errors.code": "Error :code",
+    "errors.go_home": "Go to the home page",
+    "errors.go_dashboard": "Go to my dashboard",
+    "errors.go_back": "Go back",
+    "errors.try_again": "Try again",
+    "errors.page_expired": "This page was open too long, so your session expired. Please try again.",
+    "errors.403.title": "You can't open this page",
+    "errors.403.body": "Your account doesn't have access to it. If you think it should, ask your organization's owner to change your role.",
+    "errors.404.title": "We couldn't find this page",
+    "errors.404.body": "The link may be old or mistyped, or the job may have closed. Check the address, or start again from the home page.",
+    "errors.429.title": "Too many tries",
+    "errors.429.body": "You did that too many times in a short while. Wait a minute, then try again.",
+    "errors.500.title": "Something went wrong on our side",
+    "errors.500.body": "It isn't your fault, and nothing you saved is lost. Try again in a moment. If it keeps happening, contact BLUESKILLS support.",
+    "errors.503.title": "BLUESKILLS is being updated",
+    "errors.503.body": "We'll be back in a few minutes. Nothing you saved is lost."
 }

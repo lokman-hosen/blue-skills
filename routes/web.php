@@ -69,3 +69,6 @@ require __DIR__.'/settings.php';
 require __DIR__.'/worker.php';
 require __DIR__.'/organization.php';
 require __DIR__.'/admin.php';
+
+// Unknown URLs go through the web middleware so the 404 page knows who is signed in (D-107).
+Route::fallback(fn () => abort(404));
