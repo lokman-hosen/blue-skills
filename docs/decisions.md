@@ -1407,3 +1407,28 @@ colour) and the appearance tabs use design tokens instead of the kit's neutral g
   otherwise sees one proxy IP for everyone (breaking per-IP limits) and misses HTTPS.
 - **`docs/launch-checklist.md`** collects approvals, provider accounts, server, environment,
   first and later deploys, pilot set-up, staging checks and what is still not built.
+
+### D-109 · Accessibility and RTL checks (10g)
+- **axe in the design review:** `scripts/design-review.mjs` runs `@axe-core/playwright`
+  (4.13.0, pinned; dev only) with the WCAG 2.0/2.1/2.2 A and AA rules on every page, next to its
+  own token-aware contrast check (axe's `color-contrast` rule is off to avoid duplicates). Swept
+  in en at 390 and 1440 px: public pages, worker (15 pages), employer (18), agency (10),
+  institute (6) and staff (20). One violation: the job wizard's step list scrolls sideways on
+  phones without being keyboard-reachable; it is now focusable with a focus ring.
+- **The sweep also exercised the N+1 guard (D-106)** on pages tests don't cover: the staff job
+  queue failed locally because each agency job lazy-loaded its mandate and agency. Eager loaded
+  now (and `JobCompliance` loads them itself).
+- **RTL:** no physical-direction classes outside the shadcn primitives (the 2FA modal's
+  `space-x-*` is logical in Tailwind 4). The worker flow in Urdu (light/dark, 390/1440) mirrors
+  correctly. English text inside RTL pages moves its full stop to the start (".Dhaka"), which
+  goes away with real Urdu strings.
+- **Server-side fallback to English:** Laravel doesn't fall back for `lang/*.json`, so in Urdu,
+  which has no file yet, every `__()` string from PHP (document names, evidence titles,
+  notifications) showed its raw key. A missing-key handler now returns the English line, the
+  same as the React `t()` helper does.
+- **Not done:** a separate translation coverage report. `en` and `bn` are key-complete (a test
+  enforces it) and `docs/translation-todo.md` already lists what needs review; Urdu has no strings
+  yet.
+- `npm audit` (dev dependencies) reports 7 issues in `tinypool`/`@vitest/mocker` under the
+  `vite-plus` toolchain. They predate Module 10, aren't shipped, and the fix is a breaking
+  toolchain upgrade; CI audits production dependencies only.

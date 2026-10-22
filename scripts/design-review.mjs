@@ -7,11 +7,12 @@
  *                                   [--pages=/a,/b] [--email=… --password=…] [--guest] [--phone=+880…]
  *
  * Signs in as the local superuser (or --email, or nobody with --guest), then for each page × locale × theme × width it records
- * console errors, horizontal overflow, elements that spill out of the viewport and text with
+ * console errors and CSP violations, axe WCAG 2.2 AA violations, horizontal overflow, elements that spill out of the viewport and text with
  * insufficient contrast (WCAG AA), and saves a full-page screenshot. Exits 1 on any finding.
  */
 import { mkdirSync, readFileSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
+import AxeBuilder from '@axe-core/playwright';
 import { chromium } from 'playwright';
 
 const args = Object.fromEntries(
@@ -259,6 +260,20 @@ try {
 
                     for (const error of errors) {
                         findings.push({ type: 'console', detail: error });
+                    }
+
+                    // WCAG 2.2 AA rules from axe (D-109). Text contrast is checked above with the
+                    // design tokens in mind, so axe's colour-contrast rule is left out here.
+                    const axe = await new AxeBuilder({ page })
+                        .withTags(['wcag2a', 'wcag2aa', 'wcag21a', 'wcag21aa', 'wcag22aa'])
+                        .disableRules(['color-contrast'])
+                        .analyze();
+
+                    for (const violation of axe.violations) {
+                        findings.push({
+                            type: 'a11y',
+                            detail: `${violation.id} (${violation.impact}, ${violation.nodes.length}×) ${violation.nodes[0]?.target.join(' ')}`,
+                        });
                     }
 
                     const name = `${path.replaceAll('/', '_').replace(/^_+/, '') || 'home'}-${locale}-${theme}-${width}`;

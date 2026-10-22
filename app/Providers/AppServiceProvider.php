@@ -264,6 +264,17 @@ class AppServiceProvider extends ServiceProvider
             app()->isProduction(),
         );
 
+        // Laravel only falls back to English for PHP-array files, not lang/*.json. A locale
+        // without its own file (Urdu today) would show raw keys from __(); use English instead,
+        // as the React t() helper already does (CLAUDE.md i18n, D-109).
+        app('translator')->handleMissingKeysUsing(function (string $key, array $replace, ?string $locale, bool $fallback): ?string {
+            $english = (string) config('app.fallback_locale', 'en');
+
+            return $fallback && $locale !== null && $locale !== $english
+                ? app('translator')->get($key, [], $english, false)
+                : null;
+        });
+
         // N+1 queries fail loudly in development and tests (D-106); production only logs them.
         Model::preventLazyLoading();
         Model::handleLazyLoadingViolationUsing(app()->isProduction()
