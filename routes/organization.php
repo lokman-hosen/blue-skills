@@ -4,6 +4,7 @@ use App\Domain\Jobs\Actions\ChangeJobAvailability;
 use App\Domain\Jobs\Support\JobWizard;
 use App\Domain\Mobility\Actions\ChangeCaseStage;
 use App\Domain\Mobility\Actions\DecideCaseDocument;
+use App\Http\Controllers\Organization\AnalyticsController;
 use App\Http\Controllers\Organization\ApplicantController;
 use App\Http\Controllers\Organization\CandidateController;
 use App\Http\Controllers\Organization\CaseDocumentController;
@@ -94,6 +95,9 @@ Route::middleware(['auth', 'verified', 'user.type:org'])->prefix('org/projects')
     Route::put('{project}', 'update')->name('update');
     Route::post('{project}/{action}', 'status')->whereIn('action', ['complete', 'cancel', 'reopen'])->name('status');
 });
+
+// Hiring analytics (Module 9, spec §14).
+Route::middleware(['auth', 'verified', 'user.type:org'])->get('org/analytics', [AnalyticsController::class, 'index'])->name('org.analytics.index');
 
 // Talent search and shortlists (Module 4).
 Route::middleware(['auth', 'verified', 'user.type:org'])->prefix('org')->name('org.')->group(function () {

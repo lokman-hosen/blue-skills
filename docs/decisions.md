@@ -1219,3 +1219,16 @@ colour) and the appearance tabs use design tokens instead of the kit's neutral g
   can be reopened, a cancelled one can't. Suspended organizations can't change projects (existing
   workspace lock).
 - Agencies don't have projects yet (the deck puts Projects in the employer workspace).
+
+### D-101 · Hiring analytics
+- **`/org/analytics`** for employers and agencies (anyone with `applications.view`; institutes
+  have their own placements page). Date range, default the last 90 days; everything is about
+  applications made in that range. Counts and timings only, no scores or ranking (rule 12).
+- Shows live jobs, applications, **median days from applying to first shortlist** and **to first
+  offer** (from the stage history, Postgres `percentile_cont`), the stage counts (same "ever
+  reached" rule as projects, now in `HiringStages`, shared by projects and analytics), applicants
+  by the country they live in now (top eight), how they arrived (applied themselves / invited by
+  the organization from talent search or a pool / withdrew), each job's stage counts (jobs with
+  applications in the range or live, up to 50) and active projects against their targets.
+- Spec §9's "institute pool" as a source isn't tracked separately: invitations from a pool and
+  from talent search are both "invited by you".

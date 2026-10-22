@@ -631,6 +631,32 @@ declare namespace App {
                     workerCostPolicy: string | null;
                     mandatoryFields: string[];
                 };
+                export type HiringAnalyticsData = {
+                    liveJobs: number;
+                    stages: {
+                        key: string;
+                        count: number;
+                    }[];
+                    medianDaysToShortlist: number | null;
+                    medianDaysToOffer: number | null;
+                    jobs: {
+                        id: string;
+                        code: string;
+                        title: string;
+                        status: App.Support.Data.StatusData;
+                        counts: Record<string, number>;
+                    }[];
+                    countries: {
+                        code: string;
+                        count: number;
+                    }[];
+                    sources: {
+                        invited: number;
+                        direct: number;
+                        withdrawn: number;
+                    };
+                    projects: App.Domain.Jobs.Data.RecruitmentProjectListItemData[];
+                };
                 export type JobBenefitData = {
                     key: string;
                     provision: App.Domain.Jobs.Enums.BenefitProvision | null;

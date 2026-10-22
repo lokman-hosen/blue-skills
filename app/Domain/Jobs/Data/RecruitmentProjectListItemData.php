@@ -3,7 +3,7 @@
 namespace App\Domain\Jobs\Data;
 
 use App\Domain\Jobs\Models\RecruitmentProject;
-use App\Domain\Jobs\Support\ProjectStats;
+use App\Domain\Jobs\Support\HiringStages;
 use App\Support\Data\StatusData;
 use Spatie\LaravelData\Data;
 
@@ -39,7 +39,7 @@ class RecruitmentProjectListItemData extends Data
             name: $project->name,
             status: new StatusData('project_'.$status, $project->status->label(), $project->status->tone()),
             targetHeadcount: $project->target_headcount,
-            joined: ProjectStats::joined($jobIds),
+            joined: HiringStages::joined($jobIds),
             jobs: count($jobIds),
             destinationCountryCode: $project->destination_country_code,
             sourceCountryCodes: $project->source_country_codes,

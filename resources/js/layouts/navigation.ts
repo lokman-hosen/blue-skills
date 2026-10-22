@@ -2,6 +2,7 @@ import type { InertiaLinkProps } from '@inertiajs/react';
 import type { LucideIcon } from 'lucide-react';
 import {
     Activity,
+    BarChart3,
     BookOpen,
     BriefcaseBusiness,
     ClipboardCheck,
@@ -142,6 +143,13 @@ export const orgNav: Record<App.Domain.Organization.Enums.OrganizationType, NavG
                     ability: 'viewProjects',
                 },
                 {
+                    key: 'analytics',
+                    label: 'nav.analytics',
+                    icon: BarChart3,
+                    href: org.analytics.index(),
+                    ability: 'viewAnalytics',
+                },
+                {
                     key: 'messages',
                     label: 'nav.messages',
                     icon: MessageSquare,
@@ -199,6 +207,13 @@ export const orgNav: Record<App.Domain.Organization.Enums.OrganizationType, NavG
                     icon: Plane,
                     href: org.cases.index(),
                     ability: 'viewCases',
+                },
+                {
+                    key: 'analytics',
+                    label: 'nav.analytics',
+                    icon: BarChart3,
+                    href: org.analytics.index(),
+                    ability: 'viewAnalytics',
                 },
                 {
                     key: 'compliance',
