@@ -28,6 +28,8 @@ enum Permission: string
     case AttestationsIssue = 'attestations.issue';
     case AssessmentsRecord = 'assessments.record';
     case PlacementsView = 'placements.view';
+    // Recruitment projects (D-095).
+    case ProjectsManage = 'projects.manage';
 
     // BLUESKILLS staff
     case AdminAccess = 'admin.access';

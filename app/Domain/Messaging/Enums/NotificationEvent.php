@@ -38,6 +38,7 @@ enum NotificationEvent: string
     case JobPausedMandate = 'job_paused_mandate';
     case GraduateJoined = 'graduate_joined';
     case OrganizationSuspended = 'organization_suspended';
+    case InvoiceIssued = 'invoice_issued';
 
     public function forWorkers(): bool
     {
@@ -64,7 +65,7 @@ enum NotificationEvent: string
         return [
             self::NewApplicants, self::ApplicationAnswered, self::OrganizationMessage,
             self::MandateRequested, self::MandateAnswered, self::MandateReviewed, self::CaseDocumentAnswered, self::JobPausedMandate, self::GraduateJoined,
-            self::OrganizationSuspended,
+            self::OrganizationSuspended, self::InvoiceIssued,
         ];
     }
 
@@ -112,6 +113,7 @@ enum NotificationEvent: string
             self::JobPausedMandate => 'A job paused because its mandate lapsed',
             self::GraduateJoined => 'A graduate joined a cohort',
             self::OrganizationSuspended => 'Your organization or a job was suspended or restored',
+            self::InvoiceIssued => 'A new invoice from BLUESKILLS',
         };
     }
 }

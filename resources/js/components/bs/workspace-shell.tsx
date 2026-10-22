@@ -59,7 +59,11 @@ export function WorkspaceShell({ nav, context, children }: WorkspaceShellProps) 
         <SidebarProvider defaultOpen={sidebarOpen}>
             <SkipLink />
             <LiveUpdates />
-            <Sidebar side={dir === 'rtl' ? 'right' : 'left'} collapsible="icon">
+            <Sidebar
+                side={dir === 'rtl' ? 'right' : 'left'}
+                collapsible="icon"
+                className="print:hidden"
+            >
                 <SidebarHeader>
                     <SidebarMenu>
                         <SidebarMenuItem>
@@ -154,7 +158,7 @@ export function WorkspaceShell({ nav, context, children }: WorkspaceShellProps) 
                 </SidebarFooter>
             </Sidebar>
             <SidebarInset className="min-w-0 bg-bg">
-                <header className="sticky top-0 z-30 flex min-h-14 flex-wrap items-center gap-x-2 gap-y-1 border-b border-line bg-surface/95 px-3 py-1.5 backdrop-blur">
+                <header className="sticky top-0 z-30 flex min-h-14 flex-wrap items-center gap-x-2 gap-y-1 border-b border-line bg-surface/95 px-3 py-1.5 backdrop-blur print:hidden">
                     <SidebarTrigger className="size-11 md:size-9" aria-label={t('common.menu')} />
                     <div className="min-w-0 flex-1">{context}</div>
                     <div className="flex items-center gap-1.5">

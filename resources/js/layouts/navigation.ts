@@ -2,10 +2,11 @@ import type { InertiaLinkProps } from '@inertiajs/react';
 import type { LucideIcon } from 'lucide-react';
 import {
     Activity,
+    BarChart3,
     BookOpen,
     BriefcaseBusiness,
-    Building2,
     ClipboardCheck,
+    Contact,
     CreditCard,
     FileCheck,
     FileText,
@@ -16,6 +17,7 @@ import {
     IdCard,
     LayoutDashboard,
     ListChecks,
+    Megaphone,
     MessageSquare,
     Palette,
     Plane,
@@ -56,6 +58,9 @@ export type NavLink = {
         | 'reviewCompliance'
         | 'viewCases'
         | 'viewApplicants'
+        | 'viewProjects'
+        | 'viewAnalytics'
+        | 'viewBilling'
         | 'viewMandates'
         | 'viewCourses'
         | 'managePools'
@@ -130,7 +135,20 @@ export const orgNav: Record<App.Domain.Organization.Enums.OrganizationType, NavG
                     href: org.cases.index(),
                     ability: 'viewCases',
                 },
-                { key: 'projects', label: 'nav.projects', icon: FolderKanban },
+                {
+                    key: 'projects',
+                    label: 'nav.projects',
+                    icon: FolderKanban,
+                    href: org.projects.index(),
+                    ability: 'viewProjects',
+                },
+                {
+                    key: 'analytics',
+                    label: 'nav.analytics',
+                    icon: BarChart3,
+                    href: org.analytics.index(),
+                    ability: 'viewAnalytics',
+                },
                 {
                     key: 'messages',
                     label: 'nav.messages',
@@ -142,7 +160,13 @@ export const orgNav: Record<App.Domain.Organization.Enums.OrganizationType, NavG
         {
             items: [
                 { key: 'team', label: 'nav.team', icon: Users, href: team.index() },
-                { key: 'billing', label: 'nav.billing', icon: CreditCard },
+                {
+                    key: 'billing',
+                    label: 'nav.billing',
+                    icon: CreditCard,
+                    href: org.billing.index(),
+                    ability: 'viewBilling',
+                },
                 ...orgFooter,
             ],
         },
@@ -191,6 +215,13 @@ export const orgNav: Record<App.Domain.Organization.Enums.OrganizationType, NavG
                     ability: 'viewCases',
                 },
                 {
+                    key: 'analytics',
+                    label: 'nav.analytics',
+                    icon: BarChart3,
+                    href: org.analytics.index(),
+                    ability: 'viewAnalytics',
+                },
+                {
                     key: 'compliance',
                     label: 'nav.compliance',
                     icon: ClipboardCheck,
@@ -215,7 +246,13 @@ export const orgNav: Record<App.Domain.Organization.Enums.OrganizationType, NavG
                     ability: 'viewMandates',
                 },
                 { key: 'team', label: 'nav.team', icon: Users, href: team.index() },
-                { key: 'billing', label: 'nav.billing', icon: CreditCard },
+                {
+                    key: 'billing',
+                    label: 'nav.billing',
+                    icon: CreditCard,
+                    href: org.billing.index(),
+                    ability: 'viewBilling',
+                },
                 ...orgFooter,
             ],
         },
@@ -328,7 +365,27 @@ export const adminNav: NavGroup[] = [
                 href: admin.trust.cases.index(),
                 permission: 'trust.manage',
             },
-            { key: 'crm', label: 'nav.crm', icon: Building2 },
+            {
+                key: 'crm',
+                label: 'nav.crm',
+                icon: Contact,
+                href: admin.crm.index(),
+                permission: 'crm.manage',
+            },
+            {
+                key: 'marketing',
+                label: 'nav.marketing',
+                icon: Megaphone,
+                href: admin.marketing.index(),
+                permission: 'crm.manage',
+            },
+            {
+                key: 'admin_billing',
+                label: 'nav.billing',
+                icon: CreditCard,
+                href: admin.billing.index(),
+                permission: 'finance.manage',
+            },
         ],
     },
     {

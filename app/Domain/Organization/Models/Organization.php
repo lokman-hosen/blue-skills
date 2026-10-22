@@ -3,6 +3,10 @@
 namespace App\Domain\Organization\Models;
 
 use App\Domain\Applications\Models\Shortlist;
+use App\Domain\Billing\Models\CreditLedgerEntry;
+use App\Domain\Billing\Models\Invoice;
+use App\Domain\Billing\Models\OrganizationSubscription;
+use App\Domain\Billing\States\Subscription\Active as SubscriptionActive;
 use App\Domain\Config\Models\Country;
 use App\Domain\Identity\Models\User;
 use App\Domain\Institute\Models\Cohort;
@@ -10,6 +14,7 @@ use App\Domain\Institute\Models\Course;
 use App\Domain\Institute\Models\TalentPool;
 use App\Domain\Jobs\Models\JobMandate;
 use App\Domain\Jobs\Models\JobPosting;
+use App\Domain\Jobs\Models\RecruitmentProject;
 use App\Domain\Organization\Enums\OrganizationType;
 use App\Domain\Organization\Policies\OrganizationPolicy;
 use App\Domain\Organization\States\Verification\OrganizationVerificationState;
@@ -26,6 +31,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Spatie\ModelStates\HasStates;
@@ -136,6 +142,51 @@ class Organization extends Model
     public function talentPools(): HasMany
     {
         return $this->hasMany(TalentPool::class);
+    }
+
+    /**
+     * @return HasMany<RecruitmentProject, $this>
+     */
+    public function recruitmentProjects(): HasMany
+    {
+        return $this->hasMany(RecruitmentProject::class);
+    }
+
+    /**
+     * @return HasMany<OrganizationSubscription, $this>
+     */
+    public function subscriptions(): HasMany
+    {
+        return $this->hasMany(OrganizationSubscription::class);
+    }
+
+    /**
+     * @return HasOne<OrganizationSubscription, $this>
+     */
+    public function activeSubscription(): HasOne
+    {
+        return $this->hasOne(OrganizationSubscription::class)->where('status', SubscriptionActive::$name)->latestOfMany('starts_on');
+    }
+
+    /**
+     * @return HasMany<Invoice, $this>
+     */
+    public function invoices(): HasMany
+    {
+        return $this->hasMany(Invoice::class);
+    }
+
+    /**
+     * @return HasMany<CreditLedgerEntry, $this>
+     */
+    public function creditEntries(): HasMany
+    {
+        return $this->hasMany(CreditLedgerEntry::class);
+    }
+
+    public function creditBalance(): int
+    {
+        return (int) $this->creditEntries()->sum('delta');
     }
 
     /**

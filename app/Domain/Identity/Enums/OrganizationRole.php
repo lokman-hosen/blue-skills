@@ -82,6 +82,7 @@ enum OrganizationRole: string
             Permission::TalentSearch, Permission::ShortlistsManage, Permission::InterviewsManage,
             // Cases from the organization's own jobs (D-074).
             Permission::MobilityManage,
+            Permission::ProjectsManage,
         ];
         $admin = [Permission::OrganizationUpdate, Permission::TeamManage, Permission::BillingManage];
 

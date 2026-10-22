@@ -4,7 +4,9 @@ use App\Domain\Jobs\Actions\ChangeJobAvailability;
 use App\Domain\Jobs\Support\JobWizard;
 use App\Domain\Mobility\Actions\ChangeCaseStage;
 use App\Domain\Mobility\Actions\DecideCaseDocument;
+use App\Http\Controllers\Organization\AnalyticsController;
 use App\Http\Controllers\Organization\ApplicantController;
+use App\Http\Controllers\Organization\BillingController as OrganizationBillingController;
 use App\Http\Controllers\Organization\CandidateController;
 use App\Http\Controllers\Organization\CaseDocumentController;
 use App\Http\Controllers\Organization\CohortController;
@@ -21,6 +23,7 @@ use App\Http\Controllers\Organization\MessageController;
 use App\Http\Controllers\Organization\MobilityCaseController;
 use App\Http\Controllers\Organization\OrganizationRegistrationController;
 use App\Http\Controllers\Organization\PlacementController;
+use App\Http\Controllers\Organization\RecruitmentProjectController;
 use App\Http\Controllers\Organization\ShortlistController;
 use App\Http\Controllers\Organization\TalentController;
 use App\Http\Controllers\Organization\TalentPoolController;
@@ -76,6 +79,7 @@ Route::middleware(['auth', 'verified', 'user.type:org'])->prefix('org/jobs')->na
 // Applicants, pipeline, interviews and offers (Module 4).
 Route::middleware(['auth', 'verified', 'user.type:org'])->prefix('org')->name('org.')->controller(ApplicantController::class)->group(function () {
     Route::post('applicants/move', 'move')->middleware('throttle:60,1')->name('applicants.move');
+    Route::post('applicants/reject', 'rejectMany')->middleware('throttle:60,1')->name('applicants.reject-many');
     Route::get('applicants/{application}', 'show')->name('applicants.show');
     Route::post('applicants/{application}/reject', 'reject')->name('applicants.reject');
     Route::put('applicants/{application}/assignee', 'assign')->name('applicants.assign');
@@ -83,6 +87,24 @@ Route::middleware(['auth', 'verified', 'user.type:org'])->prefix('org')->name('o
     Route::put('interviews/{interview}', 'interviewOutcome')->name('interviews.update');
     Route::post('applicants/{application}/offers', 'sendOffer')->name('applicants.offers.store');
 });
+
+// Recruitment projects: bulk hiring across jobs (Module 9, spec §6).
+Route::middleware(['auth', 'verified', 'user.type:org'])->prefix('org/projects')->name('org.projects.')->controller(RecruitmentProjectController::class)->group(function () {
+    Route::get('/', 'index')->name('index');
+    Route::post('/', 'store')->name('store');
+    Route::get('{project}', 'show')->name('show');
+    Route::put('{project}', 'update')->name('update');
+    Route::post('{project}/{action}', 'status')->whereIn('action', ['complete', 'cancel', 'reopen'])->name('status');
+});
+
+// Workspace billing: plan, credits, seats and invoices (Module 9, D-095).
+Route::middleware(['auth', 'verified', 'user.type:org'])->prefix('org/billing')->name('org.billing.')->controller(OrganizationBillingController::class)->group(function () {
+    Route::get('/', 'index')->name('index');
+    Route::get('invoices/{invoice}', 'invoice')->name('invoices.show');
+});
+
+// Hiring analytics (Module 9, spec §14).
+Route::middleware(['auth', 'verified', 'user.type:org'])->get('org/analytics', [AnalyticsController::class, 'index'])->name('org.analytics.index');
 
 // Talent search and shortlists (Module 4).
 Route::middleware(['auth', 'verified', 'user.type:org'])->prefix('org')->name('org.')->group(function () {

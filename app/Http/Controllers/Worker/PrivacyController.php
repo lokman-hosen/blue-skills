@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Worker;
 
 use App\Domain\Applications\Models\Consent;
+use App\Domain\Crm\Actions\SetStaffContactPreference;
 use App\Domain\Identity\Actions\RequestPhoneOtp;
 use App\Domain\Identity\Actions\VerifyPhoneOtp;
 use App\Domain\Identity\Enums\OtpPurpose;
@@ -24,7 +25,8 @@ use Inertia\Inertia;
 use Inertia\Response;
 
 /**
- * Who can see the Skill Passport, consent history, and deleting the account (spec §3, D-044).
+ * Who can see the Skill Passport, consent history, BLUESKILLS follow-up calls (D-095), and
+ * deleting the account (spec §3, D-044).
  */
 class PrivacyController extends Controller
 {
@@ -48,6 +50,7 @@ class PrivacyController extends Controller
             // Institutes the worker joined (product rule 11, D-082).
             'institutes' => $profile->cohortMemberships()->accepted()->with(['cohort.organization', 'cohort.course'])->latest('responded_at')->get()
                 ->map(fn (CohortMember $member) => WorkerCohortData::fromMember($member))->values()->all(),
+            'staffContactAllowed' => $profile->staff_contact_opted_out_at === null,
             'deletionCodeSent' => $request->session()->has(self::DELETION_CHALLENGE),
             'maskedPhone' => substr($phone, 0, 4).str_repeat('•', max(strlen($phone) - 7, 0)).substr($phone, -3),
             'codeLength' => (int) config('blueskills.otp.length'),
@@ -62,6 +65,18 @@ class PrivacyController extends Controller
         $validated = $request->validate(['visibility' => ['required', Rule::enum(ProfileVisibility::class)]]);
         $update->handle($profile, ProfileVisibility::from($validated['visibility']));
         Inertia::flash('toast', ['type' => 'success', 'message' => __('privacy.visibility_saved')]);
+
+        return to_route('worker.privacy.show');
+    }
+
+    public function updateStaffContact(Request $request, SetStaffContactPreference $setPreference): RedirectResponse
+    {
+        $profile = $this->workerProfile($request);
+        Gate::authorize('update', $profile);
+
+        $validated = $request->validate(['allowed' => ['required', 'boolean']]);
+        $setPreference->handle($profile, (bool) $validated['allowed']);
+        Inertia::flash('toast', ['type' => 'success', 'message' => __('privacy.staff_contact.saved')]);
 
         return to_route('worker.privacy.show');
     }

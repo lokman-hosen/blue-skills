@@ -12,6 +12,7 @@ use App\Domain\Applications\Models\JobInvitation;
 use App\Domain\Applications\Models\Shortlist;
 use App\Domain\Applications\Support\TalentAccess;
 use App\Domain\Applications\Support\TalentSearch;
+use App\Domain\Billing\Support\BillingLimits;
 use App\Domain\Config\Data\CountryOptionData;
 use App\Domain\Config\Models\Country;
 use App\Domain\Config\Models\Language;
@@ -41,6 +42,7 @@ class TalentController extends Controller
     {
         $organization = $this->organization($request);
         Gate::authorize('search', [WorkerProfile::class, $organization]);
+        abort_unless(BillingLimits::allowsTalentSearch($organization), 403, __('billing.limits.talent_search'));
 
         $filters = [
             'q' => mb_substr($request->string('q')->trim()->toString(), 0, 100) ?: null,

@@ -84,4 +84,20 @@ return [
     */
     'enforce_staff_two_factor' => (bool) env('BLUESKILLS_ENFORCE_STAFF_2FA', true),
 
+    /*
+    | Platform billing (D-095). Limits are tracked but not enforced until pricing is approved:
+    | with `enforce` on, publishing a job uses a posting credit and seats and talent search follow
+    | the plan. Invoices are settled by hand until a payment provider is added.
+    */
+    'billing' => [
+        'enforce' => (bool) env('BLUESKILLS_BILLING_ENFORCE', false),
+        'currency' => 'AED',
+        // Basis points: 500 = 5% UAE VAT.
+        'vat_rate_bp' => 500,
+        'payment_days' => 14,
+        'provider' => env('BILLING_PROVIDER', 'manual'),
+        // Shown on invoices until online payment exists, e.g. bank account details.
+        'payment_instructions' => env('BILLING_PAYMENT_INSTRUCTIONS'),
+    ],
+
 ];

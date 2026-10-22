@@ -1085,3 +1085,202 @@ colour) and the appearance tabs use design tokens instead of the kit's neutral g
   restored jobs suspended separately. Fixed with a regression test.
 - **Deploy notes for Module 8:** run migrations; schedule `evidence:expire` (daily) alongside the
   existing tasks; mark each live corridor's legal review in Configuration.
+
+### D-095 · Module 9 inputs (owner answers, 2026-10-22)
+- **Billing:** invoices only. Finance Officers issue invoices and record bank-transfer payments by
+  hand; credits, seats and plans are tracked. Limits are **not enforced** yet: a setting (off by
+  default) will later make publishing a job use up a posting credit and limit seats and talent
+  search. No payment provider (Stripe/Cashier) yet; billing goes through a provider interface so
+  one can be added without hardwiring a vendor (spec §13). Pricing still needs approval before
+  launch (spec §11).
+- **Recruitment projects** are part of Module 9: group jobs, target headcount, source countries,
+  team, stage counts, bulk shortlist/reject, deployment numbers (spec §6, deck slide 18).
+- **CRM and phone numbers:** CRM agents see a lead's phone number on the lead page only (never in
+  lists) and each view is written to the activity log. Workers can turn off "BLUESKILLS may contact
+  me about my profile" under Privacy, which marks their lead do-not-contact.
+- **Conversion stage** of a lead is derived from what the worker actually did (registered →
+  profile complete → qualified → applied → selected → deployed), never set by hand. Follow-up
+  status is set by the CRM agent.
+- **Campaign visits** are stored as daily counts per campaign, not per-person tracking.
+- **Review cadence:** once at the end of the module.
+
+### D-096 · CRM, projects and billing schema
+- New domain `app/Domain/Crm` (campaigns, daily visit counts, leads, contact attempts). Recruitment
+  projects live in `Jobs`; plans, subscriptions, invoices and the credit ledger in `Billing`.
+- `campaigns`: a code that never changes (used in `/c/{code}`), channel, source country, an
+  optional partner institute or agency, landing (sign up or job search), status active ⇄ paused →
+  ended. `campaign_visits` keep one count per campaign per day.
+- `leads`: one per worker account (`user_id` unique) or hand-entered (name + phone). Source
+  (campaign, institute invite, direct, walk-in, call centre, referral), assignee, follow-up status
+  (enum, any agent-set value), next follow-up date, and a stored conversion stage (prospect →
+  registered → profile complete → qualified → applied → selected → deployed) kept up to date from
+  the worker's progress so lists can filter on it. `lead_contact_attempts` are append-only.
+  Follow-up, assignee and stage changes go to the `crm` activity log.
+- `worker_profiles.staff_contact_opted_out_at` records the Privacy opt-out.
+- Projects are for **employers** (the deck puts Projects in the employer nav). A job belongs to at
+  most one project (`jobs.recruitment_project_id`); the team is `recruitment_project_members`;
+  references run per organization (`RP-0001`). Status active → completed | cancelled, completed
+  can be reopened. New permission `projects.manage` for the hiring roles (Owner, HR Admin,
+  Recruiter, Agency Owner, Case Officer); anyone with `jobs.view` sees projects. Deploy: re-run
+  `RolesAndPermissionsSeeder`.
+- `plans` are per organization type (agency and training fees set separately, spec §11) with
+  price, period, posting credits per period, seats (null = unlimited), talent search and project
+  access. `organization_subscriptions`: active → cancelled | ended.
+- `invoices`: draft → issued (number `INV-2026-00001` given then) → paid, or void; amounts in
+  minor units with VAT in basis points (5% UAE default, rounded half up), payment method and
+  reference, and `provider` (`manual` until a provider exists). `invoice_lines` may carry credits
+  added when the invoice is paid.
+- `credit_ledger_entries` are append-only (updates and deletes throw); the balance is the sum.
+- Billing settings in `config/blueskills.php` → `billing` (`BLUESKILLS_BILLING_ENFORCE`, off).
+- Organization billing page: Owners / Agency Owners (`billing.manage`), not institutes yet.
+  Analytics: anyone with `applications.view`.
+
+### D-097 · Campaign links and lead capture
+- **Campaign link** `/c/{code}` (case-insensitive, throttled): a running campaign (active, between
+  its start and end dates) counts one visit per browser session per day and, for someone not
+  signed in, remembers the campaign in the session. It sends people to sign-up (`/join`) or job
+  search; signed-in users go to job search. Paused, ended or not-yet-started campaigns still
+  redirect but count and attribute nothing; an unknown code goes home.
+- **Attribution** is the last campaign link opened in the session; without one, an institute invite
+  in the session (`/i/{code}`) credits that institute; otherwise "signed up directly".
+- **Every worker who signs up becomes a lead** inside the registration transaction. A hand-entered
+  lead with the same phone number is linked to the new account (keeping its original source)
+  instead of creating a second lead.
+- **Lead stage** moves forward only. It is refreshed on the queue (unique per worker, after
+  commit) when a profile is completed, evidence or a SkillShow is checked, or an application or
+  mobility case changes. Definitions (`LeadProgress`, shared with the campaign funnel): profile
+  complete = passport completed; qualified = profile complete plus at least one issuer-verified
+  evidence item or approved SkillShow; applied = any application; selected = an application
+  reached Selected, Offer, Accepted or Declined; deployed = a mobility case closed as joined.
+- **Privacy → "Calls from BLUESKILLS"**: turning it off marks the lead do-not-contact and clears
+  the next follow-up; turning it back on returns the lead to "new". The worker's choice wins over
+  an agent's. Both are written to the `crm` activity log.
+- **Local Postgres** runs with `max_locks_per_transaction=256` (compose.yaml): eight parallel Pest
+  workers each drop all tables at once and the default ran out of shared lock memory. CI runners
+  use four workers; raise it there too if the error appears.
+
+### D-098 · Worker CRM screens
+- **`/admin/crm`** (CRM Agents, Superusers): every lead with views All / Due today (next
+  follow-up today or earlier) / Mine / Unassigned (leaving out not-interested and do-not-contact)
+  and filters for follow-up status, stage, source, campaign and name. Sorted by next follow-up,
+  then newest. Lists never carry phone numbers.
+- **Adding a lead** by hand: name, source country (the worker phone countries), mobile number
+  (validated for that country, stored E.164), how we met them (walk-in, call centre, referral or a
+  campaign) and "assign to me". A number that is already a lead or a worker account is refused
+  with the existing lead's name.
+- **Lead page:** phone number as a `tel:` link (each page view writes `lead.phone_viewed` to the
+  audit log; no number and no log once the lead is do-not-contact), source, campaign or partner,
+  Skill Passport number, the stage checklist and the contact history.
+- **Logging a contact** (channel, result, note, next follow-up) sets the follow-up status from the
+  result: reached → contacted, no answer / wrong number → no answer, asked to call back → call
+  back, not interested → not interested (clears the next follow-up). The first agent to make
+  contact is assigned if nobody was. Do-not-contact leads can't be logged as contacted.
+- **Follow-up form:** assignee (staff with `crm.manage`), status and next follow-up date (today or
+  later; cleared for not interested / do not contact). An opted-out worker's lead can't be moved
+  off do-not-contact by an agent.
+
+### D-099 · Campaigns and campaign analytics
+- **`/admin/marketing`** (`crm.manage`): campaigns with channel, source country, optional verified
+  partner institute or agency, where the link goes (sign-up or job search) and start/end dates.
+  The link code comes from the name once (`FACEBOOK-BANGLADESH`) and never changes, so printed QR
+  codes keep working. Campaigns can be paused, resumed and ended; ending sets the end date to
+  today if it was later and can't be undone.
+- **Funnel** for a date range (default: the last 90 days; a campaign's own page defaults to its
+  start date): visitors = daily counts in the range; every later step follows the leads created in
+  the range as they are today (leads → signed up → profile complete → qualified → applied →
+  selected → deployed), using `LeadProgress` so it matches the CRM. Steps can exceed the one
+  before (someone can apply without being "qualified"), so each step shows its share of the
+  previous one rather than pretending to be a strict funnel. Computed with one grouped query per
+  step. The index also shows totals and how many signed up without a campaign.
+- **Campaign page:** link with copy button, QR code (black on white, downloadable SVG for banners)
+  and visitors per day. The QR rendering moved to `App\Support\QrCode`, shared with cohort
+  invites.
+- **Admin overview:** CRM staff get a "Lead follow-ups due" tile (next follow-up today or
+  earlier) linking to the CRM's Due today view.
+
+### D-100 · Recruitment projects
+- **`/org/projects`** (employers; anyone with `jobs.view` reads, `projects.manage` changes): a
+  project has a name, target headcount, destination, source countries, optional target date, its
+  jobs and a team (organization members). References run per organization (`RP-0001`). A job is
+  in at most one project; choosing a job that is already in another project is refused with its
+  name rather than moving it silently. Editing the job list releases jobs that were unticked.
+- **Stage counts** (deck slide 18): Applied → Qualified → Interview → Selected → Visa and travel
+  → Joined. A stage counts every applicant who ever reached it or a later stage, from the current
+  status or the stage history, so skipping a stage or a later rejection doesn't remove anyone
+  from the earlier counts. Visa and travel = an open or completed mobility case; Joined = a case
+  closed as joined. The page shows joined against the target, each job's positions, applicants
+  and joined, and the team.
+- **Bulk actions across the project's jobs:** the project page lists every applicant of its jobs
+  (filter by status) with the same select-and-move bar as a job pipeline (existing
+  `org.applicants.move`), plus **bulk reject** (`org.applicants.reject-many`, new) with one reason
+  the workers see; applicants who can't be rejected any more are skipped and counted. Both need
+  `applications.manage` on every selected application.
+- Completing or cancelling a project doesn't touch its jobs or applications; a completed project
+  can be reopened, a cancelled one can't. Suspended organizations can't change projects (existing
+  workspace lock).
+- Agencies don't have projects yet (the deck puts Projects in the employer workspace).
+
+### D-101 · Hiring analytics
+- **`/org/analytics`** for employers and agencies (anyone with `applications.view`; institutes
+  have their own placements page). Date range, default the last 90 days; everything is about
+  applications made in that range. Counts and timings only, no scores or ranking (rule 12).
+- Shows live jobs, applications, **median days from applying to first shortlist** and **to first
+  offer** (from the stage history, Postgres `percentile_cont`), the stage counts (same "ever
+  reached" rule as projects, now in `HiringStages`, shared by projects and analytics), applicants
+  by the country they live in now (top eight), how they arrived (applied themselves / invited by
+  the organization from talent search or a pool / withdrew), each job's stage counts (jobs with
+  applications in the range or live, up to 50) and active projects against their targets.
+- Spec §9's "institute pool" as a source isn't tracked separately: invitations from a pool and
+  from talent search are both "invited by you".
+
+### D-102 · Platform billing
+- **Finance (`/admin/billing`, `finance.manage`):** three tabs.
+  - *Organizations:* each organization's plan, credit balance and unpaid total. An organization's
+    page shows plan, credits, seats and the last 20 credit entries, with forms to **change plan**
+    (an active plan for that organization type, from a start date; the current plan ends the day
+    before; optionally creates a draft invoice for the plan) and **adjust credits** (± with a
+    reason, logged), and a "New invoice" button.
+  - *Invoices:* waiting for payment / overdue / drafts / paid / void. A draft is edited line by
+    line (description, quantity, unit price, optional posting credits per unit), then **issued**
+    (number `INV-2026-00001`, due in `payment_days` = 14, owners and agency owners told in-app and
+    by email, `invoice_issued`). An issued invoice is **marked paid** (method, bank reference,
+    date) which adds its credits to the ledger once (plan lines as plan credits, other lines as
+    purchases), or **voided** with a note. Paid invoices never change; voided ones keep their
+    number. VAT 5% by default, rounded half up.
+  - *Plans:* name, for which organization type, price (typed as a decimal, stored in minor units
+    without floats), period, posting credits, seats (blank = unlimited), talent search, projects,
+    offered or switched off. Plans are never deleted.
+- **Organizations (`/org/billing`, `billing.manage`, employers and agencies):** plan and what it
+  includes, posting credits (a negative balance is shown as "more used than bought"), seats used,
+  credit history and issued invoices (never drafts). The invoice page prints cleanly (workspace
+  chrome hidden in print) and shows how to pay: `BILLING_PAYMENT_INSTRUCTIONS` or "bank transfer
+  quoting the invoice number". Every billing screen says platform billing is separate from worker
+  job costs (rule 13).
+- **Payment provider:** `PaymentProvider` contract bound from `blueskills.billing.provider`; only
+  `manual` exists (no online payment link). A Stripe/other provider plugs in there later.
+- **Limits (`BLUESKILLS_BILLING_ENFORCE`, off):** when on, a job's *first* submission needs a
+  posting credit and its first publication uses one (resubmitting a live job is free; if credits
+  ran out while it waited for review the balance can go below zero rather than blocking staff);
+  inviting a member needs a free seat (members plus pending invitations); talent search needs a
+  plan that includes it. While off, pages say limits are counted but not enforced.
+- **Admin overview:** finance staff get "Overdue invoices".
+
+### D-103 · Module 9 sample data, review fixes and deploy notes
+- **Sample data** (`CrmAndBillingSampleSeeder`, after `SampleWorldSeeder`): CRM agent
+  `m.akter@blueskills.test` and finance officer `r.nair@blueskills.test`; campaigns Dhaka job fair
+  2026 (`/c/DHAKA-JOB-FAIR-2026`), Facebook Bangladesh electricians (job search), Meghna graduates
+  2026 (partner institute) and a paused Nepal FM radio spot, each with 30 days of visits; a lead
+  for every sample worker (stage worked out from their real progress, mixed follow-ups, some due
+  today or overdue) and three job-fair prospects (one do-not-contact); project RP-0042 "200
+  Electricians — Dubai" on ABC Contracting with AE-MT-0115 and AE-ST-0042; sample plans marked
+  "not approved for launch"; ABC on Employer Standard (September invoice paid with 15 credits, one
+  used, October invoice waiting), Northstar on Agency Professional (overdue invoice, goodwill
+  credits, a draft).
+- **Review fixes:** the lead page ticked every stage up to the furthest one (an applicant showed
+  as "qualified"); each stage is now checked on its own (`LeadProgress::reached`). Invoice lines fit
+  a 390px screen (quantity × price folds under the description; totals moved out of the table).
+  Funnel shares under 1% read "<1%". Side panels no longer shrink in flex columns.
+- **Deploy notes for Module 9:** run migrations; re-run `RolesAndPermissionsSeeder`
+  (`projects.manage`); keep `BLUESKILLS_BILLING_ENFORCE=false` until pricing is approved; set
+  `BILLING_PAYMENT_INSTRUCTIONS` (bank details) before issuing real invoices; `BILLING_PROVIDER`
+  stays `manual`. No new scheduled tasks.

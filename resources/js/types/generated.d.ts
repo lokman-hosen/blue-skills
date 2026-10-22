@@ -238,6 +238,84 @@ declare namespace App {
                     | 'other';
             }
         }
+        namespace Billing {
+            namespace Data {
+                export type InvoiceData = {
+                    summary: App.Domain.Billing.Data.InvoiceListItemData;
+                    organizationId: string;
+                    organizationLegalName: string | null;
+                    organizationCountryCode: string | null;
+                    subtotal: App.Support.Data.MoneyData;
+                    taxRatePercent: number;
+                    tax: App.Support.Data.MoneyData;
+                    lines: {
+                        id: string;
+                        description: string;
+                        quantity: number;
+                        unitAmount: App.Support.Data.MoneyData;
+                        amount: App.Support.Data.MoneyData;
+                        credits: number;
+                    }[];
+                    paymentMethod: App.Domain.Billing.Enums.PaymentMethod | null;
+                    paymentReference: string | null;
+                    notes: string | null;
+                    paymentUrl: string | null;
+                    paymentInstructions: string | null;
+                };
+                export type InvoiceListItemData = {
+                    id: string;
+                    number: string | null;
+                    organization: string;
+                    status: App.Support.Data.StatusData;
+                    total: App.Support.Data.MoneyData;
+                    issuedAt: string | null;
+                    dueOn: string | null;
+                    overdue: boolean;
+                    paidAt: string | null;
+                };
+                export type OrganizationBillingData = {
+                    organizationId: string;
+                    organization: string;
+                    plan: App.Domain.Billing.Data.PlanData | null;
+                    planSince: string | null;
+                    credits: number;
+                    seatsUsed: number;
+                    seats: number | null;
+                    enforced: boolean;
+                    ledger: {
+                        id: string;
+                        delta: number;
+                        reason: string;
+                        note: string | null;
+                        job: string | null;
+                        invoice: string | null;
+                        at: string;
+                    }[];
+                    invoices: App.Domain.Billing.Data.InvoiceListItemData[];
+                };
+                export type PlanData = {
+                    id: string;
+                    code: string;
+                    name: string;
+                    description: string | null;
+                    organizationType: App.Domain.Organization.Enums.OrganizationType;
+                    price: App.Support.Data.MoneyData;
+                    billingPeriod: App.Domain.Billing.Enums.BillingPeriod;
+                    postingCredits: number;
+                    seats: number | null;
+                    talentSearch: boolean;
+                    recruitmentProjects: boolean;
+                    isActive: boolean;
+                    subscribers: number;
+                };
+            }
+            namespace Enums {
+                export type BillingPeriod = 'monthly' | 'yearly' | 'one_off';
+                export type CreditReason =
+                    'plan_grant' | 'purchase' | 'adjustment' | 'job_published' | 'expiry';
+                export type PaymentMethod = 'bank_transfer' | 'card' | 'cash' | 'other';
+            }
+        }
         namespace Config {
             namespace Data {
                 export type CountryConfigData = {
@@ -279,6 +357,115 @@ declare namespace App {
                     | 'mobility_stage_template'
                     | 'local_notice';
                 export type LanguageStatus = 'active' | 'in_review' | 'planned';
+            }
+        }
+        namespace Crm {
+            namespace Data {
+                export type CampaignData = {
+                    id: string;
+                    code: string;
+                    name: string;
+                    channel: App.Domain.Crm.Enums.CampaignChannel;
+                    sourceCountryCode: string | null;
+                    partnerId: string | null;
+                    partner: string | null;
+                    landing: App.Domain.Crm.Enums.CampaignLanding;
+                    status: App.Support.Data.StatusData;
+                    startsOn: string;
+                    endsOn: string | null;
+                    link: string;
+                    funnel: App.Domain.Crm.Data.FunnelData;
+                };
+                export type ContactAttemptData = {
+                    id: string;
+                    channel: App.Domain.Crm.Enums.ContactChannel;
+                    outcome: App.Domain.Crm.Enums.ContactOutcome;
+                    note: string | null;
+                    staff: string | null;
+                    attemptedAt: string;
+                };
+                export type FunnelData = {
+                    visitors: number;
+                    leads: number;
+                    registrations: number;
+                    profilesComplete: number;
+                    qualified: number;
+                    applied: number;
+                    selected: number;
+                    deployed: number;
+                };
+                export type LeadData = {
+                    id: string;
+                    name: string;
+                    signedUp: boolean;
+                    passportReference: string | null;
+                    phone: string | null;
+                    optedOut: boolean;
+                    source: App.Domain.Crm.Enums.LeadSource;
+                    campaign: string | null;
+                    partner: string | null;
+                    countryCode: string | null;
+                    assigneeId: string | null;
+                    followUpStatus: App.Domain.Crm.Enums.FollowUpStatus;
+                    followUp: App.Support.Data.StatusData;
+                    stage: App.Support.Data.StatusData;
+                    nextFollowUpAt: string | null;
+                    lastContactedAt: string | null;
+                    createdAt: string;
+                    progress: {
+                        stage: App.Domain.Crm.Enums.ConversionStage;
+                        reached: boolean;
+                    }[];
+                    attempts: App.Domain.Crm.Data.ContactAttemptData[];
+                };
+                export type LeadListItemData = {
+                    id: string;
+                    name: string;
+                    signedUp: boolean;
+                    source: App.Domain.Crm.Enums.LeadSource;
+                    campaign: string | null;
+                    countryCode: string | null;
+                    followUp: App.Support.Data.StatusData;
+                    stage: App.Support.Data.StatusData;
+                    assignee: string | null;
+                    nextFollowUpAt: string | null;
+                    overdue: boolean;
+                    lastContactedAt: string | null;
+                    createdAt: string;
+                };
+            }
+            namespace Enums {
+                export type CampaignChannel =
+                    | 'social'
+                    | 'job_fair'
+                    | 'partner'
+                    | 'institute'
+                    | 'radio_tv'
+                    | 'sms_whatsapp'
+                    | 'referral'
+                    | 'other';
+                export type CampaignLanding = 'join' | 'jobs';
+                export type ContactChannel =
+                    'phone_call' | 'whatsapp' | 'sms' | 'email' | 'in_person';
+                export type ContactOutcome =
+                    'reached' | 'no_answer' | 'wrong_number' | 'call_back' | 'not_interested';
+                export type ConversionStage =
+                    | 'prospect'
+                    | 'registered'
+                    | 'profile_complete'
+                    | 'qualified'
+                    | 'applied'
+                    | 'selected'
+                    | 'deployed';
+                export type FollowUpStatus =
+                    | 'new'
+                    | 'contacted'
+                    | 'no_answer'
+                    | 'call_back'
+                    | 'not_interested'
+                    | 'do_not_contact';
+                export type LeadSource =
+                    'campaign' | 'institute' | 'direct' | 'walk_in' | 'call_centre' | 'referral';
             }
         }
         namespace Identity {
@@ -347,6 +534,7 @@ declare namespace App {
                     | 'attestations.issue'
                     | 'assessments.record'
                     | 'placements.view'
+                    | 'projects.manage'
                     | 'admin.access'
                     | 'verifications.review'
                     | 'jobs.moderate'
@@ -512,6 +700,32 @@ declare namespace App {
                     allowedWorkerCosts: App.Domain.Jobs.Enums.JobCostCategory[];
                     workerCostPolicy: string | null;
                     mandatoryFields: string[];
+                };
+                export type HiringAnalyticsData = {
+                    liveJobs: number;
+                    stages: {
+                        key: string;
+                        count: number;
+                    }[];
+                    medianDaysToShortlist: number | null;
+                    medianDaysToOffer: number | null;
+                    jobs: {
+                        id: string;
+                        code: string;
+                        title: string;
+                        status: App.Support.Data.StatusData;
+                        counts: Record<string, number>;
+                    }[];
+                    countries: {
+                        code: string;
+                        count: number;
+                    }[];
+                    sources: {
+                        invited: number;
+                        direct: number;
+                        withdrawn: number;
+                    };
+                    projects: App.Domain.Jobs.Data.RecruitmentProjectListItemData[];
                 };
                 export type JobBenefitData = {
                     key: string;
@@ -706,6 +920,38 @@ declare namespace App {
                     total: number;
                     requirements: App.Domain.Jobs.Data.MatchRequirementData[];
                 };
+                export type RecruitmentProjectData = {
+                    summary: App.Domain.Jobs.Data.RecruitmentProjectListItemData;
+                    stages: {
+                        key: string;
+                        count: number;
+                    }[];
+                    jobs: {
+                        id: string;
+                        code: string;
+                        title: string;
+                        status: App.Support.Data.StatusData;
+                        headcount: number;
+                        applicants: number;
+                        joined: number;
+                    }[];
+                    team: {
+                        id: string;
+                        name: string;
+                    }[];
+                };
+                export type RecruitmentProjectListItemData = {
+                    id: string;
+                    reference: string;
+                    name: string;
+                    status: App.Support.Data.StatusData;
+                    targetHeadcount: number;
+                    joined: number;
+                    jobs: number;
+                    destinationCountryCode: string | null;
+                    sourceCountryCodes: string[];
+                    targetDate: string | null;
+                };
                 export type TruthCardCheckData = {
                     key: string;
                     tone: string;
@@ -819,7 +1065,8 @@ declare namespace App {
                     | 'case_document_answered'
                     | 'job_paused_mandate'
                     | 'graduate_joined'
-                    | 'organization_suspended';
+                    | 'organization_suspended'
+                    | 'invoice_issued';
             }
         }
         namespace Mobility {

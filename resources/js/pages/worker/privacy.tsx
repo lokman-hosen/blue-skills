@@ -21,6 +21,7 @@ type Props = {
     visibility: Visibility;
     consents: App.Domain.Worker.Data.ConsentRecordData[];
     institutes: App.Domain.Institute.Data.WorkerCohortData[];
+    staffContactAllowed: boolean;
     deletionCodeSent: boolean;
     maskedPhone: string;
     codeLength: number;
@@ -33,6 +34,7 @@ export default function Privacy({
     visibility,
     consents,
     institutes,
+    staffContactAllowed,
     deletionCodeSent,
     maskedPhone,
     codeLength,
@@ -109,6 +111,8 @@ export default function Privacy({
                 </section>
 
                 <MyInstitutes institutes={institutes} />
+
+                <StaffContact allowed={staffContactAllowed} />
 
                 <section
                     className="flex flex-col gap-3 rounded-2xl border border-line bg-surface p-5"
@@ -228,6 +232,49 @@ export default function Privacy({
                 </section>
             </div>
         </>
+    );
+}
+
+/** Whether the BLUESKILLS team may call or message about the profile (D-095). */
+function StaffContact({ allowed }: { allowed: boolean }) {
+    const { t } = useTranslation();
+    const [saving, setSaving] = useState(false);
+
+    return (
+        <section
+            className="flex flex-col gap-3 rounded-2xl border border-line bg-surface p-5"
+            aria-labelledby="staff-contact-heading"
+        >
+            <h2 id="staff-contact-heading" className="font-semibold">
+                {t('privacy.staff_contact.title')}
+            </h2>
+            <div className="flex min-h-11 items-start gap-2">
+                <Checkbox
+                    id="staff-contact"
+                    checked={allowed}
+                    disabled={saving}
+                    onCheckedChange={(checked) =>
+                        router.put(
+                            PrivacyController.updateStaffContact.url(),
+                            { allowed: checked === true },
+                            {
+                                preserveScroll: true,
+                                onStart: () => setSaving(true),
+                                onFinish: () => setSaving(false),
+                            },
+                        )
+                    }
+                    className="mt-0.5"
+                />
+                <Label
+                    htmlFor="staff-contact"
+                    className="flex flex-col items-start gap-0.5 font-normal"
+                >
+                    <span className="text-sm">{t('privacy.staff_contact.label')}</span>
+                    <span className="text-xs text-muted">{t('privacy.staff_contact.hint')}</span>
+                </Label>
+            </div>
+        </section>
     );
 }
 

@@ -2,6 +2,7 @@
 
 namespace App\Domain\Jobs\Actions;
 
+use App\Domain\Billing\Support\BillingLimits;
 use App\Domain\Identity\Models\User;
 use App\Domain\Jobs\Mail\JobReviewDecidedMail;
 use App\Domain\Jobs\Models\JobPosting;
@@ -62,6 +63,7 @@ class DecideJobReview
             });
 
             if ($decision === VerificationDecision::Approved) {
+                BillingLimits::chargePublication($job);
                 $job->forceFill(['published_at' => $job->published_at ?? now()])->save();
             }
         });

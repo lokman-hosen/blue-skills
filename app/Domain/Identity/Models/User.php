@@ -2,6 +2,7 @@
 
 namespace App\Domain\Identity\Models;
 
+use App\Domain\Crm\Models\Lead;
 use App\Domain\Identity\Enums\StaffRole;
 use App\Domain\Identity\Enums\UserType;
 use App\Domain\Identity\Support\PlatformTeam;
@@ -81,6 +82,16 @@ class User extends Authenticatable implements MustVerifyEmail, PasskeyUser
     public function workerProfile(): HasOne
     {
         return $this->hasOne(WorkerProfile::class);
+    }
+
+    /**
+     * The CRM lead for a worker (spec §9).
+     *
+     * @return HasOne<Lead, $this>
+     */
+    public function lead(): HasOne
+    {
+        return $this->hasOne(Lead::class);
     }
 
     /**

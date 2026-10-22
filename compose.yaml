@@ -44,6 +44,8 @@ services:
             - laravel.test
     pgsql:
         image: 'postgres:18-alpine'
+        # Parallel Pest workers each drop every table at once; the default 64 runs out (D-097).
+        command: ['postgres', '-c', 'max_locks_per_transaction=256']
         ports:
             - '${FORWARD_DB_PORT:-5432}:5432'
         environment:

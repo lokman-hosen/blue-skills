@@ -11,6 +11,7 @@ use App\Domain\Identity\Models\User;
 use App\Domain\Institute\Models\Course;
 use App\Domain\Institute\Models\TalentPool;
 use App\Domain\Jobs\Models\JobMandate;
+use App\Domain\Jobs\Models\RecruitmentProject;
 use App\Domain\Messaging\Support\Unread;
 use App\Domain\Mobility\Models\MobilityCase;
 use App\Domain\Organization\Data\OrganizationSummaryData;
@@ -82,6 +83,10 @@ class HandleInertiaRequests extends Middleware
                 'viewPlacements' => $organization !== null && $user->can('viewPlacements', $organization),
                 'browsePools' => $organization !== null && $user->can('browse', [TalentPool::class, $organization]),
                 'viewApplicants' => $organization !== null && $user->can('viewAny', [Application::class, $organization]),
+                // Projects, analytics and billing (Module 9).
+                'viewProjects' => $organization !== null && $user->can('viewAny', [RecruitmentProject::class, $organization]),
+                'viewAnalytics' => $organization !== null && $user->can('viewAnalytics', $organization),
+                'viewBilling' => $organization !== null && $user->can('viewBilling', $organization),
             ],
             'organizations' => fn () => $user?->organizations
                 ->map(fn (Organization $organization) => OrganizationSummaryData::fromOrganization($organization))

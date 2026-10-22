@@ -2,6 +2,7 @@
 
 namespace App\Domain\Jobs\Actions;
 
+use App\Domain\Billing\Support\BillingLimits;
 use App\Domain\Identity\Models\User;
 use App\Domain\Jobs\Models\JobPosting;
 use App\Domain\Jobs\States\Job\Draft;
@@ -40,6 +41,8 @@ class SubmitJobForReview
         if ($problems !== []) {
             throw ValidationException::withMessages($problems);
         }
+
+        BillingLimits::ensureCanSubmit($job);
 
         return DB::transaction(function () use ($job, $actor, $materialChanges): JobPosting {
             $job->status->transitionTo(Submitted::class);

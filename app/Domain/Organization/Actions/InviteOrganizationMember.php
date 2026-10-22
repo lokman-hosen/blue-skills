@@ -2,6 +2,7 @@
 
 namespace App\Domain\Organization\Actions;
 
+use App\Domain\Billing\Support\BillingLimits;
 use App\Domain\Identity\Enums\OrganizationRole;
 use App\Domain\Identity\Models\User;
 use App\Domain\Organization\Mail\OrganizationInvitationMail;
@@ -33,6 +34,8 @@ class InviteOrganizationMember
         if ($organization->users()->whereRaw('lower(email) = ?', [$email])->exists()) {
             throw ValidationException::withMessages(['email' => __('team.already_member')]);
         }
+
+        BillingLimits::ensureSeatAvailable($organization);
 
         $token = Str::random(48);
 

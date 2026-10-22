@@ -68,6 +68,24 @@ class OrganizationPolicy
             && $this->hasPermission($user, $organization, Permission::PlacementsView);
     }
 
+    /**
+     * The workspace billing page: plan, credits, seats and invoices (D-095).
+     */
+    public function viewBilling(User $user, Organization $organization): bool
+    {
+        return $organization->type !== OrganizationType::Institute
+            && $this->hasPermission($user, $organization, Permission::BillingManage);
+    }
+
+    /**
+     * Hiring analytics: counts only, for anyone who sees the applicants (D-095).
+     */
+    public function viewAnalytics(User $user, Organization $organization): bool
+    {
+        return $organization->type !== OrganizationType::Institute
+            && $this->hasPermission($user, $organization, Permission::ApplicationsView);
+    }
+
     private function hasPermission(User $user, Organization $organization, Permission $permission): bool
     {
         return OrganizationPermissions::allows($user, $organization, $permission);
