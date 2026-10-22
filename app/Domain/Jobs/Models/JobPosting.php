@@ -44,7 +44,7 @@ use Spatie\ModelStates\HasStates;
 #[Table('jobs')]
 #[RouteKey('public_code')]
 #[Fillable([
-    'organization_id', 'employer_organization_id', 'agency_organization_id', 'job_mandate_id', 'public_code',
+    'organization_id', 'recruitment_project_id', 'employer_organization_id', 'agency_organization_id', 'job_mandate_id', 'public_code',
     'title', 'occupation_id', 'min_experience_years', 'language_requirements', 'destination_country_code',
     'destination_city', 'headcount', 'salary_amount_minor', 'salary_currency', 'salary_period', 'hours_per_day',
     'days_per_week', 'overtime_terms', 'contract_months',
@@ -129,6 +129,14 @@ class JobPosting extends Model
     public function agency(): BelongsTo
     {
         return $this->belongsTo(Organization::class, 'agency_organization_id');
+    }
+
+    /**
+     * @return BelongsTo<RecruitmentProject, $this>
+     */
+    public function recruitmentProject(): BelongsTo
+    {
+        return $this->belongsTo(RecruitmentProject::class);
     }
 
     /**

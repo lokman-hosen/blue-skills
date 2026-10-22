@@ -38,7 +38,7 @@ use Spatie\MediaLibrary\InteractsWithMedia;
 #[Fillable([
     'user_id', 'reference', 'headline', 'occupation_id', 'specialization_id', 'years_experience', 'current_country_code',
     'passport_status', 'passport_valid_until_year', 'availability', 'visibility', 'salary_expectation_minor',
-    'salary_currency', 'salary_period', 'profile_completed_at', 'suspended_at'])]
+    'salary_currency', 'salary_period', 'profile_completed_at', 'suspended_at', 'staff_contact_opted_out_at'])]
 #[UseFactory(WorkerProfileFactory::class)]
 class WorkerProfile extends Model implements HasMedia
 {
@@ -81,6 +81,7 @@ class WorkerProfile extends Model implements HasMedia
             'salary_period' => SalaryPeriod::class,
             'profile_completed_at' => 'datetime',
             'suspended_at' => 'datetime',
+            'staff_contact_opted_out_at' => 'datetime',
         ];
     }
 

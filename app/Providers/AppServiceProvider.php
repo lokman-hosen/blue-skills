@@ -12,9 +12,16 @@ use App\Domain\Applications\Models\Offer;
 use App\Domain\Applications\Models\ProfileSnapshot;
 use App\Domain\Applications\Models\Shortlist;
 use App\Domain\Applications\Models\ShortlistEntry;
+use App\Domain\Billing\Models\CreditLedgerEntry;
+use App\Domain\Billing\Models\Invoice;
+use App\Domain\Billing\Models\OrganizationSubscription;
+use App\Domain\Billing\Models\Plan;
 use App\Domain\Config\Models\Country;
 use App\Domain\Config\Models\CountryRule;
 use App\Domain\Config\Models\Language;
+use App\Domain\Crm\Models\Campaign;
+use App\Domain\Crm\Models\Lead;
+use App\Domain\Crm\Models\LeadContactAttempt;
 use App\Domain\Identity\Channels\LogOtpChannel;
 use App\Domain\Identity\Channels\WhatsAppCloudOtpChannel;
 use App\Domain\Identity\Contracts\OtpChannel;
@@ -32,6 +39,7 @@ use App\Domain\Jobs\Models\JobCost;
 use App\Domain\Jobs\Models\JobMandate;
 use App\Domain\Jobs\Models\JobPosting;
 use App\Domain\Jobs\Models\JobSkillRequirement;
+use App\Domain\Jobs\Models\RecruitmentProject;
 use App\Domain\Messaging\Channels\CloudWhatsAppSender;
 use App\Domain\Messaging\Channels\LogSmsSender;
 use App\Domain\Messaging\Channels\LogWhatsAppSender;
@@ -191,6 +199,14 @@ class AppServiceProvider extends ServiceProvider
             'trust_case_note' => TrustCaseNote::class,
             'trust_action' => TrustAction::class,
             'appeal' => Appeal::class,
+            'campaign' => Campaign::class,
+            'lead' => Lead::class,
+            'lead_contact_attempt' => LeadContactAttempt::class,
+            'recruitment_project' => RecruitmentProject::class,
+            'plan' => Plan::class,
+            'organization_subscription' => OrganizationSubscription::class,
+            'invoice' => Invoice::class,
+            'credit_ledger_entry' => CreditLedgerEntry::class,
         ]);
     }
 

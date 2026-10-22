@@ -1085,3 +1085,52 @@ colour) and the appearance tabs use design tokens instead of the kit's neutral g
   restored jobs suspended separately. Fixed with a regression test.
 - **Deploy notes for Module 8:** run migrations; schedule `evidence:expire` (daily) alongside the
   existing tasks; mark each live corridor's legal review in Configuration.
+
+### D-095 · Module 9 inputs (owner answers, 2026-10-22)
+- **Billing:** invoices only. Finance Officers issue invoices and record bank-transfer payments by
+  hand; credits, seats and plans are tracked. Limits are **not enforced** yet: a setting (off by
+  default) will later make publishing a job use up a posting credit and limit seats and talent
+  search. No payment provider (Stripe/Cashier) yet; billing goes through a provider interface so
+  one can be added without hardwiring a vendor (spec §13). Pricing still needs approval before
+  launch (spec §11).
+- **Recruitment projects** are part of Module 9: group jobs, target headcount, source countries,
+  team, stage counts, bulk shortlist/reject, deployment numbers (spec §6, deck slide 18).
+- **CRM and phone numbers:** CRM agents see a lead's phone number on the lead page only (never in
+  lists) and each view is written to the activity log. Workers can turn off "BLUESKILLS may contact
+  me about my profile" under Privacy, which marks their lead do-not-contact.
+- **Conversion stage** of a lead is derived from what the worker actually did (registered →
+  profile complete → qualified → applied → selected → deployed), never set by hand. Follow-up
+  status is set by the CRM agent.
+- **Campaign visits** are stored as daily counts per campaign, not per-person tracking.
+- **Review cadence:** once at the end of the module.
+
+### D-096 · CRM, projects and billing schema
+- New domain `app/Domain/Crm` (campaigns, daily visit counts, leads, contact attempts). Recruitment
+  projects live in `Jobs`; plans, subscriptions, invoices and the credit ledger in `Billing`.
+- `campaigns`: a code that never changes (used in `/c/{code}`), channel, source country, an
+  optional partner institute or agency, landing (sign up or job search), status active ⇄ paused →
+  ended. `campaign_visits` keep one count per campaign per day.
+- `leads`: one per worker account (`user_id` unique) or hand-entered (name + phone). Source
+  (campaign, institute invite, direct, walk-in, call centre, referral), assignee, follow-up status
+  (enum, any agent-set value), next follow-up date, and a stored conversion stage (prospect →
+  registered → profile complete → qualified → applied → selected → deployed) kept up to date from
+  the worker's progress so lists can filter on it. `lead_contact_attempts` are append-only.
+  Follow-up, assignee and stage changes go to the `crm` activity log.
+- `worker_profiles.staff_contact_opted_out_at` records the Privacy opt-out.
+- Projects are for **employers** (the deck puts Projects in the employer nav). A job belongs to at
+  most one project (`jobs.recruitment_project_id`); the team is `recruitment_project_members`;
+  references run per organization (`RP-0001`). Status active → completed | cancelled, completed
+  can be reopened. New permission `projects.manage` for the hiring roles (Owner, HR Admin,
+  Recruiter, Agency Owner, Case Officer); anyone with `jobs.view` sees projects. Deploy: re-run
+  `RolesAndPermissionsSeeder`.
+- `plans` are per organization type (agency and training fees set separately, spec §11) with
+  price, period, posting credits per period, seats (null = unlimited), talent search and project
+  access. `organization_subscriptions`: active → cancelled | ended.
+- `invoices`: draft → issued (number `INV-2026-00001` given then) → paid, or void; amounts in
+  minor units with VAT in basis points (5% UAE default, rounded half up), payment method and
+  reference, and `provider` (`manual` until a provider exists). `invoice_lines` may carry credits
+  added when the invoice is paid.
+- `credit_ledger_entries` are append-only (updates and deletes throw); the balance is the sum.
+- Billing settings in `config/blueskills.php` → `billing` (`BLUESKILLS_BILLING_ENFORCE`, off).
+- Organization billing page: Owners / Agency Owners (`billing.manage`), not institutes yet.
+  Analytics: anyone with `applications.view`.
