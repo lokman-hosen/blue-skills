@@ -1158,3 +1158,23 @@ colour) and the appearance tabs use design tokens instead of the kit's neutral g
 - **Local Postgres** runs with `max_locks_per_transaction=256` (compose.yaml): eight parallel Pest
   workers each drop all tables at once and the default ran out of shared lock memory. CI runners
   use four workers; raise it there too if the error appears.
+
+### D-098 · Worker CRM screens
+- **`/admin/crm`** (CRM Agents, Superusers): every lead with views All / Due today (next
+  follow-up today or earlier) / Mine / Unassigned (leaving out not-interested and do-not-contact)
+  and filters for follow-up status, stage, source, campaign and name. Sorted by next follow-up,
+  then newest. Lists never carry phone numbers.
+- **Adding a lead** by hand: name, source country (the worker phone countries), mobile number
+  (validated for that country, stored E.164), how we met them (walk-in, call centre, referral or a
+  campaign) and "assign to me". A number that is already a lead or a worker account is refused
+  with the existing lead's name.
+- **Lead page:** phone number as a `tel:` link (each page view writes `lead.phone_viewed` to the
+  audit log; no number and no log once the lead is do-not-contact), source, campaign or partner,
+  Skill Passport number, the stage checklist and the contact history.
+- **Logging a contact** (channel, result, note, next follow-up) sets the follow-up status from the
+  result: reached → contacted, no answer / wrong number → no answer, asked to call back → call
+  back, not interested → not interested (clears the next follow-up). The first agent to make
+  contact is assigned if nobody was. Do-not-contact leads can't be logged as contacted.
+- **Follow-up form:** assignee (staff with `crm.manage`), status and next follow-up date (today or
+  later; cleared for not interested / do not contact). An opted-out worker's lead can't be moved
+  off do-not-contact by an agent.

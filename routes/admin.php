@@ -6,6 +6,7 @@ use App\Http\Controllers\Admin\AuditLogController;
 use App\Http\Controllers\Admin\ConfigController;
 use App\Http\Controllers\Admin\EvidenceReviewController;
 use App\Http\Controllers\Admin\JobReviewController;
+use App\Http\Controllers\Admin\LeadController;
 use App\Http\Controllers\Admin\MandateReviewController;
 use App\Http\Controllers\Admin\OrganizationReviewController;
 use App\Http\Controllers\Admin\SkillShowModerationController;
@@ -48,6 +49,15 @@ Route::middleware(['auth', 'verified', 'user.type:staff', 'staff.2fa'])->prefix(
     });
 
     // SkillShow moderation (Module 2, product rule 3).
+    // Worker CRM (Module 9, spec §9, D-095).
+    Route::controller(LeadController::class)->prefix('crm')->name('crm.')->group(function () {
+        Route::get('/', 'index')->name('index');
+        Route::post('leads', 'store')->middleware('throttle:60,1')->name('leads.store');
+        Route::get('leads/{lead}', 'show')->name('leads.show');
+        Route::put('leads/{lead}', 'update')->name('leads.update');
+        Route::post('leads/{lead}/attempts', 'attempt')->middleware('throttle:60,1')->name('leads.attempts.store');
+    });
+
     // Trust: reports, cases, suspensions and appeals (Module 8, spec §10).
     Route::prefix('trust')->name('trust.')->group(function () {
         Route::get('reports', [TrustReportController::class, 'index'])->name('reports.index');

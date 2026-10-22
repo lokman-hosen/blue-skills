@@ -271,9 +271,7 @@ function StaffContact({ allowed }: { allowed: boolean }) {
                     className="flex flex-col items-start gap-0.5 font-normal"
                 >
                     <span className="text-sm">{t('privacy.staff_contact.label')}</span>
-                    <span className="text-xs text-muted">
-                        {t('privacy.staff_contact.hint')}
-                    </span>
+                    <span className="text-xs text-muted">{t('privacy.staff_contact.hint')}</span>
                 </Label>
             </div>
         </section>

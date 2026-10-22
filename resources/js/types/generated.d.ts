@@ -238,6 +238,14 @@ declare namespace App {
                     | 'other';
             }
         }
+        namespace Billing {
+            namespace Enums {
+                export type BillingPeriod = 'monthly' | 'yearly' | 'one_off';
+                export type CreditReason =
+                    'plan_grant' | 'purchase' | 'adjustment' | 'job_published' | 'expiry';
+                export type PaymentMethod = 'bank_transfer' | 'card' | 'cash' | 'other';
+            }
+        }
         namespace Config {
             namespace Data {
                 export type CountryConfigData = {
@@ -279,6 +287,90 @@ declare namespace App {
                     | 'mobility_stage_template'
                     | 'local_notice';
                 export type LanguageStatus = 'active' | 'in_review' | 'planned';
+            }
+        }
+        namespace Crm {
+            namespace Data {
+                export type ContactAttemptData = {
+                    id: string;
+                    channel: App.Domain.Crm.Enums.ContactChannel;
+                    outcome: App.Domain.Crm.Enums.ContactOutcome;
+                    note: string | null;
+                    staff: string | null;
+                    attemptedAt: string;
+                };
+                export type LeadData = {
+                    id: string;
+                    name: string;
+                    signedUp: boolean;
+                    passportReference: string | null;
+                    phone: string | null;
+                    optedOut: boolean;
+                    source: App.Domain.Crm.Enums.LeadSource;
+                    campaign: string | null;
+                    partner: string | null;
+                    countryCode: string | null;
+                    assigneeId: string | null;
+                    followUpStatus: App.Domain.Crm.Enums.FollowUpStatus;
+                    followUp: App.Support.Data.StatusData;
+                    stage: App.Support.Data.StatusData;
+                    nextFollowUpAt: string | null;
+                    lastContactedAt: string | null;
+                    createdAt: string;
+                    progress: {
+                        stage: App.Domain.Crm.Enums.ConversionStage;
+                        reached: boolean;
+                    }[];
+                    attempts: App.Domain.Crm.Data.ContactAttemptData[];
+                };
+                export type LeadListItemData = {
+                    id: string;
+                    name: string;
+                    signedUp: boolean;
+                    source: App.Domain.Crm.Enums.LeadSource;
+                    campaign: string | null;
+                    countryCode: string | null;
+                    followUp: App.Support.Data.StatusData;
+                    stage: App.Support.Data.StatusData;
+                    assignee: string | null;
+                    nextFollowUpAt: string | null;
+                    overdue: boolean;
+                    lastContactedAt: string | null;
+                    createdAt: string;
+                };
+            }
+            namespace Enums {
+                export type CampaignChannel =
+                    | 'social'
+                    | 'job_fair'
+                    | 'partner'
+                    | 'institute'
+                    | 'radio_tv'
+                    | 'sms_whatsapp'
+                    | 'referral'
+                    | 'other';
+                export type CampaignLanding = 'join' | 'jobs';
+                export type ContactChannel =
+                    'phone_call' | 'whatsapp' | 'sms' | 'email' | 'in_person';
+                export type ContactOutcome =
+                    'reached' | 'no_answer' | 'wrong_number' | 'call_back' | 'not_interested';
+                export type ConversionStage =
+                    | 'prospect'
+                    | 'registered'
+                    | 'profile_complete'
+                    | 'qualified'
+                    | 'applied'
+                    | 'selected'
+                    | 'deployed';
+                export type FollowUpStatus =
+                    | 'new'
+                    | 'contacted'
+                    | 'no_answer'
+                    | 'call_back'
+                    | 'not_interested'
+                    | 'do_not_contact';
+                export type LeadSource =
+                    'campaign' | 'institute' | 'direct' | 'walk_in' | 'call_centre' | 'referral';
             }
         }
         namespace Identity {
@@ -347,6 +439,7 @@ declare namespace App {
                     | 'attestations.issue'
                     | 'assessments.record'
                     | 'placements.view'
+                    | 'projects.manage'
                     | 'admin.access'
                     | 'verifications.review'
                     | 'jobs.moderate'
