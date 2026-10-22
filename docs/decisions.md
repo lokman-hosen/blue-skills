@@ -1333,3 +1333,32 @@ colour) and the appearance tabs use design tokens instead of the kit's neutral g
   must authorize, or be added to a list with its reason.
 - **CI** runs `composer audit` and `npm audit --omit=dev --audit-level=high`.
 - Signed media links stay at 15 minutes (`MediaUrls::TTL_MINUTES`) and storage redirects at 5.
+
+### D-106 · Performance at pilot volume (10d)
+- **`VolumeSeeder`** (local only, refuses production): 50,000 discoverable workers with skills
+  and a discovery consent, 3,000 jobs from the sample employers and 100,000 applications, by
+  set-based SQL in about 20 s; references start with `VOL`. Measured with it:
+  - Talent search with text took **3.9 s**: the discoverable scope and the text match used
+    correlated `EXISTS` (`whereHas`) checks that Postgres ran once per profile. They are now
+    uncorrelated `IN (subquery)` checks (hashed once). With the new indexes it takes **~110 ms**.
+  - Every workspace page reloaded the member's permissions for each of the ~12 navigation
+    abilities (10–14 repeated queries). `OrganizationPermissions` now remembers a member's
+    permissions for the rest of the HTTP request (never in queue workers or commands, which
+    run for many jobs); `QueryBudgetTest` guards it.
+  - `/org/jobs` listed every job (≈1 s for 500); it is paginated at 25 like candidates.
+  - Public job search stays under 100 ms with 3,000 jobs; admin and worker pages 100–200 ms.
+- **Indexes** (migration `add_search_indexes`, needs the `pg_trgm` extension, standard on
+  managed Postgres): trigram GIN on users.name, worker_profiles.headline, jobs.title,
+  organizations.display_name and leads.name; partial indexes for discovery consents, the
+  discoverable-worker ordering and published jobs by date.
+- **N+1 guard:** `Model::preventLazyLoading()` everywhere; outside production a lazy load across
+  a collection throws, in production it only logs a warning. It found four: bulk move/reject
+  (job, its organization, the worker), the applicant page's shared documents and permissions
+  loaded for roster members; all now eager loaded.
+- **Not done, on purpose:** caching taxonomy and country lists. The public jobs page runs ten
+  queries and the filter lists cost two cheap ones; caching would add invalidation for no
+  measurable gain.
+- **`scripts/load-test.mjs`** (Node only): virtual users browse job search and Truth Cards and,
+  with `--email`, workspace pages; prints p50/p95/max per page. For staging; local numbers
+  reflect Sail's single development server. The worker apply flow isn't covered (each apply
+  needs its own phone sign-in).

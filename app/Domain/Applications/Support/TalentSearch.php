@@ -2,11 +2,14 @@
 
 namespace App\Domain\Applications\Support;
 
+use App\Domain\Identity\Models\User;
+use App\Domain\Taxonomy\Models\Skill;
 use App\Domain\Worker\Enums\Availability;
 use App\Domain\Worker\Enums\ModerationStatus;
 use App\Domain\Worker\Enums\PassportStatus;
 use App\Domain\Worker\Enums\ProfileVisibility;
 use App\Domain\Worker\Models\WorkerProfile;
+use App\Domain\Worker\Models\WorkerSkill;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Pagination\LengthAwarePaginator;
 
@@ -33,8 +36,9 @@ final class TalentSearch
                 $query->where(fn (Builder $match) => $match
                     ->where('headline', 'ilike', $term)
                     ->orWhere('reference', 'ilike', $term)
-                    ->orWhereHas('user', fn (Builder $user) => $user->where('name', 'ilike', $term))
-                    ->orWhereHas('skills', fn (Builder $skill) => $skill->whereRaw("skills.name->>'en' ilike ?", [$term])));
+                    ->orWhereIn('worker_profiles.user_id', User::query()->select('users.id')->where('name', 'ilike', $term))
+                    ->orWhereIn('worker_profiles.id', WorkerSkill::query()->select('worker_profile_id')
+                        ->whereIn('skill_id', Skill::query()->select('id')->whereRaw("name->>'en' ilike ?", [$term]))));
             })
             ->when($filters['occupation'], fn (Builder $query, string $slug) => $query->whereHas('occupation', fn (Builder $occupation) => $occupation->where('slug', $slug)))
             ->when($filters['min_years'], fn (Builder $query, int $years) => $query->where('years_experience', '>=', $years))

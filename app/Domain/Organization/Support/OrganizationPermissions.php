@@ -20,11 +20,34 @@ final class OrganizationPermissions
 
     public static function allows(User $user, Organization $organization, Permission $permission): bool
     {
-        if (! self::isMember($user, $organization)) {
-            return false;
+        return in_array($permission->value, self::granted($user, $organization) ?? [], true);
+    }
+
+    /**
+     * The member's permission names in the organization, or null for a non-member. Every page
+     * checks a dozen abilities for the navigation, so an HTTP request remembers the answer
+     * (D-106); queue workers and commands always ask the database, as they live for many jobs.
+     *
+     * @return list<string>|null
+     */
+    private static function granted(User $user, Organization $organization): ?array
+    {
+        $load = fn (): ?array => self::isMember($user, $organization)
+            ? TeamContext::run($organization->id, fn () => $user->unsetRelation('roles')->unsetRelation('permissions')->load('permissions')
+                ->getAllPermissions()->pluck('name')->values()->all())
+            : null;
+
+        if (app()->runningInConsole() && ! app()->runningUnitTests()) {
+            return $load();
         }
 
-        return TeamContext::run($organization->id, fn () => $user->unsetRelation('roles')->unsetRelation('permissions')
-            ->checkPermissionTo($permission->value));
+        $attributes = request()->attributes;
+        $key = "organization_permissions:{$user->id}:{$organization->id}";
+
+        if (! $attributes->has($key)) {
+            $attributes->set($key, $load());
+        }
+
+        return $attributes->get($key);
     }
 }

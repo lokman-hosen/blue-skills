@@ -48,6 +48,8 @@ php artisan migrate:fresh --seed # reset local DB with sample data
 npm run format                   # Prettier
 npm run build && npm run design:review  # Playwright review of /_design (en/bn/ur, light/dark, 390/1440)
 npm run design:review -- --phone=+8801711000001 --pages=/passport  # as a worker (needs a queue worker)
+sail artisan db:seed --class=VolumeSeeder  # 50k workers, 3k jobs, 100k applications (local only)
+node scripts/load-test.mjs --base=… --users=25 --seconds=60 [--email=…]  # load test (staging)
 ```
 
 Worker sign-in is `/join` (phone + code). Locally `OTP_CHANNEL=log` writes the code to

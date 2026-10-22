@@ -167,5 +167,5 @@ it('shows mobility tiles on the dashboard and the employer and mandate on job or
     actingInOrg($this->officer, $this->agency)->get(route('dashboard'))
         ->assertInertia(fn (Assert $page) => $page->where('caseCounts.open', 1)->where('licenceAlert', null));
     $this->get(route('org.jobs.index'))
-        ->assertInertia(fn (Assert $page) => $page->where('jobs.0.employer', 'ABC Contracting')->where('jobs.0.mandateReference', $this->mandate->reference));
+        ->assertInertia(fn (Assert $page) => $page->where('jobs.data.0.employer', 'ABC Contracting')->where('jobs.data.0.mandateReference', $this->mandate->reference));
 });

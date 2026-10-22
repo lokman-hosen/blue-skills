@@ -86,6 +86,7 @@ use App\Domain\Worker\Voice\SampleSpeechToText;
 use App\Domain\Worker\Voice\UnavailableSpeechToText;
 use Carbon\CarbonImmutable;
 use Illuminate\Cache\RateLimiting\Limit;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\Relation;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Date;
@@ -260,6 +261,12 @@ class AppServiceProvider extends ServiceProvider
         DB::prohibitDestructiveCommands(
             app()->isProduction(),
         );
+
+        // N+1 queries fail loudly in development and tests (D-106); production only logs them.
+        Model::preventLazyLoading();
+        Model::handleLazyLoadingViolationUsing(app()->isProduction()
+            ? fn (Model $model, string $relation) => logger()->warning('Lazy loading '.$model::class."::{$relation}")
+            : null);
 
         Password::defaults(fn (): ?Password => app()->isProduction()
             ? Password::min(12)
