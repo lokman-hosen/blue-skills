@@ -20,12 +20,12 @@ use Illuminate\Support\Facades\Route;
 Route::middleware('guest')->prefix('join')->name('worker.')->controller(PhoneSignInController::class)->group(function () {
     Route::get('/', 'language')->name('join');
     Route::get('phone', 'phone')->name('phone');
-    Route::post('phone', 'sendCode')->middleware('throttle:10,1')->name('phone.store');
+    Route::post('phone', 'sendCode')->middleware('throttle:worker-join')->name('phone.store');
     Route::get('verify', 'verify')->name('verify');
-    Route::post('verify', 'confirmCode')->middleware('throttle:10,1')->name('verify.store');
-    Route::post('resend', 'resend')->middleware('throttle:5,1')->name('resend');
+    Route::post('verify', 'confirmCode')->middleware('throttle:worker-join')->name('verify.store');
+    Route::post('resend', 'resend')->middleware('throttle:worker-join')->name('resend');
     Route::get('details', 'details')->name('details');
-    Route::post('details', 'register')->middleware('throttle:10,1')->name('details.store');
+    Route::post('details', 'register')->middleware('throttle:worker-join')->name('details.store');
 });
 
 // Skill Passport: onboarding, sections and Voice-to-CV (Module 2).

@@ -1284,3 +1284,52 @@ colour) and the appearance tabs use design tokens instead of the kit's neutral g
   (`projects.manage`); keep `BLUESKILLS_BILLING_ENFORCE=false` until pricing is approved; set
   `BILLING_PAYMENT_INSTRUCTIONS` (bank details) before issuing real invoices; `BILLING_PROVIDER`
   stays `manual`. No new scheduled tasks.
+
+### D-104 · Module 10 scope (owner answers, 2026-10-22)
+- **Parts:** 10a security headers, rate limits and a route audit test; 10d performance (trigram
+  indexes, N+1 fixes, config caching, load-test script); 10e PWA manifest, offline page and error
+  pages; 10f pilot mode, production seeder, `blueskills:create-superuser`, launch checklist;
+  10g accessibility (axe) and RTL checks; 10h review and hand-over. Review once at the end.
+- **Dropped by the owner:** worker data export, a `privacy:prune` retention task and the
+  breach-response runbook (planned 10b); the `/health` endpoint, Horizon gate changes, failed-job
+  alerts, error monitoring and backups (planned 10c). Sentry and `spatie/laravel-backup` were
+  approved but belong to 10c, so they are not installed now; the launch checklist lists them.
+- **Hosting:** no account yet. Production config stays host-neutral; deploy automation waits for a
+  host (Laravel Cloud if it has a Middle East region, otherwise a UAE VPS).
+- **Packages:** `@axe-core/playwright` (dev) approved.
+- **Search:** stays on Postgres with `pg_trgm` indexes for the pilot; Scout + Meilisearch later.
+- **Pilot:** workers register freely; organizations join with a staff-issued invite code; one
+  live corridor BD → AE; billing enforcement stays off.
+- **Retention defaults (agreed, not built in this module, need legal review):** OTP codes 7 days,
+  campaign visit IPs removed after 90 days, read notifications 180 days, files of rejected or
+  withdrawn documents 90 days, closed mobility case files 1 year after closing, audit log 2 years.
+
+### D-105 · Security headers, rate limits and the route audit (10a)
+- **`SecurityHeaders`** (global middleware) on every response, error pages included: a Content
+  Security Policy with a per-request script nonce (Vite tags and the inline appearance script carry
+  it; inline styles stay allowed because React and Radix set style attributes), `frame-ancestors
+  'none'`, `object-src 'none'`, `form-action 'self'`; `X-Frame-Options: DENY`, `nosniff`,
+  `Referrer-Policy: strict-origin-when-cross-origin`, `Cross-Origin-Opener-Policy: same-origin`,
+  and a Permissions-Policy that lets only this site use camera and microphone (SkillShow,
+  Voice-to-CV). HSTS (1 year, subdomains) only over HTTPS.
+- The policy is **report-only outside production** (`BLUESKILLS_CSP_ENFORCE`), so a missing source
+  shows in the browser console before it can break a page. `connect-src` allows the Reverb socket
+  the browser uses (`VITE_REVERB_*`, which in Sail differs from the server's `REVERB_HOST`) and the
+  Vite dev server while it runs. A private disk on another host (S3) must be added with
+  `BLUESKILLS_CSP_MEDIA_SOURCES`; `BLUESKILLS_CSP_REPORT_URI` collects reports. Checked in
+  Chromium on worker, employer and staff pages: no violations.
+- **Sessions:** secure-only and encrypted cookies by default when `APP_ENV=production`.
+- **Rate limits:** a `writes` limiter on the whole web group (reads never count; broadcasting
+  auth excluded): 120 writes a minute per signed-in user, 300 per IP for guests, on top of each
+  route's own limit. Worker phone sign-in (`worker-join`) was 10 a minute **per IP**, which would
+  lock out a job fair on one Wi-Fi network after ten workers; it is now 10 a minute per session
+  and 300 per IP. The per-IP OTP cap per hour is now `BLUESKILLS_OTP_MAX_PER_IP_PER_HOUR`
+  (default 100, was 20); per-phone limits are unchanged (5 an hour, 60 s between codes).
+- **Route audit test** (`tests/Feature/Security/RouteAuditTest.php`): every app route needs
+  sign-in unless it is in the public list; every signed-in controller action must call a policy
+  or gate (in the action, a controller method it calls, `can:` middleware or a FormRequest whose
+  `authorize()` isn't `return true`) unless it is in the short "own records only" list; admin
+  routes need staff + 2FA; Inertia devtools never record outside `local`. A new route that fails
+  must authorize, or be added to a list with its reason.
+- **CI** runs `composer audit` and `npm audit --omit=dev --audit-level=high`.
+- Signed media links stay at 15 minutes (`MediaUrls::TTL_MINUTES`) and storage redirects at 5.

@@ -75,6 +75,11 @@ jobs:
       - name: Install npm dependencies
         run: npm ci
 
+      - name: Dependency security advisories
+        run: |
+          composer audit --no-interaction
+          npm audit --omit=dev --audit-level=high
+
       - name: Prepare application
         run: |
           cp .env.example .env

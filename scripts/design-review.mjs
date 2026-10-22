@@ -228,7 +228,8 @@ try {
         });
         const page = await context.newPage();
         const errors = [];
-        page.on('console', (message) => message.type() === 'error' && errors.push(message.text()));
+        // Report-only CSP violations (D-105) are logged as info, so match them by text.
+        page.on('console', (message) => (message.type() === 'error' || message.text().includes('Content Security Policy')) && errors.push(message.text()));
         page.on('pageerror', (error) => errors.push(error.message));
 
         if (storageState) {

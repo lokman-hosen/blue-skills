@@ -34,7 +34,8 @@ return [
         'max_attempts' => 5,
         'resend_seconds' => 60,
         'max_per_phone_per_hour' => 5,
-        'max_per_ip_per_hour' => 20,
+        // One job-fair Wi-Fi network is one IP address; raise this for a big event (D-105).
+        'max_per_ip_per_hour' => (int) env('BLUESKILLS_OTP_MAX_PER_IP_PER_HOUR', 100),
     ],
 
     /*
@@ -83,6 +84,31 @@ return [
     | switch this off on a local machine.
     */
     'enforce_staff_two_factor' => (bool) env('BLUESKILLS_ENFORCE_STAFF_2FA', true),
+
+    /*
+    | Response headers (D-105). The Content Security Policy is enforced in production and sent
+    | report-only elsewhere, so a blocked source shows up in the browser console first. Extra
+    | sources are space separated: `media_sources` for a private disk on another host (S3
+    | temporary URLs), `connect_sources` for anything the browser calls besides this app and
+    | Reverb. HSTS is only sent over HTTPS.
+    */
+    'security' => [
+        'csp_enforce' => (bool) env('BLUESKILLS_CSP_ENFORCE', env('APP_ENV') === 'production'),
+        'csp_report_uri' => env('BLUESKILLS_CSP_REPORT_URI'),
+        'media_sources' => env('BLUESKILLS_CSP_MEDIA_SOURCES', ''),
+        'connect_sources' => env('BLUESKILLS_CSP_CONNECT_SOURCES', ''),
+        // Where the browser reaches Reverb: the VITE_ values built into the frontend, which can
+        // differ from the server-side REVERB_HOST (in Sail that one is the container name).
+        'reverb' => [
+            'host' => env('VITE_REVERB_HOST', env('REVERB_HOST')),
+            'port' => env('VITE_REVERB_PORT', env('REVERB_PORT', 443)),
+            'scheme' => env('VITE_REVERB_SCHEME', env('REVERB_SCHEME', 'https')),
+        ],
+        'hsts_max_age' => (int) env('BLUESKILLS_HSTS_MAX_AGE', 31536000),
+        // Writes (POST/PUT/PATCH/DELETE) per minute that routes without their own limit allow.
+        'writes_per_minute' => (int) env('BLUESKILLS_WRITES_PER_MINUTE', 120),
+        'guest_writes_per_minute' => (int) env('BLUESKILLS_GUEST_WRITES_PER_MINUTE', 300),
+    ],
 
     /*
     | Platform billing (D-095). Limits are tracked but not enforced until pricing is approved:

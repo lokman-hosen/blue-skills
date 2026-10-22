@@ -85,10 +85,13 @@ use App\Domain\Worker\Voice\RuleBasedProfileExtractor;
 use App\Domain\Worker\Voice\SampleSpeechToText;
 use App\Domain\Worker\Voice\UnavailableSpeechToText;
 use Carbon\CarbonImmutable;
+use Illuminate\Cache\RateLimiting\Limit;
 use Illuminate\Database\Eloquent\Relations\Relation;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Date;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Gate;
+use Illuminate\Support\Facades\RateLimiter;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Validation\Rules\Password;
 
@@ -136,6 +139,32 @@ class AppServiceProvider extends ServiceProvider
         $this->configureMorphMap();
         LeadStageWatcher::register();
         $this->configureGates();
+        $this->configureRateLimiting();
+    }
+
+    /**
+     * Rate limits (D-105). `writes` runs on every web route on top of any route's own limit;
+     * reads are never limited by it. `worker-join` limits phone sign-in per device rather than
+     * per IP address, so a job fair on one Wi-Fi network isn't locked out after ten workers.
+     */
+    protected function configureRateLimiting(): void
+    {
+        RateLimiter::for('writes', function (Request $request): Limit {
+            if ($request->isMethodSafe() || $request->is('broadcasting/auth')) {
+                return Limit::none();
+            }
+
+            $user = $request->user();
+
+            return $user instanceof User
+                ? Limit::perMinute(config()->integer('blueskills.security.writes_per_minute'))->by('writes:user:'.$user->id)
+                : Limit::perMinute(config()->integer('blueskills.security.guest_writes_per_minute'))->by('writes:ip:'.$request->ip());
+        });
+
+        RateLimiter::for('worker-join', fn (Request $request): array => [
+            Limit::perMinute(10)->by('join:session:'.$request->session()->getId()),
+            Limit::perMinute(300)->by('join:ip:'.$request->ip()),
+        ]);
     }
 
     protected function configureGates(): void
