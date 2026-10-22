@@ -20,7 +20,7 @@ it('shows each staff member the queues they can work on and the marketplace', fu
 
     $this->actingAs(staffUser(StaffRole::Superuser))->get(route('dashboard'))
         ->assertInertia(fn (Assert $page) => $page->component('admin/overview')
-            ->has('overview.queues', 9)
+            ->has('overview.queues', 10)
             ->where('overview.marketplace.live_jobs', 1)
             ->where('overview.corridorsPendingLegalReview', fn ($count) => $count > 0));
 

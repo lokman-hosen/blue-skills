@@ -3,13 +3,16 @@
 use App\Domain\Taxonomy\Actions\SaveTaxonomyItem;
 use App\Http\Controllers\Admin\AppealDecisionController;
 use App\Http\Controllers\Admin\AuditLogController;
+use App\Http\Controllers\Admin\BillingController;
 use App\Http\Controllers\Admin\CampaignController;
 use App\Http\Controllers\Admin\ConfigController;
 use App\Http\Controllers\Admin\EvidenceReviewController;
+use App\Http\Controllers\Admin\InvoiceController;
 use App\Http\Controllers\Admin\JobReviewController;
 use App\Http\Controllers\Admin\LeadController;
 use App\Http\Controllers\Admin\MandateReviewController;
 use App\Http\Controllers\Admin\OrganizationReviewController;
+use App\Http\Controllers\Admin\PlanController;
 use App\Http\Controllers\Admin\SkillShowModerationController;
 use App\Http\Controllers\Admin\StaffController;
 use App\Http\Controllers\Admin\StaffInvitationAcceptanceController;
@@ -67,6 +70,27 @@ Route::middleware(['auth', 'verified', 'user.type:staff', 'staff.2fa'])->prefix(
         Route::put('{campaign}', 'update')->name('update');
         Route::post('{campaign}/{action}', 'status')->whereIn('action', ['pause', 'resume', 'end'])->name('status');
         Route::get('{campaign}/qr', 'qr')->name('qr');
+    });
+
+    // Platform billing for Finance Officers (Module 9, spec §11, D-095).
+    Route::prefix('billing')->name('billing.')->group(function () {
+        Route::get('/', [BillingController::class, 'index'])->name('index');
+        Route::get('organizations/{organization}', [BillingController::class, 'show'])->name('organizations.show');
+        Route::post('organizations/{organization}/plan', [BillingController::class, 'assignPlan'])->name('organizations.plan');
+        Route::post('organizations/{organization}/credits', [BillingController::class, 'adjustCredits'])->name('organizations.credits');
+        Route::post('organizations/{organization}/invoices', [BillingController::class, 'createInvoice'])->name('organizations.invoices.store');
+        Route::get('plans', [PlanController::class, 'index'])->name('plans.index');
+        Route::post('plans', [PlanController::class, 'store'])->name('plans.store');
+        Route::put('plans/{plan}', [PlanController::class, 'update'])->name('plans.update');
+        Route::controller(InvoiceController::class)->prefix('invoices')->name('invoices.')->group(function () {
+            Route::get('/', 'index')->name('index');
+            Route::get('{invoice}', 'show')->name('show');
+            Route::post('{invoice}/lines', 'addLine')->name('lines.store');
+            Route::delete('{invoice}/lines/{line}', 'removeLine')->name('lines.destroy');
+            Route::post('{invoice}/issue', 'issue')->name('issue');
+            Route::post('{invoice}/pay', 'pay')->name('pay');
+            Route::post('{invoice}/void', 'void')->name('void');
+        });
     });
 
     // Trust: reports, cases, suspensions and appeals (Module 8, spec §10).

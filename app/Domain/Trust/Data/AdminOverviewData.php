@@ -4,6 +4,8 @@ namespace App\Domain\Trust\Data;
 
 use App\Domain\Applications\Models\Application;
 use App\Domain\Applications\States\Application\Accepted;
+use App\Domain\Billing\Models\Invoice;
+use App\Domain\Billing\States\Invoice\Issued;
 use App\Domain\Config\Models\Country;
 use App\Domain\Crm\Models\Lead;
 use App\Domain\Identity\Enums\Permission;
@@ -61,6 +63,7 @@ class AdminOverviewData extends Data
                 ->where('documentable_type', (new Document)->getMorphClass())->count()] : null,
             $can(Permission::SkillShowsModerate) ? ['key' => 'skillshows', 'count' => SkillShow::query()->where('moderation_status', ModerationStatus::Pending)->count()] : null,
             $can(Permission::TrustManage) ? ['key' => 'reports', 'count' => Report::query()->whereState('status', OpenReport::class)->count()] : null,
+            $can(Permission::FinanceManage) ? ['key' => 'invoices_overdue', 'count' => Invoice::query()->whereState('status', Issued::class)->where('due_on', '<', now()->toDateString())->count()] : null,
             $can(Permission::CrmManage) ? ['key' => 'leads_due', 'count' => Lead::query()->where('next_follow_up_at', '<=', now()->endOfDay())->count()] : null,
         ]));
 

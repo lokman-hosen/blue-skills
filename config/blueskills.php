@@ -96,6 +96,8 @@ return [
         'vat_rate_bp' => 500,
         'payment_days' => 14,
         'provider' => env('BILLING_PROVIDER', 'manual'),
+        // Shown on invoices until online payment exists, e.g. bank account details.
+        'payment_instructions' => env('BILLING_PAYMENT_INSTRUCTIONS'),
     ],
 
 ];

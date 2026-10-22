@@ -19,6 +19,7 @@ const QUEUE_LINKS: Record<string, NonNullable<InertiaLinkProps['href']> | undefi
     skillshows: admin.skillshows.index(),
     reports: admin.trust.reports.index(),
     leads_due: admin.crm.index({ query: { view: 'due' } }),
+    invoices_overdue: admin.billing.invoices.index({ query: { state: 'overdue' } }),
 };
 
 const MARKETPLACE = [

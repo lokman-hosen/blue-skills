@@ -160,7 +160,13 @@ export const orgNav: Record<App.Domain.Organization.Enums.OrganizationType, NavG
         {
             items: [
                 { key: 'team', label: 'nav.team', icon: Users, href: team.index() },
-                { key: 'billing', label: 'nav.billing', icon: CreditCard },
+                {
+                    key: 'billing',
+                    label: 'nav.billing',
+                    icon: CreditCard,
+                    href: org.billing.index(),
+                    ability: 'viewBilling',
+                },
                 ...orgFooter,
             ],
         },
@@ -240,7 +246,13 @@ export const orgNav: Record<App.Domain.Organization.Enums.OrganizationType, NavG
                     ability: 'viewMandates',
                 },
                 { key: 'team', label: 'nav.team', icon: Users, href: team.index() },
-                { key: 'billing', label: 'nav.billing', icon: CreditCard },
+                {
+                    key: 'billing',
+                    label: 'nav.billing',
+                    icon: CreditCard,
+                    href: org.billing.index(),
+                    ability: 'viewBilling',
+                },
                 ...orgFooter,
             ],
         },
@@ -366,6 +378,13 @@ export const adminNav: NavGroup[] = [
                 icon: Megaphone,
                 href: admin.marketing.index(),
                 permission: 'crm.manage',
+            },
+            {
+                key: 'admin_billing',
+                label: 'nav.billing',
+                icon: CreditCard,
+                href: admin.billing.index(),
+                permission: 'finance.manage',
             },
         ],
     },

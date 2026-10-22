@@ -26,4 +26,16 @@ final class Money
     {
         return intdiv($amountMinor, 10 ** self::decimals($currency));
     }
+
+    /**
+     * A typed decimal amount ("1500", "1500.5", "1500.50") to minor units without floats.
+     */
+    public static function parseMinor(string $amount, string $currency): int
+    {
+        $decimals = self::decimals($currency);
+        [$whole, $fraction] = array_pad(explode('.', trim($amount), 2), 2, '');
+        $fraction = substr(str_pad($fraction, $decimals, '0'), 0, $decimals);
+
+        return ((int) $whole) * 10 ** $decimals + ($decimals > 0 ? (int) $fraction : 0);
+    }
 }

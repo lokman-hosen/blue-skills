@@ -12,10 +12,12 @@ use App\Domain\Applications\Models\Offer;
 use App\Domain\Applications\Models\ProfileSnapshot;
 use App\Domain\Applications\Models\Shortlist;
 use App\Domain\Applications\Models\ShortlistEntry;
+use App\Domain\Billing\Contracts\PaymentProvider;
 use App\Domain\Billing\Models\CreditLedgerEntry;
 use App\Domain\Billing\Models\Invoice;
 use App\Domain\Billing\Models\OrganizationSubscription;
 use App\Domain\Billing\Models\Plan;
+use App\Domain\Billing\Providers\ManualPaymentProvider;
 use App\Domain\Config\Models\Country;
 use App\Domain\Config\Models\CountryRule;
 use App\Domain\Config\Models\Language;
@@ -97,6 +99,11 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register(): void
     {
+        // Platform billing payments (D-095): manual bank transfer until a provider is chosen.
+        $this->app->bind(PaymentProvider::class, fn () => match (config('blueskills.billing.provider')) {
+            default => new ManualPaymentProvider,
+        });
+
         $this->app->bind(OtpChannel::class, fn () => match (config('blueskills.otp.channel')) {
             'whatsapp' => new WhatsAppCloudOtpChannel,
             default => new LogOtpChannel,

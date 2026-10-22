@@ -239,6 +239,76 @@ declare namespace App {
             }
         }
         namespace Billing {
+            namespace Data {
+                export type InvoiceData = {
+                    summary: App.Domain.Billing.Data.InvoiceListItemData;
+                    organizationId: string;
+                    organizationLegalName: string | null;
+                    organizationCountryCode: string | null;
+                    subtotal: App.Support.Data.MoneyData;
+                    taxRatePercent: number;
+                    tax: App.Support.Data.MoneyData;
+                    lines: {
+                        id: string;
+                        description: string;
+                        quantity: number;
+                        unitAmount: App.Support.Data.MoneyData;
+                        amount: App.Support.Data.MoneyData;
+                        credits: number;
+                    }[];
+                    paymentMethod: App.Domain.Billing.Enums.PaymentMethod | null;
+                    paymentReference: string | null;
+                    notes: string | null;
+                    paymentUrl: string | null;
+                    paymentInstructions: string | null;
+                };
+                export type InvoiceListItemData = {
+                    id: string;
+                    number: string | null;
+                    organization: string;
+                    status: App.Support.Data.StatusData;
+                    total: App.Support.Data.MoneyData;
+                    issuedAt: string | null;
+                    dueOn: string | null;
+                    overdue: boolean;
+                    paidAt: string | null;
+                };
+                export type OrganizationBillingData = {
+                    organizationId: string;
+                    organization: string;
+                    plan: App.Domain.Billing.Data.PlanData | null;
+                    planSince: string | null;
+                    credits: number;
+                    seatsUsed: number;
+                    seats: number | null;
+                    enforced: boolean;
+                    ledger: {
+                        id: string;
+                        delta: number;
+                        reason: string;
+                        note: string | null;
+                        job: string | null;
+                        invoice: string | null;
+                        at: string;
+                    }[];
+                    invoices: App.Domain.Billing.Data.InvoiceListItemData[];
+                };
+                export type PlanData = {
+                    id: string;
+                    code: string;
+                    name: string;
+                    description: string | null;
+                    organizationType: App.Domain.Organization.Enums.OrganizationType;
+                    price: App.Support.Data.MoneyData;
+                    billingPeriod: App.Domain.Billing.Enums.BillingPeriod;
+                    postingCredits: number;
+                    seats: number | null;
+                    talentSearch: boolean;
+                    recruitmentProjects: boolean;
+                    isActive: boolean;
+                    subscribers: number;
+                };
+            }
             namespace Enums {
                 export type BillingPeriod = 'monthly' | 'yearly' | 'one_off';
                 export type CreditReason =
@@ -995,7 +1065,8 @@ declare namespace App {
                     | 'case_document_answered'
                     | 'job_paused_mandate'
                     | 'graduate_joined'
-                    | 'organization_suspended';
+                    | 'organization_suspended'
+                    | 'invoice_issued';
             }
         }
         namespace Mobility {

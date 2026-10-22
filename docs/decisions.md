@@ -1232,3 +1232,35 @@ colour) and the appearance tabs use design tokens instead of the kit's neutral g
   applications in the range or live, up to 50) and active projects against their targets.
 - Spec §9's "institute pool" as a source isn't tracked separately: invitations from a pool and
   from talent search are both "invited by you".
+
+### D-102 · Platform billing
+- **Finance (`/admin/billing`, `finance.manage`):** three tabs.
+  - *Organizations:* each organization's plan, credit balance and unpaid total. An organization's
+    page shows plan, credits, seats and the last 20 credit entries, with forms to **change plan**
+    (an active plan for that organization type, from a start date; the current plan ends the day
+    before; optionally creates a draft invoice for the plan) and **adjust credits** (± with a
+    reason, logged), and a "New invoice" button.
+  - *Invoices:* waiting for payment / overdue / drafts / paid / void. A draft is edited line by
+    line (description, quantity, unit price, optional posting credits per unit), then **issued**
+    (number `INV-2026-00001`, due in `payment_days` = 14, owners and agency owners told in-app and
+    by email, `invoice_issued`). An issued invoice is **marked paid** (method, bank reference,
+    date) which adds its credits to the ledger once (plan lines as plan credits, other lines as
+    purchases), or **voided** with a note. Paid invoices never change; voided ones keep their
+    number. VAT 5% by default, rounded half up.
+  - *Plans:* name, for which organization type, price (typed as a decimal, stored in minor units
+    without floats), period, posting credits, seats (blank = unlimited), talent search, projects,
+    offered or switched off. Plans are never deleted.
+- **Organizations (`/org/billing`, `billing.manage`, employers and agencies):** plan and what it
+  includes, posting credits (a negative balance is shown as "more used than bought"), seats used,
+  credit history and issued invoices (never drafts). The invoice page prints cleanly (workspace
+  chrome hidden in print) and shows how to pay: `BILLING_PAYMENT_INSTRUCTIONS` or "bank transfer
+  quoting the invoice number". Every billing screen says platform billing is separate from worker
+  job costs (rule 13).
+- **Payment provider:** `PaymentProvider` contract bound from `blueskills.billing.provider`; only
+  `manual` exists (no online payment link). A Stripe/other provider plugs in there later.
+- **Limits (`BLUESKILLS_BILLING_ENFORCE`, off):** when on, a job's *first* submission needs a
+  posting credit and its first publication uses one (resubmitting a live job is free; if credits
+  ran out while it waited for review the balance can go below zero rather than blocking staff);
+  inviting a member needs a free seat (members plus pending invitations); talent search needs a
+  plan that includes it. While off, pages say limits are counted but not enforced.
+- **Admin overview:** finance staff get "Overdue invoices".

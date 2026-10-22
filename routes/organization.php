@@ -6,6 +6,7 @@ use App\Domain\Mobility\Actions\ChangeCaseStage;
 use App\Domain\Mobility\Actions\DecideCaseDocument;
 use App\Http\Controllers\Organization\AnalyticsController;
 use App\Http\Controllers\Organization\ApplicantController;
+use App\Http\Controllers\Organization\BillingController as OrganizationBillingController;
 use App\Http\Controllers\Organization\CandidateController;
 use App\Http\Controllers\Organization\CaseDocumentController;
 use App\Http\Controllers\Organization\CohortController;
@@ -94,6 +95,12 @@ Route::middleware(['auth', 'verified', 'user.type:org'])->prefix('org/projects')
     Route::get('{project}', 'show')->name('show');
     Route::put('{project}', 'update')->name('update');
     Route::post('{project}/{action}', 'status')->whereIn('action', ['complete', 'cancel', 'reopen'])->name('status');
+});
+
+// Workspace billing: plan, credits, seats and invoices (Module 9, D-095).
+Route::middleware(['auth', 'verified', 'user.type:org'])->prefix('org/billing')->name('org.billing.')->controller(OrganizationBillingController::class)->group(function () {
+    Route::get('/', 'index')->name('index');
+    Route::get('invoices/{invoice}', 'invoice')->name('invoices.show');
 });
 
 // Hiring analytics (Module 9, spec §14).
