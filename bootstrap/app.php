@@ -6,12 +6,16 @@ use App\Http\Middleware\EnsureStaffTwoFactor;
 use App\Http\Middleware\EnsureUserType;
 use App\Http\Middleware\HandleAppearance;
 use App\Http\Middleware\HandleInertiaRequests;
+use App\Http\Middleware\SecurityHeaders;
 use App\Http\Middleware\SetLocale;
+use App\Support\ErrorPage;
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
 use Illuminate\Http\Middleware\AddLinkHeadersForPreloadedAssets;
 use Illuminate\Http\Request;
+use Inertia\Inertia;
+use Symfony\Component\HttpFoundation\Response;
 
 return Application::configure(basePath: dirname(__DIR__))
     ->withRouting(
@@ -29,7 +33,10 @@ return Application::configure(basePath: dirname(__DIR__))
             'staff.2fa' => EnsureStaffTwoFactor::class,
         ]);
 
+        $middleware->append(SecurityHeaders::class);
+
         $middleware->web(append: [
+            'throttle:writes',
             HandleAppearance::class,
             SetLocale::class,
             HandleInertiaRequests::class,
@@ -41,4 +48,27 @@ return Application::configure(basePath: dirname(__DIR__))
         $exceptions->shouldRenderJsonWhen(
             fn (Request $request) => $request->is('api/*') || $request->expectsJson(),
         );
+
+        // Error pages in the site's design (D-107). Local debug keeps Laravel's 500 page with the trace.
+        $exceptions->respond(function (Response $response, Throwable $exception, Request $request): Response {
+            $status = $response->getStatusCode();
+
+            if ($request->expectsJson()) {
+                return $response;
+            }
+
+            if ($status === 419) {
+                if ($request->hasSession()) {
+                    Inertia::flash('toast', ['type' => 'warning', 'message' => __('errors.page_expired')]);
+                }
+
+                return back();
+            }
+
+            $inertiaServerError = $status >= 500 && $request->header('X-Inertia') && ! config('app.debug');
+
+            return in_array($status, ErrorPage::STATUSES, true) || $inertiaServerError
+                ? ErrorPage::render($request, $status)
+                : $response;
+        });
     })->create();

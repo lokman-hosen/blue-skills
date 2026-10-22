@@ -90,7 +90,11 @@ export default function JobWizard(props: Props) {
                 />
 
                 <nav aria-label={t('jobs.wizard.steps')}>
-                    <ol className="flex gap-1 overflow-x-auto pb-1">
+                    {/* Scrolls sideways on phones; focusable so keyboard users can scroll it (WCAG 2.1.1). */}
+                    <ol
+                        tabIndex={0}
+                        className="flex gap-1 overflow-x-auto rounded-lg pb-1 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand"
+                    >
                         {steps.map((item, index) => {
                             const current = item === step;
                             const reachable = code !== null || item === 'requirement';

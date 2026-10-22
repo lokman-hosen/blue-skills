@@ -1,0 +1,17 @@
+{
+    "name": "BLUESKILLS.AE",
+    "short_name": "BLUESKILLS",
+    "description": "Your Global Skill Passport, honest jobs and every step to joining.",
+    "id": "/",
+    "start_url": "/?source=app",
+    "scope": "/",
+    "display": "standalone",
+    "orientation": "portrait-primary",
+    "background_color": "#f3f5fa",
+    "theme_color": "#153e9e",
+    "icons": [
+        { "src": "/icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
+        { "src": "/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
+        { "src": "/icon-maskable-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+    ]
+}

@@ -1222,6 +1222,19 @@ declare namespace App {
                     city: string | null;
                     verification: App.Support.Data.StatusData;
                 };
+                export type PilotInviteData = {
+                    id: string;
+                    code: string;
+                    partnerName: string;
+                    organizationType: App.Domain.Organization.Enums.OrganizationType | null;
+                    maxUses: number;
+                    usedCount: number;
+                    expiresAt: string | null;
+                    status: App.Support.Data.StatusData;
+                    organizations: string[];
+                    createdBy: string | null;
+                    createdAt: string;
+                };
                 export type RegisterOrganizationData = {
                     type: App.Domain.Organization.Enums.OrganizationType;
                     legalName: string;
@@ -1232,6 +1245,7 @@ declare namespace App {
                     licenceNumber: string | null;
                     licenceExpiresOn: string | null;
                     title: string | null;
+                    pilotCode: string | null;
                 };
                 export type TeamInvitationData = {
                     id: string;

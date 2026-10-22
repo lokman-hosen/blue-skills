@@ -21,7 +21,7 @@ final class ApplicantProjection
 
     public function __construct(private readonly Application $application)
     {
-        $application->loadMissing(['consents', 'snapshot', 'skillShow', 'workerProfile.user']);
+        $application->loadMissing(['consents.document', 'snapshot', 'skillShow', 'workerProfile.user']);
         $this->active = $application->consents
             ->filter(fn (ApplicationConsent $consent) => $consent->isActive())
             ->keyBy(fn (ApplicationConsent $consent) => $consent->item->value)

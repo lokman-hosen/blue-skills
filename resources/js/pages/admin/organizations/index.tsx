@@ -1,10 +1,12 @@
 import { Head, Link } from '@inertiajs/react';
-import { Building2 } from 'lucide-react';
+import { Building2, KeyRound } from 'lucide-react';
 import OrganizationReviewController from '@/actions/App/Http/Controllers/Admin/OrganizationReviewController';
+import PilotInviteController from '@/actions/App/Http/Controllers/Admin/PilotInviteController';
 import { DataTable } from '@/components/bs/data-table';
 import { EmptyState } from '@/components/bs/empty-state';
 import { PageHeader } from '@/components/bs/page-header';
 import { StatusChip } from '@/components/bs/status-chip';
+import { Button } from '@/components/ui/button';
 import { useTranslation } from '@/lib/i18n';
 
 type Review = App.Domain.Organization.Data.OrganizationReviewData;
@@ -22,6 +24,14 @@ export default function OrganizationReviews({ reviews }: { reviews: Review[] }) 
                     description={t('admin.organizations.body', {
                         count: formatNumber(reviews.length),
                     })}
+                    actions={
+                        <Button asChild variant="outline" className="min-h-11">
+                            <Link href={PilotInviteController.index.url()}>
+                                <KeyRound aria-hidden className="size-4" />
+                                {t('pilot.title')}
+                            </Link>
+                        </Button>
+                    }
                 />
                 <DataTable
                     caption={t('admin.organizations.title')}

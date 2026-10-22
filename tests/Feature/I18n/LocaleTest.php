@@ -89,3 +89,10 @@ it('reads locales back from a serializing cache store', function () {
 
     $registry->forget();
 });
+
+it('falls back to English on the server for a locale without its own strings', function () {
+    app()->setLocale('ur');
+
+    expect(__('errors.code', ['code' => 404]))->toBe('Error 404')
+        ->and(__('no.such.key'))->toBe('no.such.key');
+});

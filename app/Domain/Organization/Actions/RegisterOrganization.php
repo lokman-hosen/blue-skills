@@ -8,21 +8,26 @@ use App\Domain\Identity\Support\TeamContext;
 use App\Domain\Organization\Data\RegisterOrganizationData;
 use App\Domain\Organization\Enums\OrganizationType;
 use App\Domain\Organization\Models\Organization;
+use App\Domain\Organization\Models\PilotInvite;
 use App\Domain\Organization\States\Verification\Pending;
 use App\Domain\Verification\Enums\VerificationType;
 use App\Domain\Verification\States\VerificationRequest\Open;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
+use Illuminate\Validation\ValidationException;
 
 /**
  * Self-registration (D-036): the organization starts pending, the registering user becomes its
- * owner and a verification request is queued for staff.
+ * owner and a verification request is queued for staff. During the pilot it needs a pilot
+ * invite code that admits its type (D-108); staff still verify it as usual.
  */
 class RegisterOrganization
 {
     public function handle(User $user, RegisterOrganizationData $data): Organization
     {
         return DB::transaction(function () use ($user, $data): Organization {
+            $invite = config('blueskills.pilot.enabled') ? $this->redeem($data) : null;
+
             $organization = Organization::query()->create([
                 'type' => $data->type,
                 'legal_name' => $data->legalName,
@@ -34,6 +39,7 @@ class RegisterOrganization
                 'licence_expires_on' => $data->type === OrganizationType::Agency ? $data->licenceExpiresOn : null,
                 'verification_status' => Pending::class,
                 'data_region' => config('blueskills.default_data_region'),
+                'pilot_invite_id' => $invite?->id,
             ]);
 
             $organization->users()->attach($user->id, ['title' => $data->title, 'joined_at' => now()]);
@@ -50,11 +56,30 @@ class RegisterOrganization
             ]);
 
             activity('organization')->performedOn($organization)->causedBy($user)
-                ->withProperties(['type' => $data->type->value])
+                ->withProperties(['type' => $data->type->value, 'pilot_invite' => $invite?->code])
                 ->log('organization.registered');
 
             return $organization;
         });
+    }
+
+    /** Uses up one place on the code; locked so two registrations can't take the last one. */
+    private function redeem(RegisterOrganizationData $data): PilotInvite
+    {
+        $invite = PilotInvite::query()
+            ->where('code', PilotInvite::normalize((string) $data->pilotCode))
+            ->lockForUpdate()
+            ->first();
+
+        if ($invite === null || ! $invite->admits($data->type)) {
+            throw ValidationException::withMessages([
+                'pilot_code' => __($invite !== null && $invite->state() === 'active' ? 'pilot.errors.wrong_type' : 'pilot.errors.invalid'),
+            ]);
+        }
+
+        $invite->increment('used_count');
+
+        return $invite;
     }
 
     /**

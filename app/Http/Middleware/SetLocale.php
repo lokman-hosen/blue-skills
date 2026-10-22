@@ -33,7 +33,8 @@ class SetLocale
         return $next($request);
     }
 
-    private function resolve(Request $request): string
+    /** The locale for a request; also used for error pages, which can render before this middleware runs. */
+    public function resolve(Request $request): string
     {
         $candidates = [
             $request->hasSession() ? $request->session()->get(self::SESSION_KEY) : null,

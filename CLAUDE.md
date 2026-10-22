@@ -48,6 +48,8 @@ php artisan migrate:fresh --seed # reset local DB with sample data
 npm run format                   # Prettier
 npm run build && npm run design:review  # Playwright review of /_design (en/bn/ur, light/dark, 390/1440)
 npm run design:review -- --phone=+8801711000001 --pages=/passport  # as a worker (needs a queue worker)
+sail artisan db:seed --class=VolumeSeeder  # 50k workers, 3k jobs, 100k applications (local only)
+node scripts/load-test.mjs --base=… --users=25 --seconds=60 [--email=…]  # load test (staging)
 ```
 
 Worker sign-in is `/join` (phone + code). Locally `OTP_CHANNEL=log` writes the code to
@@ -59,6 +61,9 @@ new-applicant digest, releases alerts held for workers' quiet hours and pauses a
 (`NOTIFY_WHATSAPP_DRIVER`, `NOTIFY_SMS_DRIVER`). `SPEECH_TO_TEXT_DRIVER=sample`
 answers every recording with the prototype's sample sentence; SkillShow checks need ffmpeg (in Sail).
 Seeded worker Rahim Uddin signs in with `+8801711000001` and has a complete Skill Passport.
+`BLUESKILLS_PILOT=true` turns on pilot mode (pilot notice; organizations register with a `PILOT-` code from
+Admin › Organizations › Pilot invite codes). Before going live, follow `docs/launch-checklist.md`; a new
+installation gets its first staff account from `php artisan blueskills:create-superuser`.
 
 Local logins after seeding (password `password`): `superuser@blueskills.test` (staff), `s.rahman@blueskills.test` (verification officer: worker documents), `l.haddad@blueskills.test` (trust officer: case TC-2026-0001; another officer decides its appeal), `hr@global-facilities.test` (employer with a suspended job and an appeal),
 `owner@abc-contracting.test` (employer Owner, draft job AE-ST-0042, pipeline on AE-MT-0115, project RP-0042, billing), `owner@gulfstar.test` (employer waiting for review), `sara@abc-contracting.test` (employer HR Admin), `owner@northstar.test` (agency Owner: licence, mandates, compliance), `imran@northstar.test` (agency case officer: cases MC-AE-2026-0188…0191, police clearance waiting for a check on 0189),
@@ -218,7 +223,7 @@ Update this table when a module is done.
 | 7 | Institutes: cohorts, invites, attestation, talent pools | ✓ |
 | 8 | Admin & trust: verification queues, reports, cases, config, taxonomy | ✓ |
 | 9 | CRM, analytics, billing | ✓ |
-| 10 | Hardening & pilot launch | ☐ |
+| 10 | Hardening & pilot launch | ✓ (staging deploy waits for a host; see `docs/launch-checklist.md`) |
 
 **Definition of done for a module:** migrations, models, policies, actions, FormRequests, controllers,
 Inertia pages (mobile + desktop, light + dark, en + bn), seeders with sample data, Pest feature tests

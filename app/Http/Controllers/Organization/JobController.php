@@ -42,10 +42,11 @@ class JobController extends Controller
         $jobs = $organization->postedJobs()
             ->with(['occupation', 'destinationCountry', 'verificationRequests', 'employer', 'mandate'])->withCount('applications')
             ->latest('updated_at')
-            ->get();
+            ->orderBy('id')
+            ->paginate(25);
 
         return Inertia::render('org/jobs/index', [
-            'jobs' => $jobs->map(fn (JobPosting $job) => JobListItemData::fromJob($job))->values()->all(),
+            'jobs' => $jobs->through(fn (JobPosting $job) => JobListItemData::fromJob($job)),
             'canCreate' => $canCreate = Gate::allows('create', [JobPosting::class, $organization]),
             // Agencies post only under a usable mandate (product rule 10).
             'needsMandate' => ! $canCreate && $organization->type === OrganizationType::Agency

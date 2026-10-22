@@ -108,7 +108,7 @@ final class JobCompliance
             return [];
         }
 
-        $mandate = $job->mandate;
+        $mandate = $job->loadMissing('mandate.agency')->mandate;
 
         if ($mandate === null) {
             return ['job_mandate_id' => __('jobs.mandate.missing')];

@@ -1284,3 +1284,151 @@ colour) and the appearance tabs use design tokens instead of the kit's neutral g
   (`projects.manage`); keep `BLUESKILLS_BILLING_ENFORCE=false` until pricing is approved; set
   `BILLING_PAYMENT_INSTRUCTIONS` (bank details) before issuing real invoices; `BILLING_PROVIDER`
   stays `manual`. No new scheduled tasks.
+
+### D-104 · Module 10 scope (owner answers, 2026-10-22)
+- **Parts:** 10a security headers, rate limits and a route audit test; 10d performance (trigram
+  indexes, N+1 fixes, config caching, load-test script); 10e PWA manifest, offline page and error
+  pages; 10f pilot mode, production seeder, `blueskills:create-superuser`, launch checklist;
+  10g accessibility (axe) and RTL checks; 10h review and hand-over. Review once at the end.
+- **Dropped by the owner:** worker data export, a `privacy:prune` retention task and the
+  breach-response runbook (planned 10b); the `/health` endpoint, Horizon gate changes, failed-job
+  alerts, error monitoring and backups (planned 10c). Sentry and `spatie/laravel-backup` were
+  approved but belong to 10c, so they are not installed now; the launch checklist lists them.
+- **Hosting:** no account yet. Production config stays host-neutral; deploy automation waits for a
+  host (Laravel Cloud if it has a Middle East region, otherwise a UAE VPS).
+- **Packages:** `@axe-core/playwright` (dev) approved.
+- **Search:** stays on Postgres with `pg_trgm` indexes for the pilot; Scout + Meilisearch later.
+- **Pilot:** workers register freely; organizations join with a staff-issued invite code; one
+  live corridor BD → AE; billing enforcement stays off.
+- **Retention defaults (agreed, not built in this module, need legal review):** OTP codes 7 days,
+  campaign visit IPs removed after 90 days, read notifications 180 days, files of rejected or
+  withdrawn documents 90 days, closed mobility case files 1 year after closing, audit log 2 years.
+
+### D-105 · Security headers, rate limits and the route audit (10a)
+- **`SecurityHeaders`** (global middleware) on every response, error pages included: a Content
+  Security Policy with a per-request script nonce (Vite tags and the inline appearance script carry
+  it; inline styles stay allowed because React and Radix set style attributes), `frame-ancestors
+  'none'`, `object-src 'none'`, `form-action 'self'`; `X-Frame-Options: DENY`, `nosniff`,
+  `Referrer-Policy: strict-origin-when-cross-origin`, `Cross-Origin-Opener-Policy: same-origin`,
+  and a Permissions-Policy that lets only this site use camera and microphone (SkillShow,
+  Voice-to-CV). HSTS (1 year, subdomains) only over HTTPS.
+- The policy is **report-only outside production** (`BLUESKILLS_CSP_ENFORCE`), so a missing source
+  shows in the browser console before it can break a page. `connect-src` allows the Reverb socket
+  the browser uses (`VITE_REVERB_*`, which in Sail differs from the server's `REVERB_HOST`) and the
+  Vite dev server while it runs. A private disk on another host (S3) must be added with
+  `BLUESKILLS_CSP_MEDIA_SOURCES`; `BLUESKILLS_CSP_REPORT_URI` collects reports. Checked in
+  Chromium on worker, employer and staff pages: no violations.
+- **Sessions:** secure-only and encrypted cookies by default when `APP_ENV=production`.
+- **Rate limits:** a `writes` limiter on the whole web group (reads never count; broadcasting
+  auth excluded): 120 writes a minute per signed-in user, 300 per IP for guests, on top of each
+  route's own limit. Worker phone sign-in (`worker-join`) was 10 a minute **per IP**, which would
+  lock out a job fair on one Wi-Fi network after ten workers; it is now 10 a minute per session
+  and 300 per IP. The per-IP OTP cap per hour is now `BLUESKILLS_OTP_MAX_PER_IP_PER_HOUR`
+  (default 100, was 20); per-phone limits are unchanged (5 an hour, 60 s between codes).
+- **Route audit test** (`tests/Feature/Security/RouteAuditTest.php`): every app route needs
+  sign-in unless it is in the public list; every signed-in controller action must call a policy
+  or gate (in the action, a controller method it calls, `can:` middleware or a FormRequest whose
+  `authorize()` isn't `return true`) unless it is in the short "own records only" list; admin
+  routes need staff + 2FA; Inertia devtools never record outside `local`. A new route that fails
+  must authorize, or be added to a list with its reason.
+- **CI** runs `composer audit` and `npm audit --omit=dev --audit-level=high`.
+- Signed media links stay at 15 minutes (`MediaUrls::TTL_MINUTES`) and storage redirects at 5.
+
+### D-106 · Performance at pilot volume (10d)
+- **`VolumeSeeder`** (local only, refuses production): 50,000 discoverable workers with skills
+  and a discovery consent, 3,000 jobs from the sample employers and 100,000 applications, by
+  set-based SQL in about 20 s; references start with `VOL`. Measured with it:
+  - Talent search with text took **3.9 s**: the discoverable scope and the text match used
+    correlated `EXISTS` (`whereHas`) checks that Postgres ran once per profile. They are now
+    uncorrelated `IN (subquery)` checks (hashed once). With the new indexes it takes **~110 ms**.
+  - Every workspace page reloaded the member's permissions for each of the ~12 navigation
+    abilities (10–14 repeated queries). `OrganizationPermissions` now remembers a member's
+    permissions for the rest of the HTTP request (never in queue workers or commands, which
+    run for many jobs); `QueryBudgetTest` guards it.
+  - `/org/jobs` listed every job (≈1 s for 500); it is paginated at 25 like candidates.
+  - Public job search stays under 100 ms with 3,000 jobs; admin and worker pages 100–200 ms.
+- **Indexes** (migration `add_search_indexes`, needs the `pg_trgm` extension, standard on
+  managed Postgres): trigram GIN on users.name, worker_profiles.headline, jobs.title,
+  organizations.display_name and leads.name; partial indexes for discovery consents, the
+  discoverable-worker ordering and published jobs by date.
+- **N+1 guard:** `Model::preventLazyLoading()` everywhere; outside production a lazy load across
+  a collection throws, in production it only logs a warning. It found four: bulk move/reject
+  (job, its organization, the worker), the applicant page's shared documents and permissions
+  loaded for roster members; all now eager loaded.
+- **Not done, on purpose:** caching taxonomy and country lists. The public jobs page runs ten
+  queries and the filter lists cost two cheap ones; caching would add invalidation for no
+  measurable gain.
+- **`scripts/load-test.mjs`** (Node only): virtual users browse job search and Truth Cards and,
+  with `--email`, workspace pages; prints p50/p95/max per page. For staging; local numbers
+  reflect Sail's single development server. The worker apply flow isn't covered (each apply
+  needs its own phone sign-in).
+
+### D-107 · Error pages, offline page and installable app (10e)
+- **Error pages:** 403, 404 and 429 render `public/error` (Inertia, public layout, en/bn/RTL):
+  what went wrong, what to do, "Go to my dashboard" (signed in) or "Go to the home page", and
+  "Go back". Exception messages are never shown. Unknown URLs hit a fallback route, so the page
+  knows who is signed in; errors raised before the Inertia middleware (a missing record in
+  route binding, a rate limit) get the locale and shared props in `App\Support\ErrorPage`, with
+  a translations-only fallback if the database is the problem.
+- **419** (expired form) goes back to the page with a toast instead of an error page.
+- **500 and 503** for full page loads are standalone Blade pages (`resources/views/errors/`)
+  that need no database, session or JavaScript; an Inertia visit that fails with 500 gets the
+  Inertia page. Local debug keeps Laravel's trace page. JSON requests keep JSON errors.
+- **Brand icons:** the favicon and touch icon were still the starter kit's Laravel logo. They are
+  now the BLUESKILLS mark (the `IdCard` tile from `components/bs/logo.tsx`), plus 192/512 and
+  maskable 512 PNGs for the manifest.
+- **Installable app:** `manifest.webmanifest` (standalone, brand colours, start `/?source=app`).
+  `sw.js` is registered from production builds only and does one thing: when a full page load
+  fails, it shows `offline.html` (en + bn, no JavaScript). It never caches pages or API
+  responses, because they hold personal data. Bump `VERSION` in `sw.js` when the offline page
+  changes.
+- New `errors.*` keys and the offline page's Bangla are drafts in `docs/translation-todo.md`.
+
+### D-108 · Pilot mode, safe seeding, first superuser and the launch checklist (10f)
+- **Pilot mode** (`BLUESKILLS_PILOT`, off by default). While on, every page shows a pilot notice
+  and an organization registers only with a **pilot invite code**. Codes are `PILOT-XXXXXX`
+  (no 0/O/1/I/L), issued at Admin › Organizations › Pilot invite codes by staff who review
+  organizations (`verifications.review`), for a named partner, optionally one organization
+  type, a number of uses (1–50) and an end date. Codes are handed over by staff; nothing is
+  sent. Redeeming locks the code row; unknown, used-up, expired and revoked codes get one
+  message, a code for another type gets its own. Revoking keeps earlier registrations. The
+  organization keeps `pilot_invite_id`; staff verification is unchanged. Account sign-up and
+  worker registration need no code.
+- **Corridors:** no new mechanism. Jobs already need a destination staff enabled; in pilot mode
+  `CountrySeeder` opens only `blueskills.pilot.destinations` (AE) on a new database.
+- **Seeding is safe on every deploy:** the reference seeders (countries, corridor rules,
+  languages, taxonomy) used `updateOrCreate`, so re-seeding would have undone staff edits
+  (corridor switches, rules, Bangla taxonomy names). They now only add what is missing. A
+  separate production seeder isn't needed: `DatabaseSeeder` already skips sample data in
+  production.
+- **`blueskills:create-superuser`** (email argument, `--name`, password prompted, production
+  password rules) creates the first staff superuser without putting a password in `.env`.
+- **Trusted proxies** (`TRUSTED_PROXIES` → `config/trustedproxy.php`): behind Cloudflare the app
+  otherwise sees one proxy IP for everyone (breaking per-IP limits) and misses HTTPS.
+- **`docs/launch-checklist.md`** collects approvals, provider accounts, server, environment,
+  first and later deploys, pilot set-up, staging checks and what is still not built.
+
+### D-109 · Accessibility and RTL checks (10g)
+- **axe in the design review:** `scripts/design-review.mjs` runs `@axe-core/playwright`
+  (4.13.0, pinned; dev only) with the WCAG 2.0/2.1/2.2 A and AA rules on every page, next to its
+  own token-aware contrast check (axe's `color-contrast` rule is off to avoid duplicates). Swept
+  in en at 390 and 1440 px: public pages, worker (15 pages), employer (18), agency (10),
+  institute (6) and staff (20). One violation: the job wizard's step list scrolls sideways on
+  phones without being keyboard-reachable; it is now focusable with a focus ring.
+- **The sweep also exercised the N+1 guard (D-106)** on pages tests don't cover: the staff job
+  queue failed locally because each agency job lazy-loaded its mandate and agency. Eager loaded
+  now (and `JobCompliance` loads them itself).
+- **RTL:** no physical-direction classes outside the shadcn primitives (the 2FA modal's
+  `space-x-*` is logical in Tailwind 4). The worker flow in Urdu (light/dark, 390/1440) mirrors
+  correctly. English text inside RTL pages moves its full stop to the start (".Dhaka"), which
+  goes away with real Urdu strings.
+- **Server-side fallback to English:** Laravel doesn't fall back for `lang/*.json`, so in Urdu,
+  which has no file yet, every `__()` string from PHP (document names, evidence titles,
+  notifications) showed its raw key. A missing-key handler now returns the English line, the
+  same as the React `t()` helper does.
+- **Not done:** a separate translation coverage report. `en` and `bn` are key-complete (a test
+  enforces it) and `docs/translation-todo.md` already lists what needs review; Urdu has no strings
+  yet.
+- `npm audit` (dev dependencies) reports 7 issues in `tinypool`/`@vitest/mocker` under the
+  `vite-plus` toolchain. They predate Module 10, aren't shipped, and the fix is a breaking
+  toolchain upgrade; CI audits production dependencies only.

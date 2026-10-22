@@ -1,5 +1,6 @@
 <?php
 
+use App\Domain\Identity\Actions\CreateSuperuser;
 use App\Domain\Jobs\Actions\PauseJobsUnderLapsedMandates;
 use App\Domain\Messaging\Actions\ReleaseHeldMessages;
 use App\Domain\Messaging\Actions\SendNewApplicantDigests;
@@ -8,6 +9,10 @@ use App\Domain\Worker\Actions\PruneVoiceRecordings;
 use Illuminate\Foundation\Inspiring;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Schedule;
+use Illuminate\Validation\ValidationException;
+
+use function Laravel\Prompts\password;
+use function Laravel\Prompts\text;
 
 Artisan::command('inspire', function () {
     $this->comment(Inspiring::quote());
@@ -44,3 +49,21 @@ Artisan::command('evidence:expire', function (ExpireEvidence $expire) {
 })->purpose('Mark verified worker evidence expired once its document passes its expiry date (D-090)');
 
 Schedule::command('evidence:expire')->dailyAt('01:00')->onOneServer();
+
+Artisan::command('blueskills:create-superuser {email?} {--name=}', function (CreateSuperuser $create) {
+    $email = $this->argument('email') ?? text('Email address', required: true);
+    $name = $this->option('name') ?? text('Full name', default: 'BLUESKILLS Superuser', required: true);
+    $password = password('Password (12+ characters, upper and lower case, a number and a symbol)', required: true);
+
+    try {
+        $user = $create->handle($name, $email, $password);
+    } catch (ValidationException $exception) {
+        collect($exception->errors())->flatten()->each(fn (string $message) => $this->error($message));
+
+        return 1;
+    }
+
+    $this->info("Superuser {$user->email} created. Sign in and set up two-factor authentication before using the admin screens.");
+
+    return 0;
+})->purpose('Create the first BLUESKILLS staff superuser on a new installation (D-108)');

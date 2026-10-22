@@ -261,7 +261,8 @@ class WorkerProfile extends Model implements HasMedia
             // Suspended workers are hidden from search and pools (D-088).
             ->whereNull('suspended_at')
             ->whereNotNull('occupation_id')
-            ->whereHas('user')
-            ->whereHas('consents', fn (Builder $consents) => $consents->where('purpose', ConsentPurpose::Discovery)->whereNull('revoked_at'));
+            // Uncorrelated IN checks, which Postgres hashes once instead of probing per profile (D-106).
+            ->whereIn($query->qualifyColumn('user_id'), User::query()->select('users.id'))
+            ->whereIn($query->qualifyColumn('id'), Consent::query()->select('worker_profile_id')->where('purpose', ConsentPurpose::Discovery)->whereNull('revoked_at'));
     }
 }

@@ -1,4 +1,4 @@
-import { Form, Head, setLayoutProps } from '@inertiajs/react';
+import { Form, Head, setLayoutProps, usePage } from '@inertiajs/react';
 import { Building2, BriefcaseBusiness, GraduationCap } from 'lucide-react';
 import type { LucideIcon } from 'lucide-react';
 import { useState } from 'react';
@@ -27,6 +27,7 @@ const types: { value: OrganizationType; icon: LucideIcon }[] = [
 /** Organization details (D-036). The organization starts pending review. */
 export default function RegisterOrganization({ countries }: Props) {
     const { t } = useTranslation();
+    const { pilot } = usePage().props;
     const [type, setType] = useState<OrganizationType>('employer');
 
     setLayoutProps({
@@ -47,6 +48,16 @@ export default function RegisterOrganization({ countries }: Props) {
             >
                 {({ errors, processing }) => (
                     <>
+                        {pilot && (
+                            <Field
+                                id="pilot_code"
+                                label={t('pilot.code_label')}
+                                hint={t('pilot.code_hint')}
+                                error={errors.pilot_code}
+                                autoComplete="off"
+                                required
+                            />
+                        )}
                         <fieldset className="flex flex-col gap-2">
                             <legend className="mb-2 text-sm font-semibold">
                                 {t('onboarding.org.type')}

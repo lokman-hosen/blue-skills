@@ -43,6 +43,7 @@ use Spatie\ModelStates\HasStates;
 #[Fillable([
     'type', 'legal_name', 'display_name', 'country_code', 'city', 'registration_number',
     'licence_number', 'licence_expires_on', 'licence_countries', 'verification_status', 'verified_at', 'data_region',
+    'pilot_invite_id',
 ])]
 #[UseFactory(OrganizationFactory::class)]
 #[UsePolicy(OrganizationPolicy::class)]
@@ -221,6 +222,16 @@ class Organization extends Model
     public function employerMandates(): HasMany
     {
         return $this->hasMany(JobMandate::class, 'employer_organization_id');
+    }
+
+    /**
+     * The pilot code it registered with (D-108).
+     *
+     * @return BelongsTo<PilotInvite, $this>
+     */
+    public function pilotInvite(): BelongsTo
+    {
+        return $this->belongsTo(PilotInvite::class);
     }
 
     /**

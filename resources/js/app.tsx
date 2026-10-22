@@ -54,3 +54,11 @@ void createInertiaApp({
 
 // This will set light / dark mode on load...
 initializeTheme();
+
+// Offline page for installed and mobile visits (D-107). Built assets only, so `npm run dev`
+// never serves stale code from a worker.
+if (import.meta.env.PROD && 'serviceWorker' in navigator) {
+    window.addEventListener('load', () => {
+        void navigator.serviceWorker.register('/sw.js').catch(() => undefined);
+    });
+}

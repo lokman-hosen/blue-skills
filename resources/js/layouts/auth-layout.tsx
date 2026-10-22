@@ -2,6 +2,7 @@ import { Link } from '@inertiajs/react';
 import type { ReactNode } from 'react';
 import { LanguageSwitcher } from '@/components/bs/language-switcher';
 import { Logo } from '@/components/bs/logo';
+import { PilotBanner } from '@/components/bs/pilot-banner';
 import { SkipLink } from '@/components/bs/skip-link';
 import { ThemeToggle } from '@/components/bs/theme-toggle';
 import { TranslationPendingBanner } from '@/components/bs/translation-pending-banner';
@@ -28,6 +29,7 @@ export default function AuthLayout({
     return (
         <div className="flex min-h-svh flex-col bg-bg">
             <SkipLink />
+            <PilotBanner />
             <header className="flex min-h-14 items-center justify-between gap-2 py-2 gutter">
                 <Link href={home()} aria-label={t('app.home')}>
                     <Logo />

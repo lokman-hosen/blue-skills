@@ -30,7 +30,7 @@ class JobReviewController extends Controller
         Gate::authorize('moderate', JobPosting::class);
 
         $reviews = VerificationRequest::query()
-            ->with(['subject' => fn ($query) => $query->with(['employer', 'destinationCountry', 'costs'])])
+            ->with(['subject' => fn ($query) => $query->with(['employer', 'destinationCountry', 'costs', 'mandate.agency'])])
             ->where('type', VerificationType::Job)
             ->whereIn('status', ['open', 'in_review'])
             ->oldest()

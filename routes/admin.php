@@ -12,6 +12,7 @@ use App\Http\Controllers\Admin\JobReviewController;
 use App\Http\Controllers\Admin\LeadController;
 use App\Http\Controllers\Admin\MandateReviewController;
 use App\Http\Controllers\Admin\OrganizationReviewController;
+use App\Http\Controllers\Admin\PilotInviteController;
 use App\Http\Controllers\Admin\PlanController;
 use App\Http\Controllers\Admin\SkillShowModerationController;
 use App\Http\Controllers\Admin\StaffController;
@@ -36,6 +37,13 @@ Route::middleware(['auth', 'verified', 'user.type:staff', 'staff.2fa'])->prefix(
         Route::get('/', 'index')->name('index');
         Route::get('reviews/{review}', 'show')->name('show');
         Route::patch('reviews/{review}', 'decide')->name('decide');
+    });
+
+    // Pilot invite codes for selected partners (Module 10, D-108).
+    Route::controller(PilotInviteController::class)->prefix('pilot')->name('pilot.')->group(function () {
+        Route::get('/', 'index')->name('index');
+        Route::post('/', 'store')->middleware('throttle:30,1')->name('store');
+        Route::post('{invite}/revoke', 'revoke')->name('revoke');
     });
 
     // Job review (Module 3).

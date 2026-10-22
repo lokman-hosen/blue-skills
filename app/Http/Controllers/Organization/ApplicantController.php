@@ -115,6 +115,8 @@ class ApplicantController extends Controller
         $applications = Application::query()
             ->whereIn('id', $ids)
             ->whereHas('job', fn ($query) => $query->where('organization_id', $organization->id))
+            // Stage changes notify each worker and check the job (no lazy loading per row, D-106).
+            ->with(['job.organization', 'workerProfile.user'])
             ->get();
 
         abort_if($applications->count() !== count(array_unique($ids)), 404);
@@ -159,6 +161,8 @@ class ApplicantController extends Controller
         $applications = Application::query()
             ->whereIn('id', $ids)
             ->whereHas('job', fn ($query) => $query->where('organization_id', $organization->id))
+            // Stage changes notify each worker and check the job (no lazy loading per row, D-106).
+            ->with(['job.organization', 'workerProfile.user'])
             ->get();
 
         abort_if($applications->count() !== count(array_unique($ids)), 404);

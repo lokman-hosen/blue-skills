@@ -103,7 +103,7 @@ class CountryRuleSeeder extends Seeder
 
         foreach ($rules as $countryCode => $values) {
             foreach ($values as $key => $value) {
-                CountryRule::query()->updateOrCreate(
+                CountryRule::query()->firstOrCreate(
                     ['country_code' => $countryCode, 'key' => $key],
                     ['value' => $value],
                 );

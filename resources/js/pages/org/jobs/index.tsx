@@ -3,14 +3,16 @@ import { BriefcaseBusiness, FileCheck, Plus } from 'lucide-react';
 import JobController from '@/actions/App/Http/Controllers/Organization/JobController';
 import { DataTable } from '@/components/bs/data-table';
 import { EmptyState } from '@/components/bs/empty-state';
+import type { Paginated } from '@/components/bs/jobs/types';
 import { PageHeader } from '@/components/bs/page-header';
+import { Pager } from '@/components/bs/pager';
 import { StatusChip } from '@/components/bs/status-chip';
 import { Button } from '@/components/ui/button';
 import { useTranslation } from '@/lib/i18n';
 import org from '@/routes/org';
 
 type Props = {
-    jobs: App.Domain.Jobs.Data.JobListItemData[];
+    jobs: Paginated<App.Domain.Jobs.Data.JobListItemData>;
     canCreate: boolean;
     needsMandate: boolean;
 };
@@ -48,7 +50,7 @@ export default function OrgJobs({ jobs, canCreate, needsMandate }: Props) {
                 )}
                 <DataTable
                     caption={t('jobs.title')}
-                    rows={jobs}
+                    rows={jobs.data}
                     rowKey={(row) => row.code}
                     empty={
                         <EmptyState
@@ -78,7 +80,7 @@ export default function OrgJobs({ jobs, canCreate, needsMandate }: Props) {
                                 </Link>
                             ),
                         },
-                        ...(jobs.some((job) => job.mandateReference !== null)
+                        ...(jobs.data.some((job) => job.mandateReference !== null)
                             ? [
                                   {
                                       key: 'mandate',
@@ -137,6 +139,7 @@ export default function OrgJobs({ jobs, canCreate, needsMandate }: Props) {
                         },
                     ]}
                 />
+                <Pager page={jobs} />
             </div>
         </>
     );

@@ -60,6 +60,7 @@ use App\Domain\Mobility\Models\MobilityCaseStage;
 use App\Domain\Organization\Models\Organization;
 use App\Domain\Organization\Models\OrganizationInvitation;
 use App\Domain\Organization\Models\OrganizationMember;
+use App\Domain\Organization\Models\PilotInvite;
 use App\Domain\Taxonomy\Models\Occupation;
 use App\Domain\Taxonomy\Models\Sector;
 use App\Domain\Taxonomy\Models\Skill;
@@ -85,10 +86,14 @@ use App\Domain\Worker\Voice\RuleBasedProfileExtractor;
 use App\Domain\Worker\Voice\SampleSpeechToText;
 use App\Domain\Worker\Voice\UnavailableSpeechToText;
 use Carbon\CarbonImmutable;
+use Illuminate\Cache\RateLimiting\Limit;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\Relation;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Date;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Gate;
+use Illuminate\Support\Facades\RateLimiter;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Validation\Rules\Password;
 
@@ -136,6 +141,32 @@ class AppServiceProvider extends ServiceProvider
         $this->configureMorphMap();
         LeadStageWatcher::register();
         $this->configureGates();
+        $this->configureRateLimiting();
+    }
+
+    /**
+     * Rate limits (D-105). `writes` runs on every web route on top of any route's own limit;
+     * reads are never limited by it. `worker-join` limits phone sign-in per device rather than
+     * per IP address, so a job fair on one Wi-Fi network isn't locked out after ten workers.
+     */
+    protected function configureRateLimiting(): void
+    {
+        RateLimiter::for('writes', function (Request $request): Limit {
+            if ($request->isMethodSafe() || $request->is('broadcasting/auth')) {
+                return Limit::none();
+            }
+
+            $user = $request->user();
+
+            return $user instanceof User
+                ? Limit::perMinute(config()->integer('blueskills.security.writes_per_minute'))->by('writes:user:'.$user->id)
+                : Limit::perMinute(config()->integer('blueskills.security.guest_writes_per_minute'))->by('writes:ip:'.$request->ip());
+        });
+
+        RateLimiter::for('worker-join', fn (Request $request): array => [
+            Limit::perMinute(10)->by('join:session:'.$request->session()->getId()),
+            Limit::perMinute(300)->by('join:ip:'.$request->ip()),
+        ]);
     }
 
     protected function configureGates(): void
@@ -159,6 +190,7 @@ class AppServiceProvider extends ServiceProvider
             'organization' => Organization::class,
             'organization_member' => OrganizationMember::class,
             'organization_invitation' => OrganizationInvitation::class,
+            'pilot_invite' => PilotInvite::class,
             'country' => Country::class,
             'country_rule' => CountryRule::class,
             'language' => Language::class,
@@ -231,6 +263,23 @@ class AppServiceProvider extends ServiceProvider
         DB::prohibitDestructiveCommands(
             app()->isProduction(),
         );
+
+        // Laravel only falls back to English for PHP-array files, not lang/*.json. A locale
+        // without its own file (Urdu today) would show raw keys from __(); use English instead,
+        // as the React t() helper already does (CLAUDE.md i18n, D-109).
+        app('translator')->handleMissingKeysUsing(function (string $key, array $replace, ?string $locale, bool $fallback): ?string {
+            $english = (string) config('app.fallback_locale', 'en');
+
+            return $fallback && $locale !== null && $locale !== $english
+                ? app('translator')->get($key, [], $english, false)
+                : null;
+        });
+
+        // N+1 queries fail loudly in development and tests (D-106); production only logs them.
+        Model::preventLazyLoading();
+        Model::handleLazyLoadingViolationUsing(app()->isProduction()
+            ? fn (Model $model, string $relation) => logger()->warning('Lazy loading '.$model::class."::{$relation}")
+            : null);
 
         Password::defaults(fn (): ?Password => app()->isProduction()
             ? Password::min(12)
