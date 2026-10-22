@@ -20,7 +20,7 @@ it('shows each staff member the queues they can work on and the marketplace', fu
 
     $this->actingAs(staffUser(StaffRole::Superuser))->get(route('dashboard'))
         ->assertInertia(fn (Assert $page) => $page->component('admin/overview')
-            ->has('overview.queues', 8)
+            ->has('overview.queues', 9)
             ->where('overview.marketplace.live_jobs', 1)
             ->where('overview.corridorsPendingLegalReview', fn ($count) => $count > 0));
 
@@ -28,6 +28,7 @@ it('shows each staff member the queues they can work on and the marketplace', fu
         ->assertInertia(fn (Assert $page) => $page
             ->where('overview.queues', [['key' => 'jobs', 'count' => 1], ['key' => 'reports', 'count' => 1]]));
 
+    // CRM agents see only their lead follow-ups (Module 9).
     $this->actingAs(staffUser(StaffRole::CrmAgent))->get(route('dashboard'))
-        ->assertInertia(fn (Assert $page) => $page->has('overview.queues', 0));
+        ->assertInertia(fn (Assert $page) => $page->where('overview.queues', [['key' => 'leads_due', 'count' => 0]]));
 });

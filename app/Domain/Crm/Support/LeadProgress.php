@@ -83,7 +83,7 @@ final class LeadProgress
      */
     public static function selected(Builder $profiles): Builder
     {
-        return $profiles->whereHas('applications', fn (Builder $query) => $query->whereIn('status', self::SELECTED_STATUSES));
+        return $profiles->whereHas('applications', fn (Builder $query) => $query->whereIn('applications.status', self::SELECTED_STATUSES));
     }
 
     /**
@@ -93,7 +93,7 @@ final class LeadProgress
     public static function deployed(Builder $profiles): Builder
     {
         return $profiles->whereHas('applications', fn (Builder $query) => $query
-            ->whereIn('id', MobilityCase::query()->select('application_id')->where('status', Completed::$name)));
+            ->whereIn('applications.id', MobilityCase::query()->select('application_id')->where('status', Completed::$name)));
     }
 
     /**

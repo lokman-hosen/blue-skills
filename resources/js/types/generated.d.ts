@@ -291,6 +291,21 @@ declare namespace App {
         }
         namespace Crm {
             namespace Data {
+                export type CampaignData = {
+                    id: string;
+                    code: string;
+                    name: string;
+                    channel: App.Domain.Crm.Enums.CampaignChannel;
+                    sourceCountryCode: string | null;
+                    partnerId: string | null;
+                    partner: string | null;
+                    landing: App.Domain.Crm.Enums.CampaignLanding;
+                    status: App.Support.Data.StatusData;
+                    startsOn: string;
+                    endsOn: string | null;
+                    link: string;
+                    funnel: App.Domain.Crm.Data.FunnelData;
+                };
                 export type ContactAttemptData = {
                     id: string;
                     channel: App.Domain.Crm.Enums.ContactChannel;
@@ -298,6 +313,16 @@ declare namespace App {
                     note: string | null;
                     staff: string | null;
                     attemptedAt: string;
+                };
+                export type FunnelData = {
+                    visitors: number;
+                    leads: number;
+                    registrations: number;
+                    profilesComplete: number;
+                    qualified: number;
+                    applied: number;
+                    selected: number;
+                    deployed: number;
                 };
                 export type LeadData = {
                     id: string;

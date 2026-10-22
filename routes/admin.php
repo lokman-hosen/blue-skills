@@ -3,6 +3,7 @@
 use App\Domain\Taxonomy\Actions\SaveTaxonomyItem;
 use App\Http\Controllers\Admin\AppealDecisionController;
 use App\Http\Controllers\Admin\AuditLogController;
+use App\Http\Controllers\Admin\CampaignController;
 use App\Http\Controllers\Admin\ConfigController;
 use App\Http\Controllers\Admin\EvidenceReviewController;
 use App\Http\Controllers\Admin\JobReviewController;
@@ -56,6 +57,16 @@ Route::middleware(['auth', 'verified', 'user.type:staff', 'staff.2fa'])->prefix(
         Route::get('leads/{lead}', 'show')->name('leads.show');
         Route::put('leads/{lead}', 'update')->name('leads.update');
         Route::post('leads/{lead}/attempts', 'attempt')->middleware('throttle:60,1')->name('leads.attempts.store');
+    });
+
+    // Marketing campaigns and their funnels (Module 9, spec §9).
+    Route::controller(CampaignController::class)->prefix('marketing')->name('marketing.')->group(function () {
+        Route::get('/', 'index')->name('index');
+        Route::post('/', 'store')->name('store');
+        Route::get('{campaign}', 'show')->name('show');
+        Route::put('{campaign}', 'update')->name('update');
+        Route::post('{campaign}/{action}', 'status')->whereIn('action', ['pause', 'resume', 'end'])->name('status');
+        Route::get('{campaign}/qr', 'qr')->name('qr');
     });
 
     // Trust: reports, cases, suspensions and appeals (Module 8, spec §10).

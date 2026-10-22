@@ -1178,3 +1178,22 @@ colour) and the appearance tabs use design tokens instead of the kit's neutral g
 - **Follow-up form:** assignee (staff with `crm.manage`), status and next follow-up date (today or
   later; cleared for not interested / do not contact). An opted-out worker's lead can't be moved
   off do-not-contact by an agent.
+
+### D-099 · Campaigns and campaign analytics
+- **`/admin/marketing`** (`crm.manage`): campaigns with channel, source country, optional verified
+  partner institute or agency, where the link goes (sign-up or job search) and start/end dates.
+  The link code comes from the name once (`FACEBOOK-BANGLADESH`) and never changes, so printed QR
+  codes keep working. Campaigns can be paused, resumed and ended; ending sets the end date to
+  today if it was later and can't be undone.
+- **Funnel** for a date range (default: the last 90 days; a campaign's own page defaults to its
+  start date): visitors = daily counts in the range; every later step follows the leads created in
+  the range as they are today (leads → signed up → profile complete → qualified → applied →
+  selected → deployed), using `LeadProgress` so it matches the CRM. Steps can exceed the one
+  before (someone can apply without being "qualified"), so each step shows its share of the
+  previous one rather than pretending to be a strict funnel. Computed with one grouped query per
+  step. The index also shows totals and how many signed up without a campaign.
+- **Campaign page:** link with copy button, QR code (black on white, downloadable SVG for banners)
+  and visitors per day. The QR rendering moved to `App\Support\QrCode`, shared with cohort
+  invites.
+- **Admin overview:** CRM staff get a "Lead follow-ups due" tile (next follow-up today or
+  earlier) linking to the CRM's Due today view.

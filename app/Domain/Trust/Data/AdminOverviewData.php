@@ -5,6 +5,7 @@ namespace App\Domain\Trust\Data;
 use App\Domain\Applications\Models\Application;
 use App\Domain\Applications\States\Application\Accepted;
 use App\Domain\Config\Models\Country;
+use App\Domain\Crm\Models\Lead;
 use App\Domain\Identity\Enums\Permission;
 use App\Domain\Identity\Models\User;
 use App\Domain\Jobs\Models\JobPosting;
@@ -60,6 +61,7 @@ class AdminOverviewData extends Data
                 ->where('documentable_type', (new Document)->getMorphClass())->count()] : null,
             $can(Permission::SkillShowsModerate) ? ['key' => 'skillshows', 'count' => SkillShow::query()->where('moderation_status', ModerationStatus::Pending)->count()] : null,
             $can(Permission::TrustManage) ? ['key' => 'reports', 'count' => Report::query()->whereState('status', OpenReport::class)->count()] : null,
+            $can(Permission::CrmManage) ? ['key' => 'leads_due', 'count' => Lead::query()->where('next_follow_up_at', '<=', now()->endOfDay())->count()] : null,
         ]));
 
         $verified = fn (OrganizationType $type) => Organization::query()->where('type', $type)->whereState('verification_status', Verified::class)->count();
