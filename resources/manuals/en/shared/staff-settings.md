@@ -7,4 +7,4 @@ Click **Settings** in the sidebar, or click your name at the bottom of the sideb
 - **Appearance:** choose **Light**, **Dark** or **System**.
 - **Notification settings:** open the bell in the top bar and click **Notification settings** to choose which notifications also come by email.
 
-If you lose your phone and your recovery codes, tell a Superuser. They arrange a reset with the technical team.
+If you lose your phone and your recovery codes, tell a Superuser. After checking it is really you, they reset your two-factor authentication from the Staff page, and you set it up again at your next sign-in.

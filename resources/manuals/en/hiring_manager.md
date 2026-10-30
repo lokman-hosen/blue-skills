@@ -33,10 +33,6 @@ After the interview, choose the **Outcome**: Passed, Not passed, Did not attend 
 
 Moving applicants, rejecting them and making offers are done by recruiters and HR admins. Tell them the outcome.
 
-## Talent
-
-The sidebar shows **Talent**, but talent search is for recruiters, HR admins and owners. If you open it, BLUESKILLS says you don't have access. Ask a recruiter to find workers for you.
-
 ## Shortlists
 
 **What it is for:** keep lists of workers your team is considering. A list gives nobody extra access, and workers are not told.
@@ -75,7 +71,7 @@ Workers are added to lists from talent search, which recruiters use.
 
 **I can't move an applicant or make an offer.** Your role books interviews and records outcomes. Ask a recruiter or HR admin to move, reject or make offers.
 
-**Talent search says I don't have access.** That is expected for your role.
+**Why don't I see Talent?** Talent search is for recruiters, HR admins and owners, so it is not in your sidebar. Ask a recruiter to find workers for you.
 
 **The interview time looks wrong.** Times are in your own time zone. The worker sees them in theirs.
 

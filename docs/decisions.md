@@ -1473,3 +1473,26 @@ colour) and the appearance tabs use design tokens instead of the kit's neutral g
   button under the language and theme buttons; the phone "More" sheet and the sidebar share one
   `SignOutLink`. The worker manual says where to find it on both. Resetting a staff member's lost
   two-factor authentication is still not built.
+
+### D-111 · Sidebar links follow access; staff two-factor reset
+- **Owner asked (2026-10-30)** to fix the gaps found while writing the manuals (D-110).
+- **Sidebar:** Talent and Shortlists now carry abilities like the other workspace links
+  (`searchTalent` = `WorkerProfilePolicy::search`, `viewShortlists` = `ShortlistPolicy::viewAny`),
+  so Viewers no longer see either and Hiring Managers no longer see Talent. Queues carries the
+  `horizon.view` permission, so only Superusers see it. The pages already refused these roles; only
+  the links change. A Talent link can still lead to a refusal when the organization's plan lacks
+  talent search, because that message explains what to do.
+- **Staff two-factor reset:** Superusers (`manageStaff`) get **Reset two-factor** on the Staff page
+  for a staff member who lost their phone and recovery codes. `ResetStaffTwoFactor` clears the
+  authenticator secret, recovery codes and confirmation and deletes their passkeys (the lost
+  device may hold them), and logs `staff.two_factor_reset` with before/after values. Not for your
+  own account (use Settings › Security) and refused when there is nothing to reset. The existing
+  `EnsureStaffTwoFactor` middleware then makes them set it up again before any staff screen. Their
+  open sessions are not ended (sessions aren't stored per user); deactivate the account if a
+  device is thought stolen.
+- **Staff page errors:** refusals on `member` (last superuser, deactivating yourself, nothing to
+  reset) were never shown; the page now shows them as a toast for role changes, deactivation,
+  the reset and cancelling invitations.
+- Manuals updated: Viewer and Hiring Manager no longer mention links they don't have; staff
+  manuals other than the Superuser's describe only Design system; Staff and Settings explain the
+  reset.

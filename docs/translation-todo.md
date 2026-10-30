@@ -23,3 +23,4 @@ silently: add the key here, and remove it once a reviewed translation lands in `
 | Module 10 keys: `errors.*` (error pages), `pilot.*` and the Bangla text in `public/offline.html` | bn (draft, needs native review) | Module 10 | Worker-facing: review `errors.404.*`, `errors.500.*`, `errors.page_expired` and the offline page first |
 | User Manual keys: `nav.manual`, `role.worker`, `manual.*` | bn (draft, needs native review) | User Manual (D-110) | Interface around the manuals |
 | User Manual text: `resources/manuals/en/*.md` | all except `en` | User Manual (D-110) | Manuals are English only for now; other languages show the English manual with a notice. Add `resources/manuals/bn/{role}.md` once a native speaker has written it |
+| Staff two-factor reset: `staff.reset_two_factor*`, `staff.two_factor_reset`, `staff.cannot_reset_self`, `staff.nothing_to_reset` | bn (draft, needs native review) | D-111 | Staff-facing |

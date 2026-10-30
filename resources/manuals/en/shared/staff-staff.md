@@ -13,6 +13,15 @@
 
 Choose a new role in **Role for …**.
 
+### Reset someone's two-factor authentication
+
+Use this when a staff member lost their phone and their recovery codes.
+
+1. Check it is really them asking, for example on a video call.
+2. Click **Reset two-factor** next to their name and confirm.
+
+Their authenticator app, recovery codes and passkeys stop working. At their next sign-in they use their password and must set up two-factor authentication again before any staff page opens. The reset is written to the audit log. You can't reset your own; change it in **Settings › Security**.
+
 ### Deactivate a staff member
 
 Click **Deactivate** and confirm. They can no longer sign in; their past actions stay in the audit log.

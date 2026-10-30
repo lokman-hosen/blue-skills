@@ -1,4 +1,3 @@
-## Design system and Queues
+## Design system
 
-- **Design system** is a gallery of the screen parts BLUESKILLS is built from, for the product team.
-- **Queues** opens the background job monitor (Horizon), where sign-in codes, videos and notifications are processed. Only Superusers can open it.
+**Design system** in the sidebar is a gallery of the screen parts BLUESKILLS is built from. It is meant for the product team; you don't need it for your daily work.

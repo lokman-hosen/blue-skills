@@ -52,7 +52,7 @@ This guide. Click **User Manual** in the sidebar to open it.
 
 ## Common questions
 
-**A staff member lost their phone and recovery codes.** They can't sign in without two-factor authentication, and there is no button in BLUESKILLS to reset it. Ask the technical team to clear it; the staff member then sets it up again at their next sign-in.
+**A staff member lost their phone and recovery codes.** Check it is really them, then click **Reset two-factor** next to their name in **Staff**. They set it up again at their next sign-in.
 
 **I can't deactivate a staff member or change their role.** BLUESKILLS needs at least one Superuser, and you can't deactivate yourself.
 

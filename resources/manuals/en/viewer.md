@@ -8,10 +8,6 @@ You are a **Viewer** at an employer on BLUESKILLS. You can look at jobs, applica
 
 @include shared/org-jobs-view
 
-## Talent and Shortlists
-
-The sidebar shows **Talent** and **Shortlists**, but these pages are for people who hire. If you open them, BLUESKILLS says you don't have access.
-
 @include shared/mobility-view
 
 @include shared/projects-view
@@ -30,6 +26,6 @@ The sidebar shows **Talent** and **Shortlists**, but these pages are for people 
 
 **Why can't I change anything?** The Viewer role is read-only. Ask an owner or HR admin if you need more access.
 
-**Talent or Shortlists says I don't have access.** That is expected for your role.
+**Why don't I see Talent or Shortlists?** Those pages are for people who hire, so they are not in your sidebar.
 
 **I can read messages but not reply.** Viewers can read conversations only.
