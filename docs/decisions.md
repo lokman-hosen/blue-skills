@@ -1533,3 +1533,34 @@ colour) and the appearance tabs use design tokens instead of the kit's neutral g
   as "Roles & permissions" under Staff in the staff sidebar.
 - **Manuals:** the Superuser manual explains the screen; the screen says the role manuals describe
   default permissions.
+
+### D-113 · The Superuser can create roles
+- **Owner asked (2026-11-01)** to let the Superuser create new roles and set their permissions, as
+  in as-biocare-web. Approved: all four kinds (staff, employer, agency, institute); a new
+  organization role is offered to every organization of that type; a new role is never an owner;
+  its manual is the one of the role it started from, with a note.
+- **Storage:** a new migration adds `kind`, `label`, `description`, `based_on`, `system` and
+  `created_by` to spatie's `roles` table; the 17 built-in roles are `system` (migration backfill,
+  and the seeder keeps it so). A created role is named `c_` + a lowercase ULID (fits the
+  `staff_invitations.role` varchar(32)) and shown by its label.
+- **`RoleDirectory`** answers what the enums used to: role names per kind (built-in first, then
+  created by name), labels, `based_on`, `isOwner` (built-in owners only), whether a role fits an
+  organization type. Created roles are read once per request. Team and Staff pages, invitation
+  and role-change validation, invitation emails, the organization review and the manual now go
+  through it; `OrganizationRoles::nameOf` and `StaffDirectory::nameOf` return any role's name
+  (`roleOf` still returns the enum for built-in checks such as owner and Superuser).
+  `OrganizationInvitation::$role` and `StaffInvitation::$role` are plain names now (a built-in
+  enum is still accepted when set).
+- **Labels:** a created role's label is merged into the interface strings as `role.{name}`, and the
+  translator's missing-key handler returns it on the server, so every existing `role.*` label
+  works without page changes. It is stored in one language only.
+- **Rules:** names are unique per kind (case-insensitive, built-in names included); the starting
+  role must be of the same kind; permissions are copied (only those the editor offers) or start
+  empty, with locks applied (staff keep `admin.access`, never `staff.manage`). Rename and delete
+  are for created roles only; delete is refused while anyone holds the role or an unanswered,
+  unexpired invitation uses it. Created roles have no defaults: no Reset, never "Changed", no
+  default badges. Create, rename and delete are in the audit log (`role.created`,
+  `role.renamed`, `role.deleted`).
+- **Manual:** `ManualRoles` maps a created role to the built-in role it started from (a role
+  started from another created role inherits that one's starting point) and the page shows
+  "Your role, X, is based on Y and was adjusted by BLUESKILLS…".
