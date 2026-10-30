@@ -480,10 +480,43 @@ declare namespace App {
                     twoFactorEnabled: boolean;
                     staffPermissions: string[];
                 };
+                export type RoleGroupData = {
+                    key: string;
+                    label: string;
+                    modules: App.Domain.Identity.Data.RoleModuleData[];
+                };
+                export type RoleModuleData = {
+                    key: string;
+                    label: string;
+                    permissions: App.Domain.Identity.Data.RolePermissionData[];
+                };
+                export type RolePermissionData = {
+                    name: string;
+                    label: string;
+                    hint: string;
+                    granted: boolean;
+                    default: boolean | null;
+                    lockedReason: string | null;
+                };
+                export type RoleSummaryData = {
+                    name: string;
+                    label: string;
+                    kind: string;
+                    members: number;
+                    granted: number;
+                    offered: number;
+                    changed: boolean;
+                    locked: boolean;
+                    custom: boolean;
+                    description: string | null;
+                    basedOn: string | null;
+                    basedOnLabel: string | null;
+                    invitations: number;
+                };
                 export type StaffInvitationData = {
                     id: string;
                     email: string;
-                    role: App.Domain.Identity.Enums.StaffRole;
+                    role: string;
                     expiresAt: string;
                     invitedBy: string | null;
                 };
@@ -491,7 +524,7 @@ declare namespace App {
                     id: string;
                     name: string;
                     email: string | null;
-                    role: App.Domain.Identity.Enums.StaffRole | null;
+                    role: string | null;
                     twoFactorEnabled: boolean;
                     isYou: boolean;
                 };
@@ -546,6 +579,7 @@ declare namespace App {
                     | 'taxonomy.manage'
                     | 'staff.manage'
                     | 'horizon.view';
+                export type RoleKind = 'staff' | 'employer' | 'agency' | 'institute';
                 export type StaffRole =
                     | 'superuser'
                     | 'verification_officer'
@@ -1294,7 +1328,7 @@ declare namespace App {
                 export type TeamInvitationData = {
                     id: string;
                     email: string | null;
-                    role: App.Domain.Identity.Enums.OrganizationRole;
+                    role: string;
                     expiresAt: string;
                     invitedBy: string | null;
                     organization: App.Domain.Organization.Data.OrganizationSummaryData;
@@ -1304,7 +1338,7 @@ declare namespace App {
                     name: string;
                     email: string | null;
                     title: string | null;
-                    role: App.Domain.Identity.Enums.OrganizationRole | null;
+                    role: string | null;
                     joinedAt: string | null;
                     isYou: boolean;
                 };

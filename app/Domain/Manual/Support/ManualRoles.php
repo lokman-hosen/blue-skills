@@ -4,6 +4,7 @@ namespace App\Domain\Manual\Support;
 
 use App\Domain\Identity\Enums\StaffRole;
 use App\Domain\Identity\Models\User;
+use App\Domain\Identity\Support\RoleDirectory;
 use App\Domain\Identity\Support\StaffDirectory;
 use App\Domain\Manual\Enums\ManualRole;
 use App\Domain\Organization\Models\Organization;
@@ -19,33 +20,69 @@ class ManualRoles
     public function __construct(
         private readonly OrganizationRoles $organizationRoles,
         private readonly StaffDirectory $staff,
+        private readonly RoleDirectory $directory,
     ) {}
 
     /**
-     * The roles the user holds, in reading order.
+     * The roles the user holds, in reading order. Someone in a role the Superuser created reads
+     * the manual of the built-in role it started from (D-113).
      *
      * @return list<ManualRole>
      */
     public function heldBy(User $user): array
     {
+        $held = array_unique(array_map(
+            fn (string $name) => $this->directory->basedOn($name) ?? $name,
+            $this->roleNames($user),
+        ));
+
+        return array_values(array_filter(ManualRole::cases(), fn (ManualRole $role) => in_array($role->value, $held, true)));
+    }
+
+    /**
+     * When the user reads this manual only because of a created role, that role's name; the page
+     * then says their role was adjusted and some steps may not apply.
+     */
+    public function adaptedRole(User $user, ManualRole $manual): ?string
+    {
+        $names = $this->roleNames($user);
+
+        if (in_array($manual->value, $names, true)) {
+            return null;
+        }
+
+        foreach ($names as $name) {
+            if ($this->directory->basedOn($name) === $manual->value) {
+                return $this->directory->label($name);
+            }
+        }
+
+        return null;
+    }
+
+    /**
+     * Every role name the user holds: worker, their staff role, or their role in each organization.
+     *
+     * @return list<string>
+     */
+    private function roleNames(User $user): array
+    {
         if ($user->isWorker()) {
-            return [ManualRole::Worker];
+            return [ManualRole::Worker->value];
         }
 
         if ($user->isStaff()) {
-            $role = $this->staff->roleOf($user);
+            $name = $this->staff->nameOf($user);
 
-            return $role !== null ? [ManualRole::fromStaffRole($role)] : [];
+            return $name !== null ? [$name] : [];
         }
 
-        $held = $user->organizations
-            ->map(fn (Organization $organization) => $this->organizationRoles->roleOf($user, $organization))
+        return $user->organizations
+            ->map(fn (Organization $organization) => $this->organizationRoles->nameOf($user, $organization))
             ->filter()
-            ->map(fn ($role) => ManualRole::fromOrganizationRole($role)->value)
             ->unique()
+            ->values()
             ->all();
-
-        return array_values(array_filter(ManualRole::cases(), fn (ManualRole $role) => in_array($role->value, $held, true)));
     }
 
     public function canReadAll(User $user): bool

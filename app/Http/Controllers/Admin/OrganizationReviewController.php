@@ -67,7 +67,7 @@ class OrganizationReviewController extends Controller
                     name: $member->user->name,
                     email: $member->user->email,
                     title: $member->title,
-                    role: $roles->roleOf($member->user, $organization),
+                    role: $roles->nameOf($member->user, $organization),
                     joinedAt: $member->joined_at?->toIso8601String(),
                     isYou: false,
                 ))

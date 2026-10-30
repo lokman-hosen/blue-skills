@@ -16,6 +16,15 @@ class StaffDirectory
         return is_string($name) ? StaffRole::tryFrom($name) : null;
     }
 
+    /** The staff member's role name, built-in or created by the Superuser (D-113). */
+    public function nameOf(User $user): ?string
+    {
+        $name = PlatformTeam::run(fn () => $user->unsetRelation('roles')->getRoleNames()->first());
+        $user->unsetRelation('roles');
+
+        return is_string($name) ? $name : null;
+    }
+
     public function superuserCount(): int
     {
         return DB::table(config('permission.table_names.model_has_roles'))

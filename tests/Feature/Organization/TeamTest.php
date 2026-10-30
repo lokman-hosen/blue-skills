@@ -67,7 +67,7 @@ it('emails a single-use invitation', function () {
     $invitation = OrganizationInvitation::query()->firstOrFail();
 
     expect($invitation->email)->toBe('new.recruiter@abc.test')
-        ->and($invitation->role)->toBe(OrganizationRole::Recruiter)
+        ->and($invitation->role)->toBe(OrganizationRole::Recruiter->value)
         ->and($invitation->expires_at->isAfter(now()->addDays(6)))->toBeTrue();
 
     Mail::assertQueued(OrganizationInvitationMail::class, function (OrganizationInvitationMail $mail) use ($invitation) {
@@ -82,7 +82,7 @@ it('replaces an earlier pending invitation for the same address', function () {
     $this->post(route('team.invitations.store'), ['email' => 'a@abc.test', 'role' => 'viewer']);
     $this->post(route('team.invitations.store'), ['email' => 'a@abc.test', 'role' => 'recruiter']);
 
-    expect(OrganizationInvitation::query()->whereNull('revoked_at')->pluck('role')->all())->toBe([OrganizationRole::Recruiter]);
+    expect(OrganizationInvitation::query()->whereNull('revoked_at')->pluck('role')->all())->toBe([OrganizationRole::Recruiter->value]);
 });
 
 it('validates invitations', function () {

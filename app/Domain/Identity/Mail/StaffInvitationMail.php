@@ -3,6 +3,7 @@
 namespace App\Domain\Identity\Mail;
 
 use App\Domain\Identity\Models\StaffInvitation;
+use App\Domain\Identity\Support\RoleDirectory;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldBeEncrypted;
 use Illuminate\Contracts\Queue\ShouldQueue;
@@ -31,7 +32,7 @@ class StaffInvitationMail extends Mailable implements ShouldBeEncrypted, ShouldQ
             markdown: 'mail.staff-invitation',
             with: [
                 'inviter' => $this->invitation->inviter->name ?? 'BLUESKILLS',
-                'role' => __("role.{$this->invitation->role->value}"),
+                'role' => app(RoleDirectory::class)->label($this->invitation->role),
                 'url' => route('staff-invitations.show', $this->token),
                 'expires' => $this->invitation->expires_at->toFormattedDayDateString(),
             ],

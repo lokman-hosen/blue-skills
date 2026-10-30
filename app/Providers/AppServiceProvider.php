@@ -29,8 +29,10 @@ use App\Domain\Identity\Channels\LogOtpChannel;
 use App\Domain\Identity\Channels\WhatsAppCloudOtpChannel;
 use App\Domain\Identity\Contracts\OtpChannel;
 use App\Domain\Identity\Enums\Permission;
+use App\Domain\Identity\Enums\StaffRole;
 use App\Domain\Identity\Models\StaffInvitation;
 use App\Domain\Identity\Models\User;
+use App\Domain\Identity\Support\RoleDirectory;
 use App\Domain\Institute\Models\Cohort;
 use App\Domain\Institute\Models\CohortMember;
 use App\Domain\Institute\Models\Course;
@@ -179,6 +181,8 @@ class AppServiceProvider extends ServiceProvider
         Gate::define('manageConfig', fn (User $user): bool => $user->hasStaffPermission(Permission::ConfigManage->value));
         Gate::define('viewAuditLog', fn (User $user): bool => $user->hasStaffPermission(Permission::StaffManage->value));
         Gate::define('manageTaxonomy', fn (User $user): bool => $user->hasStaffPermission(Permission::TaxonomyManage->value));
+        // Roles & permissions: only the Superuser sees and changes them (D-112).
+        Gate::define('manageRoles', fn (User $user): bool => $user->hasStaffRole(StaffRole::Superuser));
         // User manuals: your own roles' manuals; Superusers read every role's (D-110).
         Gate::define('viewManual', fn (User $user, ManualRole $role): bool => app(ManualRoles::class)->canRead($user, $role));
     }
@@ -272,6 +276,11 @@ class AppServiceProvider extends ServiceProvider
         // without its own file (Urdu today) would show raw keys from __(); use English instead,
         // as the React t() helper already does (CLAUDE.md i18n, D-109).
         app('translator')->handleMissingKeysUsing(function (string $key, array $replace, ?string $locale, bool $fallback): ?string {
+            // Roles the Superuser created are named in the database, not the language files (D-113).
+            if (str_starts_with($key, 'role.'.RoleDirectory::CUSTOM_PREFIX)) {
+                return app(RoleDirectory::class)->customLabels()[$key] ?? null;
+            }
+
             $english = (string) config('app.fallback_locale', 'en');
 
             return $fallback && $locale !== null && $locale !== $english

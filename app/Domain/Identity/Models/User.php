@@ -148,9 +148,11 @@ class User extends Authenticatable implements MustVerifyEmail, PasskeyUser
         return $this->type === UserType::Staff;
     }
 
-    public function assignStaffRole(StaffRole $role): static
+    /** A built-in staff role, or the name of one the Superuser created (D-113). */
+    public function assignStaffRole(StaffRole|string $role): static
     {
-        PlatformTeam::run(fn () => $this->unsetRelation('roles')->assignRole($role->value));
+        $name = $role instanceof StaffRole ? $role->value : $role;
+        PlatformTeam::run(fn () => $this->unsetRelation('roles')->assignRole($name));
 
         return $this->unsetRelation('roles');
     }

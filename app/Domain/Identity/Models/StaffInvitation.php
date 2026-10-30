@@ -2,11 +2,12 @@
 
 namespace App\Domain\Identity\Models;
 
-use App\Domain\Identity\Enums\StaffRole;
+use BackedEnum;
 use Database\Factories\StaffInvitationFactory;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Attributes\Hidden;
 use Illuminate\Database\Eloquent\Attributes\UseFactory;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Concerns\HasUlids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -16,7 +17,7 @@ use Illuminate\Support\Carbon;
 /**
  * @property string $id
  * @property string $email
- * @property StaffRole $role
+ * @property string $role Built-in or created staff role name (D-113)
  * @property Carbon $expires_at
  * @property Carbon|null $accepted_at
  * @property Carbon|null $revoked_at
@@ -34,10 +35,20 @@ class StaffInvitation extends Model
     /**
      * @return array<string, string>
      */
+    /**
+     * Always the role's name, built-in or created by the Superuser (D-113); a built-in role enum
+     * is accepted too.
+     *
+     * @return Attribute<string, BackedEnum|string>
+     */
+    protected function role(): Attribute
+    {
+        return Attribute::make(set: fn (BackedEnum|string $role) => $role instanceof BackedEnum ? (string) $role->value : $role);
+    }
+
     protected function casts(): array
     {
         return [
-            'role' => StaffRole::class,
             'expires_at' => 'datetime',
             'accepted_at' => 'datetime',
             'revoked_at' => 'datetime',

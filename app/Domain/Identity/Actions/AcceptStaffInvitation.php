@@ -29,7 +29,7 @@ class AcceptStaffInvitation
             $invitation->forceFill(['accepted_at' => now()])->save();
 
             activity('identity')->performedOn($user)->causedBy($user)
-                ->withProperties(['role' => $invitation->role->value])
+                ->withProperties(['role' => $invitation->role])
                 ->log('staff.joined');
 
             return $user;

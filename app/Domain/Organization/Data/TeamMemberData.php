@@ -2,7 +2,6 @@
 
 namespace App\Domain\Organization\Data;
 
-use App\Domain\Identity\Enums\OrganizationRole;
 use Spatie\LaravelData\Data;
 
 class TeamMemberData extends Data
@@ -12,7 +11,8 @@ class TeamMemberData extends Data
         public string $name,
         public ?string $email,
         public ?string $title,
-        public ?OrganizationRole $role,
+        /** Role name; label via `role.{name}` (created roles are in the shared strings too). */
+        public ?string $role,
         public ?string $joinedAt,
         public bool $isYou,
     ) {}

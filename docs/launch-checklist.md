@@ -116,6 +116,11 @@ php artisan optimize && php artisan horizon:terminate && php artisan reverb:rest
 php artisan up
 ```
 
+- Role permissions belong to the Superuser (Admin › Roles & permissions, D-112). `db:seed` gives a
+  role its defaults from code only when the role is new, and gives a newly added permission once
+  to the roles that have it by default; it never undoes what the Superuser changed. Changing the
+  default of an *existing* permission in code doesn't reach existing roles: change it on the screen.
+
 When `public/offline.html` changes, bump `VERSION` in `public/sw.js` (D-107).
 
 ## 7. Pilot set-up (staff)

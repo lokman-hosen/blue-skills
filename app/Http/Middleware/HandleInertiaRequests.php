@@ -9,6 +9,7 @@ use App\Domain\Config\Support\LocaleRegistry;
 use App\Domain\Config\Support\Translations;
 use App\Domain\Identity\Data\AuthUserData;
 use App\Domain\Identity\Models\User;
+use App\Domain\Identity\Support\RoleDirectory;
 use App\Domain\Institute\Models\Course;
 use App\Domain\Institute\Models\TalentPool;
 use App\Domain\Jobs\Models\JobMandate;
@@ -103,7 +104,8 @@ class HandleInertiaRequests extends Middleware
                 translationPending: $this->locales->isTranslationPending($locale),
             ),
             'locales' => fn () => $this->locales->available()->all(),
-            'translations' => fn () => $this->translations->for($locale),
+            // Roles the Superuser created have no language-file entry; their names come along (D-113).
+            'translations' => fn () => [...$this->translations->for($locale), ...app(RoleDirectory::class)->customLabels()],
             // Navigation badges, refreshed live through Reverb (Module 5).
             'unread' => fn () => $user !== null ? [
                 'messages' => Unread::conversations($user, $organization),
