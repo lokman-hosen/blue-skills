@@ -984,6 +984,50 @@ declare namespace App {
                 export type SalaryPeriod = 'hour' | 'day' | 'week' | 'month';
             }
         }
+        namespace Manual {
+            namespace Data {
+                export type ManualData = {
+                    role: string;
+                    label: string;
+                    group: string;
+                    title: string;
+                    introHtml: string;
+                    sections: App.Domain.Manual.Data.ManualSectionData[];
+                    translationPending: boolean;
+                };
+                export type ManualRoleData = {
+                    value: string;
+                    label: string;
+                    group: string;
+                };
+                export type ManualSectionData = {
+                    id: string;
+                    title: string;
+                    html: string;
+                };
+            }
+            namespace Enums {
+                export type ManualRole =
+                    | 'worker'
+                    | 'viewer'
+                    | 'hiring_manager'
+                    | 'recruiter'
+                    | 'hr_admin'
+                    | 'owner'
+                    | 'compliance_reviewer'
+                    | 'case_officer'
+                    | 'agency_owner'
+                    | 'assessor'
+                    | 'trainer'
+                    | 'placement_officer'
+                    | 'institute_owner'
+                    | 'crm_agent'
+                    | 'finance_officer'
+                    | 'trust_officer'
+                    | 'verification_officer'
+                    | 'superuser';
+            }
+        }
         namespace Messaging {
             namespace Data {
                 export type AttachmentData = {

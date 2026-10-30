@@ -4,6 +4,7 @@ import {
     Activity,
     BarChart3,
     BookOpen,
+    BookOpenText,
     BriefcaseBusiness,
     ClipboardCheck,
     Contact,
@@ -38,6 +39,7 @@ import admin from '@/routes/admin';
 import design from '@/routes/design';
 import horizon from '@/routes/horizon';
 import jobs from '@/routes/jobs';
+import manual from '@/routes/manual';
 import org from '@/routes/org';
 import { edit as profileSettings } from '@/routes/profile';
 import team from '@/routes/team';
@@ -96,10 +98,12 @@ export const workerSecondaryNav: NavLink[] = [
     { key: 'messages', label: 'nav.messages', icon: MessageSquare, href: worker.messages.index() },
     { key: 'documents', label: 'nav.documents', icon: FileText, href: worker.documents.index() },
     { key: 'privacy', label: 'nav.privacy', icon: ShieldCheck, href: worker.privacy.show() },
+    { key: 'manual', label: 'nav.manual', icon: BookOpenText, href: manual.index() },
     { key: 'settings', label: 'nav.settings', icon: Settings, href: profileSettings() },
 ];
 
 const orgFooter: NavLink[] = [
+    { key: 'manual', label: 'nav.manual', icon: BookOpenText, href: manual.index() },
     { key: 'settings', label: 'nav.settings', icon: Settings, href: profileSettings() },
 ];
 
@@ -426,6 +430,7 @@ export const adminNav: NavGroup[] = [
                 href: horizon.index(),
                 external: true,
             },
+            { key: 'manual', label: 'nav.manual', icon: BookOpenText, href: manual.index() },
             { key: 'settings', label: 'nav.settings', icon: Settings, href: profileSettings() },
         ],
     },

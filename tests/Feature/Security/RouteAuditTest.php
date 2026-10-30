@@ -27,7 +27,7 @@ const PUBLIC_ROUTES = [
 const OWN_DATA_ROUTES = [
     'dashboard', 'notifications.index', 'notifications.preferences', 'notifications.preferences.update',
     'notifications.read-all', 'notifications.open', 'profile.edit', 'profile.update',
-    'security.edit', 'user-password.update', 'messages.index', 'invitations.index',
+    'security.edit', 'user-password.update', 'messages.index', 'invitations.index', 'manual.index',
 ];
 
 /** @return list<RoutingRoute> */

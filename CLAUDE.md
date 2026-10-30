@@ -121,6 +121,7 @@ resources/js/
   lib/i18n.ts             t() helper reading translations shared by Inertia
   types/generated.d.ts    generated from Data classes, do not edit by hand
   layouts/navigation.ts   nav per workspace; items without a route render as "Soon"
+resources/manuals/        in-app User Manual, one Markdown file per role (README inside, D-110)
 ```
 
 - Layout is chosen by page folder in `app.tsx` (`public/`, `auth/`, `worker/`, `org|employer|agency|institute/`,

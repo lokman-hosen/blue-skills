@@ -1432,3 +1432,40 @@ colour) and the appearance tabs use design tokens instead of the kit's neutral g
 - `npm audit` (dev dependencies) reports 7 issues in `tinypool`/`@vitest/mocker` under the
   `vite-plus` toolchain. They predate Module 10, aren't shipped, and the fix is a breaking
   toolchain upgrade; CI audits production dependencies only.
+
+## User Manual
+
+### D-110 · In-app User Manual, one per role
+- **Owner answers (2026-10-30):** the "Admin" who can read every manual is the **Superuser** only;
+  other staff read their own role's manual. Manuals are **English only** for now (other languages
+  show the English manual with a notice; listed in `docs/translation-todo.md`). A person with
+  several roles (different roles in different organizations) sees the manual of **each role they
+  hold in any organization**, not only the current one. Review once at the end.
+- **18 manuals**, one per role: Worker; employer Viewer, Hiring Manager, Recruiter, HR Admin, Owner;
+  agency Compliance Reviewer, Case Officer, Agency Owner; institute Assessor, Trainer, Placement
+  Officer, Institute Owner; staff CRM Agent, Finance Officer, Trust Officer, Verification Officer,
+  Superuser. That is also the reading order (`ManualRole` cases: least access first, Superuser last).
+- **Content is Markdown files**, not code or database rows: `resources/manuals/{locale}/{role}.md`,
+  with `@include shared/name` for sections several roles share (written once, up to 3 levels
+  deep). `## ` headings become sections, the table of contents and search units. Rendered on the
+  server with Laravel's built-in CommonMark (`Str::markdown`, raw HTML stripped, unsafe links off),
+  so no new package. `resources/manuals/README.md` explains editing, adding a role and translating.
+- **Every manual starts with "Getting started" and ends with "Common questions"**, with the
+  sections in between in the role's sidebar order. Text was written against the routes,
+  FormRequests, policies and `lang/en.json`, so it only describes what each role can really do.
+  Where the sidebar shows a link the role can't open (Talent and Shortlists for Viewers and Hiring
+  Managers; Queues for staff other than the Superuser), the manual says so.
+- **Access is enforced on the server:** `GET /manual` opens the first role the user holds;
+  `GET /manual/{role}` asks the `viewManual` gate (`ManualRoles::canRead`), so typing another role
+  into the URL returns 403; an unknown role is 404. Roles come from the existing spatie teams
+  (`OrganizationRoles::roleOf` per membership, `StaffDirectory::roleOf`); no new permission.
+  An organization user with no membership yet sees an empty state.
+- **Page** (`pages/manual/show`, the user's own workspace layout): role picker (only when more
+  than one manual is readable), sticky contents (folded on phones after hydration, since the page
+  is server-rendered open), client-side search that hides non-matching sections and highlights
+  matches outside tags and entities, a translation notice, and print styles (sidebar, picker and
+  search hidden; every section printed even while a search is active). "User Manual" sits just
+  above Settings in all four sidebars (worker "More" sheet included).
+- **Found while writing, not changed:** workers on screens 1024 px and wider have no Sign out
+  button (it is only in the phone "More" sheet), and there is no way to reset a staff member's
+  lost two-factor authentication from the app. The manuals describe today's behaviour.
