@@ -29,6 +29,7 @@ use App\Domain\Identity\Channels\LogOtpChannel;
 use App\Domain\Identity\Channels\WhatsAppCloudOtpChannel;
 use App\Domain\Identity\Contracts\OtpChannel;
 use App\Domain\Identity\Enums\Permission;
+use App\Domain\Identity\Enums\StaffRole;
 use App\Domain\Identity\Models\StaffInvitation;
 use App\Domain\Identity\Models\User;
 use App\Domain\Institute\Models\Cohort;
@@ -179,6 +180,8 @@ class AppServiceProvider extends ServiceProvider
         Gate::define('manageConfig', fn (User $user): bool => $user->hasStaffPermission(Permission::ConfigManage->value));
         Gate::define('viewAuditLog', fn (User $user): bool => $user->hasStaffPermission(Permission::StaffManage->value));
         Gate::define('manageTaxonomy', fn (User $user): bool => $user->hasStaffPermission(Permission::TaxonomyManage->value));
+        // Roles & permissions: only the Superuser sees and changes them (D-112).
+        Gate::define('manageRoles', fn (User $user): bool => $user->hasStaffRole(StaffRole::Superuser));
         // User manuals: your own roles' manuals; Superusers read every role's (D-110).
         Gate::define('viewManual', fn (User $user, ManualRole $role): bool => app(ManualRoles::class)->canRead($user, $role));
     }

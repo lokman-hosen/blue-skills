@@ -13,6 +13,11 @@ use Spatie\Permission\PermissionRegistrar;
 /**
  * Roles are global definitions (organization_id = null). Organization roles are assigned
  * per organization team; staff roles under PlatformTeam::ID.
+ *
+ * The Superuser changes role permissions in Admin › Roles & permissions (D-112), so re-running
+ * this seeder must not undo that: a role gets its defaults from code only when it is created, and
+ * a permission added in code later is given once to the roles that have it by default. The
+ * Superuser role always holds every staff permission.
  */
 class RolesAndPermissionsSeeder extends Seeder
 {
@@ -22,8 +27,12 @@ class RolesAndPermissionsSeeder extends Seeder
         $registrar->forgetCachedPermissions();
         $registrar->setPermissionsTeamId(null);
 
+        $created = [];
+
         foreach (PermissionName::cases() as $permission) {
-            Permission::query()->firstOrCreate(['name' => $permission->value, 'guard_name' => 'web']);
+            if (Permission::query()->firstOrCreate(['name' => $permission->value, 'guard_name' => 'web'])->wasRecentlyCreated) {
+                $created[] = $permission->value;
+            }
         }
 
         $roles = [
@@ -37,7 +46,13 @@ class RolesAndPermissionsSeeder extends Seeder
                 'guard_name' => 'web',
                 config('permission.column_names.team_foreign_key') => null,
             ]);
-            $role->syncPermissions(array_map(fn (PermissionName $permission) => $permission->value, $permissions));
+            $defaults = array_map(fn (PermissionName $permission) => $permission->value, $permissions);
+
+            if ($role->wasRecentlyCreated || $name === StaffRole::Superuser->value) {
+                $role->syncPermissions($defaults);
+            } elseif (($new = array_values(array_intersect($defaults, $created))) !== []) {
+                $role->givePermissionTo($new);
+            }
         }
 
         $registrar->forgetCachedPermissions();

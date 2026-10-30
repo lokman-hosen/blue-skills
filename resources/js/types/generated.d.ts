@@ -480,6 +480,34 @@ declare namespace App {
                     twoFactorEnabled: boolean;
                     staffPermissions: string[];
                 };
+                export type RoleGroupData = {
+                    key: string;
+                    label: string;
+                    modules: App.Domain.Identity.Data.RoleModuleData[];
+                };
+                export type RoleModuleData = {
+                    key: string;
+                    label: string;
+                    permissions: App.Domain.Identity.Data.RolePermissionData[];
+                };
+                export type RolePermissionData = {
+                    name: string;
+                    label: string;
+                    hint: string;
+                    granted: boolean;
+                    default: boolean;
+                    lockedReason: string | null;
+                };
+                export type RoleSummaryData = {
+                    name: string;
+                    label: string;
+                    kind: string;
+                    members: number;
+                    granted: number;
+                    offered: number;
+                    changed: boolean;
+                    locked: boolean;
+                };
                 export type StaffInvitationData = {
                     id: string;
                     email: string;
@@ -546,6 +574,7 @@ declare namespace App {
                     | 'taxonomy.manage'
                     | 'staff.manage'
                     | 'horizon.view';
+                export type RoleKind = 'staff' | 'employer' | 'agency' | 'institute';
                 export type StaffRole =
                     | 'superuser'
                     | 'verification_officer'

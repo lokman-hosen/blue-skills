@@ -14,6 +14,7 @@ use App\Http\Controllers\Admin\MandateReviewController;
 use App\Http\Controllers\Admin\OrganizationReviewController;
 use App\Http\Controllers\Admin\PilotInviteController;
 use App\Http\Controllers\Admin\PlanController;
+use App\Http\Controllers\Admin\RolePermissionController;
 use App\Http\Controllers\Admin\SkillShowModerationController;
 use App\Http\Controllers\Admin\StaffController;
 use App\Http\Controllers\Admin\StaffInvitationAcceptanceController;
@@ -32,6 +33,14 @@ Route::middleware(['auth', 'verified', 'user.type:staff', 'staff.2fa'])->prefix(
         Route::delete('members/{member}', 'deactivate')->name('members.destroy');
         // Lost phone: clear two-factor and passkeys so they set it up again (D-111).
         Route::post('members/{member}/two-factor/reset', 'resetTwoFactor')->middleware('throttle:10,1')->name('members.two-factor.reset');
+    });
+
+    // Roles & permissions: the Superuser decides what each role may do (D-112).
+    Route::controller(RolePermissionController::class)->prefix('roles')->name('roles.')->group(function () {
+        Route::get('/', 'index')->name('index');
+        Route::get('{role}', 'edit')->name('edit');
+        Route::put('{role}', 'update')->middleware('throttle:30,1')->name('update');
+        Route::post('{role}/reset', 'reset')->middleware('throttle:30,1')->name('reset');
     });
 
     // Organization registration review (Module 3).
