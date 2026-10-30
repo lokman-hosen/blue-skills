@@ -1469,3 +1469,7 @@ colour) and the appearance tabs use design tokens instead of the kit's neutral g
 - **Found while writing, not changed:** workers on screens 1024 px and wider have no Sign out
   button (it is only in the phone "More" sheet), and there is no way to reset a staff member's
   lost two-factor authentication from the app. The manuals describe today's behaviour.
+- **Follow-up (owner asked):** the worker side navigation (1024 px and wider) now has a Sign out
+  button under the language and theme buttons; the phone "More" sheet and the sidebar share one
+  `SignOutLink`. The worker manual says where to find it on both. Resetting a staff member's lost
+  two-factor authentication is still not built.

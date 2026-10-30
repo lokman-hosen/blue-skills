@@ -69,6 +69,7 @@ export default function WorkerLayout({ children }: { children: ReactNode }) {
                         <LanguageSwitcher />
                         <ThemeToggle />
                     </div>
+                    {auth.user && <SignOutLink className="-ms-3 me-auto" />}
                 </div>
             </aside>
 
@@ -142,17 +143,7 @@ export default function WorkerLayout({ children }: { children: ReactNode }) {
                     <div className="flex flex-wrap items-center gap-2 border-t border-line px-4 pt-3 pb-4">
                         <LanguageSwitcher variant="full" />
                         <ThemeToggle />
-                        {auth.user && (
-                            <Link
-                                href={logout()}
-                                as="button"
-                                onClick={() => router.flushAll()}
-                                className="ms-auto inline-flex min-h-11 items-center gap-2 rounded-lg px-3 text-sm font-semibold text-bad hover:bg-bad-soft"
-                            >
-                                <LogOut aria-hidden className="size-4 rtl:-scale-x-100" />
-                                {t('common.sign_out')}
-                            </Link>
-                        )}
+                        {auth.user && <SignOutLink className="ms-auto" />}
                     </div>
                 </SheetContent>
             </Sheet>
@@ -241,5 +232,25 @@ function CountBadge({ count }: { count: number }) {
             <span aria-hidden>{formatNumber(count)}</span>
             <span className="sr-only">{t('nav.unread', { count })}</span>
         </span>
+    );
+}
+
+/** In the "More" sheet on phones and at the foot of the side navigation from `lg`. */
+function SignOutLink({ className }: { className?: string }) {
+    const { t } = useTranslation();
+
+    return (
+        <Link
+            href={logout()}
+            as="button"
+            onClick={() => router.flushAll()}
+            className={cn(
+                'inline-flex min-h-11 items-center gap-2 rounded-lg px-3 text-sm font-semibold text-bad hover:bg-bad-soft',
+                className,
+            )}
+        >
+            <LogOut aria-hidden className="size-4 rtl:-scale-x-100" />
+            {t('common.sign_out')}
+        </Link>
     );
 }

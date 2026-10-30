@@ -34,7 +34,7 @@ Good to know:
 ### The screen
 
 - **On a phone**, the menu is at the bottom of the screen: **Home**, **Jobs**, **Applications**, **Passport** and **More**. Tap **More** for SkillShow, Messages, Documents, Privacy, User Manual, Settings, the language, the theme and **Sign out**.
-- **On a computer**, the same menu is on the side of the screen.
+- **On a computer**, the same menu is on the side of the screen, with the language, the theme and **Sign out** at the bottom.
 - **The bell** at the top shows your notifications. A number on it means you have something new.
 
 ### Home
@@ -57,7 +57,10 @@ Tap the language button to change the language. Tap the theme button to choose *
 
 ### Sign out
 
-On a phone, tap **More**, then **Sign out** at the bottom. Always sign out on a shared phone.
+- On a phone, tap **More**, then **Sign out** at the bottom.
+- On a computer, click **Sign out** at the bottom of the menu on the side of the screen.
+
+Always sign out on a shared phone or computer.
 
 You have no password, so there is no password to change. Your phone number is how you sign in.
 
