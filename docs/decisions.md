@@ -1496,3 +1496,40 @@ colour) and the appearance tabs use design tokens instead of the kit's neutral g
 - Manuals updated: Viewer and Hiring Manager no longer mention links they don't have; staff
   manuals other than the Superuser's describe only Design system; Staff and Settings explain the
   reset.
+
+### D-112 · Roles & permissions screen for the Superuser
+- **Owner asked (2026-10-30)** for a screen to view and change each role's permissions, "like
+  as-biocare-web" (config-driven module → action matrix, Super Admin bypasses and can't be edited,
+  seeders that don't undo UI changes), with **all control to the Superuser**. Approved plan:
+  existing roles only (creating and deleting custom roles is a separate, larger piece of work),
+  changes apply to the role everywhere, branched from `feat/user-manual`, review at the end.
+- **Config:** `config/permissions.php` lists every permission as group → module → actions, which
+  kinds of role a group applies to (staff, employer, agency, institute) and per-permission
+  exceptions (`only`: projects for employers, talent pools for institutes, mandate requests and
+  compliance for agencies, mandate confirmation for employers…). A test fails if a `Permission`
+  case is missing. Labels and hints are `permission.*` / `permission_hint.*` translation keys.
+- **Who:** only the Superuser (`manageRoles` gate on the role, not on a permission, so nobody can
+  grant themselves the screen). Every action re-checks it; other staff and organization users
+  get 403.
+- **Locks:** the Superuser role is read-only and always holds every staff permission (the seeder
+  re-syncs it); every staff role keeps `admin.access`; `staff.manage` is Superuser-only, since it
+  lets someone change staff roles; owners keep `team.manage` so an organization can't lose
+  everyone able to manage its team. Permissions that don't fit the role's kind are refused.
+  Permissions the editor doesn't offer a role (e.g. `talent_pools.manage` on employer owners,
+  harmless defaults) are left untouched.
+- **Seeder no longer resets roles:** `RolesAndPermissionsSeeder` syncs defaults only when a role
+  is created (and always for the Superuser), and gives a permission created in this run to its
+  default roles. Re-seeding on deploy keeps the Superuser's changes. Trade-off: changing the
+  default of an *existing* permission in code no longer reaches existing roles; do it on the
+  screen (noted in the launch checklist).
+- **Effect:** permissions are read from the database on every request, so a change shows in the
+  sidebar and is enforced from the person's next page. Each save or reset is logged
+  (`role.permissions_updated` / `role.permissions_reset`, role name, offered permissions before
+  and after). The Role model isn't in the morph map, so the entry names the role in its
+  properties rather than as its subject.
+- **Screens:** `/admin/roles` (roles by kind with people, permission count, Changed/Locked) and
+  `/admin/roles/{role}` (groups → modules, tick boxes with explanations, Select all / Clear all,
+  lock reasons, a confirmation listing what the role gains and loses, Reset to defaults). Linked
+  as "Roles & permissions" under Staff in the staff sidebar.
+- **Manuals:** the Superuser manual explains the screen; the screen says the role manuals describe
+  default permissions.

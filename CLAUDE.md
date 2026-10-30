@@ -132,6 +132,9 @@ resources/manuals/        in-app User Manual, one Markdown file per role (README
   `docs/translation-todo.md`.
 - Staff roles: `$user->assignStaffRole()` / `hasStaffPermission()`. Organization roles: wrap calls in
   `TeamContext::run($organizationId, …)`. See `docs/decisions.md` D-012.
+- Role permissions: defaults live in `OrganizationRole::permissions()` / `StaffRole::permissions()`; the
+  Superuser changes them in Admin › Roles & permissions. List every new `Permission` case in
+  `config/permissions.php` (a test enforces it) and add its `permission.*` / `permission_hint.*` text (D-112).
 
 - Use Wayfinder route helpers, never hard-coded URLs.
 - Design tokens live in `resources/css/app.css` under `@theme` (ported from the locked HTML design).

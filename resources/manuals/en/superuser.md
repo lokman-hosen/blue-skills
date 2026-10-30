@@ -1,6 +1,6 @@
 # Manual for superusers
 
-You are a **Superuser** on the BLUESKILLS staff. You can use every staff page: all review queues, trust and safety, CRM, marketing and billing, plus configuration, occupations, the audit log and the staff team. You can also read the user manual of every role: choose a role in **Manual for** at the top of this page.
+You are a **Superuser** on the BLUESKILLS staff. You can use every staff page: all review queues, trust and safety, CRM, marketing and billing, plus configuration, occupations, the audit log, the staff team, and the roles and permissions of everyone in BLUESKILLS. You can also read the user manual of every role: choose a role in **Manual for** at the top of this page.
 
 @include shared/staff-getting-started
 
@@ -34,6 +34,8 @@ You are a **Superuser** on the BLUESKILLS staff. You can use every staff page: a
 
 @include shared/staff-staff
 
+@include shared/staff-roles
+
 ## Design system and Queues
 
 - **Design system** is a gallery of the screen parts BLUESKILLS is built from, for the product team.
@@ -59,5 +61,7 @@ This guide. Click **User Manual** in the sidebar to open it.
 **I changed corridor rules but an open case didn't change.** Rules apply to jobs and cases from now on. Open cases keep their stages.
 
 **I can't remove an occupation or skill.** It is in use. Rename it instead.
+
+**Someone says they can't do something their manual describes.** Their role may have been changed. Open **Roles & permissions** and look for **Changed** on their role.
 
 **How do I see who changed something?** Open **Audit log** and filter by record ID or person.
