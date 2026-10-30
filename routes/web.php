@@ -7,6 +7,7 @@ use App\Http\Controllers\Public\CohortInviteController;
 use App\Http\Controllers\Public\JobController as PublicJobController;
 use App\Http\Controllers\Shared\AppealController;
 use App\Http\Controllers\Shared\LocaleController;
+use App\Http\Controllers\Shared\ManualController;
 use App\Http\Controllers\Shared\MessageReportController;
 use App\Http\Controllers\Shared\NotificationController;
 use App\Http\Controllers\Shared\NotificationPreferenceController;
@@ -51,6 +52,10 @@ Route::middleware(['auth', 'verified', 'staff.2fa'])->group(function () {
     Route::put('notifications/preferences', [NotificationPreferenceController::class, 'update'])->name('notifications.preferences.update');
     Route::post('notifications/read-all', [NotificationController::class, 'readAll'])->name('notifications.read-all');
     Route::post('notifications/{notification}/open', [NotificationController::class, 'open'])->whereUuid('notification')->name('notifications.open');
+
+    // User manuals, one per role (D-110).
+    Route::get('manual', [ManualController::class, 'index'])->name('manual.index');
+    Route::get('manual/{role}', [ManualController::class, 'show'])->name('manual.show');
 });
 
 // Private media: signed, short-lived link plus a policy check on the owning model.

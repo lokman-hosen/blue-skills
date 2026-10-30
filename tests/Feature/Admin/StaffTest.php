@@ -146,3 +146,48 @@ it('keeps Horizon behind staff 2FA', function () {
     expect(Gate::forUser($this->superuser)->allows('viewHorizon'))->toBeTrue()
         ->and(Gate::forUser(staffMember(StaffRole::Superuser, twoFactor: false))->allows('viewHorizon'))->toBeFalse();
 });
+
+it('resets a staff member\'s two-factor so they set it up again at the next sign-in', function () {
+    $officer = staffMember(StaffRole::VerificationOfficer);
+    $officer->passkeys()->create(['name' => 'lost phone', 'credential_id' => 'cred-1', 'credential' => ['id' => 'cred-1']]);
+
+    $this->actingAs($this->superuser)
+        ->post(route('admin.staff.members.two-factor.reset', $officer))
+        ->assertRedirect()
+        ->assertSessionHasNoErrors();
+
+    $officer->refresh();
+    expect($officer->two_factor_secret)->toBeNull()
+        ->and($officer->two_factor_recovery_codes)->toBeNull()
+        ->and($officer->two_factor_confirmed_at)->toBeNull()
+        ->and($officer->passkeys()->count())->toBe(0);
+    $this->assertDatabaseHas('activity_log', [
+        'description' => 'staff.two_factor_reset',
+        'subject_id' => $officer->id,
+        'causer_id' => $this->superuser->id,
+    ]);
+
+    // Staff screens stay closed until they set it up again.
+    $this->actingAs($officer)->get(route('admin.evidence.index'))->assertRedirect(route('security.edit'));
+});
+
+it('lets only superusers reset two-factor, never their own or a non-staff account', function () {
+    $officer = staffMember(StaffRole::TrustOfficer);
+
+    $this->actingAs(staffMember(StaffRole::VerificationOfficer))
+        ->post(route('admin.staff.members.two-factor.reset', $officer))
+        ->assertForbidden();
+    expect($officer->fresh()->two_factor_confirmed_at)->not->toBeNull();
+
+    $this->actingAs($this->superuser)
+        ->post(route('admin.staff.members.two-factor.reset', $this->superuser))
+        ->assertSessionHasErrors('member');
+
+    $this->actingAs($this->superuser)
+        ->post(route('admin.staff.members.two-factor.reset', staffMember(StaffRole::CrmAgent, twoFactor: false)))
+        ->assertSessionHasErrors('member');
+
+    $this->actingAs($this->superuser)
+        ->post(route('admin.staff.members.two-factor.reset', User::factory()->create()))
+        ->assertNotFound();
+});

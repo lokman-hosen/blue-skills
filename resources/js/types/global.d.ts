@@ -28,6 +28,8 @@ declare module '@inertiajs/core' {
                 managePools: boolean;
                 viewPlacements: boolean;
                 browsePools: boolean;
+                searchTalent: boolean;
+                viewShortlists: boolean;
             };
             locale: App.Domain.Config.Data.LocaleData;
             locales: App.Domain.Config.Data.LocaleOptionData[];

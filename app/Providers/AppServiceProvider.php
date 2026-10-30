@@ -44,6 +44,8 @@ use App\Domain\Jobs\Models\JobPosting;
 use App\Domain\Jobs\Models\JobSkillRequirement;
 use App\Domain\Jobs\Models\RecruitmentProject;
 use App\Domain\Jobs\Models\RecruitmentProjectMember;
+use App\Domain\Manual\Enums\ManualRole;
+use App\Domain\Manual\Support\ManualRoles;
 use App\Domain\Messaging\Channels\CloudWhatsAppSender;
 use App\Domain\Messaging\Channels\LogSmsSender;
 use App\Domain\Messaging\Channels\LogWhatsAppSender;
@@ -177,6 +179,8 @@ class AppServiceProvider extends ServiceProvider
         Gate::define('manageConfig', fn (User $user): bool => $user->hasStaffPermission(Permission::ConfigManage->value));
         Gate::define('viewAuditLog', fn (User $user): bool => $user->hasStaffPermission(Permission::StaffManage->value));
         Gate::define('manageTaxonomy', fn (User $user): bool => $user->hasStaffPermission(Permission::TaxonomyManage->value));
+        // User manuals: your own roles' manuals; Superusers read every role's (D-110).
+        Gate::define('viewManual', fn (User $user, ManualRole $role): bool => app(ManualRoles::class)->canRead($user, $role));
     }
 
     /**

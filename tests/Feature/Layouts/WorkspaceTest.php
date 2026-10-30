@@ -1,9 +1,11 @@
 <?php
 
+use App\Domain\Identity\Enums\OrganizationRole;
 use App\Domain\Identity\Models\User;
 use App\Domain\Organization\Models\Organization;
 use App\Domain\Organization\Support\CurrentOrganization;
 use Database\Seeders\LanguageSeeder;
+use Database\Seeders\RolesAndPermissionsSeeder;
 use Inertia\Testing\AssertableInertia as Assert;
 
 beforeEach(function () {
@@ -64,3 +66,21 @@ it('forbids switching to an organization the user does not belong to', function 
         ->assertForbidden()
         ->assertSessionMissing(CurrentOrganization::SESSION_KEY);
 });
+
+it('shows Talent and Shortlists only to roles that can open them', function (OrganizationRole $role, bool $talent, bool $shortlists) {
+    $this->seed(RolesAndPermissionsSeeder::class);
+    $employer = Organization::factory()->employer()->verified()->create();
+    $member = orgMember($employer, $role);
+
+    actingInOrg($member, $employer)->get(route('dashboard'))
+        ->assertInertia(fn (Assert $page) => $page
+            ->where('organizationAbilities.searchTalent', $talent)
+            ->where('organizationAbilities.viewShortlists', $shortlists));
+
+    actingInOrg($member, $employer)->get(route('org.talent.index'))->assertStatus($talent ? 200 : 403);
+    actingInOrg($member, $employer)->get(route('org.shortlists.index'))->assertStatus($shortlists ? 200 : 403);
+})->with([
+    'recruiter' => [OrganizationRole::Recruiter, true, true],
+    'hiring manager' => [OrganizationRole::HiringManager, false, true],
+    'viewer' => [OrganizationRole::Viewer, false, false],
+]);

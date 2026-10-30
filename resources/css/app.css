@@ -292,3 +292,70 @@
         height: 48px;
     }
 }
+
+/* User Manual text rendered from Markdown (D-110). */
+@layer components {
+    .manual-prose {
+        @apply flex flex-col gap-3 text-[15px] leading-relaxed;
+    }
+
+    .manual-prose h3 {
+        @apply mt-3 font-display text-base font-bold;
+    }
+
+    .manual-prose h4 {
+        @apply mt-2 font-semibold;
+    }
+
+    .manual-prose ol {
+        @apply list-decimal ps-6;
+    }
+
+    .manual-prose ul {
+        @apply list-disc ps-6;
+    }
+
+    .manual-prose li {
+        @apply my-1 ps-1;
+    }
+
+    .manual-prose li > ol,
+    .manual-prose li > ul {
+        @apply mt-1;
+    }
+
+    .manual-prose a {
+        @apply font-semibold text-brand underline;
+    }
+
+    .manual-prose code {
+        @apply rounded bg-surface-2 px-1 py-0.5 font-mono text-[0.9em];
+    }
+
+    .manual-prose blockquote {
+        @apply rounded-xl border-s-4 border-brand bg-brand-soft px-4 py-3;
+    }
+
+    .manual-prose table {
+        @apply block max-w-full border-collapse overflow-x-auto text-sm;
+    }
+
+    .manual-prose th,
+    .manual-prose td {
+        @apply border border-line px-3 py-2 text-start align-top;
+    }
+
+    .manual-prose th {
+        @apply bg-surface-2 font-semibold;
+    }
+
+    .manual-prose mark {
+        @apply rounded-sm bg-warn-soft px-0.5 text-ink;
+    }
+
+    @media print {
+        .manual-prose mark {
+            background: none;
+        }
+    }
+}

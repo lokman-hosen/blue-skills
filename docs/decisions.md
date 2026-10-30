@@ -1432,3 +1432,67 @@ colour) and the appearance tabs use design tokens instead of the kit's neutral g
 - `npm audit` (dev dependencies) reports 7 issues in `tinypool`/`@vitest/mocker` under the
   `vite-plus` toolchain. They predate Module 10, aren't shipped, and the fix is a breaking
   toolchain upgrade; CI audits production dependencies only.
+
+## User Manual
+
+### D-110 · In-app User Manual, one per role
+- **Owner answers (2026-10-30):** the "Admin" who can read every manual is the **Superuser** only;
+  other staff read their own role's manual. Manuals are **English only** for now (other languages
+  show the English manual with a notice; listed in `docs/translation-todo.md`). A person with
+  several roles (different roles in different organizations) sees the manual of **each role they
+  hold in any organization**, not only the current one. Review once at the end.
+- **18 manuals**, one per role: Worker; employer Viewer, Hiring Manager, Recruiter, HR Admin, Owner;
+  agency Compliance Reviewer, Case Officer, Agency Owner; institute Assessor, Trainer, Placement
+  Officer, Institute Owner; staff CRM Agent, Finance Officer, Trust Officer, Verification Officer,
+  Superuser. That is also the reading order (`ManualRole` cases: least access first, Superuser last).
+- **Content is Markdown files**, not code or database rows: `resources/manuals/{locale}/{role}.md`,
+  with `@include shared/name` for sections several roles share (written once, up to 3 levels
+  deep). `## ` headings become sections, the table of contents and search units. Rendered on the
+  server with Laravel's built-in CommonMark (`Str::markdown`, raw HTML stripped, unsafe links off),
+  so no new package. `resources/manuals/README.md` explains editing, adding a role and translating.
+- **Every manual starts with "Getting started" and ends with "Common questions"**, with the
+  sections in between in the role's sidebar order. Text was written against the routes,
+  FormRequests, policies and `lang/en.json`, so it only describes what each role can really do.
+  Where the sidebar shows a link the role can't open (Talent and Shortlists for Viewers and Hiring
+  Managers; Queues for staff other than the Superuser), the manual says so.
+- **Access is enforced on the server:** `GET /manual` opens the first role the user holds;
+  `GET /manual/{role}` asks the `viewManual` gate (`ManualRoles::canRead`), so typing another role
+  into the URL returns 403; an unknown role is 404. Roles come from the existing spatie teams
+  (`OrganizationRoles::roleOf` per membership, `StaffDirectory::roleOf`); no new permission.
+  An organization user with no membership yet sees an empty state.
+- **Page** (`pages/manual/show`, the user's own workspace layout): role picker (only when more
+  than one manual is readable), sticky contents (folded on phones after hydration, since the page
+  is server-rendered open), client-side search that hides non-matching sections and highlights
+  matches outside tags and entities, a translation notice, and print styles (sidebar, picker and
+  search hidden; every section printed even while a search is active). "User Manual" sits just
+  above Settings in all four sidebars (worker "More" sheet included).
+- **Found while writing, not changed:** workers on screens 1024 px and wider have no Sign out
+  button (it is only in the phone "More" sheet), and there is no way to reset a staff member's
+  lost two-factor authentication from the app. The manuals describe today's behaviour.
+- **Follow-up (owner asked):** the worker side navigation (1024 px and wider) now has a Sign out
+  button under the language and theme buttons; the phone "More" sheet and the sidebar share one
+  `SignOutLink`. The worker manual says where to find it on both. Resetting a staff member's lost
+  two-factor authentication is still not built.
+
+### D-111 · Sidebar links follow access; staff two-factor reset
+- **Owner asked (2026-10-30)** to fix the gaps found while writing the manuals (D-110).
+- **Sidebar:** Talent and Shortlists now carry abilities like the other workspace links
+  (`searchTalent` = `WorkerProfilePolicy::search`, `viewShortlists` = `ShortlistPolicy::viewAny`),
+  so Viewers no longer see either and Hiring Managers no longer see Talent. Queues carries the
+  `horizon.view` permission, so only Superusers see it. The pages already refused these roles; only
+  the links change. A Talent link can still lead to a refusal when the organization's plan lacks
+  talent search, because that message explains what to do.
+- **Staff two-factor reset:** Superusers (`manageStaff`) get **Reset two-factor** on the Staff page
+  for a staff member who lost their phone and recovery codes. `ResetStaffTwoFactor` clears the
+  authenticator secret, recovery codes and confirmation and deletes their passkeys (the lost
+  device may hold them), and logs `staff.two_factor_reset` with before/after values. Not for your
+  own account (use Settings › Security) and refused when there is nothing to reset. The existing
+  `EnsureStaffTwoFactor` middleware then makes them set it up again before any staff screen. Their
+  open sessions are not ended (sessions aren't stored per user); deactivate the account if a
+  device is thought stolen.
+- **Staff page errors:** refusals on `member` (last superuser, deactivating yourself, nothing to
+  reset) were never shown; the page now shows them as a toast for role changes, deactivation,
+  the reset and cancelling invitations.
+- Manuals updated: Viewer and Hiring Manager no longer mention links they don't have; staff
+  manuals other than the Superuser's describe only Design system; Staff and Settings explain the
+  reset.

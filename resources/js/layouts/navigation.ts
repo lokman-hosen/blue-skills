@@ -4,6 +4,7 @@ import {
     Activity,
     BarChart3,
     BookOpen,
+    BookOpenText,
     BriefcaseBusiness,
     ClipboardCheck,
     Contact,
@@ -38,6 +39,7 @@ import admin from '@/routes/admin';
 import design from '@/routes/design';
 import horizon from '@/routes/horizon';
 import jobs from '@/routes/jobs';
+import manual from '@/routes/manual';
 import org from '@/routes/org';
 import { edit as profileSettings } from '@/routes/profile';
 import team from '@/routes/team';
@@ -65,7 +67,9 @@ export type NavLink = {
         | 'viewCourses'
         | 'managePools'
         | 'viewPlacements'
-        | 'browsePools';
+        | 'browsePools'
+        | 'searchTalent'
+        | 'viewShortlists';
 };
 
 /** Unread count shown beside a navigation item, from the shared `unread` prop. */
@@ -96,10 +100,12 @@ export const workerSecondaryNav: NavLink[] = [
     { key: 'messages', label: 'nav.messages', icon: MessageSquare, href: worker.messages.index() },
     { key: 'documents', label: 'nav.documents', icon: FileText, href: worker.documents.index() },
     { key: 'privacy', label: 'nav.privacy', icon: ShieldCheck, href: worker.privacy.show() },
+    { key: 'manual', label: 'nav.manual', icon: BookOpenText, href: manual.index() },
     { key: 'settings', label: 'nav.settings', icon: Settings, href: profileSettings() },
 ];
 
 const orgFooter: NavLink[] = [
+    { key: 'manual', label: 'nav.manual', icon: BookOpenText, href: manual.index() },
     { key: 'settings', label: 'nav.settings', icon: Settings, href: profileSettings() },
 ];
 
@@ -114,12 +120,19 @@ export const orgNav: Record<App.Domain.Organization.Enums.OrganizationType, NavG
                     href: dashboard(),
                 },
                 { key: 'jobs', label: 'nav.jobs', icon: BriefcaseBusiness, href: org.jobs.index() },
-                { key: 'talent', label: 'nav.talent', icon: Search, href: org.talent.index() },
+                {
+                    key: 'talent',
+                    label: 'nav.talent',
+                    icon: Search,
+                    href: org.talent.index(),
+                    ability: 'searchTalent',
+                },
                 {
                     key: 'shortlists',
                     label: 'nav.shortlists',
                     icon: Star,
                     href: org.shortlists.index(),
+                    ability: 'viewShortlists',
                 },
                 {
                     key: 'institute_pools',
@@ -425,7 +438,9 @@ export const adminNav: NavGroup[] = [
                 icon: Activity,
                 href: horizon.index(),
                 external: true,
+                permission: 'horizon.view',
             },
+            { key: 'manual', label: 'nav.manual', icon: BookOpenText, href: manual.index() },
             { key: 'settings', label: 'nav.settings', icon: Settings, href: profileSettings() },
         ],
     },
