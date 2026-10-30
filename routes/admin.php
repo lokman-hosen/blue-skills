@@ -30,6 +30,8 @@ Route::middleware(['auth', 'verified', 'user.type:staff', 'staff.2fa'])->prefix(
         Route::delete('invitations/{invitation}', 'revoke')->name('invitations.destroy');
         Route::patch('members/{member}', 'updateRole')->name('members.update');
         Route::delete('members/{member}', 'deactivate')->name('members.destroy');
+        // Lost phone: clear two-factor and passkeys so they set it up again (D-111).
+        Route::post('members/{member}/two-factor/reset', 'resetTwoFactor')->middleware('throttle:10,1')->name('members.two-factor.reset');
     });
 
     // Organization registration review (Module 3).

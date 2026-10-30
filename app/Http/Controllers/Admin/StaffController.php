@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Domain\Identity\Actions\ChangeStaffRole;
 use App\Domain\Identity\Actions\DeactivateStaffMember;
 use App\Domain\Identity\Actions\InviteStaffMember;
+use App\Domain\Identity\Actions\ResetStaffTwoFactor;
 use App\Domain\Identity\Data\StaffInvitationData;
 use App\Domain\Identity\Data\StaffMemberData;
 use App\Domain\Identity\Enums\StaffRole;
@@ -83,6 +84,16 @@ class StaffController extends Controller
         abort_unless($member->isStaff(), 404);
         $deactivate->handle($member, $request->user());
         Inertia::flash('toast', ['type' => 'success', 'message' => __('staff.deactivated')]);
+
+        return back();
+    }
+
+    public function resetTwoFactor(Request $request, User $member, ResetStaffTwoFactor $reset): RedirectResponse
+    {
+        Gate::authorize('manageStaff');
+        abort_unless($member->isStaff(), 404);
+        $reset->handle($member, $request->user());
+        Inertia::flash('toast', ['type' => 'success', 'message' => __('staff.two_factor_reset')]);
 
         return back();
     }

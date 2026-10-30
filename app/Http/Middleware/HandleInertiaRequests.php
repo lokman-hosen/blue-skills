@@ -3,6 +3,7 @@
 namespace App\Http\Middleware;
 
 use App\Domain\Applications\Models\Application;
+use App\Domain\Applications\Models\Shortlist;
 use App\Domain\Config\Data\LocaleData;
 use App\Domain\Config\Support\LocaleRegistry;
 use App\Domain\Config\Support\Translations;
@@ -17,6 +18,7 @@ use App\Domain\Mobility\Models\MobilityCase;
 use App\Domain\Organization\Data\OrganizationSummaryData;
 use App\Domain\Organization\Models\Organization;
 use App\Domain\Organization\Support\CurrentOrganization;
+use App\Domain\Worker\Models\WorkerProfile;
 use Illuminate\Http\Request;
 use Inertia\Middleware;
 
@@ -83,6 +85,9 @@ class HandleInertiaRequests extends Middleware
                 'viewPlacements' => $organization !== null && $user->can('viewPlacements', $organization),
                 'browsePools' => $organization !== null && $user->can('browse', [TalentPool::class, $organization]),
                 'viewApplicants' => $organization !== null && $user->can('viewAny', [Application::class, $organization]),
+                // Talent search and shortlists (Module 4); hidden from roles the pages would refuse (D-111).
+                'searchTalent' => $organization !== null && $user->can('search', [WorkerProfile::class, $organization]),
+                'viewShortlists' => $organization !== null && $user->can('viewAny', [Shortlist::class, $organization]),
                 // Projects, analytics and billing (Module 9).
                 'viewProjects' => $organization !== null && $user->can('viewAny', [RecruitmentProject::class, $organization]),
                 'viewAnalytics' => $organization !== null && $user->can('viewAnalytics', $organization),

@@ -67,7 +67,9 @@ export type NavLink = {
         | 'viewCourses'
         | 'managePools'
         | 'viewPlacements'
-        | 'browsePools';
+        | 'browsePools'
+        | 'searchTalent'
+        | 'viewShortlists';
 };
 
 /** Unread count shown beside a navigation item, from the shared `unread` prop. */
@@ -118,12 +120,19 @@ export const orgNav: Record<App.Domain.Organization.Enums.OrganizationType, NavG
                     href: dashboard(),
                 },
                 { key: 'jobs', label: 'nav.jobs', icon: BriefcaseBusiness, href: org.jobs.index() },
-                { key: 'talent', label: 'nav.talent', icon: Search, href: org.talent.index() },
+                {
+                    key: 'talent',
+                    label: 'nav.talent',
+                    icon: Search,
+                    href: org.talent.index(),
+                    ability: 'searchTalent',
+                },
                 {
                     key: 'shortlists',
                     label: 'nav.shortlists',
                     icon: Star,
                     href: org.shortlists.index(),
+                    ability: 'viewShortlists',
                 },
                 {
                     key: 'institute_pools',
@@ -429,6 +438,7 @@ export const adminNav: NavGroup[] = [
                 icon: Activity,
                 href: horizon.index(),
                 external: true,
+                permission: 'horizon.view',
             },
             { key: 'manual', label: 'nav.manual', icon: BookOpenText, href: manual.index() },
             { key: 'settings', label: 'nav.settings', icon: Settings, href: profileSettings() },

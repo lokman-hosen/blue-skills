@@ -2684,5 +2684,11 @@
     "manual.contents": "Contents",
     "manual.translation_pending": "This manual isn't translated into your language yet, so it is shown in English.",
     "manual.empty_title": "No manual for your account yet",
-    "manual.empty_body": "Manuals follow your role. When you join an organization or are given a role, your manual appears here."
+    "manual.empty_body": "Manuals follow your role. When you join an organization or are given a role, your manual appears here.",
+    "staff.reset_two_factor": "Reset two-factor",
+    "staff.reset_two_factor_title": "Reset two-factor for :name?",
+    "staff.reset_two_factor_body": "Only do this after you have checked it is really them, for example on a video call. Their authenticator app, recovery codes and passkeys stop working. At their next sign-in they must set up two-factor authentication again before they can use staff tools.",
+    "staff.two_factor_reset": "Two-factor reset. They set it up again at their next sign-in.",
+    "staff.cannot_reset_self": "Change your own two-factor authentication in Settings › Security.",
+    "staff.nothing_to_reset": "This staff member has no two-factor authentication or passkeys to reset."
 }

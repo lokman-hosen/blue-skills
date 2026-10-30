@@ -1,5 +1,6 @@
 import { Form, Head, router } from '@inertiajs/react';
-import { MailPlus, UserX } from 'lucide-react';
+import { KeyRound, MailPlus, UserX } from 'lucide-react';
+import { toast } from 'sonner';
 import StaffController from '@/actions/App/Http/Controllers/Admin/StaffController';
 import { ConfirmDialog } from '@/components/bs/confirm-dialog';
 import type { DataTableColumn } from '@/components/bs/data-table';
@@ -56,7 +57,7 @@ export default function Staff({ members, invitations, roles }: Props) {
                         router.patch(
                             StaffController.updateRole.url(member.id),
                             { role: event.target.value },
-                            { preserveScroll: true },
+                            { preserveScroll: true, onError: showError },
                         )
                     }
                     className="h-11 min-w-48 md:h-9"
@@ -86,27 +87,55 @@ export default function Staff({ members, invitations, roles }: Props) {
             align: 'end',
             cell: (member) =>
                 member.isYou ? null : (
-                    <ConfirmDialog
-                        destructive
-                        title={t('staff.deactivate_title', { name: member.name })}
-                        description={t('staff.deactivate_body')}
-                        confirmLabel={t('staff.deactivate')}
-                        onConfirm={() =>
-                            router.delete(StaffController.deactivate.url(member.id), {
-                                preserveScroll: true,
-                            })
-                        }
-                        trigger={
-                            <Button
-                                variant="ghost"
-                                size="sm"
-                                className="min-h-11 text-bad hover:bg-bad-soft hover:text-bad md:min-h-9"
-                            >
-                                <UserX aria-hidden />
-                                {t('staff.deactivate')}
-                            </Button>
-                        }
-                    />
+                    <div className="flex flex-wrap justify-end gap-1">
+                        {member.twoFactorEnabled && (
+                            <ConfirmDialog
+                                destructive
+                                title={t('staff.reset_two_factor_title', { name: member.name })}
+                                description={t('staff.reset_two_factor_body')}
+                                confirmLabel={t('staff.reset_two_factor')}
+                                onConfirm={() =>
+                                    router.post(
+                                        StaffController.resetTwoFactor.url(member.id),
+                                        {},
+                                        { preserveScroll: true, onError: showError },
+                                    )
+                                }
+                                trigger={
+                                    <Button
+                                        variant="ghost"
+                                        size="sm"
+                                        className="min-h-11 md:min-h-9"
+                                    >
+                                        <KeyRound aria-hidden />
+                                        {t('staff.reset_two_factor')}
+                                    </Button>
+                                }
+                            />
+                        )}
+                        <ConfirmDialog
+                            destructive
+                            title={t('staff.deactivate_title', { name: member.name })}
+                            description={t('staff.deactivate_body')}
+                            confirmLabel={t('staff.deactivate')}
+                            onConfirm={() =>
+                                router.delete(StaffController.deactivate.url(member.id), {
+                                    preserveScroll: true,
+                                    onError: showError,
+                                })
+                            }
+                            trigger={
+                                <Button
+                                    variant="ghost"
+                                    size="sm"
+                                    className="min-h-11 text-bad hover:bg-bad-soft hover:text-bad md:min-h-9"
+                                >
+                                    <UserX aria-hidden />
+                                    {t('staff.deactivate')}
+                                </Button>
+                            }
+                        />
+                    </div>
                 ),
         },
     ];
@@ -205,7 +234,7 @@ export default function Staff({ members, invitations, roles }: Props) {
                                         onClick={() =>
                                             router.delete(
                                                 StaffController.revoke.url(invitation.id),
-                                                { preserveScroll: true },
+                                                { preserveScroll: true, onError: showError },
                                             )
                                         }
                                     >
@@ -219,4 +248,13 @@ export default function Staff({ members, invitations, roles }: Props) {
             </div>
         </>
     );
+}
+
+/** Refusals such as "needs at least one superuser" come back as a validation error on `member`. */
+function showError(errors: Record<string, string>) {
+    const message = errors.member ?? Object.values(errors)[0];
+
+    if (message) {
+        toast.error(message);
+    }
 }
