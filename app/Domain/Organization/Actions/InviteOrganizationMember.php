@@ -5,6 +5,7 @@ namespace App\Domain\Organization\Actions;
 use App\Domain\Billing\Support\BillingLimits;
 use App\Domain\Identity\Enums\OrganizationRole;
 use App\Domain\Identity\Models\User;
+use App\Domain\Identity\Support\RoleDirectory;
 use App\Domain\Organization\Mail\OrganizationInvitationMail;
 use App\Domain\Organization\Models\Organization;
 use App\Domain\Organization\Models\OrganizationInvitation;
@@ -15,6 +16,8 @@ use Illuminate\Validation\ValidationException;
 
 class InviteOrganizationMember
 {
+    public function __construct(private readonly RoleDirectory $roles) {}
+
     public const VALID_DAYS = 7;
 
     /**
@@ -23,11 +26,13 @@ class InviteOrganizationMember
      *
      * @throws ValidationException
      */
-    public function handle(Organization $organization, User $inviter, string $email, OrganizationRole $role): OrganizationInvitation
+    public function handle(Organization $organization, User $inviter, string $email, OrganizationRole|string $role): OrganizationInvitation
     {
+        $role = $role instanceof OrganizationRole ? $role->value : $role;
         $email = Str::lower(trim($email));
 
-        if ($role->organizationType() !== $organization->type) {
+        // Built-in or created by the Superuser, as long as it is for this kind of organization (D-113).
+        if (! $this->roles->fitsOrganization($role, $organization->type)) {
             throw ValidationException::withMessages(['role' => __('team.role_not_allowed')]);
         }
 
@@ -55,7 +60,7 @@ class InviteOrganizationMember
             ]);
 
             activity('organization')->performedOn($organization)->causedBy($inviter)
-                ->withProperties(['email' => $email, 'role' => $role->value])
+                ->withProperties(['email' => $email, 'role' => $role])
                 ->log('member.invited');
 
             return $invitation;

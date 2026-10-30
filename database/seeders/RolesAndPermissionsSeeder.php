@@ -4,6 +4,7 @@ namespace Database\Seeders;
 
 use App\Domain\Identity\Enums\OrganizationRole;
 use App\Domain\Identity\Enums\Permission as PermissionName;
+use App\Domain\Identity\Enums\RoleKind;
 use App\Domain\Identity\Enums\StaffRole;
 use Illuminate\Database\Seeder;
 use Spatie\Permission\Models\Permission;
@@ -46,6 +47,8 @@ class RolesAndPermissionsSeeder extends Seeder
                 'guard_name' => 'web',
                 config('permission.column_names.team_foreign_key') => null,
             ]);
+            // Built-in roles: the Superuser can't rename or delete them (D-113).
+            $role->forceFill(['kind' => RoleKind::of($name)?->value, 'system' => true])->save();
             $defaults = array_map(fn (PermissionName $permission) => $permission->value, $permissions);
 
             if ($role->wasRecentlyCreated || $name === StaffRole::Superuser->value) {

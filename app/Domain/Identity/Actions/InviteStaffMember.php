@@ -16,8 +16,9 @@ class InviteStaffMember
     /**
      * @throws ValidationException
      */
-    public function handle(User $inviter, string $email, StaffRole $role): StaffInvitation
+    public function handle(User $inviter, string $email, StaffRole|string $role): StaffInvitation
     {
+        $role = $role instanceof StaffRole ? $role->value : $role;
         $email = Str::lower(trim($email));
 
         if (User::withTrashed()->whereRaw('lower(email) = ?', [$email])->exists()) {
@@ -42,7 +43,7 @@ class InviteStaffMember
             ]);
 
             activity('identity')->performedOn($invitation)->causedBy($inviter)
-                ->withProperties(['email' => $email, 'role' => $role->value])
+                ->withProperties(['email' => $email, 'role' => $role])
                 ->log('staff.invited');
 
             return $invitation;

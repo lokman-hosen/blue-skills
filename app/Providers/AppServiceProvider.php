@@ -32,6 +32,7 @@ use App\Domain\Identity\Enums\Permission;
 use App\Domain\Identity\Enums\StaffRole;
 use App\Domain\Identity\Models\StaffInvitation;
 use App\Domain\Identity\Models\User;
+use App\Domain\Identity\Support\RoleDirectory;
 use App\Domain\Institute\Models\Cohort;
 use App\Domain\Institute\Models\CohortMember;
 use App\Domain\Institute\Models\Course;
@@ -275,6 +276,11 @@ class AppServiceProvider extends ServiceProvider
         // without its own file (Urdu today) would show raw keys from __(); use English instead,
         // as the React t() helper already does (CLAUDE.md i18n, D-109).
         app('translator')->handleMissingKeysUsing(function (string $key, array $replace, ?string $locale, bool $fallback): ?string {
+            // Roles the Superuser created are named in the database, not the language files (D-113).
+            if (str_starts_with($key, 'role.'.RoleDirectory::CUSTOM_PREFIX)) {
+                return app(RoleDirectory::class)->customLabels()[$key] ?? null;
+            }
+
             $english = (string) config('app.fallback_locale', 'en');
 
             return $fallback && $locale !== null && $locale !== $english

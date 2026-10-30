@@ -2,17 +2,20 @@
 
 namespace App\Domain\Identity\Actions;
 
-use App\Domain\Identity\Enums\RoleKind;
 use App\Domain\Identity\Enums\StaffRole;
 use App\Domain\Identity\Models\User;
 use App\Domain\Identity\Support\PermissionCatalog;
+use App\Domain\Identity\Support\RoleDirectory;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Validation\ValidationException;
 use Spatie\Permission\Models\Role;
 
 class UpdateRolePermissions
 {
-    public function __construct(private readonly PermissionCatalog $catalog) {}
+    public function __construct(
+        private readonly PermissionCatalog $catalog,
+        private readonly RoleDirectory $roles,
+    ) {}
 
     /**
      * Sets which of the permissions the editor offers this role holds (D-112). Permissions the
@@ -24,7 +27,7 @@ class UpdateRolePermissions
      */
     public function handle(Role $role, array $granted, User $actor, string $event = 'role.permissions_updated'): void
     {
-        $kind = RoleKind::of($role->name);
+        $kind = $this->roles->kindOf($role->name);
         $offered = $kind !== null ? $this->catalog->forKind($kind) : [];
 
         // The Superuser always holds every staff permission and is never edited.

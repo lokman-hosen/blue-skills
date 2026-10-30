@@ -15,19 +15,22 @@ class ChangeStaffRole
     /**
      * @throws ValidationException
      */
-    public function handle(User $member, StaffRole $role, User $actor): void
+    public function handle(User $member, StaffRole|string $role, User $actor): void
     {
-        $previous = $this->staff->roleOf($member);
+        $role = $role instanceof StaffRole ? $role->value : $role;
+        $previous = $this->staff->nameOf($member);
 
-        if ($previous === StaffRole::Superuser && $role !== StaffRole::Superuser && $this->staff->superuserCount() <= 1) {
+        $superuser = StaffRole::Superuser->value;
+
+        if ($previous === $superuser && $role !== $superuser && $this->staff->superuserCount() <= 1) {
             throw ValidationException::withMessages(['role' => __('staff.last_superuser')]);
         }
 
-        PlatformTeam::run(fn () => $member->unsetRelation('roles')->syncRoles([$role->value]));
+        PlatformTeam::run(fn () => $member->unsetRelation('roles')->syncRoles([$role]));
         $member->unsetRelation('roles');
 
         activity('identity')->performedOn($member)->causedBy($actor)
-            ->withProperties(['old' => $previous?->value, 'new' => $role->value])
+            ->withProperties(['old' => $previous, 'new' => $role])
             ->log('staff.role_changed');
     }
 }

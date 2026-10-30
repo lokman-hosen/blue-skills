@@ -1,8 +1,9 @@
 import { Head, router } from '@inertiajs/react';
-import { Lock, RotateCcw, Save } from 'lucide-react';
+import { Lock, RotateCcw, Save, Trash2 } from 'lucide-react';
 import { useEffect, useMemo, useState } from 'react';
 import { ConfirmDialog } from '@/components/bs/confirm-dialog';
 import { PageHeader } from '@/components/bs/page-header';
+import { RoleDialog } from '@/components/bs/roles/role-dialog';
 import { StatusChip } from '@/components/bs/status-chip';
 import InputError from '@/components/input-error';
 import { Button } from '@/components/ui/button';
@@ -83,13 +84,47 @@ export default function EditRole({ role, groups }: { role: Role; groups: Group[]
                 <PageHeader
                     eyebrow={t(`roles.kind.${role.kind}`)}
                     title={role.label}
-                    description={t('roles.body')}
+                    description={role.description ?? t('roles.body')}
                     back={{ href: admin.roles.index(), label: t('roles.back') }}
                     actions={
-                        role.changed &&
-                        !role.locked && <StatusChip label={t('roles.changed')} tone="warn" />
+                        role.custom ? (
+                            <>
+                                <StatusChip label={t('roles.custom')} tone="stamp" icon={false} />
+                                <RoleDialog role={role} />
+                                <ConfirmDialog
+                                    destructive
+                                    title={t('roles.delete_title', { role: role.label })}
+                                    description={t('roles.delete_body')}
+                                    confirmLabel={t('roles.delete')}
+                                    onConfirm={() =>
+                                        router.delete(admin.roles.destroy.url(role.name), {
+                                            preserveScroll: true,
+                                            onError: (errors) => setError(Object.values(errors)[0]),
+                                        })
+                                    }
+                                    trigger={
+                                        <Button
+                                            variant="ghost"
+                                            className="min-h-11 text-bad hover:bg-bad-soft hover:text-bad"
+                                        >
+                                            <Trash2 aria-hidden />
+                                            {t('roles.delete')}
+                                        </Button>
+                                    }
+                                />
+                            </>
+                        ) : (
+                            role.changed &&
+                            !role.locked && <StatusChip label={t('roles.changed')} tone="warn" />
+                        )
                     }
                 />
+
+                {role.custom && role.basedOnLabel && (
+                    <p className="rounded-xl bg-brand-soft px-4 py-3 text-sm">
+                        {t('roles.custom_note', { role: role.basedOnLabel })}
+                    </p>
+                )}
 
                 {role.locked && (
                     <p className="flex items-start gap-2 rounded-xl bg-brand-soft px-4 py-3 text-sm">
@@ -246,7 +281,8 @@ function PermissionRow({
     const { t } = useTranslation();
     const id = `permission-${permission.name.replace('.', '-')}`;
     const locked = permission.lockedReason !== null;
-    const differs = !locked && checked !== permission.default;
+    // A role the Superuser created has no defaults, so nothing is marked (D-113).
+    const differs = !locked && permission.default !== null && checked !== permission.default;
 
     return (
         <li className="flex items-start gap-3">

@@ -8,10 +8,11 @@ use App\Domain\Identity\Actions\InviteStaffMember;
 use App\Domain\Identity\Actions\ResetStaffTwoFactor;
 use App\Domain\Identity\Data\StaffInvitationData;
 use App\Domain\Identity\Data\StaffMemberData;
-use App\Domain\Identity\Enums\StaffRole;
+use App\Domain\Identity\Enums\RoleKind;
 use App\Domain\Identity\Enums\UserType;
 use App\Domain\Identity\Models\StaffInvitation;
 use App\Domain\Identity\Models\User;
+use App\Domain\Identity\Support\RoleDirectory;
 use App\Domain\Identity\Support\StaffDirectory;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Admin\InviteStaffRequest;
@@ -24,7 +25,10 @@ use Inertia\Response;
 
 class StaffController extends Controller
 {
-    public function __construct(private readonly StaffDirectory $staff) {}
+    public function __construct(
+        private readonly StaffDirectory $staff,
+        private readonly RoleDirectory $directory,
+    ) {}
 
     public function index(Request $request): Response
     {
@@ -36,7 +40,7 @@ class StaffController extends Controller
                     id: $member->id,
                     name: $member->name,
                     email: $member->email,
-                    role: $this->staff->roleOf($member),
+                    role: $this->staff->nameOf($member),
                     twoFactorEnabled: $member->two_factor_confirmed_at !== null,
                     isYou: $member->is($request->user()),
                 ))
@@ -48,13 +52,13 @@ class StaffController extends Controller
                 ->map(fn (StaffInvitation $invitation) => StaffInvitationData::fromInvitation($invitation))
                 ->values()
                 ->all(),
-            'roles' => StaffRole::cases(),
+            'roles' => $this->directory->namesFor(RoleKind::Staff),
         ]);
     }
 
     public function invite(InviteStaffRequest $request, InviteStaffMember $invite): RedirectResponse
     {
-        $invite->handle($request->user(), $request->string('email')->toString(), $request->enum('role', StaffRole::class));
+        $invite->handle($request->user(), $request->string('email')->toString(), $request->string('role')->toString());
         Inertia::flash('toast', ['type' => 'success', 'message' => __('team.invited')]);
 
         return back();
@@ -72,7 +76,7 @@ class StaffController extends Controller
     public function updateRole(UpdateStaffRoleRequest $request, User $member, ChangeStaffRole $change): RedirectResponse
     {
         abort_unless($member->isStaff(), 404);
-        $change->handle($member, $request->enum('role', StaffRole::class), $request->user());
+        $change->handle($member, $request->string('role')->toString(), $request->user());
         Inertia::flash('toast', ['type' => 'success', 'message' => __('team.role_updated')]);
 
         return back();

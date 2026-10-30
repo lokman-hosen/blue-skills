@@ -2,9 +2,9 @@
 
 namespace App\Domain\Organization\Models;
 
-use App\Domain\Identity\Enums\OrganizationRole;
 use App\Domain\Identity\Models\User;
 use App\Domain\Organization\Policies\OrganizationInvitationPolicy;
+use BackedEnum;
 use Database\Factories\OrganizationInvitationFactory;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Attributes\Hidden;
@@ -12,6 +12,7 @@ use Illuminate\Database\Eloquent\Attributes\Scope;
 use Illuminate\Database\Eloquent\Attributes\UseFactory;
 use Illuminate\Database\Eloquent\Attributes\UsePolicy;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Concerns\HasUlids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -21,7 +22,7 @@ use Illuminate\Support\Carbon;
 /**
  * Only a SHA-256 hash of the invitation token is stored.
  *
- * @property OrganizationRole $role
+ * @property string $role Built-in or created role name (D-113)
  * @property Carbon $expires_at
  * @property Carbon|null $accepted_at
  * @property Carbon|null $revoked_at
@@ -38,10 +39,20 @@ class OrganizationInvitation extends Model
     /**
      * @return array<string, string>
      */
+    /**
+     * Always the role's name, built-in or created by the Superuser (D-113); a built-in role enum
+     * is accepted too.
+     *
+     * @return Attribute<string, BackedEnum|string>
+     */
+    protected function role(): Attribute
+    {
+        return Attribute::make(set: fn (BackedEnum|string $role) => $role instanceof BackedEnum ? (string) $role->value : $role);
+    }
+
     protected function casts(): array
     {
         return [
-            'role' => OrganizationRole::class,
             'expires_at' => 'datetime',
             'accepted_at' => 'datetime',
             'revoked_at' => 'datetime',

@@ -19,7 +19,10 @@ use Spatie\Permission\Models\Role;
  */
 class RolePermissionOverview
 {
-    public function __construct(private readonly PermissionCatalog $catalog) {}
+    public function __construct(
+        private readonly PermissionCatalog $catalog,
+        private readonly RoleDirectory $roles,
+    ) {}
 
     /**
      * @return list<RoleSummaryData>
@@ -31,7 +34,7 @@ class RolePermissionOverview
         $summaries = [];
 
         foreach (RoleKind::cases() as $kind) {
-            foreach ($kind->roleNames() as $name) {
+            foreach ($this->roles->namesFor($kind) as $name) {
                 $role = $roles->get($name);
 
                 if ($role instanceof Role) {
@@ -48,14 +51,14 @@ class RolePermissionOverview
      */
     public function groups(Role $role): array
     {
-        $kind = RoleKind::of($role->name);
+        $kind = $this->roles->kindOf($role->name);
 
         if ($kind === null) {
             return [];
         }
 
         $held = $role->permissions->pluck('name')->all();
-        $defaults = $this->catalog->defaults($role->name);
+        $defaults = $this->roles->isSystem($role->name) ? $this->catalog->defaults($role->name) : null;
 
         return array_map(fn (array $group) => new RoleGroupData(
             key: $group['group'],
@@ -71,7 +74,7 @@ class RolePermissionOverview
                         label: __("permission.{$permission}"),
                         hint: __("permission_hint.{$permission}"),
                         granted: $lock !== null ? $lock['on'] : in_array($permission, $held, true),
-                        default: in_array($permission, $defaults, true),
+                        default: $defaults !== null ? in_array($permission, $defaults, true) : null,
                         lockedReason: $lock !== null ? __($lock['reason']) : null,
                     );
                 }, $module['permissions']),
@@ -81,7 +84,7 @@ class RolePermissionOverview
 
     public function summaryOf(Role $role): RoleSummaryData
     {
-        $kind = RoleKind::of($role->name);
+        $kind = $this->roles->kindOf($role->name);
         abort_if($kind === null, 404);
 
         return $this->summary($role, $kind, $this->memberCounts()[$role->id] ?? 0);
@@ -92,7 +95,7 @@ class RolePermissionOverview
      */
     public function find(string $name): Role
     {
-        abort_if(RoleKind::of($name) === null, 404);
+        abort_unless($this->roles->exists($name), 404);
 
         $role = $this->globalRoles()->where('name', $name)->with('permissions')->first();
         abort_unless($role instanceof Role, 404);
@@ -107,16 +110,24 @@ class RolePermissionOverview
         $defaults = array_values(array_intersect($offered, $this->catalog->defaults($role->name)));
         sort($held);
         sort($defaults);
+        $system = $this->roles->isSystem($role->name);
+        $basedOn = $this->roles->basedOn($role->name);
 
         return new RoleSummaryData(
             name: $role->name,
-            label: __("role.{$role->name}"),
+            label: $this->roles->label($role->name),
             kind: $kind->value,
             members: $members,
             granted: count($held),
             offered: count($offered),
-            changed: $held !== $defaults,
+            // A created role has no defaults in code, so it is never "changed" (D-113).
+            changed: $system && $held !== $defaults,
             locked: $role->name === StaffRole::Superuser->value,
+            custom: ! $system,
+            description: $role->getAttribute('description'),
+            basedOn: $basedOn,
+            basedOnLabel: $basedOn !== null ? $this->roles->label($basedOn) : null,
+            invitations: $system ? 0 : $this->pendingInvitations($role->name),
         );
     }
 
@@ -126,6 +137,20 @@ class RolePermissionOverview
     private function globalRoles(): Builder
     {
         return Role::query()->where('guard_name', 'web')->whereNull(config('permission.column_names.team_foreign_key'));
+    }
+
+    /** Unanswered invitations that would give someone this role; a role in use can't be deleted. */
+    public function pendingInvitations(string $name): int
+    {
+        $open = fn (string $table) => DB::table($table)->where('role', $name)
+            ->whereNull('accepted_at')->whereNull('revoked_at')->where('expires_at', '>', now())->count();
+
+        return $open('organization_invitations') + $open('staff_invitations');
+    }
+
+    public function membersOf(Role $role): int
+    {
+        return $this->memberCounts()[$role->id] ?? 0;
     }
 
     /**

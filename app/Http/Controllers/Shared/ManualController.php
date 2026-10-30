@@ -49,6 +49,8 @@ class ManualController extends Controller
             'manual' => $role !== null ? $this->library->load($role, app()->getLocale()) : null,
             'roles' => array_map(fn (ManualRole $readable) => ManualRoleData::fromRole($readable), $this->roles->readableBy($user)),
             'canReadAll' => $this->roles->canReadAll($user),
+            // A role the Superuser created reads its starting role's manual, with a note (D-113).
+            'adaptedRole' => $role !== null ? $this->roles->adaptedRole($user, $role) : null,
         ]);
     }
 }

@@ -495,7 +495,7 @@ declare namespace App {
                     label: string;
                     hint: string;
                     granted: boolean;
-                    default: boolean;
+                    default: boolean | null;
                     lockedReason: string | null;
                 };
                 export type RoleSummaryData = {
@@ -507,11 +507,16 @@ declare namespace App {
                     offered: number;
                     changed: boolean;
                     locked: boolean;
+                    custom: boolean;
+                    description: string | null;
+                    basedOn: string | null;
+                    basedOnLabel: string | null;
+                    invitations: number;
                 };
                 export type StaffInvitationData = {
                     id: string;
                     email: string;
-                    role: App.Domain.Identity.Enums.StaffRole;
+                    role: string;
                     expiresAt: string;
                     invitedBy: string | null;
                 };
@@ -519,7 +524,7 @@ declare namespace App {
                     id: string;
                     name: string;
                     email: string | null;
-                    role: App.Domain.Identity.Enums.StaffRole | null;
+                    role: string | null;
                     twoFactorEnabled: boolean;
                     isYou: boolean;
                 };
@@ -1323,7 +1328,7 @@ declare namespace App {
                 export type TeamInvitationData = {
                     id: string;
                     email: string | null;
-                    role: App.Domain.Identity.Enums.OrganizationRole;
+                    role: string;
                     expiresAt: string;
                     invitedBy: string | null;
                     organization: App.Domain.Organization.Data.OrganizationSummaryData;
@@ -1333,7 +1338,7 @@ declare namespace App {
                     name: string;
                     email: string | null;
                     title: string | null;
-                    role: App.Domain.Identity.Enums.OrganizationRole | null;
+                    role: string | null;
                     joinedAt: string | null;
                     isYou: boolean;
                 };

@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers\Organization;
 
-use App\Domain\Identity\Enums\OrganizationRole;
+use App\Domain\Identity\Support\RoleDirectory;
 use App\Domain\Organization\Actions\ChangeMemberRole;
 use App\Domain\Organization\Actions\InviteOrganizationMember;
 use App\Domain\Organization\Actions\RemoveOrganizationMember;
@@ -28,6 +28,7 @@ class TeamController extends Controller
     public function __construct(
         private readonly CurrentOrganization $currentOrganization,
         private readonly OrganizationRoles $roles,
+        private readonly RoleDirectory $directory,
     ) {}
 
     public function index(Request $request): Response
@@ -44,7 +45,7 @@ class TeamController extends Controller
                 name: $member->user->name,
                 email: $member->user->email,
                 title: $member->title,
-                role: $this->roles->roleOf($member->user, $organization),
+                role: $this->roles->nameOf($member->user, $organization),
                 joinedAt: $member->joined_at?->toIso8601String(),
                 isYou: $member->user_id === $user?->id,
             ))->values()->all(),
@@ -58,7 +59,7 @@ class TeamController extends Controller
                 ->map(fn (OrganizationInvitation $invitation) => TeamInvitationData::fromInvitation($invitation))
                 ->values()
                 ->all(),
-            'roles' => OrganizationRole::forType($organization->type),
+            'roles' => $this->directory->namesForOrganization($organization->type),
             'canManage' => $user?->can('manageTeam', $organization) ?? false,
         ]);
     }
@@ -68,7 +69,7 @@ class TeamController extends Controller
         $organization = $this->organization($request);
         Gate::authorize('manageTeam', $organization);
 
-        $invite->handle($organization, $request->user(), $request->string('email')->toString(), $request->enum('role', OrganizationRole::class));
+        $invite->handle($organization, $request->user(), $request->string('email')->toString(), $request->string('role')->toString());
         Inertia::flash('toast', ['type' => 'success', 'message' => __('team.invited')]);
 
         return back();
@@ -89,7 +90,7 @@ class TeamController extends Controller
         $organization = $this->memberOrganization($request, $member);
         Gate::authorize('manageTeam', $organization);
 
-        $change->handle($member, $request->enum('role', OrganizationRole::class), $request->user());
+        $change->handle($member, $request->string('role')->toString(), $request->user());
         Inertia::flash('toast', ['type' => 'success', 'message' => __('team.role_updated')]);
 
         return back();

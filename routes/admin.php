@@ -38,7 +38,10 @@ Route::middleware(['auth', 'verified', 'user.type:staff', 'staff.2fa'])->prefix(
     // Roles & permissions: the Superuser decides what each role may do (D-112).
     Route::controller(RolePermissionController::class)->prefix('roles')->name('roles.')->group(function () {
         Route::get('/', 'index')->name('index');
+        Route::post('/', 'store')->middleware('throttle:30,1')->name('store');
         Route::get('{role}', 'edit')->name('edit');
+        Route::patch('{role}/details', 'details')->middleware('throttle:30,1')->name('details');
+        Route::delete('{role}', 'destroy')->middleware('throttle:30,1')->name('destroy');
         Route::put('{role}', 'update')->middleware('throttle:30,1')->name('update');
         Route::post('{role}/reset', 'reset')->middleware('throttle:30,1')->name('reset');
     });

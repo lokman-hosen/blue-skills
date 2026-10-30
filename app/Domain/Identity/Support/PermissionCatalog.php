@@ -13,6 +13,8 @@ use App\Domain\Identity\Enums\StaffRole;
  */
 class PermissionCatalog
 {
+    public function __construct(private readonly RoleDirectory $roles) {}
+
     /**
      * The editor's structure for one kind of role: groups -> modules -> permission names.
      *
@@ -77,7 +79,7 @@ class PermissionCatalog
     }
 
     /**
-     * The role's permissions as set in code.
+     * The role's permissions as set in code; a role the Superuser created has none.
      *
      * @return list<string>
      */
@@ -100,7 +102,7 @@ class PermissionCatalog
             return ['reason' => 'roles.locked.superuser', 'on' => true];
         }
 
-        if ($permission === config('permissions.staff_access_permission') && StaffRole::tryFrom($roleName) !== null) {
+        if ($permission === config('permissions.staff_access_permission') && $this->roles->kindOf($roleName) === RoleKind::Staff) {
             return ['reason' => 'roles.locked.staff_access', 'on' => true];
         }
 

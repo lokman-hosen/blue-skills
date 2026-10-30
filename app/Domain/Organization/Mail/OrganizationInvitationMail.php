@@ -2,6 +2,7 @@
 
 namespace App\Domain\Organization\Mail;
 
+use App\Domain\Identity\Support\RoleDirectory;
 use App\Domain\Organization\Models\OrganizationInvitation;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldBeEncrypted;
@@ -37,7 +38,7 @@ class OrganizationInvitationMail extends Mailable implements ShouldBeEncrypted, 
             with: [
                 'organization' => $this->invitation->organization->display_name,
                 'inviter' => $this->invitation->inviter?->name,
-                'role' => __("role.{$this->invitation->role->value}"),
+                'role' => app(RoleDirectory::class)->label($this->invitation->role),
                 'url' => route('invitations.show', $this->token),
                 'expires' => $this->invitation->expires_at->toFormattedDayDateString(),
             ],

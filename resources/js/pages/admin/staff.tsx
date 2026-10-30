@@ -15,7 +15,8 @@ import { Label } from '@/components/ui/label';
 import { Spinner } from '@/components/ui/spinner';
 import { useTranslation } from '@/lib/i18n';
 
-type Role = App.Domain.Identity.Enums.StaffRole;
+/** A role name: built-in, or created by the Superuser (D-113). Label via `role.{name}`. */
+type Role = string;
 type Member = App.Domain.Identity.Data.StaffMemberData;
 
 type Props = {

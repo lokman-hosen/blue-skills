@@ -20,9 +20,19 @@ class OrganizationRoles
         return is_string($name) ? OrganizationRole::tryFrom($name) : null;
     }
 
-    public function assign(User $user, Organization $organization, OrganizationRole $role): void
+    /** The member's role name, built-in or created by the Superuser (D-113). */
+    public function nameOf(User $user, Organization $organization): ?string
     {
-        TeamContext::run($organization->id, fn () => $user->unsetRelation('roles')->syncRoles([$role->value]));
+        $name = TeamContext::run($organization->id, fn () => $user->unsetRelation('roles')->getRoleNames()->first());
+        $user->unsetRelation('roles');
+
+        return is_string($name) ? $name : null;
+    }
+
+    public function assign(User $user, Organization $organization, OrganizationRole|string $role): void
+    {
+        $name = $role instanceof OrganizationRole ? $role->value : $role;
+        TeamContext::run($organization->id, fn () => $user->unsetRelation('roles')->syncRoles([$name]));
         $user->unsetRelation('roles');
     }
 

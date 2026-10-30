@@ -25,7 +25,7 @@ class AcceptOrganizationInvitation
             $invitation->forceFill(['accepted_at' => now()])->save();
 
             activity('organization')->performedOn($organization)->causedBy($user)
-                ->withProperties(['role' => $invitation->role->value])
+                ->withProperties(['role' => $invitation->role])
                 ->log('member.joined');
 
             return $organization;

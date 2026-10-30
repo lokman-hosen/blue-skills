@@ -23,10 +23,12 @@ export default function ManualPage({
     manual,
     roles,
     canReadAll,
+    adaptedRole,
 }: {
     manual: Manual | null;
     roles: Role[];
     canReadAll: boolean;
+    adaptedRole: string | null;
 }) {
     const { t } = useTranslation();
     const [query, setQuery] = useState('');
@@ -141,6 +143,12 @@ export default function ManualPage({
                         </div>
                     </div>
                 </div>
+
+                {adaptedRole && (
+                    <p className="rounded-xl bg-brand-soft px-4 py-3 text-sm text-ink">
+                        {t('manual.adapted', { role: adaptedRole, base: manual.label })}
+                    </p>
+                )}
 
                 {manual.translationPending && (
                     <p className="rounded-xl bg-warn-soft px-4 py-3 text-sm text-ink print:hidden">

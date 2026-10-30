@@ -3,6 +3,7 @@ import { Lock, Pencil, Eye } from 'lucide-react';
 import type { DataTableColumn } from '@/components/bs/data-table';
 import { DataTable } from '@/components/bs/data-table';
 import { PageHeader } from '@/components/bs/page-header';
+import { RoleDialog } from '@/components/bs/roles/role-dialog';
 import { StatusChip } from '@/components/bs/status-chip';
 import { Button } from '@/components/ui/button';
 import { useTranslation } from '@/lib/i18n';
@@ -12,7 +13,10 @@ type Role = App.Domain.Identity.Data.RoleSummaryData;
 
 const KINDS = ['staff', 'employer', 'agency', 'institute'];
 
-/** Admin › Roles & permissions (D-112): every role, its people and its permissions. Superuser only. */
+/**
+ * Admin › Roles & permissions (D-112, D-113): every role, its people and its permissions, and new
+ * roles per kind. Superuser only.
+ */
 export default function Roles({ roles }: { roles: Role[] }) {
     const { t, formatNumber } = useTranslation();
 
@@ -32,6 +36,16 @@ export default function Roles({ roles }: { roles: Role[] }) {
                     {role.changed && (
                         <span title={t('roles.changed_hint')}>
                             <StatusChip label={t('roles.changed')} tone="warn" />
+                        </span>
+                    )}
+                    {role.custom && (
+                        <span title={t('roles.custom_hint')}>
+                            <StatusChip label={t('roles.custom')} tone="stamp" icon={false} />
+                        </span>
+                    )}
+                    {role.basedOnLabel && (
+                        <span className="w-full text-xs text-muted">
+                            {t('roles.started_from', { role: role.basedOnLabel })}
                         </span>
                     )}
                 </span>
@@ -88,9 +102,12 @@ export default function Roles({ roles }: { roles: Role[] }) {
                             aria-labelledby={`roles-${kind}`}
                             className="flex flex-col gap-3"
                         >
-                            <h2 id={`roles-${kind}`} className="font-display text-lg font-bold">
-                                {t(`roles.kind.${kind}`)}
-                            </h2>
+                            <div className="flex flex-wrap items-center justify-between gap-2">
+                                <h2 id={`roles-${kind}`} className="font-display text-lg font-bold">
+                                    {t(`roles.kind.${kind}`)}
+                                </h2>
+                                <RoleDialog kind={kind} bases={rows} />
+                            </div>
                             <DataTable
                                 caption={t(`roles.kind.${kind}`)}
                                 columns={columns}

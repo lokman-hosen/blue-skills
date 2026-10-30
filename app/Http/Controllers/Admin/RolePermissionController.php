@@ -2,10 +2,16 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Domain\Identity\Actions\CreateRole;
+use App\Domain\Identity\Actions\DeleteRole;
 use App\Domain\Identity\Actions\ResetRolePermissions;
+use App\Domain\Identity\Actions\UpdateRoleDetails;
 use App\Domain\Identity\Actions\UpdateRolePermissions;
+use App\Domain\Identity\Enums\RoleKind;
 use App\Domain\Identity\Support\RolePermissionOverview;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Admin\StoreRoleRequest;
+use App\Http\Requests\Admin\UpdateRoleDetailsRequest;
 use App\Http\Requests\Admin\UpdateRolePermissionsRequest;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -14,7 +20,8 @@ use Inertia\Inertia;
 use Inertia\Response;
 
 /**
- * Admin › Roles & permissions (D-112): only the Superuser sees and changes what each role may do.
+ * Admin › Roles & permissions (D-112, D-113): only the Superuser sees and changes what each role
+ * may do, and creates, renames and deletes roles of their own.
  */
 class RolePermissionController extends Controller
 {
@@ -27,6 +34,41 @@ class RolePermissionController extends Controller
         return Inertia::render('admin/roles/index', [
             'roles' => $this->overview->summaries(),
         ]);
+    }
+
+    public function store(StoreRoleRequest $request, CreateRole $create): RedirectResponse
+    {
+        $role = $create->handle(
+            $request->enum('kind', RoleKind::class) ?? RoleKind::Employer,
+            $request->label(),
+            $request->description(),
+            $request->string('based_on')->toString(),
+            $request->boolean('copy_permissions'),
+            $request->user(),
+        );
+        Inertia::flash('toast', ['type' => 'success', 'message' => __('roles.created', ['role' => $request->label()])]);
+
+        return to_route('admin.roles.edit', $role->name);
+    }
+
+    public function details(UpdateRoleDetailsRequest $request, string $role, UpdateRoleDetails $update): RedirectResponse
+    {
+        $model = $this->overview->find($role);
+        $update->handle($model, $request->label(), $request->description(), $request->user());
+        Inertia::flash('toast', ['type' => 'success', 'message' => __('roles.renamed')]);
+
+        return to_route('admin.roles.edit', $model->name);
+    }
+
+    public function destroy(Request $request, string $role, DeleteRole $delete): RedirectResponse
+    {
+        Gate::authorize('manageRoles');
+        $model = $this->overview->find($role);
+        $label = $this->overview->summaryOf($model)->label;
+        $delete->handle($model, $request->user());
+        Inertia::flash('toast', ['type' => 'success', 'message' => __('roles.deleted', ['role' => $label])]);
+
+        return to_route('admin.roles.index');
     }
 
     public function edit(string $role): Response
