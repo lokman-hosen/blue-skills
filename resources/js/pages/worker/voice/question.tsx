@@ -2,6 +2,7 @@ import { Head, Link, router, usePoll } from '@inertiajs/react';
 import { AlertCircle, Check, Keyboard, Mic, Pencil, Square } from 'lucide-react';
 import { useEffect, useMemo, useState } from 'react';
 import VoiceController from '@/actions/App/Http/Controllers/Worker/VoiceController';
+import { PageContainer } from '@/components/bs/page-container';
 import { PageHeader } from '@/components/bs/page-header';
 import { VoiceFieldsEditor } from '@/components/bs/voice-fields-editor';
 import InputError from '@/components/input-error';
@@ -101,7 +102,7 @@ export default function VoiceQuestion({
     return (
         <>
             <Head title={t('voice.title')} />
-            <div className="mx-auto flex w-full max-w-xl flex-col gap-5">
+            <PageContainer width="form">
                 <PageHeader
                     eyebrow={t('voice.step', {
                         step: formatNumber(index + 1),
@@ -403,7 +404,7 @@ export default function VoiceQuestion({
                 <p className="rounded-lg bg-surface-2 px-3 py-2 text-xs text-muted">
                     {t('voice.privacy_note')}
                 </p>
-            </div>
+            </PageContainer>
         </>
     );
 }

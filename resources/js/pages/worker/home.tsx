@@ -1,6 +1,7 @@
 import { Head, Link } from '@inertiajs/react';
 import { GraduationCap, IdCard, ShieldAlert } from 'lucide-react';
 import { EmptyState } from '@/components/bs/empty-state';
+import { PageContainer } from '@/components/bs/page-container';
 import { PageHeader } from '@/components/bs/page-header';
 import { ProfileCompletionCard } from '@/components/bs/profile-completion-card';
 import { SkillPassportCard } from '@/components/bs/skill-passport-card';
@@ -26,7 +27,7 @@ export default function WorkerHome({ passport, cohortInvite = null, suspended = 
     return (
         <>
             <Head title={t('nav.home')} />
-            <div className="flex flex-col gap-5">
+            <PageContainer>
                 <PageHeader
                     title={
                         passport
@@ -35,29 +36,33 @@ export default function WorkerHome({ passport, cohortInvite = null, suspended = 
                     }
                     description={t('worker.home.body')}
                 />
-                {suspended && (
-                    <Link
-                        href={appeals.index()}
-                        className="flex items-center gap-3 rounded-xl border border-bad/40 bg-bad-soft px-4 py-3 text-sm font-semibold hover:border-bad"
-                    >
-                        <ShieldAlert aria-hidden className="size-5 shrink-0 text-bad" />
-                        {t('worker.home.suspended')}
-                    </Link>
-                )}
-                {cohortInvite && (
-                    <Link
-                        href={cohortInviteRoutes.show(cohortInvite.code)}
-                        className="flex items-center gap-3 rounded-xl border border-brand/40 bg-brand-soft px-4 py-3 text-sm font-semibold hover:border-brand"
-                    >
-                        <GraduationCap aria-hidden className="size-5 shrink-0 text-brand" />
-                        {t('worker.home.cohort_invite', {
-                            institute: cohortInvite.institute,
-                            course: cohortInvite.course,
-                        })}
-                    </Link>
+                {(suspended || cohortInvite) && (
+                    <div className="grid gap-3 lg:grid-cols-2">
+                        {suspended && (
+                            <Link
+                                href={appeals.index()}
+                                className="flex items-center gap-3 rounded-xl border border-bad/40 bg-bad-soft px-4 py-3 text-sm font-semibold hover:border-bad"
+                            >
+                                <ShieldAlert aria-hidden className="size-5 shrink-0 text-bad" />
+                                {t('worker.home.suspended')}
+                            </Link>
+                        )}
+                        {cohortInvite && (
+                            <Link
+                                href={cohortInviteRoutes.show(cohortInvite.code)}
+                                className="flex items-center gap-3 rounded-xl border border-brand/40 bg-brand-soft px-4 py-3 text-sm font-semibold hover:border-brand"
+                            >
+                                <GraduationCap aria-hidden className="size-5 shrink-0 text-brand" />
+                                {t('worker.home.cohort_invite', {
+                                    institute: cohortInvite.institute,
+                                    course: cohortInvite.course,
+                                })}
+                            </Link>
+                        )}
+                    </div>
                 )}
                 {passport ? (
-                    <div className="grid gap-5 lg:grid-cols-[minmax(0,1fr)_minmax(0,380px)] lg:items-start">
+                    <div className="grid gap-5 lg:grid-cols-[minmax(0,1fr)_minmax(0,380px)] lg:items-start xl:grid-cols-[minmax(0,1fr)_420px]">
                         {passport.completion.next !== null ? (
                             <ProfileCompletionCard completion={passport.completion} />
                         ) : (
@@ -83,7 +88,7 @@ export default function WorkerHome({ passport, cohortInvite = null, suspended = 
                         description={t('placeholder.worker_home')}
                     />
                 )}
-            </div>
+            </PageContainer>
         </>
     );
 }

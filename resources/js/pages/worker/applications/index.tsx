@@ -1,6 +1,7 @@
 import { Head, Link, router } from '@inertiajs/react';
 import { CalendarClock, ChevronRight, CircleAlert, ListChecks, MailOpen } from 'lucide-react';
 import { EmptyState } from '@/components/bs/empty-state';
+import { PageContainer } from '@/components/bs/page-container';
 import { PageHeader } from '@/components/bs/page-header';
 import { StatusChip } from '@/components/bs/status-chip';
 import { Button } from '@/components/ui/button';
@@ -20,7 +21,7 @@ export default function ApplicationsIndex({ applications, invitations }: Props) 
     return (
         <>
             <Head title={t('nav.applications')} />
-            <div className="mx-auto flex w-full max-w-2xl flex-col gap-5">
+            <PageContainer>
                 <PageHeader
                     title={t('nav.applications')}
                     description={t('applications.index.body')}
@@ -35,7 +36,7 @@ export default function ApplicationsIndex({ applications, invitations }: Props) 
                             <MailOpen aria-hidden className="size-5 text-brand" />
                             {t('invitations.title')}
                         </h2>
-                        <ul className="flex flex-col gap-3">
+                        <ul className="grid gap-3 xl:grid-cols-2">
                             {invitations.map((invitation) => (
                                 <li
                                     key={invitation.id}
@@ -110,12 +111,12 @@ export default function ApplicationsIndex({ applications, invitations }: Props) 
                         }
                     />
                 ) : (
-                    <ul className="flex flex-col gap-3">
+                    <ul className="grid gap-3 xl:grid-cols-2">
                         {applications.map((application) => (
-                            <li key={application.id}>
+                            <li key={application.id} className="flex">
                                 <Link
                                     href={worker.applications.show(application.id)}
-                                    className="flex items-start gap-3 rounded-2xl border border-line bg-surface p-4 hover:border-brand/60 focus-visible:ring-[3px] focus-visible:ring-ring/50 focus-visible:outline-none"
+                                    className="flex w-full items-start gap-3 rounded-2xl border border-line bg-surface p-4 hover:border-brand/60 focus-visible:ring-[3px] focus-visible:ring-ring/50 focus-visible:outline-none"
                                 >
                                     <span className="flex min-w-0 flex-1 flex-col gap-1.5">
                                         <span className="flex flex-wrap items-start justify-between gap-2">
@@ -176,7 +177,7 @@ export default function ApplicationsIndex({ applications, invitations }: Props) 
                         ))}
                     </ul>
                 )}
-            </div>
+            </PageContainer>
         </>
     );
 }

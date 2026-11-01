@@ -3,6 +3,7 @@ import { ShieldCheck, Trash2 } from 'lucide-react';
 import { useState } from 'react';
 import PrivacyController from '@/actions/App/Http/Controllers/Worker/PrivacyController';
 import { EmptyState } from '@/components/bs/empty-state';
+import { PageContainer } from '@/components/bs/page-container';
 import { PageHeader } from '@/components/bs/page-header';
 import { StatusChip } from '@/components/bs/status-chip';
 import InputError from '@/components/input-error';
@@ -46,7 +47,7 @@ export default function Privacy({
     return (
         <>
             <Head title={t('nav.privacy')} />
-            <div className="mx-auto flex w-full max-w-2xl flex-col gap-5">
+            <PageContainer width="form">
                 <PageHeader title={t('nav.privacy')} description={t('privacy.body')} />
 
                 <section
@@ -230,7 +231,7 @@ export default function Privacy({
                         </Form>
                     )}
                 </section>
-            </div>
+            </PageContainer>
         </>
     );
 }

@@ -3,6 +3,7 @@ import { BookOpenText, Printer, Search } from 'lucide-react';
 import { useEffect, useId, useMemo, useState } from 'react';
 import { EmptyState } from '@/components/bs/empty-state';
 import { NativeSelect } from '@/components/bs/native-select';
+import { PageContainer } from '@/components/bs/page-container';
 import { PageHeader } from '@/components/bs/page-header';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -63,14 +64,14 @@ export default function ManualPage({
         return (
             <>
                 <Head title={t('manual.title')} />
-                <div className="mx-auto flex w-full max-w-3xl flex-col gap-5">
+                <PageContainer width="prose">
                     <PageHeader title={t('manual.title')} />
                     <EmptyState
                         icon={BookOpenText}
                         title={t('manual.empty_title')}
                         description={t('manual.empty_body')}
                     />
-                </div>
+                </PageContainer>
             </>
         );
     }
@@ -80,7 +81,7 @@ export default function ManualPage({
     return (
         <>
             <Head title={`${manual.title} · ${t('manual.title')}`} />
-            <div className="mx-auto flex w-full max-w-6xl flex-col gap-5">
+            <PageContainer>
                 <PageHeader
                     eyebrow={t('manual.title')}
                     title={manual.title}
@@ -164,7 +165,7 @@ export default function ManualPage({
                     </p>
                 )}
 
-                <div className="grid gap-6 lg:grid-cols-[16rem_minmax(0,1fr)]">
+                <div className="grid gap-6 lg:grid-cols-[16rem_minmax(0,1fr)] xl:grid-cols-[16rem_minmax(0,880px)]">
                     <nav
                         aria-label={t('manual.contents')}
                         className="lg:sticky lg:top-20 lg:self-start print:hidden"
@@ -232,7 +233,7 @@ export default function ManualPage({
                         ))}
                     </article>
                 </div>
-            </div>
+            </PageContainer>
         </>
     );
 }

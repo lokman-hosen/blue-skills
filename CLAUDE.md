@@ -143,6 +143,8 @@ resources/manuals/        in-app User Manual, one Markdown file per role (README
   Use token names (`bg-surface`, `text-muted`, `bg-brand`…), never raw hex values.
 - **Mobile first.** Every page must work at 360px with no horizontal scroll, and up to 1440px+.
   Tables become stacked cards below `md`. Filters become a bottom sheet on mobile. Touch targets ≥ 44px.
+  Worker pages wrap their content in `PageContainer` (`full` / `form` / `prose`) instead of their own
+  `max-w-*`; the shell owns padding and the 1600px cap (D-114).
 - **RTL:** Urdu (later Arabic) sets `dir="rtl"`. Use logical utilities only (`ms-`, `me-`, `ps-`,
   `pe-`, `start-`, `end-`, `text-start`). Never `ml-`/`mr-`/`left-`/`right-` for layout.
 - Accessibility: WCAG 2.2 AA, labels on every input, visible focus, keyboard-operable dialogs.

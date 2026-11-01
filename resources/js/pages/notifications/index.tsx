@@ -2,6 +2,7 @@ import { Head, Link, router } from '@inertiajs/react';
 import { Bell, Settings } from 'lucide-react';
 import { EmptyState } from '@/components/bs/empty-state';
 import type { Paginated } from '@/components/bs/jobs/types';
+import { PageContainer } from '@/components/bs/page-container';
 import { PageHeader } from '@/components/bs/page-header';
 import { Pager } from '@/components/bs/pager';
 import { Button } from '@/components/ui/button';
@@ -21,7 +22,7 @@ export default function Notifications({ notifications }: Props) {
     return (
         <>
             <Head title={t('nav.notifications')} />
-            <div className="mx-auto flex w-full max-w-2xl flex-col gap-5">
+            <PageContainer width="form">
                 <PageHeader
                     title={t('nav.notifications')}
                     actions={
@@ -108,7 +109,7 @@ export default function Notifications({ notifications }: Props) {
                     </ul>
                 )}
                 <Pager page={notifications} />
-            </div>
+            </PageContainer>
         </>
     );
 }

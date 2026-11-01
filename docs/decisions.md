@@ -1564,3 +1564,26 @@ colour) and the appearance tabs use design tokens instead of the kit's neutral g
 - **Manual:** `ManualRoles` maps a created role to the built-in role it started from (a role
   started from another created role inherits that one's starting point) and the page shows
   "Your role, X, is based on Y and was adjusted by BLUESKILLS…".
+
+### D-114 · Worker workspace uses the desktop width
+- **Owner asked (2026-11-01)** to stop the worker dashboard sitting in a narrow centred column on
+  wide screens. Phones (< 768px) must stay exactly as they were; only `md`/`lg`/`xl`/`2xl`
+  utilities were added.
+- **One place for width and padding:** the worker shell's `<main>` uses `WORKER_MAIN_CLASSES`
+  (`components/bs/page-container.tsx`): phones keep the 16px safe-area gutter; from `md` 24px
+  padding and no 768px cap; from `lg` (side navigation visible) 32px, `xl` 40px, aligned against
+  the navigation and capped at 1600px. Pages wrap themselves in `PageContainer`
+  (`width="full" | "form" (720px) | "prose" (70ch)`), always start-aligned, instead of their own
+  `mx-auto max-w-*`. The org and staff shells are unchanged for now and can adopt it later.
+- **Pages:** Find Jobs has a sticky filter column and a two-column card grid from `xl`; the sort
+  control moves above the results from `md` and applies at once (phones keep it in the filter
+  sheet). Job cards stretch to equal heights with badges at the bottom and lay out their facts by
+  the card's own width (container query). We stop at two columns: at 1680px a third column leaves
+  cards about 340px wide. Application, case and document pages put status/stages (or the upload
+  form) in a sticky side column; Applications lists become a two-column grid from `xl`; SkillShow
+  shows the video and the upload form side by side (capped so portrait video stays a sensible
+  size); forms (Apply, Passport edit, Voice-to-CV, Privacy, notification preferences) keep 720px.
+  Home has only two widgets today, so it keeps a two-column grid; a third column needs content.
+- **Messages:** two panes from `lg` (list on the inline-start side, header and thread beside it).
+  `MessageController@show` now also sends the worker's conversation list (same query as the list
+  page, read after marking the open one read). Phones keep list → thread navigation.

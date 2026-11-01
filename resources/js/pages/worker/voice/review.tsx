@@ -2,6 +2,7 @@ import { Form, Head, Link } from '@inertiajs/react';
 import { Check, Pencil } from 'lucide-react';
 import { useMemo } from 'react';
 import VoiceController from '@/actions/App/Http/Controllers/Worker/VoiceController';
+import { PageContainer } from '@/components/bs/page-container';
 import { PageHeader } from '@/components/bs/page-header';
 import { StatusChip } from '@/components/bs/status-chip';
 import InputError from '@/components/input-error';
@@ -26,7 +27,7 @@ export default function VoiceReview({ answers, progress, options }: Props) {
     return (
         <>
             <Head title={t('voice.review_title')} />
-            <div className="mx-auto flex w-full max-w-xl flex-col gap-5">
+            <PageContainer width="form">
                 <PageHeader
                     title={t('voice.review_title')}
                     description={t('voice.review_body')}
@@ -98,7 +99,7 @@ export default function VoiceReview({ answers, progress, options }: Props) {
                         </>
                     )}
                 </Form>
-            </div>
+            </PageContainer>
         </>
     );
 }

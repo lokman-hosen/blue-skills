@@ -3,6 +3,7 @@ import { CircleAlert, Lock } from 'lucide-react';
 import type { FormEvent } from 'react';
 import { ConsentToggle } from '@/components/bs/consent-toggle';
 import { MatchSummary } from '@/components/bs/jobs/match-summary';
+import { PageContainer } from '@/components/bs/page-container';
 import { PageHeader } from '@/components/bs/page-header';
 import InputError from '@/components/input-error';
 import { Button } from '@/components/ui/button';
@@ -47,7 +48,7 @@ export default function Apply({ job, items, acceptsApplications, hasTrade }: Pro
     return (
         <>
             <Head title={t('applications.apply.title')} />
-            <div className="mx-auto flex w-full max-w-2xl flex-col gap-5">
+            <PageContainer width="form">
                 <PageHeader
                     title={t('applications.apply.title')}
                     description={t('applications.apply.body')}
@@ -146,7 +147,7 @@ export default function Apply({ job, items, acceptsApplications, hasTrade }: Pro
                         </Button>
                     </form>
                 )}
-            </div>
+            </PageContainer>
         </>
     );
 }

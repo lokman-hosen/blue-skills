@@ -5,6 +5,7 @@ import type { ReactNode } from 'react';
 import VoiceController from '@/actions/App/Http/Controllers/Worker/VoiceController';
 import { EvidenceBadge } from '@/components/bs/evidence-badge';
 import type { EvidenceState } from '@/components/bs/evidence-badge';
+import { PageContainer } from '@/components/bs/page-container';
 import { PageHeader } from '@/components/bs/page-header';
 import { ProfileCompletionCard } from '@/components/bs/profile-completion-card';
 import { SkillPassportCard } from '@/components/bs/skill-passport-card';
@@ -26,7 +27,7 @@ export default function PassportShow({ passport }: Props) {
     return (
         <>
             <Head title={t('passport.title')} />
-            <div className="flex flex-col gap-5">
+            <PageContainer>
                 <PageHeader
                     title={t('passport.title')}
                     description={t('worker.passport.owner_note')}
@@ -44,7 +45,7 @@ export default function PassportShow({ passport }: Props) {
                     <ProfileCompletionCard completion={passport.completion} />
                 )}
 
-                <div className="grid gap-5 lg:grid-cols-[minmax(0,380px)_minmax(0,1fr)] lg:items-start">
+                <div className="grid gap-5 lg:grid-cols-[minmax(0,380px)_minmax(0,1fr)] lg:items-start xl:grid-cols-[420px_minmax(0,1fr)]">
                     <div className="flex flex-col gap-4 lg:sticky lg:top-6">
                         <SkillPassportCard passport={toSkillPassportCard(passport)} />
                         <Link
@@ -262,7 +263,7 @@ export default function PassportShow({ passport }: Props) {
                         </Section>
                     </div>
                 </div>
-            </div>
+            </PageContainer>
         </>
     );
 }
@@ -300,7 +301,7 @@ function Section({
 
 function Facts({ rows }: { rows: [string, string][] }) {
     return (
-        <dl className="grid gap-x-4 gap-y-2 sm:grid-cols-2">
+        <dl className="grid gap-x-4 gap-y-2 sm:grid-cols-2 2xl:grid-cols-3">
             {rows.map(([label, value]) => (
                 <div key={label} className="min-w-0">
                     <dt className="text-xs text-muted">{label}</dt>

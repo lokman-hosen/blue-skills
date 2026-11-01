@@ -14,6 +14,7 @@ import { FileUpload } from '@/components/bs/file-upload';
 import type { CaseDocument } from '@/components/bs/mobility/case-documents';
 import { CaseDocumentRow, DOCUMENT_ACCEPT } from '@/components/bs/mobility/case-documents';
 import { CaseHistory, trackerStages } from '@/components/bs/mobility/case-history';
+import { PageContainer } from '@/components/bs/page-container';
 import { PageHeader } from '@/components/bs/page-header';
 import { StageTracker } from '@/components/bs/stage-tracker';
 import { StatusChip } from '@/components/bs/status-chip';
@@ -62,7 +63,7 @@ export default function WorkerCaseShow({
     return (
         <>
             <Head title={t('mobility.journey_title', { country: mobilityCase.destination })} />
-            <div className="mx-auto flex w-full max-w-2xl flex-col gap-5">
+            <PageContainer>
                 <PageHeader
                     eyebrow={t('mobility.case_reference', { reference: mobilityCase.reference })}
                     title={t('mobility.journey_title', { country: mobilityCase.destination })}
@@ -74,105 +75,117 @@ export default function WorkerCaseShow({
                     actions={<StatusChip status={mobilityCase.status} />}
                 />
 
-                <section className="flex flex-col gap-4 rounded-2xl border border-line bg-surface p-5">
-                    <div className="rounded-xl bg-surface-2 p-3 text-[13px]">
-                        <p>
-                            <span className="text-muted">{t('mobility.handled_by')} </span>
-                            <span className="font-semibold">{mobilityCase.handledBy}</span>
-                        </p>
-                        {mobilityCase.closedAt && mobilityCase.closedReason && (
-                            <p className="mt-1">
-                                {t('mobility.closed_on', {
-                                    date: formatDate(mobilityCase.closedAt),
-                                    reason: t(
-                                        `mobility.closed_reason.${mobilityCase.closedReason}`,
-                                    ),
-                                })}
+                {/* From `lg`: the journey in a sticky side column, documents and history beside it. */}
+                <div className="grid gap-5 lg:grid-cols-[minmax(0,1fr)_360px] lg:items-start xl:grid-cols-[minmax(0,1fr)_400px]">
+                    <section className="flex flex-col gap-4 rounded-2xl border border-line bg-surface p-5 lg:sticky lg:top-6 lg:col-start-2 lg:row-start-1 lg:max-h-[calc(100svh-3rem)] lg:overflow-y-auto">
+                        <div className="rounded-xl bg-surface-2 p-3 text-[13px]">
+                            <p>
+                                <span className="text-muted">{t('mobility.handled_by')} </span>
+                                <span className="font-semibold">{mobilityCase.handledBy}</span>
                             </p>
-                        )}
-                    </div>
-
-                    {current && (
-                        <div
-                            className="flex flex-col gap-2 rounded-xl border-2 border-stamp/40 bg-stamp-soft p-4"
-                            aria-live="polite"
-                        >
-                            <p className="eyebrow text-muted">{t('mobility.next_action')}</p>
-                            <p className="font-semibold">{current.label}</p>
-                            {current.status === 'blocked' && current.blockedReason && (
-                                <p className="flex items-start gap-1.5 text-sm text-bad">
-                                    <CircleAlert aria-hidden className="mt-0.5 size-4 shrink-0" />
-                                    {t('mobility.on_hold', { reason: current.blockedReason })}
-                                </p>
-                            )}
-                            <p className="text-sm whitespace-pre-line">
-                                {current.nextAction ?? t('mobility.no_next_action')}
-                            </p>
-                            {current.dueOn && (
-                                <p className="flex items-center gap-1.5 text-sm font-semibold text-stamp">
-                                    <CalendarClock aria-hidden className="size-4" />
-                                    {t('mobility.due', { date: formatDate(current.dueOn) })}
+                            {mobilityCase.closedAt && mobilityCase.closedReason && (
+                                <p className="mt-1">
+                                    {t('mobility.closed_on', {
+                                        date: formatDate(mobilityCase.closedAt),
+                                        reason: t(
+                                            `mobility.closed_reason.${mobilityCase.closedReason}`,
+                                        ),
+                                    })}
                                 </p>
                             )}
                         </div>
-                    )}
 
-                    <StageTracker stages={trackerStages(mobilityCase.stages)} />
-
-                    {passportStage && (
-                        <p className="flex items-start gap-2 rounded-lg bg-surface-2 px-3 py-2 text-xs">
-                            <ShieldAlert
-                                aria-hidden
-                                className="mt-0.5 size-4 shrink-0 text-brand"
-                            />
-                            {t('mobility.passport_note')}
-                        </p>
-                    )}
-
-                    <Button asChild variant="outline" className="min-h-11 self-start">
-                        <Link href={worker.applications.messages(mobilityCase.applicationId)}>
-                            <MessageSquare aria-hidden className="size-4" />
-                            {t('messages.message_employer')}
-                        </Link>
-                    </Button>
-                </section>
-
-                <section
-                    aria-labelledby="case-documents-heading"
-                    className="flex flex-col gap-1 rounded-2xl border border-line bg-surface p-5"
-                >
-                    <h2 id="case-documents-heading" className="font-semibold">
-                        {t('mobility.document.title')}
-                    </h2>
-                    <p className="text-sm text-muted">{t('mobility.document.worker_intro')}</p>
-                    {documents.length === 0 ? (
-                        <p className="py-3 text-sm text-muted">{t('mobility.document.empty')}</p>
-                    ) : (
-                        <ul className="flex flex-col divide-y divide-line">
-                            {documents.map((document) => (
-                                <CaseDocumentRow
-                                    key={document.id}
-                                    document={document}
-                                    viewer="worker"
-                                >
-                                    {canRespond && (
-                                        <WorkerDocumentActions
-                                            mobilityCase={mobilityCase}
-                                            document={document}
-                                            scan={scansOnFile.find(
-                                                (scan) => scan.type === document.type,
-                                            )}
-                                            maxSizeMb={maxSizeMb}
+                        {current && (
+                            <div
+                                className="flex flex-col gap-2 rounded-xl border-2 border-stamp/40 bg-stamp-soft p-4"
+                                aria-live="polite"
+                            >
+                                <p className="eyebrow text-muted">{t('mobility.next_action')}</p>
+                                <p className="font-semibold">{current.label}</p>
+                                {current.status === 'blocked' && current.blockedReason && (
+                                    <p className="flex items-start gap-1.5 text-sm text-bad">
+                                        <CircleAlert
+                                            aria-hidden
+                                            className="mt-0.5 size-4 shrink-0"
                                         />
-                                    )}
-                                </CaseDocumentRow>
-                            ))}
-                        </ul>
-                    )}
-                </section>
+                                        {t('mobility.on_hold', { reason: current.blockedReason })}
+                                    </p>
+                                )}
+                                <p className="text-sm whitespace-pre-line">
+                                    {current.nextAction ?? t('mobility.no_next_action')}
+                                </p>
+                                {current.dueOn && (
+                                    <p className="flex items-center gap-1.5 text-sm font-semibold text-stamp">
+                                        <CalendarClock aria-hidden className="size-4" />
+                                        {t('mobility.due', { date: formatDate(current.dueOn) })}
+                                    </p>
+                                )}
+                            </div>
+                        )}
 
-                <CaseHistory events={mobilityCase.events} />
-            </div>
+                        <StageTracker stages={trackerStages(mobilityCase.stages)} />
+
+                        {passportStage && (
+                            <p className="flex items-start gap-2 rounded-lg bg-surface-2 px-3 py-2 text-xs">
+                                <ShieldAlert
+                                    aria-hidden
+                                    className="mt-0.5 size-4 shrink-0 text-brand"
+                                />
+                                {t('mobility.passport_note')}
+                            </p>
+                        )}
+
+                        <Button asChild variant="outline" className="min-h-11 self-start">
+                            <Link href={worker.applications.messages(mobilityCase.applicationId)}>
+                                <MessageSquare aria-hidden className="size-4" />
+                                {t('messages.message_employer')}
+                            </Link>
+                        </Button>
+                    </section>
+
+                    <div className="flex min-w-0 flex-col gap-5 lg:col-start-1 lg:row-start-1">
+                        <section
+                            aria-labelledby="case-documents-heading"
+                            className="flex flex-col gap-1 rounded-2xl border border-line bg-surface p-5"
+                        >
+                            <h2 id="case-documents-heading" className="font-semibold">
+                                {t('mobility.document.title')}
+                            </h2>
+                            <p className="text-sm text-muted">
+                                {t('mobility.document.worker_intro')}
+                            </p>
+                            {documents.length === 0 ? (
+                                <p className="py-3 text-sm text-muted">
+                                    {t('mobility.document.empty')}
+                                </p>
+                            ) : (
+                                <ul className="flex flex-col divide-y divide-line">
+                                    {documents.map((document) => (
+                                        <CaseDocumentRow
+                                            key={document.id}
+                                            document={document}
+                                            viewer="worker"
+                                        >
+                                            {canRespond && (
+                                                <WorkerDocumentActions
+                                                    mobilityCase={mobilityCase}
+                                                    document={document}
+                                                    scan={scansOnFile.find(
+                                                        (scan) => scan.type === document.type,
+                                                    )}
+                                                    maxSizeMb={maxSizeMb}
+                                                />
+                                            )}
+                                        </CaseDocumentRow>
+                                    ))}
+                                </ul>
+                            )}
+                        </section>
+
+                        <CaseHistory events={mobilityCase.events} />
+                    </div>
+                </div>
+            </PageContainer>
         </>
     );
 }

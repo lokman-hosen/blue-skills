@@ -5,6 +5,7 @@ import { useEffect, useMemo, useRef, useState } from 'react';
 import SkillShowController from '@/actions/App/Http/Controllers/Worker/SkillShowController';
 import { ConfirmDialog } from '@/components/bs/confirm-dialog';
 import { NativeSelect } from '@/components/bs/native-select';
+import { PageContainer } from '@/components/bs/page-container';
 import { PageHeader } from '@/components/bs/page-header';
 import { StatusChip } from '@/components/bs/status-chip';
 import type { Tone } from '@/components/bs/tone';
@@ -178,234 +179,243 @@ export default function SkillShowPage({
     return (
         <>
             <Head title={t('skillshow.page_title')} />
-            <div className="mx-auto flex w-full max-w-xl flex-col gap-5">
+            <PageContainer>
                 <PageHeader
                     title={t('skillshow.page_title')}
                     description={t('skillshow.page_body', { seconds: formatNumber(maxSeconds) })}
                     back={{ href: worker.passport.show(), label: t('passport.title') }}
                 />
 
-                {skillShow && !replacing && (
-                    <section className="flex flex-col gap-3 rounded-2xl border border-line bg-surface p-4">
-                        <div className="aspect-[9/12] overflow-hidden rounded-xl border border-line bg-screen">
-                            {skillShow.videoUrl ? (
-                                <video
-                                    src={skillShow.videoUrl}
-                                    poster={skillShow.posterUrl ?? undefined}
-                                    controls
-                                    playsInline
-                                    preload="metadata"
-                                    className="size-full object-contain"
-                                >
-                                    <track kind="captions" />
-                                </video>
-                            ) : (
-                                <div className="grid size-full place-items-center text-on-screen">
-                                    {skillShow.status === 'processing' ? (
-                                        <Spinner className="size-8" />
-                                    ) : (
-                                        <Video aria-hidden className="size-10" />
-                                    )}
-                                </div>
-                            )}
-                        </div>
-                        <div className="flex flex-wrap items-center justify-between gap-2">
-                            <p className="text-[13px] font-semibold">{t('skillshow.title')}</p>
-                            <StatusChip
-                                label={t(`skillshow.moderation.${skillShow.status}`)}
-                                tone={statusTone[skillShow.status]}
-                            />
-                        </div>
-                        <p className="text-sm text-muted" aria-live="polite">
-                            {t(`skillshow.status_note.${skillShow.status}`)}
-                        </p>
-                        {skillShow.reasonCode && (
-                            <p
-                                role="alert"
-                                className="flex items-start gap-2 rounded-lg bg-bad-soft px-3 py-2 text-sm text-bad"
-                            >
-                                <AlertCircle aria-hidden className="mt-0.5 size-4 shrink-0" />
-                                {t(`skillshow.reason.${skillShow.reasonCode}`)}
-                            </p>
-                        )}
-                        <p className="rounded-lg bg-surface-2 px-2.5 py-1.5 text-[11.5px] text-muted">
-                            {t('skillshow.disclaimer')}
-                        </p>
-                        <div className="flex flex-wrap gap-2">
-                            <Button
-                                variant="outline"
-                                className="min-h-11"
-                                onClick={() => setReplacing(true)}
-                            >
-                                <Video aria-hidden className="size-4" />
-                                {t('skillshow.replace')}
-                            </Button>
-                            <ConfirmDialog
-                                trigger={
-                                    <Button variant="outline" className="min-h-11 text-bad">
-                                        <Trash2 aria-hidden className="size-4" />
-                                        {t('skillshow.delete')}
-                                    </Button>
-                                }
-                                title={t('skillshow.delete')}
-                                description={t('skillshow.delete_body')}
-                                confirmLabel={t('skillshow.delete')}
-                                destructive
-                                onConfirm={() =>
-                                    router.delete(SkillShowController.destroy.url(skillShow.id))
-                                }
-                            />
-                        </div>
-                    </section>
-                )}
-
-                {skillShow?.status === 'failed' && replacing && (
-                    <p
-                        role="alert"
-                        className="flex items-start gap-2 rounded-lg bg-bad-soft px-3 py-2 text-sm text-bad"
-                    >
-                        <AlertCircle aria-hidden className="mt-0.5 size-4 shrink-0" />
-                        {t(`skillshow.reason.${skillShow.reasonCode ?? 'unreadable'}`, {
-                            max: formatNumber(maxSeconds),
-                        })}
-                    </p>
-                )}
-
-                {(replacing || editable) && (
-                    <form
-                        onSubmit={submit}
-                        className="flex flex-col gap-5 rounded-2xl border border-line bg-surface p-5"
-                        noValidate
-                    >
-                        {replacing && (
-                            <div className="flex flex-col gap-2">
-                                <div className="aspect-[9/12] overflow-hidden rounded-xl border border-line bg-surface-2">
-                                    {previewUrl ? (
-                                        <video
-                                            src={previewUrl}
-                                            controls
-                                            playsInline
-                                            className="size-full bg-screen object-contain"
-                                        >
-                                            <track kind="captions" />
-                                        </video>
-                                    ) : (
-                                        <div className="grid size-full place-items-center text-center text-muted">
-                                            <div className="flex flex-col items-center gap-2">
-                                                <Video aria-hidden className="size-10" />
-                                                <p className="font-mono text-xs" dir="ltr">
-                                                    00:00 / 00:{String(maxSeconds).padStart(2, '0')}
-                                                </p>
-                                                {file && <p className="text-xs">{file.name}</p>}
-                                            </div>
-                                        </div>
-                                    )}
-                                </div>
-                                {durationMs !== null && (
-                                    <StatusChip
-                                        className="self-start"
-                                        tone="brand"
-                                        label={t('skillshow.ready', {
-                                            seconds: formatNumber(Math.round(durationMs / 1000)),
-                                        })}
-                                    />
+                {/* From `lg`: the current video and the upload form side by side. Portrait videos
+                    stay a sensible size, so the pair is capped rather than full width. */}
+                <div className="grid gap-5 lg:max-w-[1120px] lg:grid-cols-2 lg:items-start">
+                    {skillShow && !replacing && (
+                        <section className="flex flex-col gap-3 rounded-2xl border border-line bg-surface p-4">
+                            <div className="aspect-[9/12] overflow-hidden rounded-xl border border-line bg-screen">
+                                {skillShow.videoUrl ? (
+                                    <video
+                                        src={skillShow.videoUrl}
+                                        poster={skillShow.posterUrl ?? undefined}
+                                        controls
+                                        playsInline
+                                        preload="metadata"
+                                        className="size-full object-contain"
+                                    >
+                                        <track kind="captions" />
+                                    </video>
+                                ) : (
+                                    <div className="grid size-full place-items-center text-on-screen">
+                                        {skillShow.status === 'processing' ? (
+                                            <Spinner className="size-8" />
+                                        ) : (
+                                            <Video aria-hidden className="size-10" />
+                                        )}
+                                    </div>
                                 )}
-                                <label className="inline-flex min-h-12 cursor-pointer items-center justify-center gap-2 rounded-xl bg-brand px-4 text-sm font-semibold text-on-brand focus-within:ring-[3px] focus-within:ring-ring/50">
-                                    <Video aria-hidden className="size-4" />
-                                    {file ? t('skillshow.retake') : t('skillshow.record_or_upload')}
-                                    <input
-                                        ref={input}
-                                        type="file"
-                                        accept={['video/*', ...acceptedTypes].join(',')}
-                                        className="sr-only"
-                                        onChange={(event) => choose(event.target.files?.[0])}
-                                    />
-                                </label>
-                                <p className="text-xs text-muted">
-                                    {t('skillshow.tips', {
-                                        seconds: formatNumber(maxSeconds),
-                                        size: formatNumber(maxSizeMb),
-                                    })}
-                                </p>
-                                <InputError message={errors.video} />
                             </div>
-                        )}
-
-                        <fieldset className="flex flex-col gap-2">
-                            <legend className="mb-1.5 text-[13px] font-semibold">
-                                {t('skillshow.tag_skills', { max: formatNumber(maxSkills) })}
-                            </legend>
-                            <ChipGroup
-                                items={lookup.skillsFor(occupationSlug).map((skill) => ({
-                                    value: skillIds.get(skill.slug) ?? skill.slug,
-                                    label: skill.name,
-                                }))}
-                                selected={selected}
-                                onToggle={(value) =>
-                                    setSelected(
-                                        selected.includes(value)
-                                            ? selected.filter((item) => item !== value)
-                                            : selected.length < maxSkills
-                                              ? [...selected, value]
-                                              : selected,
-                                    )
-                                }
-                            />
-                            <InputError message={skillError} />
-                        </fieldset>
-
-                        <div className="flex flex-col gap-1.5">
-                            <Label htmlFor="skillshow-visibility">
-                                {t('skillshow.who_can_see')}
-                            </Label>
-                            <NativeSelect
-                                id="skillshow-visibility"
-                                value={visibility}
-                                onChange={(event) =>
-                                    setVisibility(event.target.value as Visibility)
-                                }
-                            >
-                                {VISIBILITY.map((value) => (
-                                    <option key={value} value={value}>
-                                        {t(`visibility.${value}`)}
-                                    </option>
-                                ))}
-                            </NativeSelect>
-                            <InputError message={errors.visibility} />
-                        </div>
-
-                        <p className="rounded-lg bg-surface-2 px-3 py-2 text-xs text-muted">
-                            {t('skillshow.moderation_note')}
-                        </p>
-
-                        <div className="flex flex-wrap gap-2">
-                            <Button
-                                type="submit"
-                                className="min-h-12 sm:min-w-48"
-                                disabled={
-                                    processing || (replacing && !file) || selected.length === 0
-                                }
-                            >
-                                {processing && <Spinner />}
-                                {replacing ? t('skillshow.submit') : t('common.save')}
-                            </Button>
-                            {replacing && skillShow && skillShow.status !== 'failed' && (
-                                <Button
-                                    type="button"
-                                    variant="outline"
-                                    className="min-h-12"
-                                    onClick={() => setReplacing(false)}
+                            <div className="flex flex-wrap items-center justify-between gap-2">
+                                <p className="text-[13px] font-semibold">{t('skillshow.title')}</p>
+                                <StatusChip
+                                    label={t(`skillshow.moderation.${skillShow.status}`)}
+                                    tone={statusTone[skillShow.status]}
+                                />
+                            </div>
+                            <p className="text-sm text-muted" aria-live="polite">
+                                {t(`skillshow.status_note.${skillShow.status}`)}
+                            </p>
+                            {skillShow.reasonCode && (
+                                <p
+                                    role="alert"
+                                    className="flex items-start gap-2 rounded-lg bg-bad-soft px-3 py-2 text-sm text-bad"
                                 >
-                                    {t('common.cancel')}
-                                </Button>
+                                    <AlertCircle aria-hidden className="mt-0.5 size-4 shrink-0" />
+                                    {t(`skillshow.reason.${skillShow.reasonCode}`)}
+                                </p>
                             )}
-                        </div>
-                        {replacing && skillShow && skillShow.status !== 'failed' && (
-                            <p className="text-xs text-muted">{t('skillshow.replace_note')}</p>
-                        )}
-                    </form>
-                )}
-            </div>
+                            <p className="rounded-lg bg-surface-2 px-2.5 py-1.5 text-[11.5px] text-muted">
+                                {t('skillshow.disclaimer')}
+                            </p>
+                            <div className="flex flex-wrap gap-2">
+                                <Button
+                                    variant="outline"
+                                    className="min-h-11"
+                                    onClick={() => setReplacing(true)}
+                                >
+                                    <Video aria-hidden className="size-4" />
+                                    {t('skillshow.replace')}
+                                </Button>
+                                <ConfirmDialog
+                                    trigger={
+                                        <Button variant="outline" className="min-h-11 text-bad">
+                                            <Trash2 aria-hidden className="size-4" />
+                                            {t('skillshow.delete')}
+                                        </Button>
+                                    }
+                                    title={t('skillshow.delete')}
+                                    description={t('skillshow.delete_body')}
+                                    confirmLabel={t('skillshow.delete')}
+                                    destructive
+                                    onConfirm={() =>
+                                        router.delete(SkillShowController.destroy.url(skillShow.id))
+                                    }
+                                />
+                            </div>
+                        </section>
+                    )}
+
+                    {skillShow?.status === 'failed' && replacing && (
+                        <p
+                            role="alert"
+                            className="flex items-start gap-2 rounded-lg bg-bad-soft px-3 py-2 text-sm text-bad lg:col-span-2"
+                        >
+                            <AlertCircle aria-hidden className="mt-0.5 size-4 shrink-0" />
+                            {t(`skillshow.reason.${skillShow.reasonCode ?? 'unreadable'}`, {
+                                max: formatNumber(maxSeconds),
+                            })}
+                        </p>
+                    )}
+
+                    {(replacing || editable) && (
+                        <form
+                            onSubmit={submit}
+                            className="flex flex-col gap-5 rounded-2xl border border-line bg-surface p-5"
+                            noValidate
+                        >
+                            {replacing && (
+                                <div className="flex flex-col gap-2">
+                                    <div className="aspect-[9/12] overflow-hidden rounded-xl border border-line bg-surface-2">
+                                        {previewUrl ? (
+                                            <video
+                                                src={previewUrl}
+                                                controls
+                                                playsInline
+                                                className="size-full bg-screen object-contain"
+                                            >
+                                                <track kind="captions" />
+                                            </video>
+                                        ) : (
+                                            <div className="grid size-full place-items-center text-center text-muted">
+                                                <div className="flex flex-col items-center gap-2">
+                                                    <Video aria-hidden className="size-10" />
+                                                    <p className="font-mono text-xs" dir="ltr">
+                                                        00:00 / 00:
+                                                        {String(maxSeconds).padStart(2, '0')}
+                                                    </p>
+                                                    {file && <p className="text-xs">{file.name}</p>}
+                                                </div>
+                                            </div>
+                                        )}
+                                    </div>
+                                    {durationMs !== null && (
+                                        <StatusChip
+                                            className="self-start"
+                                            tone="brand"
+                                            label={t('skillshow.ready', {
+                                                seconds: formatNumber(
+                                                    Math.round(durationMs / 1000),
+                                                ),
+                                            })}
+                                        />
+                                    )}
+                                    <label className="inline-flex min-h-12 cursor-pointer items-center justify-center gap-2 rounded-xl bg-brand px-4 text-sm font-semibold text-on-brand focus-within:ring-[3px] focus-within:ring-ring/50">
+                                        <Video aria-hidden className="size-4" />
+                                        {file
+                                            ? t('skillshow.retake')
+                                            : t('skillshow.record_or_upload')}
+                                        <input
+                                            ref={input}
+                                            type="file"
+                                            accept={['video/*', ...acceptedTypes].join(',')}
+                                            className="sr-only"
+                                            onChange={(event) => choose(event.target.files?.[0])}
+                                        />
+                                    </label>
+                                    <p className="text-xs text-muted">
+                                        {t('skillshow.tips', {
+                                            seconds: formatNumber(maxSeconds),
+                                            size: formatNumber(maxSizeMb),
+                                        })}
+                                    </p>
+                                    <InputError message={errors.video} />
+                                </div>
+                            )}
+
+                            <fieldset className="flex flex-col gap-2">
+                                <legend className="mb-1.5 text-[13px] font-semibold">
+                                    {t('skillshow.tag_skills', { max: formatNumber(maxSkills) })}
+                                </legend>
+                                <ChipGroup
+                                    items={lookup.skillsFor(occupationSlug).map((skill) => ({
+                                        value: skillIds.get(skill.slug) ?? skill.slug,
+                                        label: skill.name,
+                                    }))}
+                                    selected={selected}
+                                    onToggle={(value) =>
+                                        setSelected(
+                                            selected.includes(value)
+                                                ? selected.filter((item) => item !== value)
+                                                : selected.length < maxSkills
+                                                  ? [...selected, value]
+                                                  : selected,
+                                        )
+                                    }
+                                />
+                                <InputError message={skillError} />
+                            </fieldset>
+
+                            <div className="flex flex-col gap-1.5">
+                                <Label htmlFor="skillshow-visibility">
+                                    {t('skillshow.who_can_see')}
+                                </Label>
+                                <NativeSelect
+                                    id="skillshow-visibility"
+                                    value={visibility}
+                                    onChange={(event) =>
+                                        setVisibility(event.target.value as Visibility)
+                                    }
+                                >
+                                    {VISIBILITY.map((value) => (
+                                        <option key={value} value={value}>
+                                            {t(`visibility.${value}`)}
+                                        </option>
+                                    ))}
+                                </NativeSelect>
+                                <InputError message={errors.visibility} />
+                            </div>
+
+                            <p className="rounded-lg bg-surface-2 px-3 py-2 text-xs text-muted">
+                                {t('skillshow.moderation_note')}
+                            </p>
+
+                            <div className="flex flex-wrap gap-2">
+                                <Button
+                                    type="submit"
+                                    className="min-h-12 sm:min-w-48"
+                                    disabled={
+                                        processing || (replacing && !file) || selected.length === 0
+                                    }
+                                >
+                                    {processing && <Spinner />}
+                                    {replacing ? t('skillshow.submit') : t('common.save')}
+                                </Button>
+                                {replacing && skillShow && skillShow.status !== 'failed' && (
+                                    <Button
+                                        type="button"
+                                        variant="outline"
+                                        className="min-h-12"
+                                        onClick={() => setReplacing(false)}
+                                    >
+                                        {t('common.cancel')}
+                                    </Button>
+                                )}
+                            </div>
+                            {replacing && skillShow && skillShow.status !== 'failed' && (
+                                <p className="text-xs text-muted">{t('skillshow.replace_note')}</p>
+                            )}
+                        </form>
+                    )}
+                </div>
+            </PageContainer>
         </>
     );
 }

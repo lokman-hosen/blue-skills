@@ -6,6 +6,7 @@ import { LanguageSwitcher } from '@/components/bs/language-switcher';
 import { LiveUpdates } from '@/components/bs/live-updates';
 import { Logo } from '@/components/bs/logo';
 import { NotificationBell } from '@/components/bs/notification-bell';
+import { WORKER_MAIN_CLASSES } from '@/components/bs/page-container';
 import { PilotBanner } from '@/components/bs/pilot-banner';
 import { SkipLink } from '@/components/bs/skip-link';
 import { ThemeToggle } from '@/components/bs/theme-toggle';
@@ -83,11 +84,7 @@ export default function WorkerLayout({ children }: { children: ReactNode }) {
                     <LanguageSwitcher />
                 </header>
                 <TranslationPendingBanner />
-                <main
-                    id="main"
-                    tabIndex={-1}
-                    className="mx-auto w-full max-w-3xl min-w-0 flex-1 py-5 gutter pb-28 focus:outline-none lg:pb-8"
-                >
+                <main id="main" tabIndex={-1} className={WORKER_MAIN_CLASSES}>
                     {children}
                 </main>
             </div>

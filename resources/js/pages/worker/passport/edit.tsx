@@ -7,6 +7,7 @@ import { ConfirmDialog } from '@/components/bs/confirm-dialog';
 import { EvidenceUploadSection } from '@/components/bs/evidence-upload-section';
 import { FileUpload } from '@/components/bs/file-upload';
 import { NativeSelect } from '@/components/bs/native-select';
+import { PageContainer } from '@/components/bs/page-container';
 import { PageHeader } from '@/components/bs/page-header';
 import { ChipGroup } from '@/components/bs/voice-fields-editor';
 import InputError from '@/components/input-error';
@@ -40,7 +41,7 @@ export default function PassportEdit(props: Props) {
     return (
         <>
             <Head title={title} />
-            <div className="mx-auto flex w-full max-w-2xl flex-col gap-5">
+            <PageContainer width="form">
                 <PageHeader
                     title={title}
                     back={{ href: worker.passport.show(), label: t('passport.title') }}
@@ -58,7 +59,7 @@ export default function PassportEdit(props: Props) {
                         maxSizeMb={props.evidenceMaxMb}
                     />
                 )}
-            </div>
+            </PageContainer>
         </>
     );
 }
