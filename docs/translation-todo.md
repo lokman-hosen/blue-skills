@@ -26,3 +26,4 @@ silently: add the key here, and remove it once a reviewed translation lands in `
 | Staff two-factor reset: `staff.reset_two_factor*`, `staff.two_factor_reset`, `staff.cannot_reset_self`, `staff.nothing_to_reset` | bn (draft, needs native review) | D-111 | Staff-facing |
 | Roles & permissions: `nav.roles`, `roles.*`, `permission.*`, `permission_hint.*`, `permission_module.*`, `permission_group.*` | bn (draft, needs native review) | D-112 | Staff-facing (Superuser only) |
 | New roles: `roles.new*`, `roles.field.*`, `roles.custom*`, `roles.details*`, `roles.delete*`, `roles.errors.*`, `manual.adapted` | bn (draft, needs native review) | D-113 | Staff-facing, except `manual.adapted`. Names of roles the Superuser creates are stored in one language only |
+| Desktop Messages: `messages.conversations`, `messages.select_title`, `messages.select_body` | bn (draft, needs native review) | D-114 | Worker-facing |

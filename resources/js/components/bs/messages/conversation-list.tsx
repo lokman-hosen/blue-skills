@@ -6,15 +6,17 @@ import { cn } from '@/lib/utils';
 
 type Item = App.Domain.Messaging.Data.ConversationListItemData;
 
-/** Conversations, newest first, with unread counts. */
+/** Conversations, newest first, with unread counts. `activeId` marks the open one (two-pane view). */
 export function ConversationList({
     conversations,
     href,
     emptyBody,
+    activeId,
 }: {
     conversations: Item[];
     href: (id: string) => string;
     emptyBody: string;
+    activeId?: string;
 }) {
     const { t, formatDate, formatNumber } = useTranslation();
 
@@ -34,7 +36,12 @@ export function ConversationList({
                 <li key={conversation.id}>
                     <Link
                         href={href(conversation.id)}
-                        className="flex items-start gap-3 p-4 hover:bg-surface-2 focus-visible:bg-surface-2 focus-visible:outline-none"
+                        aria-current={conversation.id === activeId ? 'page' : undefined}
+                        className={cn(
+                            'flex items-start gap-3 p-4 hover:bg-surface-2 focus-visible:bg-surface-2 focus-visible:outline-none',
+                            conversation.id === activeId &&
+                                'bg-brand-soft shadow-[inset_3px_0_0_var(--color-brand)] hover:bg-brand-soft rtl:shadow-[inset_-3px_0_0_var(--color-brand)]',
+                        )}
                     >
                         <span className="flex min-w-0 flex-1 flex-col gap-0.5">
                             <span className="flex items-baseline justify-between gap-2">

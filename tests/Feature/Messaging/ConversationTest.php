@@ -69,7 +69,16 @@ it('sends messages live, with unread counts until the other side reads them', fu
     $this->get(route('worker.messages.show', $conversation))
         ->assertInertia(fn (Assert $page) => $page
             ->where('conversation.messages.1.senderName', "{$this->recruiter->name} · {$this->employer->display_name}")
-            ->where('conversation.messages.1.mine', false));
+            ->where('conversation.messages.1.mine', false)
+            // The list beside the thread on desktop: the worker's own, this one now read.
+            ->has('conversations', 1)
+            ->where('conversations.0.id', $conversation->id)
+            ->where('conversations.0.unread', 0));
+
+    // Another worker's conversation never shows up in this worker's list.
+    Conversation::factory()->create();
+    $this->get(route('worker.messages.show', $conversation))
+        ->assertInertia(fn (Assert $page) => $page->has('conversations', 1));
 });
 
 it('keeps conversations to their parties and roles', function () {

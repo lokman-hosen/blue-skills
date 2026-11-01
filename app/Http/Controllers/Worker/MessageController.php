@@ -11,6 +11,7 @@ use App\Domain\Messaging\Data\ConversationData;
 use App\Domain\Messaging\Data\ConversationListItemData;
 use App\Domain\Messaging\Models\Conversation;
 use App\Domain\Messaging\Support\Unread;
+use App\Domain\Worker\Models\WorkerProfile;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Shared\SendMessageRequest;
 use Illuminate\Http\RedirectResponse;
@@ -28,31 +29,23 @@ class MessageController extends Controller
 
     public function index(Request $request): Response
     {
-        $profile = $this->workerProfile($request);
-        $user = $request->user();
-
-        $conversations = Conversation::query()
-            ->where('worker_profile_id', $profile->id)
-            ->with(['application.job', 'organization', 'workerProfile.user'])
-            ->withCount(['messages as unread_count' => fn ($messages) => Unread::messages($messages, $user)])
-            ->orderByRaw('last_message_at desc nulls last')
-            ->get();
-
         return Inertia::render('worker/messages/index', [
-            'conversations' => $conversations->map(fn (Conversation $conversation) => ConversationListItemData::fromConversation($conversation, $user))->values()->all(),
+            'conversations' => $this->conversations($this->workerProfile($request), $request),
             'reportCategories' => ReportMessage::CATEGORIES,
         ]);
     }
 
     public function show(Request $request, Conversation $conversation, MarkConversationRead $markRead): Response
     {
-        $this->workerProfile($request);
+        $profile = $this->workerProfile($request);
         Gate::authorize('view', $conversation);
 
         $markRead->handle($conversation, $request->user());
 
         return Inertia::render('worker/messages/show', [
             'conversation' => ConversationData::fromConversation($conversation, $request->user(), Gate::allows('post', $conversation)),
+            // The list beside the thread from `lg` (D-114); read after marking this one read.
+            'conversations' => $this->conversations($profile, $request),
             'reportCategories' => ReportMessage::CATEGORIES,
             'maxFiles' => SendMessageRequest::MAX_FILES,
             'maxSizeMb' => SendMessageRequest::MAX_KB / 1024,
@@ -76,5 +69,25 @@ class MessageController extends Controller
         Gate::authorize('respond', $application);
 
         return to_route('worker.messages.show', $open->handle($application));
+    }
+
+    /**
+     * The worker's conversations, newest first, with unread counts.
+     *
+     * @return list<ConversationListItemData>
+     */
+    private function conversations(WorkerProfile $profile, Request $request): array
+    {
+        $user = $request->user();
+
+        return Conversation::query()
+            ->where('worker_profile_id', $profile->id)
+            ->with(['application.job', 'organization', 'workerProfile.user'])
+            ->withCount(['messages as unread_count' => fn ($messages) => Unread::messages($messages, $user)])
+            ->orderByRaw('last_message_at desc nulls last')
+            ->get()
+            ->map(fn (Conversation $conversation) => ConversationListItemData::fromConversation($conversation, $user))
+            ->values()
+            ->all();
     }
 }
