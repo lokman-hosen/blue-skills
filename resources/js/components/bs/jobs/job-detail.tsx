@@ -54,7 +54,7 @@ export function JobDetail({
                     title={job.title}
                     back={{ href: jobs.index(), label: t('jobs.search.title') }}
                 />
-                <div className="grid gap-5 lg:grid-cols-[minmax(0,1fr)_minmax(0,340px)] lg:items-start">
+                <div className="grid gap-5 lg:grid-cols-[minmax(0,1fr)_minmax(0,340px)] lg:items-start xl:grid-cols-[minmax(0,1fr)_380px]">
                     <TruthCard job={job} onReport={() => setReporting(true)} />
                     <aside className="flex flex-col gap-3 lg:sticky lg:top-20">
                         {match && <MatchSummary match={match} />}

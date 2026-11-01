@@ -4,13 +4,16 @@ import { StatusChip } from '@/components/bs/status-chip';
 import { useTranslation } from '@/lib/i18n';
 import jobs from '@/routes/jobs';
 
-/** One search result: headline Truth Card facts. Missing values read "Not disclosed". */
+/**
+ * One search result: headline Truth Card facts. Missing values read "Not disclosed". Facts go
+ * two-up when the card itself is wide enough (container query), so it reads well in a grid.
+ */
 export function JobListingCard({ job }: { job: App.Domain.Jobs.Data.JobListingData }) {
     const { t, formatMoney, formatDate, formatNumber } = useTranslation();
     const notDisclosed = <span className="text-warn italic">{t('common.not_disclosed')}</span>;
 
     return (
-        <article className="flex min-w-0 flex-col gap-3 rounded-xl border border-line bg-surface p-4">
+        <article className="@container flex w-full min-w-0 flex-col gap-3 rounded-xl border border-line bg-surface p-4">
             <header className="flex flex-wrap items-start justify-between gap-2">
                 <div className="min-w-0">
                     <h3 className="font-display text-lg leading-tight font-bold">
@@ -32,7 +35,7 @@ export function JobListingCard({ job }: { job: App.Domain.Jobs.Data.JobListingDa
                     {job.code}
                 </span>
             </header>
-            <dl className="grid gap-x-4 gap-y-1.5 text-sm sm:grid-cols-2">
+            <dl className="grid gap-x-4 gap-y-1.5 text-sm @lg:grid-cols-2">
                 <div className="flex items-center gap-2">
                     <dt className="sr-only">{t('jobs.field.destination')}</dt>
                     <MapPin aria-hidden className="size-4 shrink-0 text-muted" />
@@ -71,7 +74,7 @@ export function JobListingCard({ job }: { job: App.Domain.Jobs.Data.JobListingDa
                     </dd>
                 </div>
             </dl>
-            <footer className="flex flex-wrap items-center gap-1.5">
+            <footer className="mt-auto flex flex-wrap items-center gap-1.5">
                 <StatusChip
                     tone={job.workerPaysCosts ? 'warn' : 'ok'}
                     label={

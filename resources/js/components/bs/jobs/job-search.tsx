@@ -11,6 +11,7 @@ import { PageHeader } from '@/components/bs/page-header';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import { useIsMobile } from '@/hooks/use-mobile';
 import { useTranslation } from '@/lib/i18n';
 import jobs from '@/routes/jobs';
 
@@ -27,6 +28,8 @@ const TOGGLES = ['no_worker_costs', 'accommodation', 'salary_disclosed'] as cons
 export function JobSearch({ jobs: page, filters, countries, occupations }: JobSearchProps) {
     const { t, formatNumber } = useTranslation();
     const [draft, setDraft] = useState<JobFilters>(filters);
+    // Phones keep sorting in the filter sheet; from `md` it sits above the results.
+    const isMobile = useIsMobile();
 
     const apply = (next: JobFilters = draft) => {
         const query = Object.fromEntries(
@@ -93,8 +96,9 @@ export function JobSearch({ jobs: page, filters, countries, occupations }: JobSe
                     </Button>
                 </form>
 
-                <div className="grid gap-5 md:grid-cols-[240px_minmax(0,1fr)] md:items-start">
+                <div className="grid gap-5 md:grid-cols-[240px_minmax(0,1fr)] md:items-start lg:grid-cols-[280px_minmax(0,1fr)] 2xl:grid-cols-[300px_minmax(0,1fr)]">
                     <FilterSheet
+                        className="md:sticky md:top-20 md:max-h-[calc(100svh-6rem)] md:overflow-y-auto"
                         activeCount={activeCount}
                         onApply={() => apply()}
                         onClear={() => {
@@ -157,31 +161,34 @@ export function JobSearch({ jobs: page, filters, countries, occupations }: JobSe
                                 </label>
                             ))}
                         </fieldset>
-                        <div className="flex flex-col gap-1.5">
-                            <Label htmlFor="filter-sort">{t('jobs.search.sort')}</Label>
-                            <NativeSelect
-                                id="filter-sort"
+                        {isMobile && (
+                            <SortSelect
                                 value={draft.sort}
-                                onChange={(event) =>
-                                    setDraft({
-                                        ...draft,
-                                        sort: event.target.value as JobFilters['sort'],
-                                    })
-                                }
-                            >
-                                <option value="newest">{t('jobs.search.sort_newest')}</option>
-                                <option value="deadline">{t('jobs.search.sort_deadline')}</option>
-                            </NativeSelect>
-                        </div>
+                                onChange={(sort) => setDraft({ ...draft, sort })}
+                            />
+                        )}
                         <Button className="hidden min-h-11 md:inline-flex" onClick={() => apply()}>
                             {t('common.show_results')}
                         </Button>
                     </FilterSheet>
 
                     <section aria-live="polite" className="flex min-w-0 flex-col gap-3">
-                        <p className="text-sm text-muted">
-                            {t('jobs.search.count', { count: formatNumber(page.total) })}
-                        </p>
+                        <div className="flex flex-wrap items-center justify-between gap-3">
+                            <p className="text-sm text-muted">
+                                {t('jobs.search.count', { count: formatNumber(page.total) })}
+                            </p>
+                            {!isMobile && (
+                                <SortSelect
+                                    inline
+                                    value={draft.sort}
+                                    onChange={(sort) => {
+                                        const next = { ...draft, sort };
+                                        setDraft(next);
+                                        apply(next);
+                                    }}
+                                />
+                            )}
+                        </div>
                         {page.data.length === 0 ? (
                             <EmptyState
                                 icon={SearchX}
@@ -189,9 +196,9 @@ export function JobSearch({ jobs: page, filters, countries, occupations }: JobSe
                                 description={t('jobs.search.empty_body')}
                             />
                         ) : (
-                            <ul className="flex flex-col gap-3">
+                            <ul className="grid gap-3 xl:grid-cols-2">
                                 {page.data.map((job) => (
-                                    <li key={job.code}>
+                                    <li key={job.code} className="flex">
                                         <JobListingCard job={job} />
                                     </li>
                                 ))}
@@ -236,5 +243,34 @@ export function JobSearch({ jobs: page, filters, countries, occupations }: JobSe
                 </div>
             </div>
         </>
+    );
+}
+
+/** Newest first or closing soonest: in the filter sheet on phones, above the results from `md`. */
+function SortSelect({
+    value,
+    onChange,
+    inline = false,
+}: {
+    value: JobFilters['sort'];
+    onChange: (sort: JobFilters['sort']) => void;
+    inline?: boolean;
+}) {
+    const { t } = useTranslation();
+
+    return (
+        <div className={inline ? 'flex items-center gap-2' : 'flex flex-col gap-1.5'}>
+            <Label htmlFor="filter-sort" className={inline ? 'shrink-0 text-muted' : undefined}>
+                {t('jobs.search.sort')}
+            </Label>
+            <NativeSelect
+                id="filter-sort"
+                value={value}
+                onChange={(event) => onChange(event.target.value as JobFilters['sort'])}
+            >
+                <option value="newest">{t('jobs.search.sort_newest')}</option>
+                <option value="deadline">{t('jobs.search.sort_deadline')}</option>
+            </NativeSelect>
+        </div>
     );
 }
