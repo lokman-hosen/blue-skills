@@ -173,6 +173,9 @@ export function JobSearch({ jobs: page, filters, countries, occupations }: JobSe
                                 <option value="deadline">{t('jobs.search.sort_deadline')}</option>
                             </NativeSelect>
                         </div>
+                        <Button className="hidden min-h-11 md:inline-flex" onClick={() => apply()}>
+                            {t('common.show_results')}
+                        </Button>
                     </FilterSheet>
 
                     <section aria-live="polite" className="flex min-w-0 flex-col gap-3">

@@ -278,6 +278,9 @@ export default function TalentIndex({ verified, results, filters, options }: Pro
                             ))}
                         </fieldset>
                         <p className="text-xs text-muted">{t('talent.privacy_note')}</p>
+                        <Button className="hidden min-h-11 md:inline-flex" onClick={() => apply()}>
+                            {t('common.show_results')}
+                        </Button>
                     </FilterSheet>
 
                     <section aria-live="polite" className="flex min-w-0 flex-col gap-3">
