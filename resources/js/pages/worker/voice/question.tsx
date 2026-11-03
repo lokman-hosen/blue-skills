@@ -49,6 +49,8 @@ export default function VoiceQuestion({
     const [text, setText] = useState('');
     const [error, setError] = useState<string | undefined>();
     const [uploading, setUploading] = useState(false);
+    // True after "Speak again" / "Type again": show the answer input instead of the last result.
+    const [retaking, setRetaking] = useState(false);
 
     // Reset the local state when the worker moves to another question.
     const [shownQuestion, setShownQuestion] = useState(question);
@@ -58,6 +60,7 @@ export default function VoiceQuestion({
         setMode(startTyping || !voiceAvailable ? 'type' : 'speak');
         setText('');
         setError(undefined);
+        setRetaking(false);
     }
 
     const { start: startPolling, stop: stopPolling } = usePoll(
@@ -85,6 +88,7 @@ export default function VoiceQuestion({
                 setError(undefined);
                 setText('');
                 setMode('speak');
+                setRetaking(false);
             },
         });
     };
@@ -97,7 +101,8 @@ export default function VoiceQuestion({
         t,
         formatNumber,
     );
-    const hasResult = answer?.status === 'extracted' || answer?.status === 'confirmed';
+    const hasResult =
+        !retaking && (answer?.status === 'extracted' || answer?.status === 'confirmed');
 
     return (
         <>
@@ -235,7 +240,11 @@ export default function VoiceQuestion({
                                     <Button
                                         variant="outline"
                                         className="min-h-11"
-                                        onClick={() => void recorder.start()}
+                                        onClick={() => {
+                                            setRetaking(true);
+                                            setMode('speak');
+                                            void recorder.start();
+                                        }}
                                     >
                                         <Mic aria-hidden className="size-4" />
                                         {t('voice.speak_again')}
@@ -244,7 +253,10 @@ export default function VoiceQuestion({
                                     <Button
                                         variant="outline"
                                         className="min-h-11"
-                                        onClick={() => setMode('type')}
+                                        onClick={() => {
+                                            setRetaking(true);
+                                            setMode('type');
+                                        }}
                                     >
                                         <Keyboard aria-hidden className="size-4" />
                                         {t('voice.type_again')}

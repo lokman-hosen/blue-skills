@@ -1,20 +1,21 @@
 1. Start the containers
 
-./vendor/bin/sail up -d
+Start Docker: ./vendor/bin/sail up -d
+
 This starts Postgres (on port 54320), Redis, Mailpit, Meilisearch and Reverb (on 8081). The app runs at http://localhost:8080.
 
 2. Set up the database (first run, or to reset it)
 
-./vendor/bin/sail artisan migrate:fresh --seed
+**./vendor/bin/sail artisan migrate:fresh --seed**
 
 3. Start the frontend, queue and scheduler
 
 # Open three terminals and run one command in each:
 
-1. Vite dev server (5173): ./vendor/bin/sail npm run dev
-2. OTP codes, Voice-to-CV, SkillShow, notifications: ./vendor/bin/sail artisan queue:work
-3. digests, quiet-hours alerts, mandate/evidence expiry (optional): ./vendor/bin/sail artisan schedule:work
-4. If you don't need hot reload, run ./vendor/bin/sail npm run build once instead of npm run dev.
+1. Vite dev server (5173): **./vendor/bin/sail npm run dev**
+2. OTP codes, Voice-to-CV, SkillShow, notifications: **./vendor/bin/sail artisan queue:work**
+3. digests, quiet-hours alerts, mandate/evidence expiry (optional): **./vendor/bin/sail artisan schedule:work**
+4. If you don't need hot reload, run **./vendor/bin/sail npm run build once instead of npm run dev** .
 
 The queue worker is required, not optional. Without it, worker sign-in codes and video processing never run.
 

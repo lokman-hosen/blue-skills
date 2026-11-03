@@ -20,7 +20,7 @@ class ReportJob
             'subject_type' => $job->getMorphClass(),
             'subject_id' => $job->id,
             'category' => $category,
-            'description' => $description,
+            'description' => $description ?? '',
             'status' => Open::class,
         ]);
 

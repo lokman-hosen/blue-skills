@@ -64,6 +64,11 @@ export function useVoiceRecorder({
 
     const start = useCallback(async () => {
         if (!supported) {
+            console.error(
+                window.isSecureContext
+                    ? '[voice] This browser cannot record audio (MediaRecorder/getUserMedia missing).'
+                    : '[voice] Microphone needs a secure context: open the app over HTTPS or http://localhost.',
+            );
             setState('unsupported');
 
             return;
@@ -73,17 +78,28 @@ export function useVoiceRecorder({
 
         try {
             stream.current = await navigator.mediaDevices.getUserMedia({ audio: true });
-        } catch {
+        } catch (error) {
+            console.error('[voice] Could not open the microphone:', error);
             setState('denied');
 
             return;
         }
 
         const mimeType = supportedMimeType();
-        const instance = new MediaRecorder(
-            stream.current,
-            mimeType ? { mimeType, audioBitsPerSecond: 32_000 } : undefined,
-        );
+        let instance: MediaRecorder;
+
+        try {
+            instance = new MediaRecorder(
+                stream.current,
+                mimeType ? { mimeType, audioBitsPerSecond: 32_000 } : undefined,
+            );
+        } catch (error) {
+            console.error('[voice] Could not start recording:', error);
+            release();
+            setState('unsupported');
+
+            return;
+        }
 
         chunks.current = [];
         cancelled.current = false;
@@ -91,6 +107,10 @@ export function useVoiceRecorder({
             if (event.data.size > 0) {
                 chunks.current.push(event.data);
             }
+        };
+        instance.onerror = (event) => {
+            console.error('[voice] Recording failed:', event);
+            stop();
         };
         instance.onstop = () => {
             release();
