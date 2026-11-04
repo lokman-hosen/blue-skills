@@ -181,6 +181,7 @@ function AdjustCreditsForm({ organizationId }: { organizationId: string }) {
                 <div className="flex flex-col gap-1.5">
                     <Label htmlFor="credits-delta">{t('billing.credits_change')}</Label>
                     <Input
+                        placeholder={t('billing.credits_change_placeholder')}
                         id="credits-delta"
                         type="number"
                         inputMode="numeric"
@@ -198,6 +199,7 @@ function AdjustCreditsForm({ organizationId }: { organizationId: string }) {
                 <div className="flex flex-col gap-1.5">
                     <Label htmlFor="credits-note">{t('billing.credits_note')}</Label>
                     <Input
+                        placeholder={t('billing.credits_note_placeholder')}
                         id="credits-note"
                         className="h-11"
                         value={form.data.note}

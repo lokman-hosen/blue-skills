@@ -106,6 +106,7 @@ function Settings({ country }: { country: App.Domain.Config.Data.CountryConfigDa
                 <div className="flex flex-col gap-1.5 sm:max-w-32">
                     <Label htmlFor="currency">{t('config.currency')}</Label>
                     <Input
+                        placeholder={t('billing.field.currency_placeholder')}
                         id="currency"
                         maxLength={3}
                         className="h-11 font-mono uppercase"
@@ -210,6 +211,7 @@ function RulesForm({ country, options }: Props) {
                         <div key={field} className="flex flex-col gap-1.5">
                             <Label htmlFor={field}>{t(`config.rule.${field}`)}</Label>
                             <textarea
+                                placeholder={t(`config.rule.${field}_placeholder`)}
                                 id={field}
                                 rows={2}
                                 maxLength={field === 'local_notice' ? 1000 : 500}
@@ -268,6 +270,7 @@ function RulesForm({ country, options }: Props) {
                                     {t('config.stage_label', { number: index + 1 })}
                                 </Label>
                                 <Input
+                                    placeholder={t('config.stage_label_placeholder')}
                                     id={`stage-${index}`}
                                     className="h-11 min-w-40 flex-1"
                                     maxLength={80}

@@ -90,6 +90,7 @@ export function RoleDialog({ kind, bases, role }: Props) {
                     <div className="flex flex-col gap-1.5">
                         <Label htmlFor={`${id}-label`}>{t('roles.field.name')}</Label>
                         <Input
+                            placeholder={t('roles.field.name_placeholder')}
                             id={`${id}-label`}
                             className="h-11"
                             maxLength={60}
@@ -106,6 +107,7 @@ export function RoleDialog({ kind, bases, role }: Props) {
                     <div className="flex flex-col gap-1.5">
                         <Label htmlFor={`${id}-description`}>{t('roles.field.description')}</Label>
                         <Input
+                            placeholder={t('roles.field.description_placeholder')}
                             id={`${id}-description`}
                             className="h-11"
                             maxLength={255}

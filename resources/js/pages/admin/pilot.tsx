@@ -142,6 +142,7 @@ export default function PilotInvites({ pilotEnabled, invites, types }: Props) {
                                 <div className="flex flex-col gap-1.5">
                                     <Label htmlFor="pilot-partner">{t('pilot.partner')}</Label>
                                     <Input
+                                        placeholder={t('pilot.partner_placeholder')}
                                         id="pilot-partner"
                                         name="partner_name"
                                         required
@@ -170,6 +171,7 @@ export default function PilotInvites({ pilotEnabled, invites, types }: Props) {
                                 <div className="flex flex-col gap-1.5">
                                     <Label htmlFor="pilot-uses">{t('pilot.max_uses')}</Label>
                                     <Input
+                                        placeholder={t('pilot.max_uses_placeholder')}
                                         id="pilot-uses"
                                         name="max_uses"
                                         type="number"

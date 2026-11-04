@@ -380,6 +380,7 @@ function NoteForm({ caseId }: { caseId: string }) {
         >
             <Label htmlFor="case-note">{t('trust.case.add_note')}</Label>
             <textarea
+                placeholder={t('trust.case.add_note_placeholder')}
                 id="case-note"
                 rows={3}
                 maxLength={5000}

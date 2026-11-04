@@ -217,6 +217,7 @@ function OpenCaseDialog({
                     <div className="flex flex-col gap-1.5">
                         <Label htmlFor={`summary-${report.id}`}>{t('trust.summary')}</Label>
                         <textarea
+                            placeholder={t('trust.summary_placeholder')}
                             id={`summary-${report.id}`}
                             rows={3}
                             maxLength={500}

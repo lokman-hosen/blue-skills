@@ -165,6 +165,7 @@ export default function Staff({ members, invitations, roles }: Props) {
                                 <div className="flex flex-col gap-1.5">
                                     <Label htmlFor="staff-email">{t('team.email')}</Label>
                                     <Input
+                                        placeholder={t('auth.email_placeholder')}
                                         id="staff-email"
                                         name="email"
                                         type="email"

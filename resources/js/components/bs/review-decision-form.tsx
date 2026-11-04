@@ -59,6 +59,7 @@ export function ReviewDecisionForm({
             <div className="flex flex-col gap-1.5">
                 <Label htmlFor="review-note">{t('admin.review.note')}</Label>
                 <textarea
+                    placeholder={t('admin.review.note_placeholder')}
                     id="review-note"
                     value={form.data.note}
                     maxLength={1000}

@@ -49,6 +49,7 @@ export default function BillingOrganizations({ organizations, q }: Props) {
                     <div className="flex flex-col gap-1.5">
                         <Label htmlFor="billing-q">{t('billing.search')}</Label>
                         <Input
+                            placeholder={t('common.search_by_name')}
                             id="billing-q"
                             className="h-11 w-64"
                             value={search}

@@ -245,6 +245,7 @@ function AttemptForm({
                 <div className="flex flex-col gap-1.5">
                     <Label htmlFor="attempt-note">{t('crm.attempt.note')}</Label>
                     <textarea
+                        placeholder={t('crm.attempt.note_placeholder')}
                         id="attempt-note"
                         rows={3}
                         maxLength={1000}

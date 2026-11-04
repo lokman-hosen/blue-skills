@@ -85,6 +85,7 @@ export function CampaignDialog({
                     <div className="flex flex-col gap-1.5">
                         <Label htmlFor="campaign-name">{t('marketing.field.name')}</Label>
                         <Input
+                            placeholder={t('marketing.field.name_placeholder')}
                             id="campaign-name"
                             className="h-11"
                             value={form.data.name}

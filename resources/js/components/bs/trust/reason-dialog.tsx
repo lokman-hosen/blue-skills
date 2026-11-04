@@ -94,6 +94,7 @@ export function ReasonDialog({
                             {!noteRequired && ` (${t('common.optional')})`}
                         </Label>
                         <textarea
+                            placeholder={t('trust.note_placeholder')}
                             id={`${id}-note`}
                             rows={3}
                             maxLength={1000}

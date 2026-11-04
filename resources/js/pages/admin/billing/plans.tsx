@@ -206,6 +206,7 @@ function PlanDialog({
                     <div className="flex flex-col gap-1.5">
                         <Label htmlFor="plan-name">{t('billing.field.name')}</Label>
                         <Input
+                            placeholder={t('billing.field.name_placeholder')}
                             id="plan-name"
                             className="h-11"
                             value={form.data.name}
@@ -217,6 +218,7 @@ function PlanDialog({
                     <div className="flex flex-col gap-1.5">
                         <Label htmlFor="plan-description">{t('billing.field.description')}</Label>
                         <Input
+                            placeholder={t('billing.field.description_placeholder')}
                             id="plan-description"
                             className="h-11"
                             value={form.data.description}
@@ -261,6 +263,7 @@ function PlanDialog({
                         <div className="flex flex-col gap-1.5">
                             <Label htmlFor="plan-price">{t('billing.field.price')}</Label>
                             <Input
+                                placeholder={t('billing.field.price_placeholder')}
                                 id="plan-price"
                                 inputMode="decimal"
                                 className="h-11"
@@ -273,6 +276,7 @@ function PlanDialog({
                         <div className="flex flex-col gap-1.5">
                             <Label htmlFor="plan-currency">{t('billing.field.currency')}</Label>
                             <Input
+                                placeholder={t('billing.field.currency_placeholder')}
                                 id="plan-currency"
                                 className="h-11 uppercase"
                                 maxLength={3}
@@ -288,6 +292,7 @@ function PlanDialog({
                         <div className="flex flex-col gap-1.5">
                             <Label htmlFor="plan-credits">{t('billing.field.credits')}</Label>
                             <Input
+                                placeholder={t('billing.field.credits_placeholder')}
                                 id="plan-credits"
                                 type="number"
                                 inputMode="numeric"

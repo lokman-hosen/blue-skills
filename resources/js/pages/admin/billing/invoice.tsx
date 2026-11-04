@@ -121,6 +121,7 @@ function LineForm({ invoiceId }: { invoiceId: string }) {
                 <div className="flex flex-col gap-1.5">
                     <Label htmlFor="line-description">{t('billing.invoice.description')}</Label>
                     <Input
+                        placeholder={t('billing.invoice.description_placeholder')}
                         id="line-description"
                         className="h-11"
                         value={form.data.description}
@@ -133,6 +134,7 @@ function LineForm({ invoiceId }: { invoiceId: string }) {
                     <div className="flex flex-col gap-1.5">
                         <Label htmlFor="line-quantity">{t('billing.invoice.quantity')}</Label>
                         <Input
+                            placeholder={t('billing.invoice.quantity_placeholder')}
                             id="line-quantity"
                             type="number"
                             inputMode="numeric"
@@ -147,6 +149,7 @@ function LineForm({ invoiceId }: { invoiceId: string }) {
                     <div className="flex flex-col gap-1.5">
                         <Label htmlFor="line-amount">{t('billing.invoice.unit')}</Label>
                         <Input
+                            placeholder={t('billing.invoice.unit_placeholder')}
                             id="line-amount"
                             inputMode="decimal"
                             className="h-11"
@@ -160,6 +163,7 @@ function LineForm({ invoiceId }: { invoiceId: string }) {
                 <div className="flex flex-col gap-1.5">
                     <Label htmlFor="line-credits">{t('billing.line_credits')}</Label>
                     <Input
+                        placeholder={t('billing.line_credits_placeholder')}
                         id="line-credits"
                         type="number"
                         inputMode="numeric"
@@ -226,6 +230,7 @@ function PayForm({
                 <div className="flex flex-col gap-1.5">
                     <Label htmlFor="pay-reference">{t('billing.payment_reference')}</Label>
                     <Input
+                        placeholder={t('billing.payment_reference_placeholder')}
                         id="pay-reference"
                         className="h-11"
                         value={form.data.payment_reference}
@@ -271,6 +276,7 @@ function VoidForm({ invoiceId }: { invoiceId: string }) {
                 <div className="flex flex-col gap-1.5">
                     <Label htmlFor="void-note">{t('billing.void_reason')}</Label>
                     <Input
+                        placeholder={t('billing.void_reason_placeholder')}
                         id="void-note"
                         className="h-11"
                         value={form.data.note}

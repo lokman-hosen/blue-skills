@@ -126,6 +126,7 @@ export default function Leads({ leads, view, filters, campaigns, countries }: Pr
                             <div className="flex flex-col gap-1.5">
                                 <Label htmlFor="crm-q">{t('crm.filter.q')}</Label>
                                 <Input
+                                    placeholder={t('common.search_by_name')}
                                     id="crm-q"
                                     className="h-11"
                                     value={draft.q ?? ''}
@@ -295,6 +296,7 @@ function AddLeadDialog({ campaigns, countries }: { campaigns: Option[]; countrie
                     <div className="flex flex-col gap-1.5">
                         <Label htmlFor="lead-name">{t('crm.field.name')}</Label>
                         <Input
+                            placeholder={t('auth.worker.name_placeholder')}
                             id="lead-name"
                             className="h-11"
                             value={form.data.name}
@@ -321,6 +323,7 @@ function AddLeadDialog({ campaigns, countries }: { campaigns: Option[]; countrie
                         <div className="flex flex-col gap-1.5">
                             <Label htmlFor="lead-phone">{t('crm.field.phone')}</Label>
                             <Input
+                                placeholder={t('crm.field.phone_placeholder')}
                                 id="lead-phone"
                                 type="tel"
                                 dir="ltr"
