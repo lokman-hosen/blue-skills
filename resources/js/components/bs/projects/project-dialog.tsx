@@ -131,6 +131,7 @@ export function ProjectDialog({
                         <div className="flex flex-col gap-1.5">
                             <Label htmlFor="project-target">{t('projects.field.target')}</Label>
                             <Input
+                                placeholder={t('projects.field.target_placeholder')}
                                 id="project-target"
                                 type="number"
                                 inputMode="numeric"

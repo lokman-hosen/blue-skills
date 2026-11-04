@@ -136,6 +136,7 @@ export default function Candidates({ candidates, jobs, stages, filters }: Props)
                             <div className="flex flex-col gap-1.5">
                                 <Label htmlFor="candidate-search">{t('candidates.search')}</Label>
                                 <Input
+                                    placeholder={t('candidates.search_placeholder')}
                                     id="candidate-search"
                                     type="search"
                                     className="h-11"

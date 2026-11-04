@@ -66,6 +66,7 @@ function RespondPanel({ mandate }: { mandate: App.Domain.Jobs.Data.MandateData }
                     {t('mandates.note')} {declining ? '' : `(${t('common.optional')})`}
                 </Label>
                 <textarea
+                    placeholder={t('mandates.note_placeholder')}
                     id="mandate-note"
                     rows={2}
                     maxLength={500}

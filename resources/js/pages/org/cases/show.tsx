@@ -285,6 +285,7 @@ function CurrentStagePanel({
                 <div className="flex flex-col gap-1.5">
                     <Label htmlFor="next_action">{t('mobility.field.next_action')}</Label>
                     <textarea
+                        placeholder={t('mobility.field.next_action_placeholder')}
                         id="next_action"
                         rows={3}
                         maxLength={500}
@@ -368,6 +369,7 @@ function NoteDialog({
                 <form onSubmit={submit} className="flex flex-col gap-3" noValidate>
                     <Label htmlFor={`${action}-note`}>{t('mobility.field.note')}</Label>
                     <textarea
+                        placeholder={t('mobility.field.note_placeholder')}
                         id={`${action}-note`}
                         rows={3}
                         maxLength={500}
@@ -444,6 +446,7 @@ function CloseDialog({
                             {form.data.reason !== 'other' && ` (${t('common.optional')})`}
                         </Label>
                         <textarea
+                            placeholder={t('mobility.close.note_placeholder')}
                             id="close-note"
                             rows={2}
                             maxLength={500}
@@ -672,6 +675,7 @@ function ReturnDialog({
                             {form.data.reason !== 'other' && ` (${t('common.optional')})`}
                         </Label>
                         <textarea
+                            placeholder={t('mobility.field.note_placeholder')}
                             id={`return-note-${document.id}`}
                             rows={3}
                             maxLength={500}
@@ -765,6 +769,7 @@ function RequestDocumentDialog({
                             {t('mobility.document.request_title')} ({t('common.optional')})
                         </Label>
                         <Input
+                            placeholder={t('mobility.document.request_title_placeholder')}
                             id="request-title"
                             className="h-11"
                             maxLength={120}
@@ -807,6 +812,7 @@ function RequestDocumentDialog({
                             {t('mobility.document.request_note')} ({t('common.optional')})
                         </Label>
                         <textarea
+                            placeholder={t('mobility.document.request_note_placeholder')}
                             id="request-note"
                             rows={2}
                             maxLength={500}

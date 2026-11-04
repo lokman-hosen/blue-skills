@@ -29,6 +29,7 @@ export function PoolFields({
             <div className="flex flex-col gap-1.5">
                 <Label htmlFor={`${id}-name`}>{t('pools.field.name')}</Label>
                 <Input
+                    placeholder={t('pools.field.name_placeholder')}
                     id={`${id}-name`}
                     className="h-11"
                     maxLength={120}
@@ -60,6 +61,7 @@ export function PoolFields({
                     {t('pools.field.description')} ({t('common.optional')})
                 </Label>
                 <Input
+                    placeholder={t('pools.field.description_placeholder')}
                     id={`${id}-description`}
                     className="h-11"
                     maxLength={500}

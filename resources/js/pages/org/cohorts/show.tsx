@@ -242,7 +242,7 @@ function RosterForm({ cohort }: { cohort: Cohort }) {
                 onChange={(event) => form.setData('roster', event.target.value)}
                 className={`${TEXTAREA} font-mono`}
                 aria-describedby="roster-hint"
-                placeholder={'Rahim Uddin, 01711000001\nKarim Ahmed, +8801711000002'}
+                placeholder={t('cohorts.roster.placeholder')}
                 dir="ltr"
             />
             <InputError message={form.errors.roster} />

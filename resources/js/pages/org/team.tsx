@@ -141,6 +141,7 @@ export default function Team({ members, invitations, roles, canManage }: Props) 
                                     <div className="flex flex-col gap-1.5">
                                         <Label htmlFor="invite-email">{t('team.email')}</Label>
                                         <Input
+                                            placeholder={t('auth.email_placeholder')}
                                             id="invite-email"
                                             name="email"
                                             type="email"

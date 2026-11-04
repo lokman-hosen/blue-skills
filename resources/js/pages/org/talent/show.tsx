@@ -172,6 +172,7 @@ function ShortlistPanel({
                         {t('shortlists.note')} ({t('common.optional')})
                     </Label>
                     <Input
+                        placeholder={t('shortlists.note_placeholder')}
                         id="shortlist-note"
                         className="h-11"
                         value={add.data.note}
@@ -282,6 +283,7 @@ function InvitePanel({
                         {t('invitations.note')} ({t('common.optional')})
                     </Label>
                     <textarea
+                        placeholder={t('invitations.note_placeholder')}
                         id="invite-note"
                         rows={2}
                         maxLength={300}

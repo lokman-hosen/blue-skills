@@ -293,6 +293,7 @@ function RequirementStep({ code, form: job, options, agency }: Props) {
                     error={form.errors.title}
                 >
                     <Input
+                        placeholder={t('jobs.field.title_placeholder')}
                         id="title"
                         value={form.data.title}
                         maxLength={120}
@@ -327,6 +328,7 @@ function RequirementStep({ code, form: job, options, agency }: Props) {
                         error={form.errors.headcount}
                     >
                         <Input
+                            placeholder={t('jobs.field.headcount_placeholder')}
                             id="headcount"
                             type="number"
                             inputMode="numeric"
@@ -364,6 +366,7 @@ function RequirementStep({ code, form: job, options, agency }: Props) {
                         error={form.errors.destination_city}
                     >
                         <Input
+                            placeholder={t('jobs.field.city_placeholder')}
                             id="destination_city"
                             value={form.data.destination_city}
                             onChange={(e) => form.setData('destination_city', e.target.value)}
@@ -449,6 +452,7 @@ function SkillsStep({ code, form: job, options }: Props) {
                     error={form.errors.min_experience_years}
                 >
                     <Input
+                        placeholder={t('jobs.field.min_experience_placeholder')}
                         id="min_experience_years"
                         type="number"
                         inputMode="numeric"
@@ -470,6 +474,7 @@ function SkillsStep({ code, form: job, options }: Props) {
                                     {t('jobs.field.language_code')}
                                 </Label>
                                 <Input
+                                    placeholder={t('jobs.field.language_code_placeholder')}
                                     id={`lang-code-${index}`}
                                     value={row.code}
                                     maxLength={3}
@@ -581,6 +586,7 @@ function TermsStep({ code, form: job, options }: Props) {
                         error={form.errors.salary_amount}
                     >
                         <Input
+                            placeholder={t('jobs.field.salary_placeholder')}
                             id="salary_amount"
                             type="number"
                             inputMode="numeric"
@@ -630,6 +636,7 @@ function TermsStep({ code, form: job, options }: Props) {
                         error={form.errors.hours_per_day}
                     >
                         <Input
+                            placeholder={t('jobs.field.hours_per_day_placeholder')}
                             id="hours_per_day"
                             type="number"
                             inputMode="decimal"
@@ -647,6 +654,7 @@ function TermsStep({ code, form: job, options }: Props) {
                         error={form.errors.days_per_week}
                     >
                         <Input
+                            placeholder={t('jobs.field.days_per_week_placeholder')}
                             id="days_per_week"
                             type="number"
                             inputMode="numeric"
@@ -663,6 +671,7 @@ function TermsStep({ code, form: job, options }: Props) {
                         error={form.errors.contract_months}
                     >
                         <Input
+                            placeholder={t('jobs.field.contract_months_placeholder')}
                             id="contract_months"
                             type="number"
                             inputMode="numeric"
@@ -680,6 +689,7 @@ function TermsStep({ code, form: job, options }: Props) {
                     error={form.errors.overtime_terms}
                 >
                     <Input
+                        placeholder={t('jobs.field.overtime_placeholder')}
                         id="overtime_terms"
                         value={form.data.overtime_terms}
                         maxLength={500}
@@ -763,6 +773,7 @@ function MobilityStep({ code, form: job, options }: Props) {
                                 error={errors[`${key}_details`]}
                             >
                                 <Input
+                                    placeholder={t('jobs.field.details_placeholder')}
                                     id={`${key}_details`}
                                     value={form.data[`${key}_details`]}
                                     maxLength={255}
@@ -779,6 +790,7 @@ function MobilityStep({ code, form: job, options }: Props) {
                     error={errors.other_benefits}
                 >
                     <Input
+                        placeholder={t('jobs.field.other_benefits_placeholder')}
                         id="other_benefits"
                         value={form.data.other_benefits}
                         maxLength={1000}
@@ -861,6 +873,7 @@ function MobilityStep({ code, form: job, options }: Props) {
                                     label={t('jobs.field.cost_description')}
                                 >
                                     <Input
+                                        placeholder={t('jobs.field.cost_description_placeholder')}
                                         id={`cost-description-${index}`}
                                         value={cost.description}
                                         maxLength={160}
@@ -875,6 +888,7 @@ function MobilityStep({ code, form: job, options }: Props) {
                                     label={t('worker.salary.amount')}
                                 >
                                     <Input
+                                        placeholder={t('jobs.field.cost_amount_placeholder')}
                                         id={`cost-amount-${index}`}
                                         type="number"
                                         inputMode="numeric"

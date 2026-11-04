@@ -200,6 +200,7 @@ function CourseDialog({ occupations, course }: { occupations: Option[]; course?:
                     <div className="flex flex-col gap-1.5">
                         <Label htmlFor={`${id}-title`}>{t('courses.field.title')}</Label>
                         <Input
+                            placeholder={t('courses.field.title_placeholder')}
                             id={`${id}-title`}
                             className="h-11"
                             maxLength={160}
@@ -231,6 +232,7 @@ function CourseDialog({ occupations, course }: { occupations: Option[]; course?:
                             {t('courses.field.weeks')} ({t('common.optional')})
                         </Label>
                         <Input
+                            placeholder={t('courses.field.weeks_placeholder')}
                             id={`${id}-weeks`}
                             type="number"
                             inputMode="numeric"
@@ -247,6 +249,7 @@ function CourseDialog({ occupations, course }: { occupations: Option[]; course?:
                             {t('courses.field.description')} ({t('common.optional')})
                         </Label>
                         <textarea
+                            placeholder={t('courses.field.description_placeholder')}
                             id={`${id}-description`}
                             rows={3}
                             maxLength={2000}

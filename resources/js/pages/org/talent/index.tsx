@@ -211,6 +211,7 @@ export default function TalentIndex({ verified, results, filters, options }: Pro
                         <div className="flex flex-col gap-1.5">
                             <Label htmlFor="talent-years">{t('talent.filter.min_years')}</Label>
                             <Input
+                                placeholder={t('jobs.field.min_experience_placeholder')}
                                 id="talent-years"
                                 type="number"
                                 inputMode="numeric"

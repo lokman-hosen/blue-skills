@@ -512,6 +512,7 @@ function RejectDialog({
                         {t('applicants.internal_note')} ({t('common.optional')})
                     </Label>
                     <textarea
+                        placeholder={t('applicants.internal_note_placeholder')}
                         rows={3}
                         className="w-full rounded-md border border-input bg-surface px-3 py-2 text-base shadow-xs outline-none focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50 md:text-sm"
                         id="reject-note"
@@ -593,6 +594,7 @@ function InterviewDialog({
                     <div className="flex flex-col gap-1.5">
                         <Label htmlFor="interview-length">{t('applicants.length')}</Label>
                         <Input
+                            placeholder={t('applicants.length_placeholder')}
                             id="interview-length"
                             type="number"
                             inputMode="numeric"
@@ -633,6 +635,7 @@ function InterviewDialog({
                             : `${t('applicants.link')} (${t('common.optional')})`}
                     </Label>
                     <Input
+                        placeholder={t('applicants.link_placeholder')}
                         id="interview-location"
                         className="h-11"
                         value={form.data.location}
@@ -646,6 +649,7 @@ function InterviewDialog({
                         {t('applicants.instructions')} ({t('common.optional')})
                     </Label>
                     <textarea
+                        placeholder={t('applicants.instructions_placeholder')}
                         rows={3}
                         className="w-full rounded-md border border-input bg-surface px-3 py-2 text-base shadow-xs outline-none focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50 md:text-sm"
                         id="interview-instructions"
@@ -766,6 +770,7 @@ function OfferDialog({ applicant }: { applicant: Applicant }) {
                         )
                     </Label>
                     <Input
+                        placeholder={t('jobs.field.salary_placeholder')}
                         id="offer-salary"
                         type="number"
                         inputMode="numeric"
@@ -809,6 +814,7 @@ function OfferDialog({ applicant }: { applicant: Applicant }) {
                         {t('applicants.offer_note')} ({t('common.optional')})
                     </Label>
                     <textarea
+                        placeholder={t('applicants.offer_note_placeholder')}
                         rows={3}
                         className="w-full rounded-md border border-input bg-surface px-3 py-2 text-base shadow-xs outline-none focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50 md:text-sm"
                         id="offer-note"

@@ -299,6 +299,7 @@ function AttestDialog({ member }: { member: Member }) {
                             {t('institute.records.note_label')} ({t('common.optional')})
                         </Label>
                         <textarea
+                            placeholder={t('institute.records.note_placeholder')}
                             id={`attest-note-${member.id}`}
                             rows={2}
                             maxLength={500}
@@ -363,6 +364,7 @@ function AssessDialog({ member }: { member: Member }) {
                             {t('institute.records.test_title')}
                         </Label>
                         <Input
+                            placeholder={t('institute.records.test_title_placeholder')}
                             id={`assess-title-${member.id}`}
                             className="h-11"
                             maxLength={160}
@@ -401,6 +403,7 @@ function AssessDialog({ member }: { member: Member }) {
                                 {t('institute.records.score_label')} ({t('common.optional')})
                             </Label>
                             <Input
+                                placeholder={t('institute.records.score_placeholder')}
                                 id={`assess-score-${member.id}`}
                                 type="number"
                                 inputMode="numeric"
@@ -481,6 +484,7 @@ function WithdrawDialog({
                         {t('institute.records.withdraw_reason')}
                     </Label>
                     <textarea
+                        placeholder={t('institute.records.withdraw_reason_placeholder')}
                         id={`withdraw-${record.id}`}
                         rows={3}
                         maxLength={500}

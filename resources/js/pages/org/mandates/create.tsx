@@ -158,6 +158,7 @@ export default function CreateMandate({ employers, occupations, countries, licen
                         <div className="flex flex-col gap-1.5">
                             <Label htmlFor="mandate-headcount">{t('mandates.headcount')}</Label>
                             <Input
+                                placeholder={t('mandates.headcount_placeholder')}
                                 id="mandate-headcount"
                                 type="number"
                                 inputMode="numeric"
