@@ -51,6 +51,7 @@ export default function Login({ status, canResetPassword }: Props) {
                         <div className="flex flex-col gap-1.5">
                             <Label htmlFor="email">{t('auth.email')}</Label>
                             <Input
+                                placeholder={t('auth.email_placeholder')}
                                 id="email"
                                 type="email"
                                 name="email"

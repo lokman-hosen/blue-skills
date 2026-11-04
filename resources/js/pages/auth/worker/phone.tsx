@@ -50,6 +50,7 @@ export default function WorkerPhone({ countries }: Props) {
                             <div className="flex flex-col gap-1.5">
                                 <Label htmlFor="phone">{t('auth.phone.number')}</Label>
                                 <Input
+                                    placeholder={t('auth.phone.number_placeholder')}
                                     id="phone"
                                     name="phone"
                                     type="tel"

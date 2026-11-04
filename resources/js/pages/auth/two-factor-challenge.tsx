@@ -41,6 +41,7 @@ export default function TwoFactorChallenge() {
                         {showRecoveryInput ? (
                             <div className="flex flex-col gap-1.5">
                                 <Input
+                                    placeholder={t('auth.two_factor.recovery_placeholder')}
                                     name="recovery_code"
                                     type="text"
                                     autoFocus

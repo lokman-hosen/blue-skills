@@ -49,6 +49,7 @@ export default function Profile({
                             <div className="flex flex-col gap-1.5">
                                 <Label htmlFor="name">{t('auth.worker.name')}</Label>
                                 <Input
+                                    placeholder={t('auth.worker.name_placeholder')}
                                     id="name"
                                     className="h-11"
                                     defaultValue={user?.name}
@@ -64,6 +65,7 @@ export default function Profile({
                                 <div className="flex flex-col gap-1.5">
                                     <Label htmlFor="email">{t('auth.email')}</Label>
                                     <Input
+                                        placeholder={t('auth.email_placeholder')}
                                         id="email"
                                         type="email"
                                         className="h-11"
