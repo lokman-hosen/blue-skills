@@ -450,6 +450,7 @@ function ContractAnswer({
                                 {t('mobility.document.contract_query_label')}
                             </Label>
                             <textarea
+                                placeholder={t('mobility.document.contract_query_placeholder')}
                                 id={`query-${document.id}`}
                                 rows={3}
                                 maxLength={500}

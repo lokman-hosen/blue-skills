@@ -184,6 +184,7 @@ function AboutForm({ passport, options }: Props) {
                     error={form.errors.headline}
                 >
                     <Input
+                        placeholder={t('worker.field.headline_placeholder')}
                         id="headline"
                         value={form.data.headline}
                         maxLength={120}
@@ -197,6 +198,7 @@ function AboutForm({ passport, options }: Props) {
                     error={form.errors.years_experience}
                 >
                     <Input
+                        placeholder={t('worker.basics.years_placeholder')}
                         id="years_experience"
                         type="number"
                         inputMode="numeric"
@@ -386,6 +388,7 @@ function ExperienceForm({
                     error={form.errors.role}
                 >
                     <Input
+                        placeholder={t('worker.experience.role_placeholder')}
                         id={`${id}-role`}
                         value={form.data.role}
                         onChange={(event) => form.setData('role', event.target.value)}
@@ -418,6 +421,7 @@ function ExperienceForm({
                     error={form.errors.employer_name}
                 >
                     <Input
+                        placeholder={t('worker.experience.employer_placeholder')}
                         id={`${id}-employer`}
                         value={form.data.employer_name}
                         onChange={(event) => form.setData('employer_name', event.target.value)}
@@ -449,6 +453,7 @@ function ExperienceForm({
                 {form.data.by === 'years' ? (
                     <Field id={`${id}-years`} label={t('voice.years')} error={form.errors.years}>
                         <Input
+                            placeholder={t('voice.years_placeholder')}
                             id={`${id}-years`}
                             type="number"
                             inputMode="numeric"
@@ -496,6 +501,7 @@ function ExperienceForm({
                     error={form.errors.description}
                 >
                     <textarea
+                        placeholder={t('worker.experience.description_placeholder')}
                         id={`${id}-description`}
                         value={form.data.description}
                         maxLength={1000}
@@ -745,6 +751,7 @@ function PreferencesForm({ passport, options, currencies }: Props) {
                     error={form.errors.passport_valid_until_year}
                 >
                     <Input
+                        placeholder={t('voice.label.valid_until_placeholder')}
                         id="passport_valid_until_year"
                         type="number"
                         inputMode="numeric"
@@ -810,6 +817,7 @@ function PreferencesForm({ passport, options, currencies }: Props) {
                                 {t('worker.salary.amount')}
                             </Label>
                             <Input
+                                placeholder={t('worker.salary.amount_placeholder')}
                                 id="salary_amount"
                                 type="number"
                                 inputMode="numeric"

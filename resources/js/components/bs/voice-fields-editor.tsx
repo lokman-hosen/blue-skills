@@ -172,6 +172,7 @@ export function VoiceFieldsEditor({
                 <div className="flex flex-col gap-1.5">
                     <Label htmlFor={`${id}-years`}>{t('voice.label.experience')}</Label>
                     <Input
+                        placeholder={t('worker.basics.years_placeholder')}
                         id={`${id}-years`}
                         type="number"
                         inputMode="numeric"
@@ -225,6 +226,7 @@ export function VoiceFieldsEditor({
                                     {t('voice.years')}
                                 </Label>
                                 <Input
+                                    placeholder={t('voice.years_placeholder')}
                                     id={`${id}-country-years-${index}`}
                                     type="number"
                                     inputMode="numeric"
@@ -304,6 +306,7 @@ export function VoiceFieldsEditor({
                         <div className="flex flex-col gap-1.5">
                             <Label htmlFor={`${id}-valid`}>{t('voice.label.valid_until')}</Label>
                             <Input
+                                placeholder={t('voice.label.valid_until_placeholder')}
                                 id={`${id}-valid`}
                                 type="number"
                                 inputMode="numeric"

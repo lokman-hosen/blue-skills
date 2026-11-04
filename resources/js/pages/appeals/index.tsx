@@ -89,6 +89,7 @@ function SuspensionCard({ suspension }: { suspension: Suspension }) {
                         {t('appeals.statement_hint')}
                     </p>
                     <textarea
+                        placeholder={t('appeals.statement_placeholder')}
                         id={`statement-${suspension.id}`}
                         rows={5}
                         maxLength={3000}

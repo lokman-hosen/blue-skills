@@ -160,6 +160,7 @@ function ReportDialog({
                                 {t('jobs.report.description')}
                             </Label>
                             <textarea
+                                placeholder={t('jobs.report.description_placeholder')}
                                 id="report-description"
                                 value={form.data.description}
                                 maxLength={1000}

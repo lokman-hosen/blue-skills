@@ -323,6 +323,7 @@ function ReportDialog({
                             {t('messages.report_details')}
                         </Label>
                         <textarea
+                            placeholder={t('messages.report_details_placeholder')}
                             id="message-report-description"
                             rows={3}
                             maxLength={500}

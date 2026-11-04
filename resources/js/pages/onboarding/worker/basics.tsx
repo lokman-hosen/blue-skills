@@ -114,6 +114,7 @@ export default function WorkerBasics({
                 <div className="flex flex-col gap-1.5">
                     <Label htmlFor="years_experience">{t('worker.basics.years')}</Label>
                     <Input
+                        placeholder={t('worker.basics.years_placeholder')}
                         id="years_experience"
                         type="number"
                         inputMode="numeric"
