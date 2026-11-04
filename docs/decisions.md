@@ -1587,3 +1587,21 @@ colour) and the appearance tabs use design tokens instead of the kit's neutral g
 - **Messages:** two panes from `lg` (list on the inline-start side, header and thread beside it).
   `MessageController@show` now also sends the worker's conversation list (same query as the list
   page, read after marking the open one read). Phones keep list → thread navigation.
+
+### D-115 · Placeholders on form fields
+- **Owner asked (2026-11-04)** for a placeholder on every applicable form field, translated and
+  never hard-coded.
+- **Text:** a short example or hint, never the label again (`e.g. name@company.com`,
+  `e.g. 2500`). Where a field already has an example in its hint, the placeholder uses a different
+  one. Bangla placeholders keep Latin digits in number, phone and email fields, because those
+  inputs take Latin digits. Placeholders never replace labels or `aria-describedby` hints.
+- **Keys:** the field's label key plus `_placeholder` (`jobs.field.salary` →
+  `jobs.field.salary_placeholder`), placed next to the label key. Fields with the same meaning
+  share one key (`auth.email_placeholder`, `auth.worker.name_placeholder`,
+  `common.search_by_name`).
+- **Skipped on purpose:** date and date-time inputs (the browser shows its own format); selects
+  that start on a valid value (an empty "Select…" option would let a blank value be submitted);
+  selects that already have an "Any"/"Choose…" option; read-only or pre-filled fields (invite
+  links, setup key, staff invitation email, WhatsApp invite text); OTP boxes; password fields (the
+  rules differ between production and local, so a hint would be wrong somewhere); taxonomy names
+  per language (no single example fits every level).
