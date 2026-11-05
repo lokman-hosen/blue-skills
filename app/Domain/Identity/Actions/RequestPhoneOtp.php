@@ -29,9 +29,9 @@ class RequestPhoneOtp
 
         $length = (int) config('blueskills.otp.length');
         $code = 123456;
-        if (! app()->isLocal()) {
-            $code = str_pad((string) random_int(0, 10 ** $length - 1), $length, '0', STR_PAD_LEFT);
-        }
+//        if (! app()->isLocal()) {
+//            $code = str_pad((string) random_int(0, 10 ** $length - 1), $length, '0', STR_PAD_LEFT);
+//        }
 
         $challenge = OtpChallenge::query()->create([
             'phone' => $phone,
