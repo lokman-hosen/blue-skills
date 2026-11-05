@@ -13,16 +13,19 @@ import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from '@/co
 import type { NavLink } from '@/layouts/navigation';
 import { useTranslation } from '@/lib/i18n';
 import { cn } from '@/lib/utils';
-import { dashboard, home, login } from '@/routes';
+import { dashboard, home, howItWorks, login } from '@/routes';
 import jobs from '@/routes/jobs';
 
-// Find Jobs is live (Module 3); the other public screens stay inert until their modules ship.
-const publicNav: NavLink[] = [
+// Items without an href render as "Soon". `enabled: false` hides an item everywhere (D-116).
+const publicNav: (NavLink & { enabled?: boolean })[] = [
     { key: 'find_jobs', label: 'nav.find_jobs', icon: Search, href: jobs.index() },
-    { key: 'find_talent', label: 'nav.find_talent', icon: BriefcaseBusiness },
-    { key: 'how_it_works', label: 'nav.how_it_works', icon: Info },
+    // TODO(D-116): Find Talent needs a product decision (employer landing page or anonymised
+    // preview) and a public route + controller; talent search itself is org-only today
+    // (org.talent.index). Set `enabled: true` and add the href once that page exists.
+    { key: 'find_talent', label: 'nav.find_talent', icon: BriefcaseBusiness, enabled: false },
+    { key: 'how_it_works', label: 'nav.how_it_works', icon: Info, href: howItWorks() },
     { key: 'safety', label: 'nav.safety', icon: ShieldCheck },
-];
+].filter((item) => item.enabled !== false);
 
 export default function PublicLayout({ children }: { children: ReactNode }) {
     const { t } = useTranslation();

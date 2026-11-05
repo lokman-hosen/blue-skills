@@ -28,3 +28,4 @@ silently: add the key here, and remove it once a reviewed translation lands in `
 | New roles: `roles.new*`, `roles.field.*`, `roles.custom*`, `roles.details*`, `roles.delete*`, `roles.errors.*`, `manual.adapted` | bn (draft, needs native review) | D-113 | Staff-facing, except `manual.adapted`. Names of roles the Superuser creates are stored in one language only |
 | Desktop Messages: `messages.conversations`, `messages.select_title`, `messages.select_body` | bn (draft, needs native review) | D-114 | Worker-facing |
 | Form placeholders: `*_placeholder` keys, `common.search_by_name`, `cohorts.roster.placeholder` | bn (draft, needs native review) | D-115 | Review the worker-facing ones first: `auth.*`, `worker.*`, `voice.*`, `appeals.*`, `mobility.document.contract_query_placeholder` |
+| How It Works page: `how_it_works.*` | bn (draft, needs native review) | D-116 | Public and worker-facing; the English copy also waits for the owner's review |

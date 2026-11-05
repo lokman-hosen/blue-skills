@@ -31,3 +31,8 @@ Useful extras
 
 ./vendor/bin/sail php vendor/bin/pest --parallel   # tests
 ./vendor/bin/sail down                              # stop everything
+
+Cache clear:
+
+1. ./vendor/bin/sail artisan optimize:clear
+2. ./vendor/bin/sail artisan optimize

@@ -17,6 +17,11 @@ use Illuminate\Support\Facades\Route;
 
 Route::inertia('/', 'public/home')->name('home');
 
+// How It Works (spec §14): static explainer for workers and for employers and agencies (D-116).
+Route::inertia('how-it-works', 'public/how-it-works')->name('how-it-works');
+
+// Find Talent (spec §14) has no public route yet: see D-116 for what it needs.
+
 // Find Jobs and the Job Truth Card (Module 3). Published jobs are public.
 Route::get('jobs', [PublicJobController::class, 'index'])->name('jobs.index');
 Route::get('jobs/{job}', [PublicJobController::class, 'show'])->name('jobs.show');

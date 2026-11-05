@@ -1605,3 +1605,23 @@ colour) and the appearance tabs use design tokens instead of the kit's neutral g
   links, setup key, staff invitation email, WhatsApp invite text); OTP boxes; password fields (the
   rules differ between production and local, so a hint would be wrong somewhere); taxonomy names
   per language (no single example fits every level).
+
+### D-116 · Public nav: How It Works built, Find Talent hidden
+- **Owner asked (2026-11-05)** that no public nav link leads to an unfinished page: build what the
+  codebase already supports, hide the rest behind one flag.
+- **How It Works** (`/how-it-works`, `public/how-it-works`) is a static Inertia page: four steps for
+  workers (Speak, Show, Apply, Track), four for employers and agencies (Get verified, Post a job,
+  Find and shortlist, Hire and deploy) and three promises (free for workers, worker owns the
+  profile, private by default). Worker step copy for Speak and Show comes from `prototype-v1.html`;
+  the rest is written from the product rules and **waits for the owner's copy review**. Guests get
+  "Create your free profile" (`/join`) and "Register your organization"; signed-in users get
+  "Dashboard".
+- **Find Talent** is hidden (`enabled: false` on its item in `public-layout.tsx`); it has no
+  route, so `/talent` and similar URLs fall through to the standard 404. Talent search exists only
+  for verified organizations (`org.talent.index`) and workers consent to be found by *verified
+  employers and licensed agencies* (`privacy.visibility.employers_and_agencies`), so a public
+  listing of workers is not allowed. **To re-enable:** decide what the public page is — an employer
+  landing page that explains talent search and sends visitors to register, or an anonymised
+  preview (counts by trade/country, no names or photos) — then add a public route + controller and
+  set `enabled: true` with its `href`.
+- Safety stays a "Soon" item; it was out of scope for this change.
