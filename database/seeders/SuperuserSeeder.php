@@ -10,7 +10,7 @@ use Illuminate\Support\Facades\Log;
 
 class SuperuserSeeder extends Seeder
 {
-    public const LOCAL_EMAIL = 'superuser@blueskills.test';
+    public const LOCAL_EMAIL = 'superadmin@blueskills.ae';
 
     /**
      * Production needs BLUESKILLS_SUPERUSER_EMAIL and _PASSWORD. Locally we fall back to a
