@@ -1,5 +1,5 @@
 import { Head, Link, useForm } from '@inertiajs/react';
-import { Check } from 'lucide-react';
+import { Check, ExternalLink } from 'lucide-react';
 import type { FormEvent } from 'react';
 import { useState } from 'react';
 import { MatchSummary } from '@/components/bs/jobs/match-summary';
@@ -84,6 +84,24 @@ export function JobDetail({
                             <Button asChild className="min-h-12 w-full text-base">
                                 <Link href={worker.join()}>{t('jobs.apply.sign_up')}</Link>
                             </Button>
+                        )}
+                        {job.applyUrl && acceptsApplications && (
+                            // Secondary only: applying on BLUESKILLS keeps the snapshot and consent (D-117).
+                            <p className="text-xs text-muted">
+                                {t('truth_card.apply_external')}{' '}
+                                <a
+                                    href={job.applyUrl}
+                                    target="_blank"
+                                    rel="noopener noreferrer nofollow"
+                                    className="inline-flex min-h-11 items-center gap-1 font-semibold text-brand underline-offset-2 hover:underline"
+                                >
+                                    {t('truth_card.apply_external_link')}
+                                    <ExternalLink
+                                        aria-hidden
+                                        className="size-3.5 rtl:-scale-x-100"
+                                    />
+                                </a>
+                            </p>
                         )}
                     </aside>
                 </div>

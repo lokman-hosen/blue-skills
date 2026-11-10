@@ -6,6 +6,7 @@ import { EmptyState } from '@/components/bs/empty-state';
 import { FilterSheet } from '@/components/bs/filter-sheet';
 import { JobListingCard } from '@/components/bs/jobs/job-listing-card';
 import type { JobFilters, Paginated } from '@/components/bs/jobs/types';
+import { JOB_OPTIONS } from '@/components/bs/jobs/wizard-fields';
 import { NativeSelect } from '@/components/bs/native-select';
 import { PageHeader } from '@/components/bs/page-header';
 import { Button } from '@/components/ui/button';
@@ -20,12 +21,19 @@ export type JobSearchProps = {
     filters: JobFilters;
     countries: App.Domain.Config.Data.CountryOptionData[];
     occupations: App.Domain.Taxonomy.Data.TaxonomyOptionData[];
+    industries: App.Domain.Taxonomy.Data.TaxonomyOptionData[];
 };
 
 const TOGGLES = ['no_worker_costs', 'accommodation', 'salary_disclosed'] as const;
 
 /** Find Jobs: search and filters over published jobs, newest first (spec §8). */
-export function JobSearch({ jobs: page, filters, countries, occupations }: JobSearchProps) {
+export function JobSearch({
+    jobs: page,
+    filters,
+    countries,
+    occupations,
+    industries,
+}: JobSearchProps) {
     const { t, formatNumber } = useTranslation();
     const [draft, setDraft] = useState<JobFilters>(filters);
     // Phones keep sorting in the filter sheet; from `md` it sits above the results.
@@ -56,6 +64,8 @@ export function JobSearch({ jobs: page, filters, countries, occupations }: JobSe
         q: null,
         country: null,
         occupation: null,
+        industry: null,
+        employment_type: null,
         no_worker_costs: false,
         accommodation: false,
         salary_disclosed: false,
@@ -64,6 +74,8 @@ export function JobSearch({ jobs: page, filters, countries, occupations }: JobSe
     const activeCount = [
         draft.country,
         draft.occupation,
+        draft.industry,
+        draft.employment_type,
         ...TOGGLES.map((key) => draft[key]),
     ].filter(Boolean).length;
 
@@ -124,6 +136,23 @@ export function JobSearch({ jobs: page, filters, countries, occupations }: JobSe
                             </NativeSelect>
                         </div>
                         <div className="flex flex-col gap-1.5">
+                            <Label htmlFor="filter-industry">{t('jobs.field.industry')}</Label>
+                            <NativeSelect
+                                id="filter-industry"
+                                value={draft.industry ?? ''}
+                                onChange={(event) =>
+                                    setDraft({ ...draft, industry: event.target.value || null })
+                                }
+                            >
+                                <option value="">{t('jobs.search.any_industry')}</option>
+                                {industries.map((industry) => (
+                                    <option key={industry.slug} value={industry.slug}>
+                                        {industry.name}
+                                    </option>
+                                ))}
+                            </NativeSelect>
+                        </div>
+                        <div className="flex flex-col gap-1.5">
                             <Label htmlFor="filter-occupation">{t('voice.label.occupation')}</Label>
                             <NativeSelect
                                 id="filter-occupation"
@@ -136,6 +165,29 @@ export function JobSearch({ jobs: page, filters, countries, occupations }: JobSe
                                 {occupations.map((occupation) => (
                                     <option key={occupation.slug} value={occupation.slug}>
                                         {occupation.name}
+                                    </option>
+                                ))}
+                            </NativeSelect>
+                        </div>
+                        <div className="flex flex-col gap-1.5">
+                            <Label htmlFor="filter-employment-type">
+                                {t('jobs.field.employment_type')}
+                            </Label>
+                            <NativeSelect
+                                id="filter-employment-type"
+                                value={draft.employment_type ?? ''}
+                                onChange={(event) =>
+                                    setDraft({
+                                        ...draft,
+                                        employment_type: (event.target.value ||
+                                            null) as JobFilters['employment_type'],
+                                    })
+                                }
+                            >
+                                <option value="">{t('jobs.search.any_employment_type')}</option>
+                                {JOB_OPTIONS.employment_type.map((type) => (
+                                    <option key={type} value={type}>
+                                        {t(`jobs.option.employment_type.${type}`)}
                                     </option>
                                 ))}
                             </NativeSelect>

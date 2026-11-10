@@ -3,6 +3,7 @@ import {
     Building2,
     BriefcaseBusiness,
     CircleAlert,
+    FileText,
     Flag,
     House,
     ListChecks,
@@ -39,6 +40,41 @@ export function TruthCard({ job, preview = false, onReport, className }: TruthCa
         value === null || value === undefined || value === '' ? notDisclosed : value;
     const payer = (value: App.Domain.Jobs.Enums.CostPayer | null) =>
         value ? t(`truth_card.payer.${value}`) : notDisclosed;
+    /** An option label, or the poster's own words when they chose "Other" (D-117). */
+    const option = (key: string, value: string | null, other: string | null) =>
+        value === null
+            ? null
+            : value === 'other'
+              ? (other ?? t(`jobs.option.${key}.other`))
+              : t(`jobs.option.${key}.${value}`);
+    const hours =
+        job.workingHours || job.workingDays
+            ? [
+                  option('working_hours', job.workingHours, job.workingHoursOther),
+                  option('working_days', job.workingDays, job.workingDaysOther),
+              ]
+                  .filter(Boolean)
+                  .join(' · ')
+            : job.hoursPerDay !== null && job.daysPerWeek !== null
+              ? t('truth_card.value.hours', {
+                    hours: formatNumber(job.hoursPerDay),
+                    days: formatNumber(job.daysPerWeek),
+                })
+              : null;
+    const contract = job.contractDuration
+        ? option('contract_duration', job.contractDuration, job.contractOther)
+        : job.contractMonths !== null
+          ? t('truth_card.value.contract', { months: formatNumber(job.contractMonths) })
+          : null;
+    const experience = job.experienceLevel
+        ? option('experience_level', job.experienceLevel, job.experienceOther)
+        : job.minExperienceYears !== null
+          ? t('truth_card.value.experience', { years: formatNumber(job.minExperienceYears) })
+          : null;
+    const languageLevel = (level: string) =>
+        ['basic', 'communicative', 'fluent'].includes(level)
+            ? t(`jobs.language_level.${level}`)
+            : level;
 
     const location = [job.destinationCity, job.destinationCountryName ?? job.destinationCountryCode]
         .filter(Boolean)
@@ -120,10 +156,24 @@ export function TruthCard({ job, preview = false, onReport, className }: TruthCa
                 </Section>
 
                 <Section title={t('truth_card.section.work')} icon={BriefcaseBusiness}>
+                    {(job.industry || job.occupation) && (
+                        <Row label={t('truth_card.row.industry')}>
+                            {[job.industry, job.occupation].filter(Boolean).join(' · ')}
+                        </Row>
+                    )}
+                    <Row label={t('truth_card.row.employment_type')}>
+                        {orNotDisclosed(option('employment_type', job.employmentType, null))}
+                    </Row>
                     <Row label={t('truth_card.row.salary')}>
                         {job.salary ? (
                             <span className="tnum">
-                                {formatMoney(job.salary)}
+                                {job.salaryMax &&
+                                job.salaryMax.amountMinor !== job.salary.amountMinor
+                                    ? t('truth_card.value.salary_range', {
+                                          min: formatMoney(job.salary),
+                                          max: formatMoney(job.salaryMax),
+                                      })
+                                    : formatMoney(job.salary)}
                                 {job.salaryPeriod &&
                                     ` ${t(`truth_card.period.${job.salaryPeriod}`)}`}
                             </span>
@@ -131,24 +181,19 @@ export function TruthCard({ job, preview = false, onReport, className }: TruthCa
                             notDisclosed
                         )}
                     </Row>
-                    <Row label={t('truth_card.row.hours')}>
-                        {job.hoursPerDay !== null && job.daysPerWeek !== null
-                            ? t('truth_card.value.hours', {
-                                  hours: formatNumber(job.hoursPerDay),
-                                  days: formatNumber(job.daysPerWeek),
-                              })
-                            : notDisclosed}
+                    <Row label={t('truth_card.row.pay_basis')}>
+                        {orNotDisclosed(option('salary_basis', job.salaryBasis, null))}
+                    </Row>
+                    <Row label={t('truth_card.row.hours')}>{orNotDisclosed(hours)}</Row>
+                    <Row label={t('truth_card.row.shift')}>
+                        {orNotDisclosed(
+                            option('shift_pattern', job.shiftPattern, job.shiftPatternOther),
+                        )}
                     </Row>
                     <Row label={t('truth_card.row.overtime')}>
                         {orNotDisclosed(job.overtimeTerms)}
                     </Row>
-                    <Row label={t('truth_card.row.contract')}>
-                        {job.contractMonths !== null
-                            ? t('truth_card.value.contract', {
-                                  months: formatNumber(job.contractMonths),
-                              })
-                            : notDisclosed}
-                    </Row>
+                    <Row label={t('truth_card.row.contract')}>{orNotDisclosed(contract)}</Row>
                     <Row label={t('truth_card.row.openings')}>{formatNumber(job.headcount)}</Row>
                     {(job.joiningFrom || job.joiningTo) && (
                         <Row label={t('truth_card.row.joining')}>
@@ -161,27 +206,49 @@ export function TruthCard({ job, preview = false, onReport, className }: TruthCa
                 </Section>
 
                 <Section title={t('truth_card.section.requirements')} icon={ListChecks}>
-                    <Row label={t('truth_card.row.experience')}>
-                        {job.minExperienceYears !== null
-                            ? t('truth_card.value.experience', {
-                                  years: formatNumber(job.minExperienceYears),
-                              })
-                            : notDisclosed}
+                    <Row label={t('truth_card.row.experience')}>{orNotDisclosed(experience)}</Row>
+                    <Row label={t('truth_card.row.education')}>
+                        {orNotDisclosed(
+                            option('education_level', job.educationLevel, job.educationOther),
+                        )}
                     </Row>
+                    {job.ageRange && (
+                        // Shown only when the employer states one; never used for matching (D-117).
+                        <Row label={t('truth_card.row.age')}>
+                            {option('age_range', job.ageRange, job.ageOther)}
+                        </Row>
+                    )}
                     <Row label={t('truth_card.row.skills')}>
-                        {job.skills.length > 0 ? job.skills.join(', ') : notDisclosed}
+                        {job.skills.length > 0 || job.otherSkills
+                            ? [...job.skills, job.otherSkills].filter(Boolean).join(', ')
+                            : notDisclosed}
                     </Row>
                     <Row label={t('truth_card.row.languages')}>
                         {job.languageRequirements.length > 0
                             ? job.languageRequirements
                                   .map(
                                       (language) =>
-                                          `${language.code.toUpperCase()} (${language.level})`,
+                                          `${language.code.toUpperCase()} (${languageLevel(language.level)})`,
                                   )
                                   .join(' · ')
                             : notDisclosed}
                     </Row>
                 </Section>
+
+                {(job.duties || job.additionalDetails) && (
+                    <Section title={t('truth_card.section.details')} icon={FileText}>
+                        {job.duties && (
+                            <Row label={t('truth_card.row.duties')}>
+                                <span className="whitespace-pre-line">{job.duties}</span>
+                            </Row>
+                        )}
+                        {job.additionalDetails && (
+                            <Row label={t('truth_card.row.additional_details')}>
+                                <span className="whitespace-pre-line">{job.additionalDetails}</span>
+                            </Row>
+                        )}
+                    </Section>
+                )}
 
                 <Section title={t('truth_card.section.benefits')} icon={House}>
                     {job.benefits.map((benefit) => (
@@ -189,6 +256,16 @@ export function TruthCard({ job, preview = false, onReport, className }: TruthCa
                             {benefit.provision ? (
                                 <>
                                     {t(`truth_card.provision.${benefit.provision}`)}
+                                    {benefit.key === 'accommodation' &&
+                                        benefit.provision === 'deducted' &&
+                                        job.accommodationCost && (
+                                            <span className="font-semibold tnum">
+                                                {' · '}
+                                                {t('truth_card.value.per_month', {
+                                                    amount: formatMoney(job.accommodationCost),
+                                                })}
+                                            </span>
+                                        )}
                                     {benefit.details && (
                                         <span className="text-muted"> · {benefit.details}</span>
                                     )}
@@ -209,6 +286,9 @@ export function TruthCard({ job, preview = false, onReport, className }: TruthCa
                 </Section>
 
                 <Section title={t('truth_card.section.costs')} icon={CircleAlert}>
+                    <Row label={t('truth_card.row.worker_fees')}>
+                        {orNotDisclosed(option('worker_fees', job.workerFees, null))}
+                    </Row>
                     {workerCosts.length > 0 ? (
                         workerCosts.map((cost, index) => (
                             <Row

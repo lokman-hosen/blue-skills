@@ -1,8 +1,15 @@
 import { Form, Head, Link, useForm } from '@inertiajs/react';
 import { AlertTriangle, Plus, Send, Trash2 } from 'lucide-react';
-import type { FormEvent, ReactNode } from 'react';
-import { useMemo } from 'react';
+import type { FormEvent } from 'react';
+import { useMemo, useState } from 'react';
 import JobController from '@/actions/App/Http/Controllers/Organization/JobController';
+import {
+    Field,
+    OptionSelect,
+    OtherInput,
+    TextArea,
+    WizardCard as Card,
+} from '@/components/bs/jobs/wizard-fields';
 import { NativeSelect } from '@/components/bs/native-select';
 import { PageHeader } from '@/components/bs/page-header';
 import { TruthCard } from '@/components/bs/truth-card';
@@ -15,9 +22,10 @@ import { Spinner } from '@/components/ui/spinner';
 import { useTranslation } from '@/lib/i18n';
 import { cn } from '@/lib/utils';
 
-type Step = 'requirement' | 'skills' | 'terms' | 'mobility' | 'preview';
+type Step = 'basics' | 'pay' | 'requirements' | 'apply' | 'preview';
 type FormState = App.Domain.Jobs.Data.JobFormData;
 type Options = App.Domain.Jobs.Data.JobFormOptionsData;
+type Errors = Record<string, string>;
 
 type Props = {
     step: Step;
@@ -28,34 +36,25 @@ type Props = {
     problems: Record<string, string>;
     live: boolean;
     organizationVerified: boolean;
+    organizationName: string;
     agency: boolean;
     options: Options;
 };
 
-const BENEFITS = ['accommodation', 'food', 'transport', 'medical', 'airfare'] as const;
-
+/** Accommodation first: it is the only benefit with a follow-up field (its monthly cost). */
+const BENEFITS = ['accommodation', 'food', 'transport', 'insurance', 'medical', 'airfare'] as const;
 type Benefit = (typeof BENEFITS)[number];
-type CostRow = {
-    category: string;
-    description: string;
-    amount: string;
-    currency: string;
-    payer: string;
-};
-type MobilityForm = Record<
-    Benefit | `${Benefit}_details` | 'other_benefits' | 'permit_payer' | 'visa_payer' | 'deadline',
-    string
-> & {
-    costs: CostRow[];
-};
+
+/** Free, Paid, Not provided (prototype), plus Allowance for jobs that use it (D-117). */
 const PROVISIONS: App.Domain.Jobs.Enums.BenefitProvision[] = [
     'provided',
-    'allowance',
     'deducted',
     'not_provided',
+    'allowance',
 ];
 const PAYERS: App.Domain.Jobs.Enums.CostPayer[] = ['employer', 'agency', 'worker'];
-const PERIODS: App.Domain.Jobs.Enums.SalaryPeriod[] = ['month', 'week', 'day', 'hour'];
+const PERIODS: App.Domain.Jobs.Enums.SalaryPeriod[] = ['hour', 'day', 'week', 'month', 'year'];
+const LANGUAGE_LEVELS = ['basic', 'communicative', 'fluent'];
 const CATEGORIES: App.Domain.Jobs.Enums.JobCostCategory[] = [
     'recruitment_fee',
     'visa',
@@ -70,7 +69,15 @@ const CATEGORIES: App.Domain.Jobs.Enums.JobCostCategory[] = [
     'other',
 ];
 
-/** The Post a Job wizard: four steps, then preview and submit (prototype "Post job"). */
+type CostRow = {
+    category: string;
+    description: string;
+    amount: string;
+    currency: string;
+    payer: string;
+};
+
+/** The Post a Job wizard: four steps, then preview and submit (job posting prototype, D-117). */
 export default function JobWizard(props: Props) {
     const { t } = useTranslation();
     const { step, steps, code, live } = props;
@@ -97,7 +104,7 @@ export default function JobWizard(props: Props) {
                     >
                         {steps.map((item, index) => {
                             const current = item === step;
-                            const reachable = code !== null || item === 'requirement';
+                            const reachable = code !== null || item === 'basics';
                             const label = `${index + 1}. ${t(`jobs.wizard.step.${item}`)}`;
 
                             return (
@@ -135,10 +142,10 @@ export default function JobWizard(props: Props) {
 
                 <div className="grid gap-5 lg:grid-cols-[minmax(0,1fr)_minmax(0,420px)] lg:items-start">
                     <div className="min-w-0">
-                        {step === 'requirement' && <RequirementStep {...props} />}
-                        {step === 'skills' && <SkillsStep {...props} />}
-                        {step === 'terms' && <TermsStep {...props} />}
-                        {step === 'mobility' && <MobilityStep {...props} />}
+                        {step === 'basics' && <BasicsStep {...props} />}
+                        {step === 'pay' && <PayStep {...props} />}
+                        {step === 'requirements' && <RequirementsStep {...props} />}
+                        {step === 'apply' && <ApplyStep {...props} />}
                         {step === 'preview' && <PreviewStep {...props} />}
                     </div>
                     {props.preview && step !== 'preview' && (
@@ -153,37 +160,6 @@ export default function JobWizard(props: Props) {
     );
 }
 
-function Card({ children }: { children: ReactNode }) {
-    return (
-        <div className="flex flex-col gap-4 rounded-2xl border border-line bg-surface p-5">
-            {children}
-        </div>
-    );
-}
-
-function Field({
-    id,
-    label,
-    error,
-    hint,
-    children,
-}: {
-    id: string;
-    label: string;
-    error?: string;
-    hint?: string;
-    children: ReactNode;
-}) {
-    return (
-        <div className="flex min-w-0 flex-col gap-1.5">
-            <Label htmlFor={id}>{label}</Label>
-            {children}
-            {hint && <p className="text-xs text-muted">{hint}</p>}
-            <InputError message={error} />
-        </div>
-    );
-}
-
 function StepActions({ processing }: { processing: boolean }) {
     const { t } = useTranslation();
 
@@ -195,11 +171,30 @@ function StepActions({ processing }: { processing: boolean }) {
     );
 }
 
-/** Saves a step: creates the draft on the first step, updates it afterwards. */
+type StepForm = {
+    post: (url: string) => void;
+    put: (url: string) => void;
+    setError: (errors: Errors) => void;
+    clearErrors: () => void;
+};
+
+/**
+ * Saves a step: creates the draft on the first step, updates it afterwards. The client checks
+ * repeat the server's cross-field rules so the poster sees them before sending (D-117); the
+ * server still validates everything.
+ */
 function useStepSubmit(code: string | null, step: Exclude<Step, 'preview'>) {
-    return (form: { post: (url: string) => void; put: (url: string) => void }) =>
+    return (form: StepForm, check: () => Errors = () => ({})) =>
         (event: FormEvent) => {
             event.preventDefault();
+            const errors = check();
+
+            if (Object.keys(errors).length > 0) {
+                form.clearErrors();
+                form.setError(errors);
+
+                return;
+            }
 
             if (code) {
                 form.put(JobController.update.url([code, step]));
@@ -209,12 +204,26 @@ function useStepSubmit(code: string | null, step: Exclude<Step, 'preview'>) {
         };
 }
 
-function RequirementStep({ code, form: job, options, agency }: Props) {
+/** "Other" needs the poster's own words (server rule `required_if:…,other`). */
+function requireOther(
+    errors: Errors,
+    message: string,
+    pairs: [value: string, other: string, key: string][],
+) {
+    pairs.forEach(([value, other, key]) => {
+        if (value === 'other' && other.trim() === '') {
+            errors[key] = message;
+        }
+    });
+}
+
+function BasicsStep({ code, form: job, options, agency, organizationName }: Props) {
     const { t, formatDate, formatNumber } = useTranslation();
     const form = useForm({
         job_mandate_id: job?.jobMandateId ?? '',
         title: job?.title ?? '',
         occupation_id: job?.occupationId ?? '',
+        employment_type: (job?.employmentType ?? '') as string,
         headcount: job?.headcount?.toString() ?? '',
         destination_country_code: job?.destinationCountryCode ?? '',
         destination_city: job?.destinationCity ?? '',
@@ -223,12 +232,20 @@ function RequirementStep({ code, form: job, options, agency }: Props) {
     });
     // Employers never send a mandate; agencies post inside one (product rule 10).
     form.transform(({ job_mandate_id, ...data }) => (agency ? { ...data, job_mandate_id } : data));
-    const submit = useStepSubmit(code, 'requirement')(form);
+    const submit = useStepSubmit(code, 'basics')(form);
     const mandate = options.mandates.find((item) => item.id === form.data.job_mandate_id);
-    const occupations =
+    const allowed =
         mandate && mandate.occupationIds.length > 0
             ? options.occupations.filter((item) => mandate.occupationIds.includes(item.id))
             : options.occupations;
+    const industries = [
+        ...new Map(allowed.map((item) => [item.sectorSlug, item.sector])).entries(),
+    ];
+    // Industry is the trade's sector: it narrows the trade list and is never stored on its own.
+    const [industry, setIndustry] = useState(
+        () => options.occupations.find((item) => item.id === job?.occupationId)?.sectorSlug ?? '',
+    );
+    const occupations = industry ? allowed.filter((item) => item.sectorSlug === industry) : allowed;
     const destinations = mandate?.destinationCountryCode
         ? options.destinations.filter((country) => country.code === mandate.destinationCountryCode)
         : options.destinations;
@@ -249,9 +266,43 @@ function RequirementStep({ code, form: job, options, agency }: Props) {
         }));
     };
 
+    const chooseIndustry = (slug: string) => {
+        setIndustry(slug);
+        const current = options.occupations.find((item) => item.id === form.data.occupation_id);
+
+        if (slug && current?.sectorSlug !== slug) {
+            form.setData('occupation_id', '');
+        }
+    };
+
     return (
         <form onSubmit={submit} noValidate>
             <Card>
+                <dl className="grid gap-3 rounded-xl bg-surface-2 px-4 py-3 text-sm sm:grid-cols-2">
+                    <div className="min-w-0">
+                        <dt className="text-xs text-muted">{t('jobs.wizard.posting_as')}</dt>
+                        <dd className="font-semibold break-words">
+                            {t(
+                                agency
+                                    ? 'jobs.wizard.posting_as_agency'
+                                    : 'jobs.wizard.posting_as_employer',
+                                { name: organizationName },
+                            )}
+                        </dd>
+                    </div>
+                    <div className="min-w-0">
+                        <dt className="text-xs text-muted">{t('truth_card.row.employer')}</dt>
+                        <dd className="font-semibold break-words">
+                            {agency
+                                ? (mandate?.employer ?? (
+                                      <span className="font-normal text-muted">
+                                          {t('jobs.wizard.employer_from_mandate')}
+                                      </span>
+                                  ))
+                                : organizationName}
+                        </dd>
+                    </div>
+                </dl>
                 {agency && (
                     <Field
                         id="job_mandate_id"
@@ -303,42 +354,6 @@ function RequirementStep({ code, form: job, options, agency }: Props) {
                 </Field>
                 <div className="grid gap-4 sm:grid-cols-2">
                     <Field
-                        id="occupation_id"
-                        label={t('voice.label.occupation')}
-                        error={form.errors.occupation_id}
-                    >
-                        <NativeSelect
-                            id="occupation_id"
-                            value={form.data.occupation_id}
-                            onChange={(e) => form.setData('occupation_id', e.target.value)}
-                        >
-                            <option value="" disabled>
-                                {t('voice.choose_trade')}
-                            </option>
-                            {occupations.map((item) => (
-                                <option key={item.id} value={item.id}>
-                                    {item.name} · {item.sector}
-                                </option>
-                            ))}
-                        </NativeSelect>
-                    </Field>
-                    <Field
-                        id="headcount"
-                        label={t('jobs.field.headcount')}
-                        error={form.errors.headcount}
-                    >
-                        <Input
-                            placeholder={t('jobs.field.headcount_placeholder')}
-                            id="headcount"
-                            type="number"
-                            inputMode="numeric"
-                            min={1}
-                            value={form.data.headcount}
-                            onChange={(e) => form.setData('headcount', e.target.value)}
-                            className="h-11 text-base"
-                        />
-                    </Field>
-                    <Field
                         id="destination_country_code"
                         label={t('jobs.field.destination')}
                         error={form.errors.destination_country_code}
@@ -369,10 +384,70 @@ function RequirementStep({ code, form: job, options, agency }: Props) {
                             placeholder={t('jobs.field.city_placeholder')}
                             id="destination_city"
                             value={form.data.destination_city}
+                            maxLength={120}
                             onChange={(e) => form.setData('destination_city', e.target.value)}
                             className="h-11 text-base"
                         />
                     </Field>
+                    <Field
+                        id="headcount"
+                        label={t('jobs.field.headcount')}
+                        error={form.errors.headcount}
+                    >
+                        <Input
+                            placeholder={t('jobs.field.headcount_placeholder')}
+                            id="headcount"
+                            type="number"
+                            inputMode="numeric"
+                            min={1}
+                            max={10000}
+                            value={form.data.headcount}
+                            onChange={(e) => form.setData('headcount', e.target.value)}
+                            className="h-11 text-base"
+                        />
+                    </Field>
+                    <Field id="industry" label={t('jobs.field.industry')}>
+                        <NativeSelect
+                            id="industry"
+                            value={industry}
+                            onChange={(e) => chooseIndustry(e.target.value)}
+                        >
+                            <option value="">{t('jobs.field.industry_choose')}</option>
+                            {industries.map(([slug, name]) => (
+                                <option key={slug} value={slug}>
+                                    {name}
+                                </option>
+                            ))}
+                        </NativeSelect>
+                    </Field>
+                    <Field
+                        id="occupation_id"
+                        label={t('voice.label.occupation')}
+                        error={form.errors.occupation_id}
+                    >
+                        <NativeSelect
+                            id="occupation_id"
+                            value={form.data.occupation_id}
+                            onChange={(e) => form.setData('occupation_id', e.target.value)}
+                        >
+                            <option value="" disabled>
+                                {t('voice.choose_trade')}
+                            </option>
+                            {occupations.map((item) => (
+                                <option key={item.id} value={item.id}>
+                                    {industry ? item.name : `${item.name} · ${item.sector}`}
+                                </option>
+                            ))}
+                        </NativeSelect>
+                    </Field>
+                    <OptionSelect
+                        id="employment_type"
+                        option="employment_type"
+                        label={t('jobs.field.employment_type')}
+                        value={form.data.employment_type}
+                        onChange={(value) => form.setData('employment_type', value)}
+                        error={form.errors.employment_type}
+                    />
                     <Field
                         id="joining_from"
                         label={t('jobs.field.joining_from')}
@@ -400,178 +475,104 @@ function RequirementStep({ code, form: job, options, agency }: Props) {
                         />
                     </Field>
                 </div>
+                <p className="rounded-lg bg-surface-2 px-3 py-2 text-xs text-muted">
+                    {t('jobs.wizard.campaign_note')}
+                </p>
                 <StepActions processing={form.processing} />
             </Card>
         </form>
     );
 }
 
-function SkillsStep({ code, form: job, options }: Props) {
-    const { t } = useTranslation();
-    const occupation = options.occupations.find((item) => item.id === job?.occupationId);
-    const typical = new Set(occupation?.skills.map((skill) => skill.id) ?? []);
-    const skills = [
-        ...(occupation?.skills ?? []),
-        ...options.skills.filter((skill) => !typical.has(skill.id)),
-    ];
-    const form = useForm({
-        skill_ids: job?.skillIds ?? [],
-        min_experience_years: job?.minExperienceYears?.toString() ?? '',
-        language_requirements: (job?.languageRequirements ?? []).map((item) => ({
-            code: item.code,
-            level: item.level,
-        })),
-    });
-    const submit = useStepSubmit(code, 'skills')(form);
-    const languageError = Object.entries(form.errors).find(([key]) =>
-        key.startsWith('language_requirements'),
-    )?.[1];
+type PayForm = Record<
+    | 'salary_amount'
+    | 'salary_max_amount'
+    | 'salary_currency'
+    | 'salary_period'
+    | 'salary_basis'
+    | 'working_hours'
+    | 'working_hours_other'
+    | 'working_days'
+    | 'working_days_other'
+    | 'shift_pattern'
+    | 'shift_pattern_other'
+    | 'overtime_terms'
+    | Benefit
+    | `${Benefit}_details`
+    | 'accommodation_cost_amount'
+    | 'other_benefits',
+    string
+>;
 
-    return (
-        <form onSubmit={submit} noValidate>
-            <Card>
-                <fieldset className="flex flex-col gap-2">
-                    <legend className="mb-1.5 text-sm font-medium">{t('jobs.field.skills')}</legend>
-                    <ChipGroup
-                        items={skills.map((skill) => ({ value: skill.id, label: skill.name }))}
-                        selected={form.data.skill_ids}
-                        onToggle={(id) =>
-                            form.setData(
-                                'skill_ids',
-                                form.data.skill_ids.includes(id)
-                                    ? form.data.skill_ids.filter((item) => item !== id)
-                                    : [...form.data.skill_ids, id],
-                            )
-                        }
-                    />
-                    <InputError message={form.errors.skill_ids} />
-                </fieldset>
-                <Field
-                    id="min_experience_years"
-                    label={t('jobs.field.min_experience')}
-                    error={form.errors.min_experience_years}
-                >
-                    <Input
-                        placeholder={t('jobs.field.min_experience_placeholder')}
-                        id="min_experience_years"
-                        type="number"
-                        inputMode="numeric"
-                        min={0}
-                        max={40}
-                        value={form.data.min_experience_years}
-                        onChange={(e) => form.setData('min_experience_years', e.target.value)}
-                        className="h-11 max-w-40 text-base"
-                    />
-                </Field>
-                <fieldset className="flex flex-col gap-2">
-                    <legend className="mb-1.5 text-sm font-medium">
-                        {t('jobs.field.languages')}
-                    </legend>
-                    {form.data.language_requirements.map((row, index) => (
-                        <div key={index} className="flex items-end gap-2">
-                            <div className="flex w-24 flex-col gap-1">
-                                <Label htmlFor={`lang-code-${index}`} className="text-xs">
-                                    {t('jobs.field.language_code')}
-                                </Label>
-                                <Input
-                                    placeholder={t('jobs.field.language_code_placeholder')}
-                                    id={`lang-code-${index}`}
-                                    value={row.code}
-                                    maxLength={3}
-                                    dir="ltr"
-                                    onChange={(e) =>
-                                        form.setData(
-                                            'language_requirements',
-                                            form.data.language_requirements.map((item, i) =>
-                                                i === index
-                                                    ? {
-                                                          ...item,
-                                                          code: e.target.value.toLowerCase(),
-                                                      }
-                                                    : item,
-                                            ),
-                                        )
-                                    }
-                                    className="h-11 text-base"
-                                />
-                            </div>
-                            <div className="flex min-w-0 flex-1 flex-col gap-1">
-                                <Label htmlFor={`lang-level-${index}`} className="text-xs">
-                                    {t('jobs.field.language_level')}
-                                </Label>
-                                <Input
-                                    id={`lang-level-${index}`}
-                                    value={row.level}
-                                    maxLength={40}
-                                    placeholder={t('jobs.field.language_level_example')}
-                                    onChange={(e) =>
-                                        form.setData(
-                                            'language_requirements',
-                                            form.data.language_requirements.map((item, i) =>
-                                                i === index
-                                                    ? { ...item, level: e.target.value }
-                                                    : item,
-                                            ),
-                                        )
-                                    }
-                                    className="h-11 text-base"
-                                />
-                            </div>
-                            <Button
-                                type="button"
-                                variant="ghost"
-                                className="size-11 shrink-0"
-                                aria-label={t('worker.languages.remove')}
-                                onClick={() =>
-                                    form.setData(
-                                        'language_requirements',
-                                        form.data.language_requirements.filter(
-                                            (_, i) => i !== index,
-                                        ),
-                                    )
-                                }
-                            >
-                                <Trash2 aria-hidden className="size-4" />
-                            </Button>
-                        </div>
-                    ))}
-                    <Button
-                        type="button"
-                        variant="outline"
-                        className="min-h-11 self-start"
-                        onClick={() =>
-                            form.setData('language_requirements', [
-                                ...form.data.language_requirements,
-                                { code: 'en', level: '' },
-                            ])
-                        }
-                    >
-                        <Plus aria-hidden className="size-4" />
-                        {t('worker.languages.add')}
-                    </Button>
-                    <InputError message={languageError} />
-                </fieldset>
-                <StepActions processing={form.processing} />
-            </Card>
-        </form>
-    );
-}
-
-function TermsStep({ code, form: job, options }: Props) {
+function PayStep({ code, form: job, options }: Props) {
     const { t } = useTranslation();
     const destination = options.destinations.find(
         (item) => item.code === job?.destinationCountryCode,
     );
-    const form = useForm({
+    const form = useForm<PayForm>({
         salary_amount: job?.salaryAmount?.toString() ?? '',
+        salary_max_amount: job?.salaryMaxAmount?.toString() ?? '',
         salary_currency: job?.salaryCurrency ?? destination?.currency ?? '',
-        salary_period: (job?.salaryPeriod ?? 'month') as string,
-        hours_per_day: job?.hoursPerDay?.toString() ?? '',
-        days_per_week: job?.daysPerWeek?.toString() ?? '',
+        salary_period: job?.salaryPeriod ?? 'month',
+        salary_basis: job?.salaryBasis ?? '',
+        working_hours: job?.workingHours ?? '',
+        working_hours_other: job?.workingHoursOther ?? '',
+        working_days: job?.workingDays ?? '',
+        working_days_other: job?.workingDaysOther ?? '',
+        shift_pattern: job?.shiftPattern ?? '',
+        shift_pattern_other: job?.shiftPatternOther ?? '',
         overtime_terms: job?.overtimeTerms ?? '',
-        contract_months: job?.contractMonths?.toString() ?? '',
+        accommodation: job?.benefits.accommodation ?? '',
+        accommodation_details: job?.benefitDetails.accommodation ?? '',
+        accommodation_cost_amount: job?.accommodationCostAmount?.toString() ?? '',
+        food: job?.benefits.food ?? '',
+        food_details: job?.benefitDetails.food ?? '',
+        transport: job?.benefits.transport ?? '',
+        transport_details: job?.benefitDetails.transport ?? '',
+        insurance: job?.benefits.insurance ?? '',
+        insurance_details: job?.benefitDetails.insurance ?? '',
+        medical: job?.benefits.medical ?? '',
+        medical_details: job?.benefitDetails.medical ?? '',
+        airfare: job?.benefits.airfare ?? '',
+        airfare_details: job?.benefitDetails.airfare ?? '',
+        other_benefits: job?.otherBenefits ?? '',
     });
-    const submit = useStepSubmit(code, 'terms')(form);
+    const data = form.data;
+    const errors = form.errors as Errors;
+    const paysForAccommodation = data.accommodation === 'deducted';
+
+    const check = () => {
+        const found: Errors = {};
+        requireOther(found, t('jobs.validation.other_required'), [
+            [data.working_hours, data.working_hours_other, 'working_hours_other'],
+            [data.working_days, data.working_days_other, 'working_days_other'],
+            [data.shift_pattern, data.shift_pattern_other, 'shift_pattern_other'],
+        ]);
+
+        if (data.salary_max_amount !== '' && data.salary_amount === '') {
+            found.salary_amount = t('jobs.validation.salary_min_required');
+        } else if (
+            data.salary_max_amount !== '' &&
+            Number(data.salary_max_amount) < Number(data.salary_amount)
+        ) {
+            found.salary_max_amount = t('jobs.validation.salary_max_below_min');
+        }
+
+        if (paysForAccommodation && data.accommodation_cost_amount === '') {
+            found.accommodation_cost_amount = t('jobs.validation.accommodation_cost_required');
+        }
+
+        if (
+            (data.salary_amount !== '' ||
+                (paysForAccommodation && data.accommodation_cost_amount !== '')) &&
+            data.salary_currency === ''
+        ) {
+            found.salary_currency = t('jobs.validation.currency_required');
+        }
+
+        return found;
+    };
+    const submit = useStepSubmit(code, 'pay')(form, check);
 
     return (
         <form onSubmit={submit} noValidate>
@@ -579,33 +580,20 @@ function TermsStep({ code, form: job, options }: Props) {
                 <p className="rounded-lg bg-surface-2 px-3 py-2 text-xs text-muted">
                     {t('jobs.field.not_disclosed_note')}
                 </p>
-                <div className="grid gap-4 sm:grid-cols-3">
-                    <Field
-                        id="salary_amount"
-                        label={t('jobs.field.salary')}
-                        error={form.errors.salary_amount}
-                    >
-                        <Input
-                            placeholder={t('jobs.field.salary_placeholder')}
-                            id="salary_amount"
-                            type="number"
-                            inputMode="numeric"
-                            min={1}
-                            value={form.data.salary_amount}
-                            onChange={(e) => form.setData('salary_amount', e.target.value)}
-                            className="h-11 text-base"
-                        />
-                    </Field>
+                <div className="grid gap-4 sm:grid-cols-2">
                     <Field
                         id="salary_currency"
                         label={t('worker.salary.currency')}
-                        error={form.errors.salary_currency}
+                        error={errors.salary_currency}
                     >
                         <NativeSelect
                             id="salary_currency"
-                            value={form.data.salary_currency}
+                            value={data.salary_currency}
                             onChange={(e) => form.setData('salary_currency', e.target.value)}
                         >
+                            <option value="" disabled>
+                                {t('worker.salary.currency')}
+                            </option>
                             {options.currencies.map((currency) => (
                                 <option key={currency} value={currency}>
                                     {currency}
@@ -615,12 +603,12 @@ function TermsStep({ code, form: job, options }: Props) {
                     </Field>
                     <Field
                         id="salary_period"
-                        label={t('worker.salary.per')}
-                        error={form.errors.salary_period}
+                        label={t('jobs.field.salary_period')}
+                        error={errors.salary_period}
                     >
                         <NativeSelect
                             id="salary_period"
-                            value={form.data.salary_period}
+                            value={data.salary_period}
                             onChange={(e) => form.setData('salary_period', e.target.value)}
                         >
                             {PERIODS.map((period) => (
@@ -631,124 +619,110 @@ function TermsStep({ code, form: job, options }: Props) {
                         </NativeSelect>
                     </Field>
                     <Field
-                        id="hours_per_day"
-                        label={t('jobs.field.hours_per_day')}
-                        error={form.errors.hours_per_day}
+                        id="salary_amount"
+                        label={t('jobs.field.salary_min')}
+                        error={errors.salary_amount}
                     >
                         <Input
-                            placeholder={t('jobs.field.hours_per_day_placeholder')}
-                            id="hours_per_day"
+                            placeholder={t('jobs.field.salary_placeholder')}
+                            id="salary_amount"
                             type="number"
-                            inputMode="decimal"
-                            step="0.5"
+                            inputMode="numeric"
                             min={1}
-                            max={16}
-                            value={form.data.hours_per_day}
-                            onChange={(e) => form.setData('hours_per_day', e.target.value)}
+                            value={data.salary_amount}
+                            onChange={(e) => form.setData('salary_amount', e.target.value)}
                             className="h-11 text-base"
                         />
                     </Field>
                     <Field
-                        id="days_per_week"
-                        label={t('jobs.field.days_per_week')}
-                        error={form.errors.days_per_week}
+                        id="salary_max_amount"
+                        label={t('jobs.field.salary_max')}
+                        hint={t('jobs.field.salary_max_hint')}
+                        error={errors.salary_max_amount}
                     >
                         <Input
-                            placeholder={t('jobs.field.days_per_week_placeholder')}
-                            id="days_per_week"
+                            placeholder={t('jobs.field.salary_max_placeholder')}
+                            id="salary_max_amount"
                             type="number"
                             inputMode="numeric"
-                            min={1}
-                            max={7}
-                            value={form.data.days_per_week}
-                            onChange={(e) => form.setData('days_per_week', e.target.value)}
-                            className="h-11 text-base"
-                        />
-                    </Field>
-                    <Field
-                        id="contract_months"
-                        label={t('jobs.field.contract_months')}
-                        error={form.errors.contract_months}
-                    >
-                        <Input
-                            placeholder={t('jobs.field.contract_months_placeholder')}
-                            id="contract_months"
-                            type="number"
-                            inputMode="numeric"
-                            min={1}
-                            max={120}
-                            value={form.data.contract_months}
-                            onChange={(e) => form.setData('contract_months', e.target.value)}
+                            min={data.salary_amount || 1}
+                            aria-describedby="salary_max_amount-hint"
+                            value={data.salary_max_amount}
+                            onChange={(e) => form.setData('salary_max_amount', e.target.value)}
                             className="h-11 text-base"
                         />
                     </Field>
                 </div>
+                <OptionSelect
+                    id="salary_basis"
+                    option="salary_basis"
+                    label={t('jobs.field.salary_basis')}
+                    value={data.salary_basis}
+                    onChange={(value) => form.setData('salary_basis', value)}
+                    error={errors.salary_basis}
+                />
+                <div className="grid gap-4 sm:grid-cols-2">
+                    {(['working_hours', 'working_days'] as const).map((key) => (
+                        <div key={key} className="flex min-w-0 flex-col gap-3">
+                            <OptionSelect
+                                id={key}
+                                option={key}
+                                label={t(`jobs.field.${key}`)}
+                                value={data[key]}
+                                onChange={(value) => form.setData(key, value)}
+                                error={errors[key]}
+                            />
+                            {data[key] === 'other' && (
+                                <OtherInput
+                                    id={`${key}_other`}
+                                    value={data[`${key}_other`]}
+                                    onChange={(value) => form.setData(`${key}_other`, value)}
+                                    error={errors[`${key}_other`]}
+                                />
+                            )}
+                        </div>
+                    ))}
+                </div>
+                <OptionSelect
+                    id="shift_pattern"
+                    option="shift_pattern"
+                    label={t('jobs.field.shift_pattern')}
+                    value={data.shift_pattern}
+                    onChange={(value) => form.setData('shift_pattern', value)}
+                    error={errors.shift_pattern}
+                />
+                {data.shift_pattern === 'other' && (
+                    <OtherInput
+                        id="shift_pattern_other"
+                        value={data.shift_pattern_other}
+                        onChange={(value) => form.setData('shift_pattern_other', value)}
+                        error={errors.shift_pattern_other}
+                    />
+                )}
                 <Field
                     id="overtime_terms"
                     label={t('jobs.field.overtime')}
-                    error={form.errors.overtime_terms}
+                    error={errors.overtime_terms}
                 >
                     <Input
                         placeholder={t('jobs.field.overtime_placeholder')}
                         id="overtime_terms"
-                        value={form.data.overtime_terms}
+                        value={data.overtime_terms}
                         maxLength={500}
                         onChange={(e) => form.setData('overtime_terms', e.target.value)}
                         className="h-11 text-base"
                     />
                 </Field>
-                <StepActions processing={form.processing} />
-            </Card>
-        </form>
-    );
-}
 
-function MobilityStep({ code, form: job, options }: Props) {
-    const { t } = useTranslation();
-    const destination = options.destinations.find(
-        (item) => item.code === job?.destinationCountryCode,
-    );
-    const allowed = new Set(destination?.allowedWorkerCosts ?? []);
-    const form = useForm<MobilityForm>({
-        accommodation: job?.benefits.accommodation ?? '',
-        accommodation_details: job?.benefitDetails.accommodation ?? '',
-        food: job?.benefits.food ?? '',
-        food_details: job?.benefitDetails.food ?? '',
-        transport: job?.benefits.transport ?? '',
-        transport_details: job?.benefitDetails.transport ?? '',
-        medical: job?.benefits.medical ?? '',
-        medical_details: job?.benefitDetails.medical ?? '',
-        airfare: job?.benefits.airfare ?? '',
-        airfare_details: job?.benefitDetails.airfare ?? '',
-        other_benefits: job?.otherBenefits ?? '',
-        permit_payer: job?.permitPayer ?? '',
-        visa_payer: job?.visaPayer ?? '',
-        deadline: job?.deadline ?? '',
-        costs: (job?.costs ?? []).map((cost) => ({
-            category: cost.category,
-            description: cost.description ?? '',
-            amount: cost.amount.toString(),
-            currency: cost.currency,
-            payer: cost.payer,
-        })),
-    });
-    const submit = useStepSubmit(code, 'mobility')(form);
-    const errors = form.errors as Record<string, string>;
-    const setCost = (index: number, key: string, value: string) =>
-        form.setData(
-            'costs',
-            form.data.costs.map((cost, i) => (i === index ? { ...cost, [key]: value } : cost)),
-        );
-
-    return (
-        <form onSubmit={submit} noValidate>
-            <Card>
                 <fieldset className="flex flex-col gap-3">
                     <legend className="mb-1.5 text-sm font-medium">
                         {t('jobs.field.benefits')}
                     </legend>
                     {BENEFITS.map((key) => (
-                        <div key={key} className="grid gap-2 sm:grid-cols-[10rem_minmax(0,1fr)]">
+                        <div
+                            key={key}
+                            className="grid gap-2 border-b border-line/70 pb-3 last:border-0 sm:grid-cols-[12rem_minmax(0,1fr)]"
+                        >
                             <Field
                                 id={key}
                                 label={t(`truth_card.benefit.${key}`)}
@@ -756,15 +730,15 @@ function MobilityStep({ code, form: job, options }: Props) {
                             >
                                 <NativeSelect
                                     id={key}
-                                    value={form.data[key]}
+                                    value={data[key]}
                                     onChange={(e) => form.setData(key, e.target.value)}
                                 >
-                                    <option value="">{t('common.not_disclosed')}</option>
                                     {PROVISIONS.map((provision) => (
                                         <option key={provision} value={provision}>
                                             {t(`truth_card.provision.${provision}`)}
                                         </option>
                                     ))}
+                                    <option value="">{t('jobs.field.unknown')}</option>
                                 </NativeSelect>
                             </Field>
                             <Field
@@ -775,12 +749,43 @@ function MobilityStep({ code, form: job, options }: Props) {
                                 <Input
                                     placeholder={t('jobs.field.details_placeholder')}
                                     id={`${key}_details`}
-                                    value={form.data[`${key}_details`]}
+                                    value={data[`${key}_details`]}
                                     maxLength={255}
                                     onChange={(e) => form.setData(`${key}_details`, e.target.value)}
                                     className="h-11 text-base"
                                 />
                             </Field>
+                            {key === 'accommodation' && paysForAccommodation && (
+                                <div className="sm:col-start-2">
+                                    <Field
+                                        id="accommodation_cost_amount"
+                                        label={t('jobs.field.accommodation_cost')}
+                                        hint={t('jobs.field.accommodation_cost_hint', {
+                                            currency: data.salary_currency || '—',
+                                        })}
+                                        error={errors.accommodation_cost_amount}
+                                    >
+                                        <Input
+                                            placeholder={t(
+                                                'jobs.field.accommodation_cost_placeholder',
+                                            )}
+                                            id="accommodation_cost_amount"
+                                            type="number"
+                                            inputMode="numeric"
+                                            min={1}
+                                            aria-describedby="accommodation_cost_amount-hint"
+                                            value={data.accommodation_cost_amount}
+                                            onChange={(e) =>
+                                                form.setData(
+                                                    'accommodation_cost_amount',
+                                                    e.target.value,
+                                                )
+                                            }
+                                            className="h-11 max-w-48 text-base"
+                                        />
+                                    </Field>
+                                </div>
+                            )}
                         </div>
                     ))}
                 </fieldset>
@@ -792,44 +797,399 @@ function MobilityStep({ code, form: job, options }: Props) {
                     <Input
                         placeholder={t('jobs.field.other_benefits_placeholder')}
                         id="other_benefits"
-                        value={form.data.other_benefits}
+                        value={data.other_benefits}
                         maxLength={1000}
                         onChange={(e) => form.setData('other_benefits', e.target.value)}
                         className="h-11 text-base"
                     />
                 </Field>
-                <div className="grid gap-4 sm:grid-cols-3">
-                    {(['permit_payer', 'visa_payer'] as const).map((key) => (
-                        <Field
-                            key={key}
-                            id={key}
-                            label={t(`jobs.field.${key}`)}
-                            error={errors[key]}
-                        >
-                            <NativeSelect
+                <StepActions processing={form.processing} />
+            </Card>
+        </form>
+    );
+}
+
+function RequirementsStep({ code, form: job, options }: Props) {
+    const { t } = useTranslation();
+    const occupation = options.occupations.find((item) => item.id === job?.occupationId);
+    const typical = new Set(occupation?.skills.map((skill) => skill.id) ?? []);
+    const skills = [
+        ...(occupation?.skills ?? []),
+        ...options.skills.filter((skill) => !typical.has(skill.id)),
+    ];
+    const form = useForm({
+        experience_level: (job?.experienceLevel ?? '') as string,
+        experience_other: job?.experienceOther ?? '',
+        education_level: (job?.educationLevel ?? '') as string,
+        education_other: job?.educationOther ?? '',
+        language_requirements: (job?.languageRequirements ?? []).map((item) => ({
+            code: item.code,
+            level: item.level,
+        })),
+        age_range: (job?.ageRange ?? '') as string,
+        age_other: job?.ageOther ?? '',
+        skill_ids: job?.skillIds ?? [],
+        other_skills: job?.otherSkills ?? '',
+        duties: job?.duties ?? '',
+    });
+    const data = form.data;
+    const errors = form.errors as Errors;
+    const check = () => {
+        const found: Errors = {};
+        requireOther(found, t('jobs.validation.other_required'), [
+            [data.experience_level, data.experience_other, 'experience_other'],
+            [data.education_level, data.education_other, 'education_other'],
+            [data.age_range, data.age_other, 'age_other'],
+        ]);
+
+        return found;
+    };
+    const submit = useStepSubmit(code, 'requirements')(form, check);
+    const languageError = Object.entries(errors).find(([key]) =>
+        key.startsWith('language_requirements'),
+    )?.[1];
+    const setLanguage = (index: number, change: Partial<{ code: string; level: string }>) =>
+        form.setData(
+            'language_requirements',
+            data.language_requirements.map((item, i) =>
+                i === index ? { ...item, ...change } : item,
+            ),
+        );
+
+    return (
+        <form onSubmit={submit} noValidate>
+            <Card>
+                <div className="grid gap-4 sm:grid-cols-2">
+                    {(
+                        [
+                            ['experience_level', 'experience_other', 'jobs.field.experience'],
+                            ['education_level', 'education_other', 'jobs.field.education'],
+                        ] as const
+                    ).map(([key, other, label]) => (
+                        <div key={key} className="flex min-w-0 flex-col gap-3">
+                            <OptionSelect
                                 id={key}
-                                value={form.data[key]}
-                                onChange={(e) => form.setData(key, e.target.value)}
-                            >
-                                <option value="">{t('common.not_disclosed')}</option>
-                                {PAYERS.map((payer) => (
-                                    <option key={payer} value={payer}>
-                                        {t(`truth_card.payer.${payer}`)}
-                                    </option>
-                                ))}
-                            </NativeSelect>
-                        </Field>
+                                option={key}
+                                label={t(label)}
+                                value={data[key]}
+                                onChange={(value) => form.setData(key, value)}
+                                error={errors[key]}
+                            />
+                            {data[key] === 'other' && (
+                                <OtherInput
+                                    id={other}
+                                    value={data[other]}
+                                    onChange={(value) => form.setData(other, value)}
+                                    error={errors[other]}
+                                />
+                            )}
+                        </div>
                     ))}
-                    <Field id="deadline" label={t('jobs.field.deadline')} error={errors.deadline}>
-                        <Input
-                            id="deadline"
-                            type="date"
-                            value={form.data.deadline}
-                            onChange={(e) => form.setData('deadline', e.target.value)}
-                            className="h-11 text-base"
-                        />
-                    </Field>
                 </div>
+
+                <fieldset className="flex flex-col gap-2">
+                    <legend className="mb-1.5 text-sm font-medium">
+                        {t('jobs.field.languages')}
+                    </legend>
+                    {data.language_requirements.map((row, index) => {
+                        const preset = LANGUAGE_LEVELS.includes(row.level);
+
+                        return (
+                            <div
+                                key={index}
+                                className="flex flex-wrap items-end gap-2 sm:flex-nowrap"
+                            >
+                                <div className="flex w-24 flex-col gap-1">
+                                    <Label htmlFor={`lang-code-${index}`} className="text-xs">
+                                        {t('jobs.field.language_code')}
+                                    </Label>
+                                    <Input
+                                        placeholder={t('jobs.field.language_code_placeholder')}
+                                        id={`lang-code-${index}`}
+                                        value={row.code}
+                                        maxLength={3}
+                                        dir="ltr"
+                                        onChange={(e) =>
+                                            setLanguage(index, {
+                                                code: e.target.value.toLowerCase(),
+                                            })
+                                        }
+                                        className="h-11 text-base"
+                                    />
+                                </div>
+                                <div className="flex min-w-0 flex-1 flex-col gap-1">
+                                    <Label htmlFor={`lang-level-${index}`} className="text-xs">
+                                        {t('jobs.field.language_level')}
+                                    </Label>
+                                    <NativeSelect
+                                        id={`lang-level-${index}`}
+                                        value={preset ? row.level : 'other'}
+                                        onChange={(e) =>
+                                            setLanguage(index, {
+                                                level:
+                                                    e.target.value === 'other'
+                                                        ? ''
+                                                        : e.target.value,
+                                            })
+                                        }
+                                    >
+                                        {[...LANGUAGE_LEVELS, 'other'].map((level) => (
+                                            <option key={level} value={level}>
+                                                {t(`jobs.language_level.${level}`)}
+                                            </option>
+                                        ))}
+                                    </NativeSelect>
+                                </div>
+                                {!preset && (
+                                    <div className="flex min-w-0 flex-1 flex-col gap-1">
+                                        <Label
+                                            htmlFor={`lang-level-other-${index}`}
+                                            className="text-xs"
+                                        >
+                                            {t('jobs.field.other_details')}
+                                        </Label>
+                                        <Input
+                                            id={`lang-level-other-${index}`}
+                                            value={row.level}
+                                            maxLength={40}
+                                            placeholder={t('jobs.field.language_level_example')}
+                                            onChange={(e) =>
+                                                setLanguage(index, { level: e.target.value })
+                                            }
+                                            className="h-11 text-base"
+                                        />
+                                    </div>
+                                )}
+                                <Button
+                                    type="button"
+                                    variant="ghost"
+                                    className="size-11 shrink-0"
+                                    aria-label={t('worker.languages.remove')}
+                                    onClick={() =>
+                                        form.setData(
+                                            'language_requirements',
+                                            data.language_requirements.filter(
+                                                (_, i) => i !== index,
+                                            ),
+                                        )
+                                    }
+                                >
+                                    <Trash2 aria-hidden className="size-4" />
+                                </Button>
+                            </div>
+                        );
+                    })}
+                    <Button
+                        type="button"
+                        variant="outline"
+                        className="min-h-11 self-start"
+                        onClick={() =>
+                            form.setData('language_requirements', [
+                                ...data.language_requirements,
+                                { code: 'en', level: 'basic' },
+                            ])
+                        }
+                    >
+                        <Plus aria-hidden className="size-4" />
+                        {t('worker.languages.add')}
+                    </Button>
+                    <InputError message={languageError} />
+                </fieldset>
+
+                <OptionSelect
+                    id="age_range"
+                    option="age_range"
+                    label={t('jobs.field.age')}
+                    hint={t('jobs.field.age_hint')}
+                    value={data.age_range}
+                    onChange={(value) => form.setData('age_range', value)}
+                    error={errors.age_range}
+                />
+                {data.age_range === 'other' && (
+                    <OtherInput
+                        id="age_other"
+                        value={data.age_other}
+                        onChange={(value) => form.setData('age_other', value)}
+                        error={errors.age_other}
+                    />
+                )}
+
+                <fieldset className="flex flex-col gap-2">
+                    <legend className="mb-1.5 text-sm font-medium">{t('jobs.field.skills')}</legend>
+                    <ChipGroup
+                        items={skills.map((skill) => ({ value: skill.id, label: skill.name }))}
+                        selected={data.skill_ids}
+                        onToggle={(id) =>
+                            form.setData(
+                                'skill_ids',
+                                data.skill_ids.includes(id)
+                                    ? data.skill_ids.filter((item) => item !== id)
+                                    : [...data.skill_ids, id],
+                            )
+                        }
+                    />
+                    <InputError message={errors.skill_ids} />
+                </fieldset>
+                <Field
+                    id="other_skills"
+                    label={t('jobs.field.other_skills')}
+                    hint={t('jobs.field.other_skills_hint')}
+                    error={errors.other_skills}
+                >
+                    <Input
+                        id="other_skills"
+                        value={data.other_skills}
+                        maxLength={500}
+                        placeholder={t('jobs.field.other_skills_placeholder')}
+                        aria-describedby="other_skills-hint"
+                        onChange={(e) => form.setData('other_skills', e.target.value)}
+                        className="h-11 text-base"
+                    />
+                </Field>
+                <Field id="duties" label={t('jobs.field.duties')} error={errors.duties}>
+                    <TextArea
+                        id="duties"
+                        value={data.duties}
+                        maxLength={5000}
+                        placeholder={t('jobs.field.duties_placeholder')}
+                        onChange={(e) => form.setData('duties', e.target.value)}
+                    />
+                </Field>
+                <StepActions processing={form.processing} />
+            </Card>
+        </form>
+    );
+}
+
+type ApplyForm = Record<
+    | 'permit_payer'
+    | 'visa_payer'
+    | 'contract_duration'
+    | 'contract_other'
+    | 'worker_fees'
+    | 'apply_method'
+    | 'apply_url'
+    | 'deadline'
+    | 'additional_details',
+    string
+> & { costs: CostRow[] };
+
+function ApplyStep({ code, form: job, options }: Props) {
+    const { t } = useTranslation();
+    const destination = options.destinations.find(
+        (item) => item.code === job?.destinationCountryCode,
+    );
+    const allowed = new Set(destination?.allowedWorkerCosts ?? []);
+    const form = useForm<ApplyForm>({
+        permit_payer: job?.permitPayer ?? '',
+        visa_payer: job?.visaPayer ?? '',
+        contract_duration: job?.contractDuration ?? '',
+        contract_other: job?.contractOther ?? '',
+        worker_fees: job?.workerFees ?? '',
+        costs: (job?.costs ?? []).map((cost) => ({
+            category: cost.category,
+            description: cost.description ?? '',
+            amount: cost.amount.toString(),
+            currency: cost.currency,
+            payer: cost.payer,
+        })),
+        apply_method: job?.applyMethod ?? 'blueskills',
+        apply_url: job?.applyUrl ?? '',
+        deadline: job?.deadline ?? '',
+        additional_details: job?.additionalDetails ?? '',
+    });
+    const data = form.data;
+    const errors = form.errors as Errors;
+    const check = () => {
+        const found: Errors = {};
+        requireOther(found, t('jobs.validation.other_required'), [
+            [data.contract_duration, data.contract_other, 'contract_other'],
+        ]);
+        const itemised = data.costs.some((cost) => cost.payer === 'worker');
+        const workerPaysVisa = data.visa_payer === 'worker' || data.permit_payer === 'worker';
+
+        if (data.worker_fees === 'apply' && !itemised) {
+            found.worker_fees = t('jobs.validation.fees_need_items');
+        }
+
+        if (data.worker_fees === 'none' && (itemised || workerPaysVisa)) {
+            found.worker_fees = t('jobs.validation.fees_none_but_items');
+        }
+
+        if (data.apply_method === 'both' && data.apply_url.trim() === '') {
+            found.apply_url = t('jobs.validation.apply_url_required');
+        } else if (
+            data.apply_method === 'both' &&
+            !/^https?:\/\/\S+\.\S+/i.test(data.apply_url.trim())
+        ) {
+            found.apply_url = t('jobs.validation.apply_url_invalid');
+        }
+
+        return found;
+    };
+    const submit = useStepSubmit(code, 'apply')(form, check);
+    const setCost = (index: number, key: string, value: string) =>
+        form.setData(
+            'costs',
+            data.costs.map((cost, i) => (i === index ? { ...cost, [key]: value } : cost)),
+        );
+
+    return (
+        <form onSubmit={submit} noValidate>
+            <Card>
+                <fieldset className="flex flex-col gap-3">
+                    <legend className="mb-1.5 text-sm font-medium">
+                        {t('jobs.field.visa_support')}
+                    </legend>
+                    <div className="grid gap-4 sm:grid-cols-2">
+                        {(['visa_payer', 'permit_payer'] as const).map((key) => (
+                            <Field
+                                key={key}
+                                id={key}
+                                label={t(`jobs.field.${key}`)}
+                                error={errors[key]}
+                            >
+                                <NativeSelect
+                                    id={key}
+                                    value={data[key]}
+                                    onChange={(e) => form.setData(key, e.target.value)}
+                                >
+                                    {PAYERS.map((payer) => (
+                                        <option key={payer} value={payer}>
+                                            {t(`truth_card.payer.${payer}`)}
+                                        </option>
+                                    ))}
+                                    <option value="">{t('jobs.field.unknown')}</option>
+                                </NativeSelect>
+                            </Field>
+                        ))}
+                    </div>
+                </fieldset>
+                <OptionSelect
+                    id="contract_duration"
+                    option="contract_duration"
+                    label={t('jobs.field.contract')}
+                    value={data.contract_duration}
+                    onChange={(value) => form.setData('contract_duration', value)}
+                    error={errors.contract_duration}
+                />
+                {data.contract_duration === 'other' && (
+                    <OtherInput
+                        id="contract_other"
+                        value={data.contract_other}
+                        onChange={(value) => form.setData('contract_other', value)}
+                        error={errors.contract_other}
+                    />
+                )}
+                <OptionSelect
+                    id="worker_fees"
+                    option="worker_fees"
+                    label={t('jobs.field.worker_fees')}
+                    hint={t('jobs.field.worker_fees_hint')}
+                    value={data.worker_fees}
+                    onChange={(value) => form.setData('worker_fees', value)}
+                    error={errors.worker_fees}
+                />
 
                 <fieldset className="flex flex-col gap-3">
                     <legend className="mb-1.5 text-sm font-medium">{t('jobs.field.costs')}</legend>
@@ -839,7 +1199,7 @@ function MobilityStep({ code, form: job, options }: Props) {
                             policy: destination?.workerCostPolicy ?? t('jobs.compliance.no_rules'),
                         })}
                     </p>
-                    {form.data.costs.map((cost, index) => {
+                    {data.costs.map((cost, index) => {
                         const unlawful =
                             cost.payer === 'worker' &&
                             !allowed.has(cost.category as App.Domain.Jobs.Enums.JobCostCategory);
@@ -938,7 +1298,7 @@ function MobilityStep({ code, form: job, options }: Props) {
                                     onClick={() =>
                                         form.setData(
                                             'costs',
-                                            form.data.costs.filter((_, i) => i !== index),
+                                            data.costs.filter((_, i) => i !== index),
                                         )
                                     }
                                 >
@@ -963,7 +1323,7 @@ function MobilityStep({ code, form: job, options }: Props) {
                         className="min-h-11 self-start"
                         onClick={() =>
                             form.setData('costs', [
-                                ...form.data.costs,
+                                ...data.costs,
                                 {
                                     category: 'visa',
                                     description: '',
@@ -983,6 +1343,62 @@ function MobilityStep({ code, form: job, options }: Props) {
                         }
                     />
                 </fieldset>
+
+                <div className="grid gap-4 sm:grid-cols-2">
+                    <OptionSelect
+                        id="apply_method"
+                        option="apply_method"
+                        label={t('jobs.field.apply_method')}
+                        value={data.apply_method}
+                        empty={null}
+                        onChange={(value) => form.setData('apply_method', value)}
+                        error={errors.apply_method}
+                    />
+                    <Field id="deadline" label={t('jobs.field.deadline')} error={errors.deadline}>
+                        <Input
+                            id="deadline"
+                            type="date"
+                            value={data.deadline}
+                            onChange={(e) => form.setData('deadline', e.target.value)}
+                            className="h-11 text-base"
+                        />
+                    </Field>
+                </div>
+                {data.apply_method === 'both' && (
+                    <Field
+                        id="apply_url"
+                        label={t('jobs.field.apply_url')}
+                        hint={t('jobs.field.apply_url_hint')}
+                        error={errors.apply_url}
+                    >
+                        <Input
+                            id="apply_url"
+                            type="url"
+                            inputMode="url"
+                            dir="ltr"
+                            maxLength={2048}
+                            placeholder={t('jobs.field.apply_url_placeholder')}
+                            aria-describedby="apply_url-hint"
+                            value={data.apply_url}
+                            onChange={(e) => form.setData('apply_url', e.target.value)}
+                            className="h-11 text-base"
+                        />
+                    </Field>
+                )}
+                <Field
+                    id="additional_details"
+                    label={t('jobs.field.additional_details')}
+                    error={errors.additional_details}
+                >
+                    <TextArea
+                        id="additional_details"
+                        rows={5}
+                        value={data.additional_details}
+                        maxLength={10000}
+                        placeholder={t('jobs.field.additional_details_placeholder')}
+                        onChange={(e) => form.setData('additional_details', e.target.value)}
+                    />
+                </Field>
                 <StepActions processing={form.processing} />
             </Card>
         </form>

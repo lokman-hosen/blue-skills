@@ -50,7 +50,19 @@ export function JobListingCard({ job }: { job: App.Domain.Jobs.Data.JobListingDa
                     <Wallet aria-hidden className="size-4 shrink-0 text-muted" />
                     <dd className="font-semibold">
                         {job.salary
-                            ? `${formatMoney(job.salary)}${job.salaryPeriod ? ` / ${t(`salary_period.${job.salaryPeriod}`)}` : ''}`
+                            ? `${
+                                  job.salaryMax &&
+                                  job.salaryMax.amountMinor !== job.salary.amountMinor
+                                      ? t('truth_card.value.salary_range', {
+                                            min: formatMoney(job.salary),
+                                            max: formatMoney(job.salaryMax),
+                                        })
+                                      : formatMoney(job.salary)
+                              }${job.salaryPeriod ? ` / ${t(`salary_period.${job.salaryPeriod}`)}` : ''}${
+                                  job.salaryBasis
+                                      ? ` · ${t(`jobs.option.salary_basis.${job.salaryBasis}`)}`
+                                      : ''
+                              }`
                             : notDisclosed}
                     </dd>
                 </div>
@@ -75,6 +87,13 @@ export function JobListingCard({ job }: { job: App.Domain.Jobs.Data.JobListingDa
                 </div>
             </dl>
             <footer className="mt-auto flex flex-wrap items-center gap-1.5">
+                {job.employmentType && (
+                    <StatusChip
+                        tone="neutral"
+                        icon={false}
+                        label={t(`jobs.option.employment_type.${job.employmentType}`)}
+                    />
+                )}
                 <StatusChip
                     tone={job.workerPaysCosts ? 'warn' : 'ok'}
                     label={

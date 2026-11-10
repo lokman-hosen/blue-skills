@@ -11,6 +11,8 @@ export type JobFilters = {
     q: string | null;
     country: string | null;
     occupation: string | null;
+    industry: string | null;
+    employment_type: App.Domain.Jobs.Enums.EmploymentType | null;
     no_worker_costs: boolean;
     accommodation: boolean;
     salary_disclosed: boolean;

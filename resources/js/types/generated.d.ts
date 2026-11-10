@@ -789,28 +789,48 @@ declare namespace App {
                     title: string;
                     jobMandateId: string | null;
                     occupationId: string;
+                    employmentType: App.Domain.Jobs.Enums.EmploymentType | null;
                     headcount: number;
                     destinationCountryCode: string;
                     destinationCity: string | null;
                     joiningFrom: string | null;
                     joiningTo: string | null;
-                    skillIds: string[];
-                    minExperienceYears: number | null;
-                    languageRequirements: App.Domain.Jobs.Data.LanguageRequirementData[];
                     salaryAmount: number | null;
+                    salaryMaxAmount: number | null;
                     salaryCurrency: string | null;
                     salaryPeriod: App.Domain.Jobs.Enums.SalaryPeriod | null;
-                    hoursPerDay: number | null;
-                    daysPerWeek: number | null;
+                    salaryBasis: App.Domain.Jobs.Enums.SalaryBasis | null;
+                    workingHours: App.Domain.Jobs.Enums.WorkingHours | null;
+                    workingHoursOther: string | null;
+                    workingDays: App.Domain.Jobs.Enums.WorkingDays | null;
+                    workingDaysOther: string | null;
+                    shiftPattern: App.Domain.Jobs.Enums.ShiftPattern | null;
+                    shiftPatternOther: string | null;
                     overtimeTerms: string | null;
-                    contractMonths: number | null;
                     benefits: Record<string, App.Domain.Jobs.Enums.BenefitProvision | null>;
                     benefitDetails: Record<string, string | null>;
+                    accommodationCostAmount: number | null;
                     otherBenefits: string | null;
+                    experienceLevel: App.Domain.Jobs.Enums.ExperienceLevel | null;
+                    experienceOther: string | null;
+                    educationLevel: App.Domain.Jobs.Enums.EducationLevel | null;
+                    educationOther: string | null;
+                    languageRequirements: App.Domain.Jobs.Data.LanguageRequirementData[];
+                    ageRange: App.Domain.Jobs.Enums.AgeRange | null;
+                    ageOther: string | null;
+                    skillIds: string[];
+                    otherSkills: string | null;
+                    duties: string | null;
                     permitPayer: App.Domain.Jobs.Enums.CostPayer | null;
                     visaPayer: App.Domain.Jobs.Enums.CostPayer | null;
-                    deadline: string | null;
+                    contractDuration: App.Domain.Jobs.Enums.ContractDuration | null;
+                    contractOther: string | null;
+                    workerFees: App.Domain.Jobs.Enums.WorkerFees | null;
                     costs: App.Domain.Jobs.Data.JobCostFormData[];
+                    applyMethod: App.Domain.Jobs.Enums.ApplyMethod;
+                    applyUrl: string | null;
+                    deadline: string | null;
+                    additionalDetails: string | null;
                 };
                 export type JobFormOptionsData = {
                     occupations: App.Domain.Taxonomy.Data.OccupationOptionData[];
@@ -847,7 +867,10 @@ declare namespace App {
                     destinationCountryName: string | null;
                     destinationCity: string | null;
                     salary: App.Support.Data.MoneyData | null;
+                    salaryMax: App.Support.Data.MoneyData | null;
                     salaryPeriod: App.Domain.Jobs.Enums.SalaryPeriod | null;
+                    salaryBasis: App.Domain.Jobs.Enums.SalaryBasis | null;
+                    employmentType: App.Domain.Jobs.Enums.EmploymentType | null;
                     accommodation: App.Domain.Jobs.Enums.BenefitProvision | null;
                     workerPaysCosts: boolean;
                     deadline: string | null;
@@ -870,6 +893,8 @@ declare namespace App {
                     publicCode: string;
                     title: string;
                     occupation: string | null;
+                    industry: string | null;
+                    employmentType: App.Domain.Jobs.Enums.EmploymentType | null;
                     destinationCountryCode: string;
                     destinationCountryName: string | null;
                     destinationCity: string | null;
@@ -881,20 +906,43 @@ declare namespace App {
                     mandateReference: string | null;
                     mandateHeadcount: number | null;
                     salary: App.Support.Data.MoneyData | null;
+                    salaryMax: App.Support.Data.MoneyData | null;
                     salaryPeriod: App.Domain.Jobs.Enums.SalaryPeriod | null;
+                    salaryBasis: App.Domain.Jobs.Enums.SalaryBasis | null;
+                    workingHours: App.Domain.Jobs.Enums.WorkingHours | null;
+                    workingHoursOther: string | null;
+                    workingDays: App.Domain.Jobs.Enums.WorkingDays | null;
+                    workingDaysOther: string | null;
+                    shiftPattern: App.Domain.Jobs.Enums.ShiftPattern | null;
+                    shiftPatternOther: string | null;
                     hoursPerDay: number | null;
                     daysPerWeek: number | null;
                     overtimeTerms: string | null;
+                    contractDuration: App.Domain.Jobs.Enums.ContractDuration | null;
+                    contractOther: string | null;
                     contractMonths: number | null;
                     headcount: number;
+                    experienceLevel: App.Domain.Jobs.Enums.ExperienceLevel | null;
+                    experienceOther: string | null;
                     minExperienceYears: number | null;
+                    educationLevel: App.Domain.Jobs.Enums.EducationLevel | null;
+                    educationOther: string | null;
+                    ageRange: App.Domain.Jobs.Enums.AgeRange | null;
+                    ageOther: string | null;
                     languageRequirements: App.Domain.Jobs.Data.LanguageRequirementData[];
                     skills: string[];
+                    otherSkills: string | null;
+                    duties: string | null;
                     benefits: App.Domain.Jobs.Data.JobBenefitData[];
+                    accommodationCost: App.Support.Data.MoneyData | null;
                     otherBenefits: string | null;
                     permitPayer: App.Domain.Jobs.Enums.CostPayer | null;
                     visaPayer: App.Domain.Jobs.Enums.CostPayer | null;
+                    workerFees: App.Domain.Jobs.Enums.WorkerFees | null;
                     costs: App.Domain.Jobs.Data.JobCostData[];
+                    applyMethod: App.Domain.Jobs.Enums.ApplyMethod;
+                    applyUrl: string | null;
+                    additionalDetails: string | null;
                     joiningFrom: string | null;
                     joiningTo: string | null;
                     deadline: string | null;
@@ -992,9 +1040,26 @@ declare namespace App {
                 };
             }
             namespace Enums {
+                export type AgeRange = '18_25' | '18_35' | '18_45' | '18_50' | '18_60' | 'other';
+                export type ApplyMethod = 'blueskills' | 'both';
                 export type BenefitProvision =
                     'provided' | 'allowance' | 'deducted' | 'not_provided';
+                export type ContractDuration =
+                    | '3_months'
+                    | '6_months'
+                    | '9_months'
+                    | '12_months'
+                    | '12_24_months'
+                    | '12_36_months'
+                    | '2_years'
+                    | 'permanent'
+                    | 'other';
                 export type CostPayer = 'employer' | 'agency' | 'worker';
+                export type EducationLevel =
+                    'none' | 'primary' | 'secondary' | 'diploma' | 'degree' | 'other';
+                export type EmploymentType = 'full_time' | 'part_time' | 'seasonal' | 'fixed_term';
+                export type ExperienceLevel =
+                    'none' | 'under_1' | '1_3' | '3_5' | '5_10' | '10_plus' | 'other';
                 export type JobCostCategory =
                     | 'recruitment_fee'
                     | 'visa'
@@ -1015,7 +1080,19 @@ declare namespace App {
                     | 'rejected'
                     | 'expired'
                     | 'revoked';
-                export type SalaryPeriod = 'hour' | 'day' | 'week' | 'month';
+                export type SalaryBasis = 'net' | 'gross';
+                export type SalaryPeriod = 'hour' | 'day' | 'week' | 'month' | 'year';
+                export type ShiftPattern = 'day' | 'night' | 'rotating' | 'flexible' | 'other';
+                export type WorkerFees = 'none' | 'apply';
+                export type WorkingDays = 'days_5' | 'days_5_6' | 'days_6' | 'rotating' | 'other';
+                export type WorkingHours =
+                    | 'day_6_8'
+                    | 'day_8_10'
+                    | 'day_10_12'
+                    | 'month_160_200'
+                    | 'month_200_270'
+                    | 'variable'
+                    | 'other';
             }
         }
         namespace Manual {
@@ -1354,6 +1431,7 @@ declare namespace App {
                     slug: string;
                     name: string;
                     sector: string;
+                    sectorSlug: string;
                     specializations: App.Domain.Taxonomy.Data.TaxonomyOptionData[];
                     skills: App.Domain.Taxonomy.Data.TaxonomyOptionData[];
                 };

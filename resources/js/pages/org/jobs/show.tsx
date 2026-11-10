@@ -1,5 +1,5 @@
 import { Form, Head, Link } from '@inertiajs/react';
-import { Pencil, Users } from 'lucide-react';
+import { Copy, Pencil, Users } from 'lucide-react';
 import JobController from '@/actions/App/Http/Controllers/Organization/JobController';
 import { PageHeader } from '@/components/bs/page-header';
 import { StatusChip } from '@/components/bs/status-chip';
@@ -12,7 +12,7 @@ import org from '@/routes/org';
 type Props = {
     job: App.Domain.Jobs.Data.JobTruthCardData;
     lastDecision: App.Domain.Verification.Data.ReviewDecisionData | null;
-    abilities: { update: boolean; submit: boolean; manage: boolean };
+    abilities: { update: boolean; submit: boolean; manage: boolean; duplicate: boolean };
     /** Number of applications, or null when the member cannot see applicants. */
     applicants: number | null;
 };
@@ -82,9 +82,7 @@ export default function OrgJob({ job, lastDecision, abilities, applicants }: Pro
                         )}
                         {abilities.update && (
                             <Button asChild variant="outline" className="min-h-11">
-                                <Link
-                                    href={JobController.edit.url([job.publicCode, 'requirement'])}
-                                >
+                                <Link href={JobController.edit.url([job.publicCode, 'basics'])}>
                                     <Pencil aria-hidden className="size-4" />
                                     {t('jobs.edit')}
                                 </Link>
@@ -121,6 +119,24 @@ export default function OrgJob({ job, lastDecision, abilities, applicants }: Pro
                                     )}
                                 </Form>
                             ))}
+                        {abilities.duplicate && (
+                            <Form {...JobController.duplicate.form(job.publicCode)}>
+                                {({ processing, errors }) => (
+                                    <>
+                                        <Button
+                                            type="submit"
+                                            variant="outline"
+                                            className="min-h-11 w-full"
+                                            disabled={processing}
+                                        >
+                                            <Copy aria-hidden className="size-4" />
+                                            {t('jobs.duplicate')}
+                                        </Button>
+                                        <InputError message={errors.job} />
+                                    </>
+                                )}
+                            </Form>
+                        )}
                         {status === 'published' && (
                             <p className="text-xs text-muted">{t('jobs.material_change_note')}</p>
                         )}
