@@ -237,6 +237,7 @@ export default function Applicants({
                     caption={t('applicants.title', { job: job.title })}
                     columns={columns}
                     rows={applicants.data}
+                    startIndex={applicants.from ?? 1}
                     rowKey={(row) => row.id}
                     empty={
                         <EmptyState

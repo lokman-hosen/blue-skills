@@ -63,6 +63,7 @@ export default function BillingOrganizations({ organizations, q }: Props) {
                 <DataTable<Row>
                     caption={t('billing.tab.organizations')}
                     rows={organizations.data}
+                    startIndex={organizations.from ?? 1}
                     rowKey={(row) => row.id}
                     empty={
                         <EmptyState

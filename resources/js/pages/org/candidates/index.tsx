@@ -196,6 +196,7 @@ export default function Candidates({ candidates, jobs, stages, filters }: Props)
                             caption={t('nav.candidates')}
                             columns={columns}
                             rows={candidates.data}
+                            startIndex={candidates.from ?? 1}
                             rowKey={(row) => row.applicant.id}
                             empty={
                                 <EmptyState

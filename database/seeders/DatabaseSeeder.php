@@ -23,10 +23,15 @@ class DatabaseSeeder extends Seeder
             TaxonomySeeder::class,
             RolesAndPermissionsSeeder::class,
             SuperuserSeeder::class,
+
+            // job seeder
+            SampleWorldSeeder::class,
+            CrmAndBillingSampleSeeder::class,
+            EuWorkPermitJobsSeeder::class
         ]);
 
-        if (! app()->isProduction()) {
-            $this->call([SampleWorldSeeder::class, CrmAndBillingSampleSeeder::class]);
-        }
+//        if (! app()->isProduction()) {
+//            $this->call([SampleWorldSeeder::class, CrmAndBillingSampleSeeder::class, EuWorkPermitJobsSeeder::class]);
+//        }
     }
 }

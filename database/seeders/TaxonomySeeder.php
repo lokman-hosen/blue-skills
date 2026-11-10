@@ -36,19 +36,24 @@ class TaxonomySeeder extends Seeder
             'Carpenter' => [[], []],
             'Painter' => [[], []],
             'Steel fixer' => [[], []],
+            'Construction worker' => [['Construction helper'], ['Plastering', 'Paving', 'Facade works', 'Interior finishing']],
         ],
         'Logistics' => [
             'Warehouse operative' => [['Forklift operator'], ['Picking & packing', 'Forklift (UDT)', 'Scanner use']],
         ],
         'Manufacturing' => [
             'Welder' => [['MIG/MAG', 'TIG'], ['Fillet welds', 'Blueprint reading', 'MIG/MAG 135/136']],
+            'Production worker' => [['Machine operator', 'Packer'], ['Machine operation', 'Product packing', 'Quality checking']],
+            'Food processing worker' => [['Poultry processing'], ['Knife work', 'Production line work']],
+            'Steel structure assembler' => [[], ['Steel assembly', 'Measuring instruments']],
         ],
         'Transport' => [
             'Driver' => [['Heavy vehicle driver', 'Light vehicle driver'], []],
         ],
         // Industries from the job posting prototype (D-117).
         'Agriculture' => [
-            'Farm worker' => [['Greenhouse worker', 'Fruit picker'], ['Harvesting', 'Greenhouse care']],
+            'Farm worker' => [['Greenhouse worker', 'Fruit picker'], ['Harvesting', 'Greenhouse care', 'Orchard care']],
+            'Forestry worker' => [[], ['Tree planting', 'Forest clearing']],
         ],
         'Hospitality' => [
             'Cook' => [['Commis cook'], ['Food hygiene', 'Food preparation']],

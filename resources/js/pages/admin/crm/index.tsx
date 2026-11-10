@@ -167,6 +167,7 @@ export default function Leads({ leads, view, filters, campaigns, countries }: Pr
                         <DataTable<LeadRow>
                             caption={t('crm.title')}
                             rows={leads.data}
+                            startIndex={leads.from ?? 1}
                             rowKey={(row) => row.id}
                             empty={
                                 <EmptyState

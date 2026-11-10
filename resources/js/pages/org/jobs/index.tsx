@@ -51,6 +51,7 @@ export default function OrgJobs({ jobs, canCreate, needsMandate }: Props) {
                 <DataTable
                     caption={t('jobs.title')}
                     rows={jobs.data}
+                    startIndex={jobs.from ?? 1}
                     rowKey={(row) => row.code}
                     empty={
                         <EmptyState

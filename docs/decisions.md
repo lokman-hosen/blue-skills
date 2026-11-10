@@ -1702,3 +1702,31 @@ colour) and the appearance tabs use design tokens instead of the kit's neutral g
   the "Existing jobs" point of D-117; no installation holds jobs saved before D-117.
 - Local databases need `migrate:fresh --seed` once. After the first real deployment the rule
   "never change a merged migration" applies again.
+
+### D-120 · Sample jobs from the EU Work Permit job list
+
+- **Date:** 2026-11-10. Owner asked for the twelve jobs of "EU Work Permit Program — Job Options
+  List" (updated Oct 2026) as sample jobs of ABC Contracting (`owner@abc-contracting.test`).
+- `EuWorkPermitJobsSeeder` runs after the sample world (never in production), posts them as
+  Published with codes `PL-WE-2601` … `AL-HO-2612`, and skips a code that already exists.
+- **Only what the list states is stored (product rule 4).** No deadline, visa payer or permit payer;
+  worker fees are "apply" only on the five jobs where the list names a worker-paid cost (deposits,
+  medical, workwear, visa service fee) and unknown on the rest. The list has no vacancy count, so
+  headcount is a placeholder of 10. Where the list gives a range for accommodation the lower amount
+  is stored and the range is in the details; the forestry job's CZK 120 / day is stored as
+  CZK 3,600 / month.
+- **Left out on purpose:** "Preferred nationalities" and men-only / women-only wording. Age limits
+  are kept because the posting has a field for them. Owner to decide whether these may be shown.
+- **Taxonomy:** new trades Construction worker, Production worker, Food processing worker, Steel
+  structure assembler and Forestry worker, with a few skills each, so every job has a real trade.
+
+### D-121 · Serial number column on every table
+
+- **Date:** 2026-11-10. Owner asked for a serial number as the first column of the jobs table and
+  of every other table, so rows are easy to count.
+- `DataTable` draws it itself ("#" header, `table.serial` for screen readers), so every list that
+  uses the component has it; on phones the number sits before the card title. Paginated lists pass
+  `startIndex={page.from ?? 1}` so numbering carries on across pages. `serial={false}` turns it off.
+- The number is a position in the current list, not an id: it changes with sorting and filters.
+- Not numbered: the invoice document's line items and the daily-visitors mini table, which are not
+  `DataTable` lists.

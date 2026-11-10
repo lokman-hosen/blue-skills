@@ -1,6 +1,8 @@
 export type Paginated<T> = {
     data: T[];
     current_page: number;
+    /** Number of the first row on this page; null when the page is empty. */
+    from: number | null;
     last_page: number;
     total: number;
     prev_page_url: string | null;

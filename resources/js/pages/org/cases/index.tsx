@@ -237,6 +237,7 @@ export default function OrgCases({ cases, counts, filters }: Props) {
                     caption={t('nav.mobility')}
                     columns={columns}
                     rows={cases.data}
+                    startIndex={cases.from ?? 1}
                     rowKey={(row) => row.id}
                     empty={
                         <EmptyState

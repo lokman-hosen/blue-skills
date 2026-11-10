@@ -27,6 +27,7 @@ export default function EvidenceQueue({ items }: { items: Paginated<Item> }) {
                 <DataTable<Item>
                     caption={t('admin.evidence.title')}
                     rows={items.data}
+                    startIndex={items.from ?? 1}
                     rowKey={(row) => row.id}
                     empty={
                         <EmptyState

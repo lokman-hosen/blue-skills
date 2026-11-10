@@ -62,6 +62,7 @@ export default function TrustReports({ reports, state, dismissReasons, prioritie
                 <DataTable<ReportRow>
                     caption={t('trust.reports.title')}
                     rows={reports.data}
+                    startIndex={reports.from ?? 1}
                     rowKey={(row) => row.id}
                     empty={
                         <EmptyState

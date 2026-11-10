@@ -220,6 +220,7 @@
     "skillshow.moderation.pending": "In moderation",
     "skillshow.moderation.approved": "Published",
     "skillshow.moderation.rejected": "Not approved",
+    "table.serial": "No.",
     "table.empty": "Nothing to show yet.",
     "state.error.title": "Something went wrong",
     "state.error.body": "We couldn't load this. Check your connection, then try again.",

@@ -451,6 +451,7 @@ function ProjectApplicants({
                 caption={t('projects.applicants')}
                 columns={columns}
                 rows={applicants.data}
+                startIndex={applicants.from ?? 1}
                 rowKey={(row) => row.id}
                 empty={
                     <EmptyState

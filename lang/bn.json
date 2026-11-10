@@ -220,6 +220,7 @@
     "skillshow.moderation.pending": "মডারেশনে আছে",
     "skillshow.moderation.approved": "প্রকাশিত",
     "skillshow.moderation.rejected": "অনুমোদিত হয়নি",
+    "table.serial": "ক্রমিক",
     "table.empty": "এখনও দেখানোর কিছু নেই।",
     "state.error.title": "কিছু একটা সমস্যা হয়েছে",
     "state.error.body": "এটি লোড করা যায়নি। আপনার সংযোগ দেখে আবার চেষ্টা করুন।",

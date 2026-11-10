@@ -41,6 +41,7 @@ export default function TrustCases({ cases, state }: Props) {
                 <DataTable<CaseRow>
                     caption={t('trust.cases.title')}
                     rows={cases.data}
+                    startIndex={cases.from ?? 1}
                     rowKey={(row) => row.id}
                     empty={
                         <EmptyState

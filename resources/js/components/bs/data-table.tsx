@@ -25,6 +25,13 @@ type DataTableProps<Row> = {
     error?: { message?: string; onRetry?: () => void } | null;
     empty?: ReactNode;
     className?: string;
+    /**
+     * Number of the first row. Paginated lists pass the paginator's `from`, so numbering
+     * carries on from the previous page.
+     */
+    startIndex?: number;
+    /** Set to false to leave out the serial number column. */
+    serial?: boolean;
 };
 
 /**
@@ -40,8 +47,10 @@ export function DataTable<Row>({
     error = null,
     empty,
     className,
+    startIndex = 1,
+    serial = true,
 }: DataTableProps<Row>) {
-    const { t } = useTranslation();
+    const { t, formatNumber } = useTranslation();
     const primary = columns.find((column) => column.primary) ?? columns[0];
     const secondary = columns.filter((column) => column !== primary);
 
@@ -62,6 +71,13 @@ export function DataTable<Row>({
                     <caption className="sr-only">{caption}</caption>
                     <thead className="text-muted">
                         <tr>
+                            {serial && (
+                                <th scope="col" className="w-px py-2.5 ps-4 text-start font-medium">
+                                    <abbr title={t('table.serial')} className="no-underline">
+                                        #
+                                    </abbr>
+                                </th>
+                            )}
                             {columns.map((column) => (
                                 <th
                                     key={column.key}
@@ -80,6 +96,7 @@ export function DataTable<Row>({
                         {loading
                             ? Array.from({ length: 3 }, (_, index) => (
                                   <tr key={index} className="border-t border-line">
+                                      {serial && <td className="py-3 ps-4" />}
                                       {columns.map((column) => (
                                           <td key={column.key} className="px-4 py-3">
                                               <Skeleton className="h-4 w-3/4" />
@@ -87,8 +104,13 @@ export function DataTable<Row>({
                                       ))}
                                   </tr>
                               ))
-                            : rows.map((row) => (
+                            : rows.map((row, index) => (
                                   <tr key={rowKey(row)} className="border-t border-line align-top">
+                                      {serial && (
+                                          <td className="py-2.5 ps-4 whitespace-nowrap text-muted tnum">
+                                              {formatNumber(startIndex + index)}
+                                          </td>
+                                      )}
                                       {columns.map((column) => (
                                           <td
                                               key={column.key}
@@ -115,12 +137,20 @@ export function DataTable<Row>({
                               <Skeleton className="h-3 w-3/4" />
                           </li>
                       ))
-                    : rows.map((row) => (
+                    : rows.map((row, index) => (
                           <li
                               key={rowKey(row)}
                               className="rounded-xl border border-line bg-surface p-4"
                           >
-                              <div className="text-sm font-semibold">{primary.cell(row)}</div>
+                              <div className="flex items-baseline gap-2 text-sm font-semibold">
+                                  {serial && (
+                                      <span className="shrink-0 font-normal text-muted tnum">
+                                          <span className="sr-only">{t('table.serial')} </span>
+                                          {formatNumber(startIndex + index)}.
+                                      </span>
+                                  )}
+                                  <div className="min-w-0 flex-1">{primary.cell(row)}</div>
+                              </div>
                               <dl className="mt-2 flex flex-col gap-1.5">
                                   {secondary.map((column) => (
                                       <div
