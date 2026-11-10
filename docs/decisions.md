@@ -1625,3 +1625,42 @@ colour) and the appearance tabs use design tokens instead of the kit's neutral g
   preview (counts by trade/country, no names or photos) — then add a public route + controller and
   set `enabled: true` with its `href`.
 - Safety stays a "Soon" item; it was out of scope for this change.
+
+### D-117 · Universal job posting (job posting prototype)
+- **Owner asked (2026-11-10)** to align Post a Job with `BLUESKILLS_Job_Posting_Prototype.html`. The
+  prototype has no validation and says the live version keeps itemised fees, permit payers, the
+  mandate, airfare and medical, so it **extends** the existing job object; nothing was removed.
+- **Steps** are now `basics → pay → requirements → apply → preview` in the prototype's order. The
+  old step slugs (`requirement`, `terms`, `skills`, `mobility`) redirect with 301 (`JobWizard::LEGACY_STEPS`).
+- **New fields** (all nullable; null still reads "Not disclosed"): employment type, maximum pay
+  (`salary_amount_minor` stays the minimum, so offers still can't go below it), pay basis
+  (net/gross), working hours / days / shift pattern as option lists with an "Other" text,
+  accommodation cost per month (in the salary currency, only when accommodation is Paid),
+  insurance (a sixth benefit next to medical), experience level (sets `min_experience_years` for
+  matching; "None" and "Other" add no experience requirement), education, age range, other skills
+  (free text, not matched), duties, contract duration (sets `contract_months`), a worker-fee
+  declaration, apply method, an external apply URL and additional details / original advert.
+- **Owner's answers to the open questions:** "Posting as" is shown read-only from the
+  organization type, no Government organization type yet. The employer stays the verified
+  organization (or the mandate's employer), not a typed name. Benefits read Free / Paid /
+  Not provided / Unknown; stored values unchanged and Allowance kept. Age is shown on the Truth
+  Card only, never filtered or matched. Applying always goes through BLUESKILLS (snapshot and
+  consent, rules 6–7); "Both" adds the employer's page as a secondary link, external-only is not
+  offered. Skills stay on the taxonomy with a free-text "Other skills"; languages stay a list with
+  Basic / Communicative / Fluent / Other levels. Industry is the trade's sector and narrows the trade
+  list; it is not stored. Duplicate is added. Today's required fields and limits stay.
+- **Fee rule (product rule 4):** "Fees apply" needs at least one worker-paid cost item; "None"
+  allows no worker-paid item, visa or permit. The wizard checks the same rules before sending.
+- **Material fields** now include every new pay/condition field plus apply method and URL; duties,
+  education, age and skills are not material.
+- **Disclosure keys:** `working_hours`, `shift_pattern`, `contract_length` and `contract_type` now
+  point at the new fields; `insurance`, `pay_basis` and `employment_type` are new keys staff can
+  require per corridor.
+- **Existing jobs:** `2026_11_10_100100_fill_universal_posting_fields_from_existing_jobs` maps the
+  numeric hours, days, contract and experience to options; values that fit none become "Other" with
+  the old value as text. Worker fees become "apply" only when a worker-paid cost already exists.
+  `hours_per_day` and `days_per_week` are no longer edited (saving the pay step clears them) and will
+  be dropped in a later release.
+- **Currencies** come from `config('blueskills.job_currencies')` plus each country's own, so EUR/USD
+  work without a country. New destinations MY, RS, LT, AL and industries Agriculture, Hospitality,
+  Healthcare are seeded for new installs; existing installs add them in Admin › Config / Taxonomy.

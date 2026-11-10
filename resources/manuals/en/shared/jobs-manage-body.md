@@ -12,10 +12,11 @@
 
 1. Click **Post a job**.
 2. Fill in each step and click **Save and continue**:
-   1. **Requirement:** **Job title** (for example "Building Electrician"), the trade, **Openings** (1 to 10,000), the **Destination country**, the **City**, and **Joining from** and **Joining by** dates.
-   2. **Skills:** **Required skills** (up to 15), **Minimum years of experience** and up to 5 **Language requirements**.
-   3. **Employment terms:** **Salary** with currency and period, **Hours per day**, **Days per week**, **Overtime terms** and **Contract length (months)**.
-   4. **Mobility & costs:** accommodation, food, transport, medical and airfare (provided, allowance, deducted from pay or not provided), **Work permit paid by**, **Visa paid by**, the **Application deadline**, and **Costs and who pays**. Click **Add a cost** for each cost, even the ones the employer pays.
+   1. **Job basics:** **Posting as** and the **Actual employer** are shown for you. Fill in the **Job title** (for example "Building Electrician"), the **Destination country** and **City**, **Openings** (1 to 10,000), the **Industry** (it narrows the trade list), the **Occupation**, the **Employment type** (full-time, part-time, seasonal or fixed-term), and **Joining from** and **Joining by** dates.
+   2. **Pay & benefits:** **Currency**, **Pay period** (hour, day, week, month or year), **Minimum pay** and **Maximum pay** (leave the maximum empty for a fixed amount), **Pay basis** (net or gross), **Hours**, **Days**, **Shifts** and **Overtime terms**. For accommodation, meals, transport, insurance, medical care and airfare choose **Free**, **Paid by the worker**, **Not provided**, **Allowance** or **Unknown**. When the worker pays for accommodation, enter the **Accommodation cost / month**.
+   3. **Requirements:** **Experience**, **Education**, up to 5 **Language requirements** (Basic, Communicative, Fluent or your own words), **Age** (shown to workers, never used to filter them), **Required skills** (up to 15), **Other skills** and **Job duties / requirements** in your own words.
+   4. **Visa & apply:** who pays the **Visa** and the **Work permit**, the **Contract duration**, **Worker-paid recruitment fees** (None, Fees apply or Unknown), **Costs and who pays**, **Apply via**, the **Closing date** and **Additional details / original advertisement**. Click **Add a cost** for each cost, even the ones the employer pays. If you choose **Fees apply**, list each fee the worker pays. If you choose **BLUESKILLS and the employer's website**, enter the web address; workers still apply on BLUESKILLS and see your page as a second option.
+   When a list has **Other**, describe it in your own words in the box that appears.
 3. On **Preview & submit**, read **What workers will see**: the Job Truth Card exactly as workers see it.
 4. If BLUESKILLS lists **Fix these before submitting**, fix each item first.
 5. Click **Submit for review**. You see **Sent for review.** You are told the outcome by notification and email.
@@ -27,13 +28,17 @@ Rules to know:
 - Your organization must be verified by BLUESKILLS before a job can be submitted. You can still write drafts.
 - Dates can't be in the past.
 
+### Post several positions
+
+Hiring for more than one position from the same advertisement? Save the first job, open it and click **Duplicate**. You get a new draft with the same details (not its applications or review history). Change what differs, for example the title, openings or pay, and submit it.
+
 ### Edit a job
 
 1. Open the job and click **Edit job**.
 2. Change what you need and click **Save and continue** on each step.
 3. On **Preview & submit**, click **Submit for review** if the job needs to be checked again.
 
-You can't edit a job while it is being reviewed. If you change the pay, the employer, the worker costs or the conditions of a live job, it goes back to review and is hidden from workers until it is approved. Workers who already applied are told and asked to read the Truth Card again.
+You can't edit a job while it is being reviewed. If you change the pay, the employer, the worker costs, the conditions (hours, shifts, contract, benefits) or how workers apply on a live job, it goes back to review and is hidden from workers until it is approved. Workers who already applied are told and asked to read the Truth Card again.
 
 ### Pause, resume, close or archive a job
 

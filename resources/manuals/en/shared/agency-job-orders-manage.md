@@ -8,10 +8,10 @@
 
 You need a verified mandate from the employer (see Mandates) and a valid licence for the destination (see Licence). Without one you see **You need a verified mandate to post jobs**.
 
-When you post a job, the **Requirement** step also asks for the **Mandate**. The job must stay inside that mandate:
+When you post a job, the **Job basics** step also asks for the **Mandate**. The job must stay inside that mandate:
 
 - the trade and destination must be ones the mandate covers;
-- the openings can't be more than the places left on the mandate;
+- the openings can't be more than the places left on the mandate (this also applies when you **Duplicate** a job);
 - the mandate must still be valid, and your licence must cover the destination.
 
 If a mandate ends, is revoked, or your licence stops covering the destination, its live jobs are paused automatically, usually that night. Get a new mandate, then click **Resume**.
