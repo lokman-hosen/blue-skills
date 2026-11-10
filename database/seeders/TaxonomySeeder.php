@@ -46,6 +46,17 @@ class TaxonomySeeder extends Seeder
         'Transport' => [
             'Driver' => [['Heavy vehicle driver', 'Light vehicle driver'], []],
         ],
+        // Industries from the job posting prototype (D-117).
+        'Agriculture' => [
+            'Farm worker' => [['Greenhouse worker', 'Fruit picker'], ['Harvesting', 'Greenhouse care']],
+        ],
+        'Hospitality' => [
+            'Cook' => [['Commis cook'], ['Food hygiene', 'Food preparation']],
+            'Housekeeping attendant' => [[], ['Room cleaning', 'Laundry']],
+        ],
+        'Healthcare' => [
+            'Caregiver' => [['Elderly care'], ['Patient handling', 'First aid']],
+        ],
     ];
 
     /**

@@ -4,9 +4,20 @@ namespace App\Domain\Jobs\Models;
 
 use App\Domain\Applications\Models\Application;
 use App\Domain\Config\Models\Country;
+use App\Domain\Jobs\Enums\AgeRange;
+use App\Domain\Jobs\Enums\ApplyMethod;
 use App\Domain\Jobs\Enums\BenefitProvision;
+use App\Domain\Jobs\Enums\ContractDuration;
 use App\Domain\Jobs\Enums\CostPayer;
+use App\Domain\Jobs\Enums\EducationLevel;
+use App\Domain\Jobs\Enums\EmploymentType;
+use App\Domain\Jobs\Enums\ExperienceLevel;
+use App\Domain\Jobs\Enums\SalaryBasis;
 use App\Domain\Jobs\Enums\SalaryPeriod;
+use App\Domain\Jobs\Enums\ShiftPattern;
+use App\Domain\Jobs\Enums\WorkerFees;
+use App\Domain\Jobs\Enums\WorkingDays;
+use App\Domain\Jobs\Enums\WorkingHours;
 use App\Domain\Jobs\States\Job\Draft;
 use App\Domain\Jobs\States\Job\JobState;
 use App\Domain\Jobs\States\Job\MoreInformationRequested;
@@ -52,6 +63,12 @@ use Spatie\ModelStates\HasStates;
     'medical', 'medical_details', 'airfare', 'airfare_details', 'other_benefits',
     'permit_payer', 'visa_payer', 'joining_from', 'joining_to', 'deadline', 'status', 'published_at',
     'submitted_at', 'material_change_at',
+    // Universal job posting (D-117).
+    'employment_type', 'salary_max_amount_minor', 'salary_basis', 'working_hours', 'working_hours_other',
+    'working_days', 'working_days_other', 'shift_pattern', 'shift_pattern_other', 'accommodation_cost_amount_minor',
+    'insurance', 'insurance_details', 'experience_level', 'experience_other', 'education_level', 'education_other',
+    'age_range', 'age_other', 'other_skills', 'duties', 'contract_duration', 'contract_other', 'worker_fees',
+    'apply_method', 'apply_url', 'additional_details',
 ])]
 #[UseFactory(JobPostingFactory::class)]
 class JobPosting extends Model
@@ -59,19 +76,28 @@ class JobPosting extends Model
     /** @use HasFactory<JobPostingFactory> */
     use HasFactory, HasStates, HasUlids, LogsStatusChanges, SoftDeletes;
 
-    public const BENEFITS = ['accommodation', 'food', 'transport', 'medical', 'airfare'];
+    /**
+     * Matches the column default, so a new job applies through BLUESKILLS before it is saved.
+     *
+     * @var array<string, mixed>
+     */
+    protected $attributes = ['apply_method' => 'blueskills'];
+
+    public const BENEFITS = ['accommodation', 'food', 'transport', 'insurance', 'medical', 'airfare'];
 
     /**
-     * Changing any of these on a live job sends it back to review (product rule 5). Worker
-     * costs are compared separately.
+     * Changing any of these on a live job sends it back to review (product rule 5): pay,
+     * employer, conditions and how workers apply. Worker costs are compared separately.
      */
     public const MATERIAL_FIELDS = [
-        'employer_organization_id', 'destination_country_code', 'destination_city',
-        'salary_amount_minor', 'salary_currency', 'salary_period', 'hours_per_day', 'days_per_week',
-        'overtime_terms', 'contract_months',
-        'accommodation', 'accommodation_details', 'food', 'food_details', 'transport', 'transport_details',
+        'employer_organization_id', 'destination_country_code', 'destination_city', 'employment_type',
+        'salary_amount_minor', 'salary_max_amount_minor', 'salary_currency', 'salary_period', 'salary_basis',
+        'working_hours', 'working_hours_other', 'working_days', 'working_days_other',
+        'shift_pattern', 'shift_pattern_other', 'overtime_terms', 'contract_duration', 'contract_other', 'contract_months',
+        'accommodation', 'accommodation_details', 'accommodation_cost_amount_minor', 'food', 'food_details',
+        'transport', 'transport_details', 'insurance', 'insurance_details',
         'medical', 'medical_details', 'airfare', 'airfare_details', 'other_benefits',
-        'permit_payer', 'visa_payer',
+        'permit_payer', 'visa_payer', 'worker_fees', 'apply_method', 'apply_url',
     ];
 
     /**
@@ -93,6 +119,20 @@ class JobPosting extends Model
             'transport' => BenefitProvision::class,
             'medical' => BenefitProvision::class,
             'airfare' => BenefitProvision::class,
+            'insurance' => BenefitProvision::class,
+            'employment_type' => EmploymentType::class,
+            'salary_max_amount_minor' => 'integer',
+            'salary_basis' => SalaryBasis::class,
+            'working_hours' => WorkingHours::class,
+            'working_days' => WorkingDays::class,
+            'shift_pattern' => ShiftPattern::class,
+            'accommodation_cost_amount_minor' => 'integer',
+            'experience_level' => ExperienceLevel::class,
+            'education_level' => EducationLevel::class,
+            'age_range' => AgeRange::class,
+            'contract_duration' => ContractDuration::class,
+            'worker_fees' => WorkerFees::class,
+            'apply_method' => ApplyMethod::class,
             'permit_payer' => CostPayer::class,
             'visa_payer' => CostPayer::class,
             'joining_from' => 'date',

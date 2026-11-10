@@ -41,11 +41,22 @@ use App\Domain\Institute\Models\Course;
 use App\Domain\Institute\Models\TalentPool;
 use App\Domain\Institute\Models\TradeAssessment;
 use App\Domain\Institute\Models\TrainingAttestation;
+use App\Domain\Jobs\Enums\AgeRange;
+use App\Domain\Jobs\Enums\ApplyMethod;
 use App\Domain\Jobs\Enums\BenefitProvision;
+use App\Domain\Jobs\Enums\ContractDuration;
 use App\Domain\Jobs\Enums\CostPayer;
+use App\Domain\Jobs\Enums\EducationLevel;
+use App\Domain\Jobs\Enums\EmploymentType;
+use App\Domain\Jobs\Enums\ExperienceLevel;
 use App\Domain\Jobs\Enums\JobCostCategory;
 use App\Domain\Jobs\Enums\MandateStatus;
+use App\Domain\Jobs\Enums\SalaryBasis;
 use App\Domain\Jobs\Enums\SalaryPeriod;
+use App\Domain\Jobs\Enums\ShiftPattern;
+use App\Domain\Jobs\Enums\WorkerFees;
+use App\Domain\Jobs\Enums\WorkingDays;
+use App\Domain\Jobs\Enums\WorkingHours;
 use App\Domain\Jobs\Models\JobMandate;
 use App\Domain\Jobs\Models\JobPosting;
 use App\Domain\Jobs\States\Job\Draft;
@@ -292,6 +303,11 @@ class SampleWorldSeeder extends Seeder
             'title' => 'Warehouse Professional',
             'occupation' => 'warehouse-operative',
             'min_experience_years' => 1,
+            'salary_max_amount_minor' => 5800_00,
+            'salary_basis' => SalaryBasis::Gross,
+            'shift_pattern' => ShiftPattern::Rotating,
+            'age_range' => AgeRange::From18To45,
+            'duties' => 'Picking, packing and loading in a high-bay warehouse. Forklift licence (UDT) is an advantage.',
             'language_requirements' => [['code' => 'en', 'level' => 'basic']],
             'destination_country_code' => 'PL',
             'destination_city' => 'Poznań',
@@ -334,7 +350,10 @@ class SampleWorldSeeder extends Seeder
             'days_per_week' => 5,
             'overtime_terms' => 'Paid at 1.25× per Japanese labour law',
             'contract_months' => 36,
-            'accommodation' => BenefitProvision::Deducted, 'accommodation_details' => 'Company dormitory · JPY 25,000 / month deducted',
+            'accommodation' => BenefitProvision::Deducted, 'accommodation_details' => 'Company dormitory',
+            'accommodation_cost_amount_minor' => 25000,
+            'education_level' => EducationLevel::Diploma,
+            'shift_pattern' => ShiftPattern::Day,
             'food' => BenefitProvision::NotProvided,
             'transport' => BenefitProvision::Allowance, 'transport_details' => 'Commuting allowance',
             'medical' => BenefitProvision::Provided, 'medical_details' => 'Japanese social insurance',
@@ -386,6 +405,18 @@ class SampleWorldSeeder extends Seeder
             'title' => 'MIG/MAG Welder',
             'occupation' => 'welder',
             'min_experience_years' => 3,
+            // The job posting prototype's own example (D-117): range, basis, shifts, paid hostel,
+            // free-text duties and the employer's own careers page as a second way to apply.
+            'salary_max_amount_minor' => 46000_00,
+            'salary_basis' => SalaryBasis::Gross,
+            'shift_pattern' => ShiftPattern::Rotating,
+            'accommodation_cost_amount_minor' => 5000_00,
+            'insurance' => BenefitProvision::Provided, 'insurance_details' => 'Accident insurance from day one',
+            'education_level' => EducationLevel::Diploma,
+            'other_skills' => 'Reading technical drawings',
+            'duties' => 'MIG/MAG welding of steel structures. Factory welding test required.',
+            'apply_method' => ApplyMethod::Both,
+            'apply_url' => 'https://careers.moravia.test/welders',
             'language_requirements' => [['code' => 'en', 'level' => 'basic']],
             'destination_country_code' => 'CZ',
             'destination_city' => 'Ostrava',
@@ -1350,9 +1381,9 @@ class SampleWorldSeeder extends Seeder
         unset($attributes['occupation']);
 
         $job = JobPosting::query()->create([
-            ...$attributes,
+            ...self::universalFields($attributes, $costs),
             'occupation_id' => $occupation->id,
-            'salary_period' => SalaryPeriod::Month,
+            'salary_period' => $attributes['salary_period'] ?? SalaryPeriod::Month,
         ]);
 
         foreach ($skillSlugs as $slug) {
@@ -1364,6 +1395,46 @@ class SampleWorldSeeder extends Seeder
         }
 
         return $job;
+    }
+
+    /**
+     * Sample jobs are written with the older numeric fields; fill the universal posting fields
+     * (D-117) the same way the data migration does, so seeded jobs look like wizard-made ones.
+     *
+     * @param  array<string, mixed>  $attributes
+     * @param  list<array{0: JobCostCategory, 1: string, 2: int, 3: string, 4: CostPayer}>  $costs
+     * @return array<string, mixed>
+     */
+    private static function universalFields(array $attributes, array $costs): array
+    {
+        $hours = $attributes['hours_per_day'] ?? null;
+        $days = $attributes['days_per_week'] ?? null;
+        $months = $attributes['contract_months'] ?? null;
+        $years = $attributes['min_experience_years'] ?? null;
+        $workerPays = collect($costs)->contains(fn (array $cost) => $cost[4] === CostPayer::Worker)
+            || in_array(CostPayer::Worker, [$attributes['visa_payer'] ?? null, $attributes['permit_payer'] ?? null], true);
+        unset($attributes['hours_per_day'], $attributes['days_per_week']);
+
+        return [
+            'employment_type' => EmploymentType::FullTime,
+            'working_hours' => match (true) {
+                $hours === null => null,
+                $hours <= 8 => WorkingHours::Day6To8,
+                $hours <= 10 => WorkingHours::Day8To10,
+                default => WorkingHours::Day10To12,
+            },
+            'working_days' => match ($days) {
+                null => null,
+                5 => WorkingDays::Five,
+                6 => WorkingDays::Six,
+                default => WorkingDays::Rotating,
+            },
+            'contract_duration' => $months !== null ? (ContractDuration::fromMonths($months) ?? ContractDuration::Other) : null,
+            'contract_other' => $months !== null && ContractDuration::fromMonths($months) === null ? "{$months} months" : null,
+            'experience_level' => $years !== null ? ExperienceLevel::fromYears($years) : null,
+            'worker_fees' => $workerPays ? WorkerFees::Apply : WorkerFees::None,
+            ...$attributes,
+        ];
     }
 
     private function skillId(string $slug): string

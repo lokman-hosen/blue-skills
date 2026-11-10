@@ -27,6 +27,11 @@ class CountrySeeder extends Seeder
             ['PL', 'Poland', 'PLN', '+48', false, true],
             ['JP', 'Japan', 'JPY', '+81', false, true],
             ['CZ', 'Czechia', 'CZK', '+420', false, true],
+            // Corridors from the job posting prototype (D-117).
+            ['MY', 'Malaysia', 'MYR', '+60', false, true],
+            ['RS', 'Serbia', 'RSD', '+381', false, true],
+            ['LT', 'Lithuania', 'EUR', '+370', false, true],
+            ['AL', 'Albania', 'ALL', '+355', false, true],
         ];
 
         foreach ($countries as [$code, $name, $currency, $dialCode, $source, $destination]) {

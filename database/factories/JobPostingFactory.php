@@ -3,8 +3,13 @@
 namespace Database\Factories;
 
 use App\Domain\Jobs\Enums\BenefitProvision;
+use App\Domain\Jobs\Enums\ContractDuration;
 use App\Domain\Jobs\Enums\CostPayer;
+use App\Domain\Jobs\Enums\EmploymentType;
+use App\Domain\Jobs\Enums\SalaryBasis;
 use App\Domain\Jobs\Enums\SalaryPeriod;
+use App\Domain\Jobs\Enums\WorkingDays;
+use App\Domain\Jobs\Enums\WorkingHours;
 use App\Domain\Jobs\Models\JobPosting;
 use App\Domain\Jobs\States\Job\Draft;
 use App\Domain\Jobs\States\Job\Published;
@@ -35,8 +40,11 @@ class JobPostingFactory extends Factory
             'salary_amount_minor' => fake()->numberBetween(1500, 5000) * 100,
             'salary_currency' => 'AED',
             'salary_period' => SalaryPeriod::Month,
-            'hours_per_day' => 8,
-            'days_per_week' => 6,
+            'employment_type' => EmploymentType::FullTime,
+            'salary_basis' => SalaryBasis::Gross,
+            'working_hours' => WorkingHours::Day6To8,
+            'working_days' => WorkingDays::Six,
+            'contract_duration' => ContractDuration::Years2,
             'contract_months' => 24,
             'accommodation' => BenefitProvision::Provided,
             'permit_payer' => CostPayer::Employer,

@@ -65,6 +65,13 @@ return [
     ],
 
     /*
+    | Currencies a job may quote pay and costs in, besides each destination's own currency
+    | (D-117). Staff add destinations in Admin › Config; add a currency here only when a
+    | corridor pays in a third currency (EUR in the Baltics, USD offers).
+    */
+    'job_currencies' => ['AED', 'ALL', 'CZK', 'EUR', 'JPY', 'MYR', 'OMR', 'PLN', 'QAR', 'RSD', 'SAR', 'USD'],
+
+    /*
     | Countries whose numbers can register as workers (dial-code picker on the phone step).
     */
     'worker_phone_countries' => ['BD', 'NP', 'IN', 'PK', 'LK'],

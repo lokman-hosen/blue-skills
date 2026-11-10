@@ -8,6 +8,7 @@ enum SalaryPeriod: string
     case Day = 'day';
     case Week = 'week';
     case Month = 'month';
+    case Year = 'year';
 
     /**
      * English label; translate with __() at the presentation edge.
@@ -19,6 +20,7 @@ enum SalaryPeriod: string
             self::Day => 'Day',
             self::Week => 'Week',
             self::Month => 'Month',
+            self::Year => 'Year',
         };
     }
 }
