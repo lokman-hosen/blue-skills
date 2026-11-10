@@ -29,7 +29,7 @@ Plans are switched off, never deleted, so old invoices keep their plan. Prices a
 ### Create and issue an invoice
 
 1. Open the organization and click **New invoice**. A draft is created.
-2. Click **Add a line**. Enter the description, quantity, unit price and, if it sells credits, **Posting credits per unit (optional)**. Add as many lines as needed. Click **Remove** to delete a line.
+2. Click **Add a line**. Enter the description, quantity, unit price and, if it sells credits, **Posting credits per unit**. Add as many lines as needed. Click **Remove** to delete a line.
 3. Click **Issue invoice** and confirm. It gets its number and due date, can't be changed afterwards, and the organization's billing managers are told.
 
 ### Record a payment

@@ -1664,3 +1664,30 @@ colour) and the appearance tabs use design tokens instead of the kit's neutral g
 - **Currencies** come from `config('blueskills.job_currencies')` plus each country's own, so EUR/USD
   work without a country. New destinations MY, RS, LT, AL and industries Agriculture, Hospitality,
   Healthcare are seeded for new installs; existing installs add them in Admin › Config / Taxonomy.
+
+### D-118 · Required fields show an asterisk; optional fields show nothing
+- **Owner asked (2026-11-10)** for one convention on every form: a red asterisk after the label of a
+  required field, no marker on optional fields, and no "(optional)" text anywhere.
+- **One mechanism:** `Label` (`components/ui/label.tsx`) takes `required` and draws the asterisk
+  (`aria-hidden`, `text-bad`, `ms-0.5`). `RequiredMark` is the same asterisk for a fieldset
+  `<legend>`; checkbox and chip groups, where `aria-required` is not allowed, pass
+  `srLabel={t('common.required')}` so screen readers hear "required" once. `FileUpload`, the job
+  wizard's `Field`/`OptionSelect` and the local `Field` wrappers pass `required` through.
+- **Assistive tech:** required controls get `aria-required`; radio groups get
+  `role="radiogroup" aria-required`. The HTML `required` attribute is **not** added, because
+  forms without `noValidate` would start blocking submission in the browser; inputs that
+  already had it keep it.
+- **What counts as required** comes from the server rules (FormRequests, inline `validate()`,
+  `JobWizard::rules`), not the old label text. Conditional rules show the asterisk only while the
+  condition holds: a note when the reason is "Other", an "Other" description, the interview
+  address in person, the employer's apply link for "Both", paid-accommodation cost, currency and
+  period once an amount is entered, the decline note on a mandate, the upload when no saved scan
+  can be reused.
+- **No asterisk on purpose:** search and filter forms (always optional), the message composer,
+  read-only fields (invite links, an invited email), and the staff review / SkillShow moderation
+  reason, which is needed only for some of the buttons on the same form.
+- The empty choice in three selects now reads "Choose…" (`common.choose`); `common.optional` is
+  gone. "(optional)" and leading "Optional." were removed from en and bn strings and from the
+  label names quoted in the manuals; the manuals' getting-started sections explain the asterisk.
+- `cohorts.roster.label` said "(optional)" although the roster form requires a roster (adding a
+  roster is an optional step, the field is not): it now shows the asterisk.

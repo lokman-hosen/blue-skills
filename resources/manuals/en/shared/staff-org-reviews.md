@@ -18,7 +18,7 @@ Reasons include, for example, a document that can't be read or has expired, deta
 
 During the pilot, organizations need a code to register. Open **Pilot invite codes** from the Verifications page.
 
-1. Under **Issue a code**, enter the **Partner** name, the organization type (or **Any type**), the number of **Uses** (1 to 50) and **Expires on (optional)**.
+1. Under **Issue a code**, enter the **Partner** name, the organization type (or **Any type**), the number of **Uses** (1 to 50) and, if you want, **Expires on**.
 2. Click **Issue code**. Give the code to the partner yourself; BLUESKILLS doesn't send it.
 3. To stop a code, click **Revoke** and confirm. Organizations that already used it keep their registration.
 

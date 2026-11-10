@@ -14,7 +14,7 @@ Choose a period with **From** and **To** and click **Show**. The funnel shows Vi
 2. Enter the **Name** and choose the **Channel** (for example job fair, social media or partner).
 3. Choose the **Country** and the **Partner institute or agency** if there is one.
 4. Choose **Where the link goes**: the sign-up page or job search.
-5. Choose **Starts** and, if you know it, **Ends (optional)**.
+5. Choose **Starts** and, if you know it, **Ends**.
 6. Click **Create campaign**.
 
 The link code is made from the name and never changes, so printed QR codes keep working.

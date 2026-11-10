@@ -8,7 +8,7 @@
 
 1. Click **New project**.
 2. Enter a **Project name**, for example "200 Electricians — Dubai", and the **Target headcount** (at least 1).
-3. Add the **Target date (optional)**, the **Destination** and the **Source countries**.
+3. Add the **Target date** if there is one, the **Destination** and the **Source countries**.
 4. Under **Jobs in this project**, tick the jobs it covers. A job can be in only one project at a time.
 5. Under **Team**, tick the people working on it.
 6. Click **Create project**.

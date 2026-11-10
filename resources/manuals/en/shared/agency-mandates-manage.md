@@ -17,7 +17,7 @@ A mandate can also be **Declined** by the employer, **Rejected** by BLUESKILLS (
 1. Click **Request a mandate**.
 2. Choose the **Employer**. Only employers verified on BLUESKILLS can be chosen.
 3. Choose the **Trades** (1 to 10), the destination and the number of **Workers** (1 to 10,000).
-4. Add **Valid from** (optional) and **Valid until** (a future date).
+4. Add **Valid from** if the mandate starts later, and **Valid until** (a future date).
 5. Upload the **Signed mandate letter**.
 6. Click **Send to the employer**. You see **Mandate request sent to the employer.**
 

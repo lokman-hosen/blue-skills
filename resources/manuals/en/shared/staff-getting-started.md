@@ -2,6 +2,8 @@
 
 You use the BLUESKILLS staff workspace, **BLUESKILLS Operations**, in a web browser. Every staff account must use two-factor authentication. (Two-factor authentication means you need your password and a code from your phone to sign in.)
 
+In every form, a field marked with a red asterisk (*) must be filled in. Fields without one can be left empty.
+
 ### Set up your account
 
 A Superuser invites you by email.

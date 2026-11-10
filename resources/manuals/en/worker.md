@@ -4,6 +4,8 @@ BLUESKILLS helps you find honest overseas jobs. You build a free **Skill Passpor
 
 ## Getting started
 
+In every form, a question marked with a red asterisk (*) must be answered. You can leave the others empty.
+
 ### Create your account
 
 You only need a mobile phone number. There is no password.

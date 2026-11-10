@@ -2,6 +2,8 @@
 
 BLUESKILLS works in a web browser on a computer, tablet or phone. You don't need to install anything.
 
+In every form, a field marked with a red asterisk (*) must be filled in. Fields without one can be left empty.
+
 ### Join your organization
 
 Most people join an organization that is already on BLUESKILLS. Someone in your organization sends you an invitation by email.
