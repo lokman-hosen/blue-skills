@@ -9,6 +9,9 @@ return new class extends Migration
     /**
      * The structured job object behind the Job Truth Card (spec §5). Nullable
      * condition columns mean "Not disclosed"; never default them to a guess.
+     *
+     * Includes the universal job posting fields (D-117). `hours_per_day` and `days_per_week`
+     * are no longer edited and stay until a later release drops them.
      */
     public function up(): void
     {
@@ -37,37 +40,63 @@ return new class extends Migration
             $table->string('public_code', 16)->unique();
             $table->string('title');
             $table->foreignUlid('occupation_id')->constrained()->restrictOnDelete();
+            $table->string('employment_type', 16)->nullable();
             $table->unsignedSmallInteger('min_experience_years')->nullable();
+            $table->string('experience_level', 16)->nullable();
+            $table->string('experience_other', 120)->nullable();
+            $table->string('education_level', 16)->nullable();
+            $table->string('education_other', 120)->nullable();
+            $table->string('age_range', 8)->nullable();
+            $table->string('age_other', 120)->nullable();
+            $table->string('other_skills', 500)->nullable();
+            $table->text('duties')->nullable();
             $table->jsonb('language_requirements')->nullable();
             $table->char('destination_country_code', 2);
             $table->string('destination_city')->nullable();
             $table->unsignedInteger('headcount');
 
             $table->unsignedBigInteger('salary_amount_minor')->nullable();
+            $table->unsignedBigInteger('salary_max_amount_minor')->nullable();
             $table->char('salary_currency', 3)->nullable();
             $table->string('salary_period', 8)->nullable();
+            $table->string('salary_basis', 8)->nullable();
             $table->decimal('hours_per_day', 4, 2)->nullable();
             $table->unsignedSmallInteger('days_per_week')->nullable();
+            $table->string('working_hours', 16)->nullable();
+            $table->string('working_hours_other', 120)->nullable();
+            $table->string('working_days', 16)->nullable();
+            $table->string('working_days_other', 120)->nullable();
+            $table->string('shift_pattern', 16)->nullable();
+            $table->string('shift_pattern_other', 120)->nullable();
             $table->text('overtime_terms')->nullable();
             $table->unsignedSmallInteger('contract_months')->nullable();
+            $table->string('contract_duration', 16)->nullable();
+            $table->string('contract_other', 120)->nullable();
 
             $table->string('accommodation', 16)->nullable();
             $table->string('accommodation_details')->nullable();
+            $table->unsignedBigInteger('accommodation_cost_amount_minor')->nullable();
             $table->string('food', 16)->nullable();
             $table->string('food_details')->nullable();
             $table->string('transport', 16)->nullable();
             $table->string('transport_details')->nullable();
             $table->string('medical', 16)->nullable();
             $table->string('medical_details')->nullable();
+            $table->string('insurance', 16)->nullable();
+            $table->string('insurance_details')->nullable();
             $table->string('airfare', 16)->nullable();
             $table->string('airfare_details')->nullable();
             $table->text('other_benefits')->nullable();
 
             $table->string('permit_payer', 16)->nullable();
             $table->string('visa_payer', 16)->nullable();
+            $table->string('worker_fees', 8)->nullable();
             $table->date('joining_from')->nullable();
             $table->date('joining_to')->nullable();
             $table->date('deadline')->nullable();
+            $table->string('apply_method', 16)->default('blueskills');
+            $table->string('apply_url', 2048)->nullable();
+            $table->text('additional_details')->nullable();
 
             $table->string('status', 32);
             $table->timestampTz('published_at')->nullable();
@@ -76,6 +105,7 @@ return new class extends Migration
 
             $table->foreign('destination_country_code')->references('code')->on('countries');
             $table->index('status');
+            $table->index('employment_type');
             $table->index(['occupation_id', 'destination_country_code']);
             $table->index('employer_organization_id');
             $table->index('agency_organization_id');

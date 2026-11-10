@@ -1691,3 +1691,14 @@ colour) and the appearance tabs use design tokens instead of the kit's neutral g
   label names quoted in the manuals; the manuals' getting-started sections explain the asterisk.
 - `cohorts.roster.label` said "(optional)" although the roster form requires a roster (adding a
   roster is an optional step, the field is not): it now shows the asterisk.
+
+### D-119 · Universal posting columns folded into the first jobs migration
+
+- **Date:** 2026-11-10
+- Still in development with no live data, so `2026_11_10_100000_add_universal_posting_fields_to_jobs`
+  was merged into `2026_10_20_100500_create_job_tables` and
+  `2026_11_10_100100_fill_universal_posting_fields_from_existing_jobs` was removed: on a new
+  database the jobs table is empty when it is created, so there is nothing to fill. This replaces
+  the "Existing jobs" point of D-117; no installation holds jobs saved before D-117.
+- Local databases need `migrate:fresh --seed` once. After the first real deployment the rule
+  "never change a merged migration" applies again.
