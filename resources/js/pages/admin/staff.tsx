@@ -163,10 +163,13 @@ export default function Staff({ members, invitations, roles }: Props) {
                         {({ errors, processing }) => (
                             <>
                                 <div className="flex flex-col gap-1.5">
-                                    <Label htmlFor="staff-email">{t('team.email')}</Label>
+                                    <Label htmlFor="staff-email" required>
+                                        {t('team.email')}
+                                    </Label>
                                     <Input
                                         placeholder={t('auth.email_placeholder')}
                                         id="staff-email"
+                                        aria-required
                                         name="email"
                                         type="email"
                                         required
@@ -177,9 +180,12 @@ export default function Staff({ members, invitations, roles }: Props) {
                                     <InputError message={errors.email} />
                                 </div>
                                 <div className="flex flex-col gap-1.5">
-                                    <Label htmlFor="staff-role">{t('team.role')}</Label>
+                                    <Label htmlFor="staff-role" required>
+                                        {t('team.role')}
+                                    </Label>
                                     <NativeSelect
                                         id="staff-role"
+                                        aria-required
                                         name="role"
                                         defaultValue="verification_officer"
                                     >

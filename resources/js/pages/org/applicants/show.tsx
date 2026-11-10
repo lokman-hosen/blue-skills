@@ -345,11 +345,12 @@ function MoveForm({ applicant }: { applicant: Applicant }) {
     return (
         <div className="flex flex-wrap items-end gap-2">
             <div className="flex min-w-0 flex-1 flex-col gap-1">
-                <Label htmlFor="move-stage" className="text-xs">
+                <Label htmlFor="move-stage" required className="text-xs">
                     {t('applicants.move_to')}
                 </Label>
                 <NativeSelect
                     id="move-stage"
+                    aria-required
                     value={stage}
                     onChange={(event) => setStage(event.target.value)}
                 >
@@ -492,9 +493,12 @@ function RejectDialog({
         >
             <form onSubmit={submit} className="flex flex-col gap-4" noValidate>
                 <div className="flex flex-col gap-1.5">
-                    <Label htmlFor="reject-reason">{t('applicants.reason')}</Label>
+                    <Label htmlFor="reject-reason" required>
+                        {t('applicants.reason')}
+                    </Label>
                     <NativeSelect
                         id="reject-reason"
+                        aria-required
                         value={form.data.reason}
                         onChange={(event) => form.setData('reason', event.target.value)}
                     >
@@ -508,9 +512,7 @@ function RejectDialog({
                     <InputError message={form.errors.reason} />
                 </div>
                 <div className="flex flex-col gap-1.5">
-                    <Label htmlFor="reject-note">
-                        {t('applicants.internal_note')} ({t('common.optional')})
-                    </Label>
+                    <Label htmlFor="reject-note">{t('applicants.internal_note')}</Label>
                     <textarea
                         placeholder={t('applicants.internal_note_placeholder')}
                         rows={3}
@@ -581,9 +583,12 @@ function InterviewDialog({
             <form onSubmit={submit} className="flex flex-col gap-4" noValidate>
                 <div className="grid gap-4 sm:grid-cols-2">
                     <div className="flex flex-col gap-1.5">
-                        <Label htmlFor="interview-at">{t('applicants.when')}</Label>
+                        <Label htmlFor="interview-at" required>
+                            {t('applicants.when')}
+                        </Label>
                         <Input
                             id="interview-at"
+                            aria-required
                             type="datetime-local"
                             className="h-11"
                             value={form.data.scheduled_at}
@@ -592,10 +597,13 @@ function InterviewDialog({
                         <InputError message={form.errors.scheduled_at} />
                     </div>
                     <div className="flex flex-col gap-1.5">
-                        <Label htmlFor="interview-length">{t('applicants.length')}</Label>
+                        <Label htmlFor="interview-length" required>
+                            {t('applicants.length')}
+                        </Label>
                         <Input
                             placeholder={t('applicants.length_placeholder')}
                             id="interview-length"
+                            aria-required
                             type="number"
                             inputMode="numeric"
                             min={10}
@@ -610,9 +618,12 @@ function InterviewDialog({
                     </div>
                 </div>
                 <div className="flex flex-col gap-1.5">
-                    <Label htmlFor="interview-mode">{t('applicants.mode')}</Label>
+                    <Label htmlFor="interview-mode" required>
+                        {t('applicants.mode')}
+                    </Label>
                     <NativeSelect
                         id="interview-mode"
+                        aria-required
                         value={form.data.mode}
                         onChange={(event) =>
                             form.setData(
@@ -629,14 +640,15 @@ function InterviewDialog({
                     </NativeSelect>
                 </div>
                 <div className="flex flex-col gap-1.5">
-                    <Label htmlFor="interview-location">
+                    <Label htmlFor="interview-location" required={form.data.mode === 'in_person'}>
                         {form.data.mode === 'in_person'
                             ? t('applicants.address')
-                            : `${t('applicants.link')} (${t('common.optional')})`}
+                            : t('applicants.link')}
                     </Label>
                     <Input
                         placeholder={t('applicants.link_placeholder')}
                         id="interview-location"
+                        aria-required={form.data.mode === 'in_person'}
                         className="h-11"
                         value={form.data.location}
                         onChange={(event) => form.setData('location', event.target.value)}
@@ -645,9 +657,7 @@ function InterviewDialog({
                     <InputError message={form.errors.location} />
                 </div>
                 <div className="flex flex-col gap-1.5">
-                    <Label htmlFor="interview-instructions">
-                        {t('applicants.instructions')} ({t('common.optional')})
-                    </Label>
+                    <Label htmlFor="interview-instructions">{t('applicants.instructions')}</Label>
                     <textarea
                         placeholder={t('applicants.instructions_placeholder')}
                         rows={3}
@@ -682,11 +692,12 @@ function OutcomeForm({
     return (
         <div className="mt-1 flex flex-wrap items-end gap-2">
             <div className="flex min-w-0 flex-1 flex-col gap-1">
-                <Label htmlFor={`outcome-${interview.id}`} className="text-xs">
+                <Label htmlFor={`outcome-${interview.id}`} required className="text-xs">
                     {t('applicants.outcome')}
                 </Label>
                 <NativeSelect
                     id={`outcome-${interview.id}`}
+                    aria-required
                     value={form.data.outcome}
                     onChange={(event) => form.setData('outcome', event.target.value)}
                 >
@@ -763,7 +774,7 @@ function OfferDialog({ applicant }: { applicant: Applicant }) {
         >
             <form onSubmit={submit} className="flex flex-col gap-4" noValidate>
                 <div className="flex flex-col gap-1.5">
-                    <Label htmlFor="offer-salary">
+                    <Label htmlFor="offer-salary" required>
                         {t('jobs.field.salary')} ({applicant.jobSalary?.currency}
                         {applicant.jobSalaryPeriod &&
                             ` / ${t(`salary_period.${applicant.jobSalaryPeriod}`)}`}
@@ -772,6 +783,7 @@ function OfferDialog({ applicant }: { applicant: Applicant }) {
                     <Input
                         placeholder={t('jobs.field.salary_placeholder')}
                         id="offer-salary"
+                        aria-required
                         type="number"
                         inputMode="numeric"
                         min={1}
@@ -783,9 +795,7 @@ function OfferDialog({ applicant }: { applicant: Applicant }) {
                 </div>
                 <div className="grid gap-4 sm:grid-cols-2">
                     <div className="flex flex-col gap-1.5">
-                        <Label htmlFor="offer-start">
-                            {t('applications.offer.start_on')} ({t('common.optional')})
-                        </Label>
+                        <Label htmlFor="offer-start">{t('applications.offer.start_on')}</Label>
                         <Input
                             id="offer-start"
                             type="date"
@@ -796,9 +806,7 @@ function OfferDialog({ applicant }: { applicant: Applicant }) {
                         <InputError message={form.errors.start_on} />
                     </div>
                     <div className="flex flex-col gap-1.5">
-                        <Label htmlFor="offer-respond">
-                            {t('applications.offer.respond_by')} ({t('common.optional')})
-                        </Label>
+                        <Label htmlFor="offer-respond">{t('applications.offer.respond_by')}</Label>
                         <Input
                             id="offer-respond"
                             type="date"
@@ -810,9 +818,7 @@ function OfferDialog({ applicant }: { applicant: Applicant }) {
                     </div>
                 </div>
                 <div className="flex flex-col gap-1.5">
-                    <Label htmlFor="offer-note">
-                        {t('applicants.offer_note')} ({t('common.optional')})
-                    </Label>
+                    <Label htmlFor="offer-note">{t('applicants.offer_note')}</Label>
                     <textarea
                         placeholder={t('applicants.offer_note_placeholder')}
                         rows={3}

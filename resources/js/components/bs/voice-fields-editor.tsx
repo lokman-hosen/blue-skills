@@ -7,7 +7,7 @@ import { NativeSelect } from '@/components/bs/native-select';
 import InputError from '@/components/input-error';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
+import { Label, RequiredMark } from '@/components/ui/label';
 import { Spinner } from '@/components/ui/spinner';
 import { useTranslation } from '@/lib/i18n';
 import type { OptionLookup } from '@/lib/passport';
@@ -124,9 +124,12 @@ export function VoiceFieldsEditor({
             {question === 'occupation' && (
                 <>
                     <div className="flex flex-col gap-1.5">
-                        <Label htmlFor={`${id}-occupation`}>{t('voice.label.occupation')}</Label>
+                        <Label htmlFor={`${id}-occupation`} required>
+                            {t('voice.label.occupation')}
+                        </Label>
                         <NativeSelect
                             id={`${id}-occupation`}
+                            aria-required
                             value={occupation}
                             onChange={(event) => {
                                 setOccupation(event.target.value);
@@ -155,7 +158,7 @@ export function VoiceFieldsEditor({
                                 value={specialization}
                                 onChange={(event) => setSpecialization(event.target.value)}
                             >
-                                <option value="">{t('common.optional')}</option>
+                                <option value="">{t('common.choose')}</option>
                                 {occupationOption.specializations.map((item) => (
                                     <option key={item.slug} value={item.slug}>
                                         {item.name}
@@ -170,10 +173,13 @@ export function VoiceFieldsEditor({
 
             {question === 'experience' && (
                 <div className="flex flex-col gap-1.5">
-                    <Label htmlFor={`${id}-years`}>{t('voice.label.experience')}</Label>
+                    <Label htmlFor={`${id}-years`} required>
+                        {t('voice.label.experience')}
+                    </Label>
                     <Input
                         placeholder={t('worker.basics.years_placeholder')}
                         id={`${id}-years`}
+                        aria-required
                         type="number"
                         inputMode="numeric"
                         min={0}
@@ -191,15 +197,21 @@ export function VoiceFieldsEditor({
                 <fieldset className="flex flex-col gap-2">
                     <legend className="mb-1.5 text-sm font-medium">
                         {t('voice.label.countries')}
+                        <RequiredMark srLabel={t('common.required')} />
                     </legend>
                     {countries.map((row, index) => (
                         <div key={index} className="flex items-end gap-2">
                             <div className="flex min-w-0 flex-1 flex-col gap-1">
-                                <Label htmlFor={`${id}-country-${index}`} className="text-xs">
+                                <Label
+                                    htmlFor={`${id}-country-${index}`}
+                                    required
+                                    className="text-xs"
+                                >
                                     {t('voice.country')}
                                 </Label>
                                 <NativeSelect
                                     id={`${id}-country-${index}`}
+                                    aria-required
                                     value={row.code}
                                     onChange={(event) =>
                                         setCountries(
@@ -222,12 +234,17 @@ export function VoiceFieldsEditor({
                                 </NativeSelect>
                             </div>
                             <div className="flex w-24 flex-col gap-1">
-                                <Label htmlFor={`${id}-country-years-${index}`} className="text-xs">
+                                <Label
+                                    htmlFor={`${id}-country-years-${index}`}
+                                    required
+                                    className="text-xs"
+                                >
                                     {t('voice.years')}
                                 </Label>
                                 <Input
                                     placeholder={t('voice.years_placeholder')}
                                     id={`${id}-country-years-${index}`}
+                                    aria-required
                                     type="number"
                                     inputMode="numeric"
                                     min={0}
@@ -276,6 +293,7 @@ export function VoiceFieldsEditor({
                 <fieldset className="flex flex-col gap-2">
                     <legend className="mb-1.5 text-sm font-medium">
                         {t('voice.label.skills')}
+                        <RequiredMark srLabel={t('common.required')} />
                     </legend>
                     <ChipGroup
                         items={lookup.skillsFor(occupationSlug).map((skill) => ({
@@ -344,6 +362,7 @@ export function VoiceFieldsEditor({
                 <fieldset className="flex flex-col gap-2">
                     <legend className="mb-1.5 text-sm font-medium">
                         {t('voice.label.destinations')}
+                        <RequiredMark srLabel={t('common.required')} />
                     </legend>
                     <p className="text-xs text-muted">{t('voice.destinations_hint')}</p>
                     <ChipGroup
@@ -445,9 +464,13 @@ function RadioCards({
     onChange: (value: string) => void;
     error?: string;
 }) {
+    // Only used for answers that are required (passport status, availability).
     return (
-        <fieldset className="flex flex-col gap-2">
-            <legend className="mb-1.5 text-sm font-medium">{legend}</legend>
+        <fieldset className="flex flex-col gap-2" role="radiogroup" aria-required>
+            <legend className="mb-1.5 text-sm font-medium">
+                {legend}
+                <RequiredMark />
+            </legend>
             <div className="grid gap-2 sm:grid-cols-2">
                 {items.map((item) => (
                     <label

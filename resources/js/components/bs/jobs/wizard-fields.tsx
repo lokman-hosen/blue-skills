@@ -54,17 +54,22 @@ export function Field({
     label,
     error,
     hint,
+    required = false,
     children,
 }: {
     id: string;
     label: string;
     error?: string;
     hint?: string;
+    /** Shows the asterisk (D-118); give the control `aria-required` too. */
+    required?: boolean;
     children: ReactNode;
 }) {
     return (
         <div className="flex min-w-0 flex-col gap-1.5">
-            <Label htmlFor={id}>{label}</Label>
+            <Label htmlFor={id} required={required}>
+                {label}
+            </Label>
             {children}
             {hint && (
                 <p id={`${id}-hint`} className="text-xs text-muted">
@@ -89,6 +94,7 @@ export function OptionSelect({
     error,
     hint,
     empty,
+    required = false,
 }: {
     id: string;
     option: JobOptionKey;
@@ -99,14 +105,16 @@ export function OptionSelect({
     hint?: string;
     /** Label of the empty choice; null hides it (the field always has a value). */
     empty?: string | null;
+    required?: boolean;
 }) {
     const { t } = useTranslation();
 
     return (
-        <Field id={id} label={label} error={error} hint={hint}>
+        <Field id={id} label={label} error={error} hint={hint} required={required}>
             <NativeSelect
                 id={id}
                 value={value}
+                aria-required={required || undefined}
                 aria-describedby={hint ? `${id}-hint` : undefined}
                 onChange={(event) => onChange(event.target.value)}
             >
@@ -136,9 +144,11 @@ export function OtherInput({
     const { t } = useTranslation();
 
     return (
-        <Field id={id} label={t('jobs.field.other_details')} error={error}>
+        // Shown only after "Other" is chosen, and then required (`required_if:…,other`).
+        <Field id={id} label={t('jobs.field.other_details')} error={error} required>
             <Input
                 id={id}
+                aria-required
                 value={value}
                 maxLength={120}
                 placeholder={t('jobs.field.other_placeholder')}

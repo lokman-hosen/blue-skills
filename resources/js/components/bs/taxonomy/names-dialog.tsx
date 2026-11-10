@@ -81,12 +81,12 @@ export function NamesDialog({
                 <form onSubmit={submit} className="flex flex-col gap-3" noValidate>
                     {locales.map((locale) => (
                         <div key={locale.code} className="flex flex-col gap-1.5">
-                            <Label htmlFor={`${id}-${locale.code}`}>
+                            <Label htmlFor={`${id}-${locale.code}`} required={locale.code === 'en'}>
                                 {locale.name}
-                                {locale.code !== 'en' && ` (${t('common.optional')})`}
                             </Label>
                             <Input
                                 id={`${id}-${locale.code}`}
+                                aria-required={locale.code === 'en'}
                                 lang={locale.code}
                                 className="h-11"
                                 maxLength={120}

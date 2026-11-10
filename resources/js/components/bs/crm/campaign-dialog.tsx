@@ -14,7 +14,7 @@ import {
     DialogTrigger,
 } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
+import { Label, RequiredMark } from '@/components/ui/label';
 import { Spinner } from '@/components/ui/spinner';
 import { useTranslation } from '@/lib/i18n';
 import admin from '@/routes/admin';
@@ -83,10 +83,13 @@ export function CampaignDialog({
                 </DialogHeader>
                 <form onSubmit={submit} className="flex flex-col gap-3" noValidate>
                     <div className="flex flex-col gap-1.5">
-                        <Label htmlFor="campaign-name">{t('marketing.field.name')}</Label>
+                        <Label htmlFor="campaign-name" required>
+                            {t('marketing.field.name')}
+                        </Label>
                         <Input
                             placeholder={t('marketing.field.name_placeholder')}
                             id="campaign-name"
+                            aria-required
                             className="h-11"
                             value={form.data.name}
                             onChange={(event) => form.setData('name', event.target.value)}
@@ -96,9 +99,12 @@ export function CampaignDialog({
                     </div>
                     <div className="grid gap-3 sm:grid-cols-2">
                         <div className="flex flex-col gap-1.5">
-                            <Label htmlFor="campaign-channel">{t('marketing.field.channel')}</Label>
+                            <Label htmlFor="campaign-channel" required>
+                                {t('marketing.field.channel')}
+                            </Label>
                             <NativeSelect
                                 id="campaign-channel"
+                                aria-required
                                 value={form.data.channel}
                                 onChange={(event) => form.setData('channel', event.target.value)}
                             >
@@ -146,9 +152,10 @@ export function CampaignDialog({
                         </NativeSelect>
                         <InputError message={form.errors.partner_organization_id} />
                     </div>
-                    <fieldset className="flex flex-col gap-1.5">
+                    <fieldset role="radiogroup" aria-required className="flex flex-col gap-1.5">
                         <legend className="mb-1.5 text-sm font-medium">
                             {t('marketing.field.landing')}
+                            <RequiredMark />
                         </legend>
                         {(['join', 'jobs'] as const).map((value) => (
                             <label
@@ -169,9 +176,12 @@ export function CampaignDialog({
                     </fieldset>
                     <div className="grid gap-3 sm:grid-cols-2">
                         <div className="flex flex-col gap-1.5">
-                            <Label htmlFor="campaign-start">{t('marketing.field.starts_on')}</Label>
+                            <Label htmlFor="campaign-start" required>
+                                {t('marketing.field.starts_on')}
+                            </Label>
                             <Input
                                 id="campaign-start"
+                                aria-required
                                 type="date"
                                 className="h-11"
                                 value={form.data.starts_on}

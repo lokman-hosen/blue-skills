@@ -60,12 +60,13 @@ export default function DeleteUser() {
                             {({ resetAndClearErrors, processing, errors }) => (
                                 <>
                                     <div className="grid gap-2">
-                                        <Label htmlFor="password" className="sr-only">
+                                        <Label htmlFor="password" required className="sr-only">
                                             {t('auth.password')}
                                         </Label>
 
                                         <PasswordInput
                                             id="password"
+                                            aria-required
                                             name="password"
                                             ref={passwordInput}
                                             autoComplete="current-password"

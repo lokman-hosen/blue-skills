@@ -204,10 +204,13 @@ function PlanDialog({
                 </DialogHeader>
                 <form onSubmit={submit} className="flex flex-col gap-3" noValidate>
                     <div className="flex flex-col gap-1.5">
-                        <Label htmlFor="plan-name">{t('billing.field.name')}</Label>
+                        <Label htmlFor="plan-name" required>
+                            {t('billing.field.name')}
+                        </Label>
                         <Input
                             placeholder={t('billing.field.name_placeholder')}
                             id="plan-name"
+                            aria-required
                             className="h-11"
                             value={form.data.name}
                             onChange={(event) => form.setData('name', event.target.value)}
@@ -227,9 +230,12 @@ function PlanDialog({
                     </div>
                     <div className="grid gap-3 sm:grid-cols-2">
                         <div className="flex flex-col gap-1.5">
-                            <Label htmlFor="plan-type">{t('billing.field.for')}</Label>
+                            <Label htmlFor="plan-type" required>
+                                {t('billing.field.for')}
+                            </Label>
                             <NativeSelect
                                 id="plan-type"
+                                aria-required
                                 value={form.data.organization_type}
                                 onChange={(event) =>
                                     form.setData('organization_type', event.target.value)
@@ -243,9 +249,12 @@ function PlanDialog({
                             </NativeSelect>
                         </div>
                         <div className="flex flex-col gap-1.5">
-                            <Label htmlFor="plan-period">{t('billing.field.period')}</Label>
+                            <Label htmlFor="plan-period" required>
+                                {t('billing.field.period')}
+                            </Label>
                             <NativeSelect
                                 id="plan-period"
+                                aria-required
                                 value={form.data.billing_period}
                                 onChange={(event) =>
                                     form.setData('billing_period', event.target.value)
@@ -261,10 +270,13 @@ function PlanDialog({
                     </div>
                     <div className="grid grid-cols-[minmax(0,1fr)_6rem] gap-3">
                         <div className="flex flex-col gap-1.5">
-                            <Label htmlFor="plan-price">{t('billing.field.price')}</Label>
+                            <Label htmlFor="plan-price" required>
+                                {t('billing.field.price')}
+                            </Label>
                             <Input
                                 placeholder={t('billing.field.price_placeholder')}
                                 id="plan-price"
+                                aria-required
                                 inputMode="decimal"
                                 className="h-11"
                                 value={form.data.price}
@@ -274,10 +286,13 @@ function PlanDialog({
                             <InputError message={form.errors.price} />
                         </div>
                         <div className="flex flex-col gap-1.5">
-                            <Label htmlFor="plan-currency">{t('billing.field.currency')}</Label>
+                            <Label htmlFor="plan-currency" required>
+                                {t('billing.field.currency')}
+                            </Label>
                             <Input
                                 placeholder={t('billing.field.currency_placeholder')}
                                 id="plan-currency"
+                                aria-required
                                 className="h-11 uppercase"
                                 maxLength={3}
                                 value={form.data.price_currency}
@@ -290,10 +305,13 @@ function PlanDialog({
                     </div>
                     <div className="grid grid-cols-2 gap-3">
                         <div className="flex flex-col gap-1.5">
-                            <Label htmlFor="plan-credits">{t('billing.field.credits')}</Label>
+                            <Label htmlFor="plan-credits" required>
+                                {t('billing.field.credits')}
+                            </Label>
                             <Input
                                 placeholder={t('billing.field.credits_placeholder')}
                                 id="plan-credits"
+                                aria-required
                                 type="number"
                                 inputMode="numeric"
                                 min={0}

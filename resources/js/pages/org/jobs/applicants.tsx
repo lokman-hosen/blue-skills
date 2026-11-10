@@ -203,11 +203,12 @@ export default function Applicants({
                             {t('applicants.selected', { count: formatNumber(selected.length) })}
                         </p>
                         <div className="flex flex-col gap-1">
-                            <Label htmlFor="bulk-stage" className="text-xs">
+                            <Label htmlFor="bulk-stage" required className="text-xs">
                                 {t('applicants.move_to')}
                             </Label>
                             <NativeSelect
                                 id="bulk-stage"
+                                aria-required
                                 value={target}
                                 onChange={(event) => setTarget(event.target.value)}
                             >

@@ -212,9 +212,12 @@ function AttemptForm({
             <form onSubmit={submit} className="flex flex-col gap-3" noValidate>
                 <div className="grid grid-cols-2 gap-3">
                     <div className="flex flex-col gap-1.5">
-                        <Label htmlFor="attempt-channel">{t('crm.attempt.channel')}</Label>
+                        <Label htmlFor="attempt-channel" required>
+                            {t('crm.attempt.channel')}
+                        </Label>
                         <NativeSelect
                             id="attempt-channel"
+                            aria-required
                             value={form.data.channel}
                             onChange={(event) => form.setData('channel', event.target.value)}
                         >
@@ -226,9 +229,12 @@ function AttemptForm({
                         </NativeSelect>
                     </div>
                     <div className="flex flex-col gap-1.5">
-                        <Label htmlFor="attempt-outcome">{t('crm.attempt.outcome')}</Label>
+                        <Label htmlFor="attempt-outcome" required>
+                            {t('crm.attempt.outcome')}
+                        </Label>
                         <NativeSelect
                             id="attempt-outcome"
+                            aria-required
                             value={form.data.outcome}
                             onChange={(event) => form.setData('outcome', event.target.value)}
                             aria-invalid={!!form.errors.outcome}
@@ -316,9 +322,12 @@ function FollowUpForm({
                     </NativeSelect>
                 </div>
                 <div className="flex flex-col gap-1.5">
-                    <Label htmlFor="lead-status">{t('crm.column.follow_up')}</Label>
+                    <Label htmlFor="lead-status" required>
+                        {t('crm.column.follow_up')}
+                    </Label>
                     <NativeSelect
                         id="lead-status"
+                        aria-required
                         value={form.data.follow_up_status}
                         onChange={(event) => form.setData('follow_up_status', event.target.value)}
                         aria-invalid={!!form.errors.follow_up_status}

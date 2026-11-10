@@ -58,10 +58,13 @@ export default function StaffInvitation({ token, invitation }: Props) {
                             />
                         </div>
                         <div className="flex flex-col gap-1.5">
-                            <Label htmlFor="name">{t('auth.worker.name')}</Label>
+                            <Label htmlFor="name" required>
+                                {t('auth.worker.name')}
+                            </Label>
                             <Input
                                 placeholder={t('auth.worker.name_placeholder')}
                                 id="name"
+                                aria-required
                                 name="name"
                                 required
                                 autoFocus
@@ -72,9 +75,12 @@ export default function StaffInvitation({ token, invitation }: Props) {
                             <InputError message={errors.name} />
                         </div>
                         <div className="flex flex-col gap-1.5">
-                            <Label htmlFor="password">{t('auth.password')}</Label>
+                            <Label htmlFor="password" required>
+                                {t('auth.password')}
+                            </Label>
                             <PasswordInput
                                 id="password"
+                                aria-required
                                 name="password"
                                 required
                                 autoComplete="new-password"
@@ -83,11 +89,12 @@ export default function StaffInvitation({ token, invitation }: Props) {
                             <InputError message={errors.password} />
                         </div>
                         <div className="flex flex-col gap-1.5">
-                            <Label htmlFor="password_confirmation">
+                            <Label htmlFor="password_confirmation" required>
                                 {t('auth.password_confirmation')}
                             </Label>
                             <PasswordInput
                                 id="password_confirmation"
+                                aria-required
                                 name="password_confirmation"
                                 required
                                 autoComplete="new-password"

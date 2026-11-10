@@ -201,9 +201,12 @@ function OpenCaseDialog({
                 </DialogHeader>
                 <form onSubmit={submit} className="flex flex-col gap-3" noValidate>
                     <div className="flex flex-col gap-1.5 sm:max-w-56">
-                        <Label htmlFor={`priority-${report.id}`}>{t('trust.priority')}</Label>
+                        <Label htmlFor={`priority-${report.id}`} required>
+                            {t('trust.priority')}
+                        </Label>
                         <NativeSelect
                             id={`priority-${report.id}`}
+                            aria-required
                             value={form.data.priority}
                             onChange={(event) => form.setData('priority', event.target.value)}
                         >
@@ -215,10 +218,13 @@ function OpenCaseDialog({
                         </NativeSelect>
                     </div>
                     <div className="flex flex-col gap-1.5">
-                        <Label htmlFor={`summary-${report.id}`}>{t('trust.summary')}</Label>
+                        <Label htmlFor={`summary-${report.id}`} required>
+                            {t('trust.summary')}
+                        </Label>
                         <textarea
                             placeholder={t('trust.summary_placeholder')}
                             id={`summary-${report.id}`}
+                            aria-required
                             rows={3}
                             maxLength={500}
                             value={form.data.summary}

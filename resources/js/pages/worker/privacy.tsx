@@ -178,11 +178,12 @@ export default function Privacy({
                             {({ processing, errors }) => (
                                 <>
                                     <div className="flex flex-col gap-1.5">
-                                        <Label htmlFor="deletion-code">
+                                        <Label htmlFor="deletion-code" required>
                                             {t('privacy.delete.code_label', { phone: maskedPhone })}
                                         </Label>
                                         <Input
                                             id="deletion-code"
+                                            aria-required
                                             name="code"
                                             inputMode="numeric"
                                             autoComplete="one-time-code"

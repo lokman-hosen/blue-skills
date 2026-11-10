@@ -12,7 +12,7 @@ import type { Tone } from '@/components/bs/tone';
 import { ChipGroup } from '@/components/bs/voice-fields-editor';
 import InputError from '@/components/input-error';
 import { Button } from '@/components/ui/button';
-import { Label } from '@/components/ui/label';
+import { Label, RequiredMark } from '@/components/ui/label';
 import { Spinner } from '@/components/ui/spinner';
 import { useTranslation } from '@/lib/i18n';
 import { optionLookup } from '@/lib/passport';
@@ -343,6 +343,7 @@ export default function SkillShowPage({
                             <fieldset className="flex flex-col gap-2">
                                 <legend className="mb-1.5 text-[13px] font-semibold">
                                     {t('skillshow.tag_skills', { max: formatNumber(maxSkills) })}
+                                    <RequiredMark srLabel={t('common.required')} />
                                 </legend>
                                 <ChipGroup
                                     items={lookup.skillsFor(occupationSlug).map((skill) => ({
@@ -364,11 +365,12 @@ export default function SkillShowPage({
                             </fieldset>
 
                             <div className="flex flex-col gap-1.5">
-                                <Label htmlFor="skillshow-visibility">
+                                <Label htmlFor="skillshow-visibility" required>
                                     {t('skillshow.who_can_see')}
                                 </Label>
                                 <NativeSelect
                                     id="skillshow-visibility"
+                                    aria-required
                                     value={visibility}
                                     onChange={(event) =>
                                         setVisibility(event.target.value as Visibility)

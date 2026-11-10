@@ -86,9 +86,12 @@ export default function ShortlistsIndex({ shortlists, jobs }: Props) {
                             {t('shortlists.new')}
                         </h2>
                         <div className="flex flex-col gap-1.5">
-                            <Label htmlFor="shortlist-name">{t('shortlists.name')}</Label>
+                            <Label htmlFor="shortlist-name" required>
+                                {t('shortlists.name')}
+                            </Label>
                             <Input
                                 id="shortlist-name"
+                                aria-required
                                 className="h-11"
                                 value={form.data.name}
                                 maxLength={120}
@@ -98,9 +101,7 @@ export default function ShortlistsIndex({ shortlists, jobs }: Props) {
                             <InputError message={form.errors.name} />
                         </div>
                         <div className="flex flex-col gap-1.5">
-                            <Label htmlFor="shortlist-job">
-                                {t('shortlists.for_job')} ({t('common.optional')})
-                            </Label>
+                            <Label htmlFor="shortlist-job">{t('shortlists.for_job')}</Label>
                             <NativeSelect
                                 id="shortlist-job"
                                 value={form.data.job}

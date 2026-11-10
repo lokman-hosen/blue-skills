@@ -140,10 +140,13 @@ export default function PilotInvites({ pilotEnabled, invites, types }: Props) {
                         {({ errors, processing }) => (
                             <>
                                 <div className="flex flex-col gap-1.5">
-                                    <Label htmlFor="pilot-partner">{t('pilot.partner')}</Label>
+                                    <Label htmlFor="pilot-partner" required>
+                                        {t('pilot.partner')}
+                                    </Label>
                                     <Input
                                         placeholder={t('pilot.partner_placeholder')}
                                         id="pilot-partner"
+                                        aria-required
                                         name="partner_name"
                                         required
                                         autoComplete="off"
@@ -169,10 +172,13 @@ export default function PilotInvites({ pilotEnabled, invites, types }: Props) {
                                     <InputError message={errors.organization_type} />
                                 </div>
                                 <div className="flex flex-col gap-1.5">
-                                    <Label htmlFor="pilot-uses">{t('pilot.max_uses')}</Label>
+                                    <Label htmlFor="pilot-uses" required>
+                                        {t('pilot.max_uses')}
+                                    </Label>
                                     <Input
                                         placeholder={t('pilot.max_uses_placeholder')}
                                         id="pilot-uses"
+                                        aria-required
                                         name="max_uses"
                                         type="number"
                                         min={1}

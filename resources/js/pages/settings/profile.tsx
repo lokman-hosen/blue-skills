@@ -47,10 +47,13 @@ export default function Profile({
                     {({ processing, errors }) => (
                         <>
                             <div className="flex flex-col gap-1.5">
-                                <Label htmlFor="name">{t('auth.worker.name')}</Label>
+                                <Label htmlFor="name" required>
+                                    {t('auth.worker.name')}
+                                </Label>
                                 <Input
                                     placeholder={t('auth.worker.name_placeholder')}
                                     id="name"
+                                    aria-required
                                     className="h-11"
                                     defaultValue={user?.name}
                                     name="name"
@@ -63,10 +66,13 @@ export default function Profile({
 
                             {canEditEmail && (
                                 <div className="flex flex-col gap-1.5">
-                                    <Label htmlFor="email">{t('auth.email')}</Label>
+                                    <Label htmlFor="email" required>
+                                        {t('auth.email')}
+                                    </Label>
                                     <Input
                                         placeholder={t('auth.email_placeholder')}
                                         id="email"
+                                        aria-required
                                         type="email"
                                         className="h-11"
                                         defaultValue={user?.email ?? ''}

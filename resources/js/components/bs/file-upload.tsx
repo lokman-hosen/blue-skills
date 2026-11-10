@@ -1,6 +1,7 @@
 import { FileText, Lock, Upload, X } from 'lucide-react';
 import type { DragEvent } from 'react';
 import { useId, useRef, useState } from 'react';
+import { RequiredMark } from '@/components/ui/label';
 import { useTranslation } from '@/lib/i18n';
 import { cn } from '@/lib/utils';
 
@@ -18,6 +19,8 @@ type FileUploadProps = {
     hint?: string;
     /** Shows the "stored privately" note for sensitive documents. */
     sensitive?: boolean;
+    /** Shows the asterisk and sets `aria-required` on the file input (D-118). */
+    required?: boolean;
     className?: string;
 };
 
@@ -41,6 +44,7 @@ export function FileUpload({
     error,
     hint,
     sensitive = false,
+    required = false,
     className,
 }: FileUploadProps) {
     const { t, formatNumber } = useTranslation();
@@ -82,6 +86,7 @@ export function FileUpload({
         <div className={cn('flex flex-col gap-1.5', className)}>
             <span className="text-[13px] font-semibold" id={`${inputId}-label`}>
                 {label}
+                {required && <RequiredMark />}
             </span>
             {value ? (
                 <div className="flex items-center gap-3 rounded-xl border border-line bg-surface p-3">
@@ -137,6 +142,7 @@ export function FileUpload({
                 className="sr-only"
                 accept={accept.join(',')}
                 aria-labelledby={`${inputId}-label`}
+                aria-required={required || undefined}
                 aria-describedby={messageId}
                 aria-invalid={message ? true : undefined}
                 onChange={(event) => select(event.target.files?.[0])}

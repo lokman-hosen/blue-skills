@@ -33,9 +33,12 @@ export default function WorkerPhone({ countries }: Props) {
                             dir="ltr"
                         >
                             <div className="flex flex-col gap-1.5">
-                                <Label htmlFor="country">{t('auth.phone.country')}</Label>
+                                <Label htmlFor="country" required>
+                                    {t('auth.phone.country')}
+                                </Label>
                                 <NativeSelect
                                     id="country"
+                                    aria-required
                                     name="country"
                                     defaultValue={countries[0]?.code}
                                     aria-invalid={!!errors.country}
@@ -48,10 +51,13 @@ export default function WorkerPhone({ countries }: Props) {
                                 </NativeSelect>
                             </div>
                             <div className="flex flex-col gap-1.5">
-                                <Label htmlFor="phone">{t('auth.phone.number')}</Label>
+                                <Label htmlFor="phone" required>
+                                    {t('auth.phone.number')}
+                                </Label>
                                 <Input
                                     placeholder={t('auth.phone.number_placeholder')}
                                     id="phone"
+                                    aria-required
                                     name="phone"
                                     type="tel"
                                     inputMode="tel"

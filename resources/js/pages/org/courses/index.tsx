@@ -198,10 +198,13 @@ function CourseDialog({ occupations, course }: { occupations: Option[]; course?:
                 </DialogHeader>
                 <form onSubmit={submit} className="flex flex-col gap-3" noValidate>
                     <div className="flex flex-col gap-1.5">
-                        <Label htmlFor={`${id}-title`}>{t('courses.field.title')}</Label>
+                        <Label htmlFor={`${id}-title`} required>
+                            {t('courses.field.title')}
+                        </Label>
                         <Input
                             placeholder={t('courses.field.title_placeholder')}
                             id={`${id}-title`}
+                            aria-required
                             className="h-11"
                             maxLength={160}
                             value={form.data.title}
@@ -210,9 +213,7 @@ function CourseDialog({ occupations, course }: { occupations: Option[]; course?:
                         <InputError message={form.errors.title} />
                     </div>
                     <div className="flex flex-col gap-1.5">
-                        <Label htmlFor={`${id}-trade`}>
-                            {t('courses.field.trade')} ({t('common.optional')})
-                        </Label>
+                        <Label htmlFor={`${id}-trade`}>{t('courses.field.trade')}</Label>
                         <NativeSelect
                             id={`${id}-trade`}
                             value={form.data.occupation_id}
@@ -228,9 +229,7 @@ function CourseDialog({ occupations, course }: { occupations: Option[]; course?:
                         <InputError message={form.errors.occupation_id} />
                     </div>
                     <div className="flex flex-col gap-1.5 sm:max-w-40">
-                        <Label htmlFor={`${id}-weeks`}>
-                            {t('courses.field.weeks')} ({t('common.optional')})
-                        </Label>
+                        <Label htmlFor={`${id}-weeks`}>{t('courses.field.weeks')}</Label>
                         <Input
                             placeholder={t('courses.field.weeks_placeholder')}
                             id={`${id}-weeks`}
@@ -246,7 +245,7 @@ function CourseDialog({ occupations, course }: { occupations: Option[]; course?:
                     </div>
                     <div className="flex flex-col gap-1.5">
                         <Label htmlFor={`${id}-description`}>
-                            {t('courses.field.description')} ({t('common.optional')})
+                            {t('courses.field.description')}
                         </Label>
                         <textarea
                             placeholder={t('courses.field.description_placeholder')}

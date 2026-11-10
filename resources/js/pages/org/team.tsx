@@ -139,10 +139,13 @@ export default function Team({ members, invitations, roles, canManage }: Props) 
                             {({ errors, processing }) => (
                                 <>
                                     <div className="flex flex-col gap-1.5">
-                                        <Label htmlFor="invite-email">{t('team.email')}</Label>
+                                        <Label htmlFor="invite-email" required>
+                                            {t('team.email')}
+                                        </Label>
                                         <Input
                                             placeholder={t('auth.email_placeholder')}
                                             id="invite-email"
+                                            aria-required
                                             name="email"
                                             type="email"
                                             required
@@ -153,9 +156,12 @@ export default function Team({ members, invitations, roles, canManage }: Props) 
                                         <InputError message={errors.email} />
                                     </div>
                                     <div className="flex flex-col gap-1.5">
-                                        <Label htmlFor="invite-role">{t('team.role')}</Label>
+                                        <Label htmlFor="invite-role" required>
+                                            {t('team.role')}
+                                        </Label>
                                         <NativeSelect
                                             id="invite-role"
+                                            aria-required
                                             name="role"
                                             defaultValue={roles[1] ?? roles[0]}
                                         >

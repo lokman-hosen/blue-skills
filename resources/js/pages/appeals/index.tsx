@@ -84,13 +84,16 @@ function SuspensionCard({ suspension }: { suspension: Suspension }) {
             ))}
             {!pending && (
                 <form onSubmit={submit} className="flex flex-col gap-2" noValidate>
-                    <Label htmlFor={`statement-${suspension.id}`}>{t('appeals.statement')}</Label>
+                    <Label htmlFor={`statement-${suspension.id}`} required>
+                        {t('appeals.statement')}
+                    </Label>
                     <p id={`statement-hint-${suspension.id}`} className="text-xs text-muted">
                         {t('appeals.statement_hint')}
                     </p>
                     <textarea
                         placeholder={t('appeals.statement_placeholder')}
                         id={`statement-${suspension.id}`}
+                        aria-required
                         rows={5}
                         maxLength={3000}
                         value={form.data.statement}

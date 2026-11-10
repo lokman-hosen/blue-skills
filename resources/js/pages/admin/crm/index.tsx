@@ -294,10 +294,13 @@ function AddLeadDialog({ campaigns, countries }: { campaigns: Option[]; countrie
                 </DialogHeader>
                 <form onSubmit={submit} className="flex flex-col gap-3" noValidate>
                     <div className="flex flex-col gap-1.5">
-                        <Label htmlFor="lead-name">{t('crm.field.name')}</Label>
+                        <Label htmlFor="lead-name" required>
+                            {t('crm.field.name')}
+                        </Label>
                         <Input
                             placeholder={t('auth.worker.name_placeholder')}
                             id="lead-name"
+                            aria-required
                             className="h-11"
                             value={form.data.name}
                             onChange={(event) => form.setData('name', event.target.value)}
@@ -307,9 +310,12 @@ function AddLeadDialog({ campaigns, countries }: { campaigns: Option[]; countrie
                     </div>
                     <div className="grid gap-3 sm:grid-cols-[8rem_minmax(0,1fr)]">
                         <div className="flex flex-col gap-1.5">
-                            <Label htmlFor="lead-country">{t('crm.field.country')}</Label>
+                            <Label htmlFor="lead-country" required>
+                                {t('crm.field.country')}
+                            </Label>
                             <NativeSelect
                                 id="lead-country"
+                                aria-required
                                 value={form.data.country}
                                 onChange={(event) => form.setData('country', event.target.value)}
                             >
@@ -321,10 +327,13 @@ function AddLeadDialog({ campaigns, countries }: { campaigns: Option[]; countrie
                             </NativeSelect>
                         </div>
                         <div className="flex flex-col gap-1.5">
-                            <Label htmlFor="lead-phone">{t('crm.field.phone')}</Label>
+                            <Label htmlFor="lead-phone" required>
+                                {t('crm.field.phone')}
+                            </Label>
                             <Input
                                 placeholder={t('crm.field.phone_placeholder')}
                                 id="lead-phone"
+                                aria-required
                                 type="tel"
                                 dir="ltr"
                                 inputMode="tel"
@@ -338,9 +347,12 @@ function AddLeadDialog({ campaigns, countries }: { campaigns: Option[]; countrie
                         </div>
                     </div>
                     <div className="flex flex-col gap-1.5">
-                        <Label htmlFor="lead-source">{t('crm.field.source')}</Label>
+                        <Label htmlFor="lead-source" required>
+                            {t('crm.field.source')}
+                        </Label>
                         <NativeSelect
                             id="lead-source"
+                            aria-required
                             value={form.data.source}
                             onChange={(event) => form.setData('source', event.target.value)}
                         >

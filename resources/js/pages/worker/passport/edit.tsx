@@ -88,17 +88,22 @@ function Field({
     label,
     error,
     hint,
+    required = false,
     children,
 }: {
     id: string;
     label: string;
     error?: string;
     hint?: string;
+    /** Shows the asterisk (D-118); give the control `aria-required` too. */
+    required?: boolean;
     children: ReactNode;
 }) {
     return (
         <div className="flex flex-col gap-1.5">
-            <Label htmlFor={id}>{label}</Label>
+            <Label htmlFor={id} required={required}>
+                {label}
+            </Label>
             {children}
             {hint && <p className="text-xs text-muted">{hint}</p>}
             <InputError message={error} />
@@ -131,11 +136,13 @@ function AboutForm({ passport, options }: Props) {
             <Card>
                 <Field
                     id="occupation_id"
+                    required
                     label={t('voice.label.occupation')}
                     error={form.errors.occupation_id}
                 >
                     <NativeSelect
                         id="occupation_id"
+                        aria-required
                         value={form.data.occupation_id}
                         onChange={(event) =>
                             form.setData((data) => ({
@@ -168,7 +175,7 @@ function AboutForm({ passport, options }: Props) {
                                 form.setData('specialization_id', event.target.value)
                             }
                         >
-                            <option value="">{t('common.optional')}</option>
+                            <option value="">{t('common.choose')}</option>
                             {occupation.specializations.map((item) => (
                                 <option key={item.id} value={item.id}>
                                     {item.name}
@@ -194,12 +201,14 @@ function AboutForm({ passport, options }: Props) {
                 </Field>
                 <Field
                     id="years_experience"
+                    required
                     label={t('worker.basics.years')}
                     error={form.errors.years_experience}
                 >
                     <Input
                         placeholder={t('worker.basics.years_placeholder')}
                         id="years_experience"
+                        aria-required
                         type="number"
                         inputMode="numeric"
                         min={0}
@@ -211,11 +220,13 @@ function AboutForm({ passport, options }: Props) {
                 </Field>
                 <Field
                     id="current_country_code"
+                    required
                     label={t('worker.field.current_country')}
                     error={form.errors.current_country_code}
                 >
                     <NativeSelect
                         id="current_country_code"
+                        aria-required
                         value={form.data.current_country_code}
                         onChange={(event) =>
                             form.setData('current_country_code', event.target.value)
@@ -384,12 +395,14 @@ function ExperienceForm({
             <Card>
                 <Field
                     id={`${id}-role`}
+                    required
                     label={t('worker.experience.role')}
                     error={form.errors.role}
                 >
                     <Input
                         placeholder={t('worker.experience.role_placeholder')}
                         id={`${id}-role`}
+                        aria-required
                         value={form.data.role}
                         onChange={(event) => form.setData('role', event.target.value)}
                         className="h-11 text-base"
@@ -397,11 +410,13 @@ function ExperienceForm({
                 </Field>
                 <Field
                     id={`${id}-country`}
+                    required
                     label={t('voice.country')}
                     error={form.errors.country_code}
                 >
                     <NativeSelect
                         id={`${id}-country`}
+                        aria-required
                         value={form.data.country_code}
                         onChange={(event) => form.setData('country_code', event.target.value)}
                     >
@@ -417,7 +432,7 @@ function ExperienceForm({
                 </Field>
                 <Field
                     id={`${id}-employer`}
-                    label={`${t('worker.experience.employer')} (${t('common.optional')})`}
+                    label={t('worker.experience.employer')}
                     error={form.errors.employer_name}
                 >
                     <Input
@@ -451,10 +466,16 @@ function ExperienceForm({
                     </div>
                 </fieldset>
                 {form.data.by === 'years' ? (
-                    <Field id={`${id}-years`} label={t('voice.years')} error={form.errors.years}>
+                    <Field
+                        id={`${id}-years`}
+                        required
+                        label={t('voice.years')}
+                        error={form.errors.years}
+                    >
                         <Input
                             placeholder={t('voice.years_placeholder')}
                             id={`${id}-years`}
+                            aria-required
                             type="number"
                             inputMode="numeric"
                             min={0}
@@ -468,11 +489,13 @@ function ExperienceForm({
                     <div className="grid gap-4 sm:grid-cols-2">
                         <Field
                             id={`${id}-start`}
+                            required
                             label={t('worker.experience.started')}
                             error={form.errors.started_on}
                         >
                             <Input
                                 id={`${id}-start`}
+                                aria-required
                                 type="date"
                                 value={form.data.started_on}
                                 onChange={(event) => form.setData('started_on', event.target.value)}
@@ -497,7 +520,7 @@ function ExperienceForm({
                 )}
                 <Field
                     id={`${id}-description`}
-                    label={`${t('worker.experience.description')} (${t('common.optional')})`}
+                    label={t('worker.experience.description')}
                     error={form.errors.description}
                 >
                     <textarea
@@ -611,11 +634,12 @@ function LanguagesForm({ passport, languages }: Props) {
                 {form.data.languages.map((row, index) => (
                     <div key={index} className="flex items-end gap-2">
                         <div className="flex min-w-0 flex-1 flex-col gap-1">
-                            <Label htmlFor={`language-${index}`} className="text-xs">
+                            <Label htmlFor={`language-${index}`} required className="text-xs">
                                 {t('worker.languages.language')}
                             </Label>
                             <NativeSelect
                                 id={`language-${index}`}
+                                aria-required
                                 value={row.code}
                                 onChange={(event) => update(index, 'code', event.target.value)}
                             >
@@ -630,11 +654,12 @@ function LanguagesForm({ passport, languages }: Props) {
                             </NativeSelect>
                         </div>
                         <div className="flex min-w-0 flex-1 flex-col gap-1">
-                            <Label htmlFor={`proficiency-${index}`} className="text-xs">
+                            <Label htmlFor={`proficiency-${index}`} required className="text-xs">
                                 {t('worker.languages.level')}
                             </Label>
                             <NativeSelect
                                 id={`proficiency-${index}`}
+                                aria-required
                                 value={row.proficiency}
                                 onChange={(event) =>
                                     update(index, 'proficiency', event.target.value)
@@ -726,11 +751,13 @@ function PreferencesForm({ passport, options, currencies }: Props) {
             <Card>
                 <Field
                     id="passport_status"
+                    required
                     label={t('voice.label.passport')}
                     error={form.errors.passport_status}
                 >
                     <NativeSelect
                         id="passport_status"
+                        aria-required
                         value={form.data.passport_status}
                         onChange={(event) => form.setData('passport_status', event.target.value)}
                     >
@@ -746,7 +773,7 @@ function PreferencesForm({ passport, options, currencies }: Props) {
                 </Field>
                 <Field
                     id="passport_valid_until_year"
-                    label={`${t('voice.label.valid_until')} (${t('common.optional')})`}
+                    label={t('voice.label.valid_until')}
                     hint={t('voice.valid_until_hint')}
                     error={form.errors.passport_valid_until_year}
                 >
@@ -766,11 +793,13 @@ function PreferencesForm({ passport, options, currencies }: Props) {
                 </Field>
                 <Field
                     id="availability"
+                    required
                     label={t('voice.label.availability')}
                     error={form.errors.availability}
                 >
                     <NativeSelect
                         id="availability"
+                        aria-required
                         value={form.data.availability}
                         onChange={(event) => form.setData('availability', event.target.value)}
                     >
@@ -809,7 +838,7 @@ function PreferencesForm({ passport, options, currencies }: Props) {
                 </fieldset>
                 <fieldset className="flex flex-col gap-2">
                     <legend className="mb-1.5 text-sm font-medium">
-                        {t('worker.field.salary')} ({t('common.optional')})
+                        {t('worker.field.salary')}
                     </legend>
                     <div className="grid grid-cols-[minmax(0,1fr)_6.5rem] gap-2 sm:grid-cols-[minmax(0,1fr)_7rem_9rem]">
                         <div className="flex flex-col gap-1">
@@ -830,11 +859,16 @@ function PreferencesForm({ passport, options, currencies }: Props) {
                             />
                         </div>
                         <div className="flex flex-col gap-1">
-                            <Label htmlFor="salary_currency" className="text-xs">
+                            <Label
+                                htmlFor="salary_currency"
+                                required={form.data.salary_amount !== ''}
+                                className="text-xs"
+                            >
                                 {t('worker.salary.currency')}
                             </Label>
                             <NativeSelect
                                 id="salary_currency"
+                                aria-required={form.data.salary_amount !== ''}
                                 value={form.data.salary_currency}
                                 onChange={(event) =>
                                     form.setData('salary_currency', event.target.value)
@@ -848,11 +882,16 @@ function PreferencesForm({ passport, options, currencies }: Props) {
                             </NativeSelect>
                         </div>
                         <div className="col-span-2 flex flex-col gap-1 sm:col-span-1">
-                            <Label htmlFor="salary_period" className="text-xs">
+                            <Label
+                                htmlFor="salary_period"
+                                required={form.data.salary_amount !== ''}
+                                className="text-xs"
+                            >
                                 {t('worker.salary.per')}
                             </Label>
                             <NativeSelect
                                 id="salary_period"
+                                aria-required={form.data.salary_amount !== ''}
                                 value={form.data.salary_period}
                                 onChange={(event) =>
                                     form.setData(

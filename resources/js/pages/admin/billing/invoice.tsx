@@ -119,10 +119,13 @@ function LineForm({ invoiceId }: { invoiceId: string }) {
         <Panel title={t('billing.add_line')}>
             <form onSubmit={submit} className="flex flex-col gap-3" noValidate>
                 <div className="flex flex-col gap-1.5">
-                    <Label htmlFor="line-description">{t('billing.invoice.description')}</Label>
+                    <Label htmlFor="line-description" required>
+                        {t('billing.invoice.description')}
+                    </Label>
                     <Input
                         placeholder={t('billing.invoice.description_placeholder')}
                         id="line-description"
+                        aria-required
                         className="h-11"
                         value={form.data.description}
                         onChange={(event) => form.setData('description', event.target.value)}
@@ -132,10 +135,13 @@ function LineForm({ invoiceId }: { invoiceId: string }) {
                 </div>
                 <div className="grid grid-cols-2 gap-3">
                     <div className="flex flex-col gap-1.5">
-                        <Label htmlFor="line-quantity">{t('billing.invoice.quantity')}</Label>
+                        <Label htmlFor="line-quantity" required>
+                            {t('billing.invoice.quantity')}
+                        </Label>
                         <Input
                             placeholder={t('billing.invoice.quantity_placeholder')}
                             id="line-quantity"
+                            aria-required
                             type="number"
                             inputMode="numeric"
                             min={1}
@@ -147,10 +153,13 @@ function LineForm({ invoiceId }: { invoiceId: string }) {
                         <InputError message={form.errors.quantity} />
                     </div>
                     <div className="flex flex-col gap-1.5">
-                        <Label htmlFor="line-amount">{t('billing.invoice.unit')}</Label>
+                        <Label htmlFor="line-amount" required>
+                            {t('billing.invoice.unit')}
+                        </Label>
                         <Input
                             placeholder={t('billing.invoice.unit_placeholder')}
                             id="line-amount"
+                            aria-required
                             inputMode="decimal"
                             className="h-11"
                             value={form.data.unit_amount}
@@ -214,9 +223,12 @@ function PayForm({
         <Panel title={t('billing.mark_paid')}>
             <form onSubmit={submit} className="flex flex-col gap-3" noValidate>
                 <div className="flex flex-col gap-1.5">
-                    <Label htmlFor="pay-method">{t('billing.payment_method')}</Label>
+                    <Label htmlFor="pay-method" required>
+                        {t('billing.payment_method')}
+                    </Label>
                     <NativeSelect
                         id="pay-method"
+                        aria-required
                         value={form.data.payment_method}
                         onChange={(event) => form.setData('payment_method', event.target.value)}
                     >
@@ -228,10 +240,13 @@ function PayForm({
                     </NativeSelect>
                 </div>
                 <div className="flex flex-col gap-1.5">
-                    <Label htmlFor="pay-reference">{t('billing.payment_reference')}</Label>
+                    <Label htmlFor="pay-reference" required>
+                        {t('billing.payment_reference')}
+                    </Label>
                     <Input
                         placeholder={t('billing.payment_reference_placeholder')}
                         id="pay-reference"
+                        aria-required
                         className="h-11"
                         value={form.data.payment_reference}
                         onChange={(event) => form.setData('payment_reference', event.target.value)}
@@ -240,9 +255,12 @@ function PayForm({
                     <InputError message={form.errors.payment_reference} />
                 </div>
                 <div className="flex flex-col gap-1.5">
-                    <Label htmlFor="pay-date">{t('billing.paid_on')}</Label>
+                    <Label htmlFor="pay-date" required>
+                        {t('billing.paid_on')}
+                    </Label>
                     <Input
                         id="pay-date"
+                        aria-required
                         type="date"
                         className="h-11"
                         value={form.data.paid_on}
@@ -274,10 +292,13 @@ function VoidForm({ invoiceId }: { invoiceId: string }) {
         <Panel title={t('billing.void')}>
             <form onSubmit={submit} className="flex flex-col gap-3" noValidate>
                 <div className="flex flex-col gap-1.5">
-                    <Label htmlFor="void-note">{t('billing.void_reason')}</Label>
+                    <Label htmlFor="void-note" required>
+                        {t('billing.void_reason')}
+                    </Label>
                     <Input
                         placeholder={t('billing.void_reason_placeholder')}
                         id="void-note"
+                        aria-required
                         className="h-11"
                         value={form.data.note}
                         onChange={(event) => form.setData('note', event.target.value)}

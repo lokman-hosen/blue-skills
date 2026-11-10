@@ -80,9 +80,12 @@ export default function PasskeyRegistration({ onSuccess }: Props) {
             className="space-y-4 rounded-lg border border-border bg-surface-2/50 p-4"
         >
             <div className="grid gap-2">
-                <Label htmlFor="passkey-name">{t('settings.passkeys.name')}</Label>
+                <Label htmlFor="passkey-name" required>
+                    {t('settings.passkeys.name')}
+                </Label>
                 <Input
                     id="passkey-name"
+                    aria-required
                     type="text"
                     value={name}
                     onChange={(e) => setName(e.target.value)}

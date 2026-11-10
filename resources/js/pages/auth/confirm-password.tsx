@@ -32,9 +32,12 @@ export default function ConfirmPassword() {
                 {({ processing, errors }) => (
                     <>
                         <div className="flex flex-col gap-1.5">
-                            <Label htmlFor="password">{t('auth.password')}</Label>
+                            <Label htmlFor="password" required>
+                                {t('auth.password')}
+                            </Label>
                             <PasswordInput
                                 id="password"
+                                aria-required
                                 name="password"
                                 autoComplete="current-password"
                                 autoFocus

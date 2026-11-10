@@ -104,10 +104,13 @@ function Settings({ country }: { country: App.Domain.Config.Data.CountryConfigDa
         <Panel title={t('config.settings')}>
             <form onSubmit={submit} className="flex flex-col gap-3" noValidate>
                 <div className="flex flex-col gap-1.5 sm:max-w-32">
-                    <Label htmlFor="currency">{t('config.currency')}</Label>
+                    <Label htmlFor="currency" required>
+                        {t('config.currency')}
+                    </Label>
                     <Input
                         placeholder={t('billing.field.currency_placeholder')}
                         id="currency"
+                        aria-required
                         maxLength={3}
                         className="h-11 font-mono uppercase"
                         value={form.data.currency}
@@ -266,12 +269,13 @@ function RulesForm({ country, options }: Props) {
                                 <span className="w-6 text-center text-sm text-muted tnum">
                                     {index + 1}
                                 </span>
-                                <Label htmlFor={`stage-${index}`} className="sr-only">
+                                <Label htmlFor={`stage-${index}`} required className="sr-only">
                                     {t('config.stage_label', { number: index + 1 })}
                                 </Label>
                                 <Input
                                     placeholder={t('config.stage_label_placeholder')}
                                     id={`stage-${index}`}
+                                    aria-required
                                     className="h-11 min-w-40 flex-1"
                                     maxLength={80}
                                     value={stage.label}

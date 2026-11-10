@@ -231,12 +231,15 @@ function RosterForm({ cohort }: { cohort: Cohort }) {
             className="flex flex-col gap-1.5 border-t border-line pt-3"
             noValidate
         >
-            <Label htmlFor="roster">{t('cohorts.roster.label')}</Label>
+            <Label htmlFor="roster" required>
+                {t('cohorts.roster.label')}
+            </Label>
             <p id="roster-hint" className="text-xs text-muted">
                 {t('cohorts.roster.hint')}
             </p>
             <textarea
                 id="roster"
+                aria-required
                 rows={4}
                 value={form.data.roster}
                 onChange={(event) => form.setData('roster', event.target.value)}

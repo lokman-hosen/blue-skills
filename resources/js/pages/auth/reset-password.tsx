@@ -31,9 +31,12 @@ export default function ResetPassword({ token, email, passwordRules }: Props) {
                 {({ processing, errors }) => (
                     <>
                         <div className="flex flex-col gap-1.5">
-                            <Label htmlFor="email">{t('auth.email')}</Label>
+                            <Label htmlFor="email" required>
+                                {t('auth.email')}
+                            </Label>
                             <Input
                                 id="email"
+                                aria-required
                                 type="email"
                                 name="email"
                                 autoComplete="email"
@@ -44,9 +47,12 @@ export default function ResetPassword({ token, email, passwordRules }: Props) {
                             <InputError message={errors.email} />
                         </div>
                         <div className="flex flex-col gap-1.5">
-                            <Label htmlFor="password">{t('auth.new_password')}</Label>
+                            <Label htmlFor="password" required>
+                                {t('auth.new_password')}
+                            </Label>
                             <PasswordInput
                                 id="password"
+                                aria-required
                                 name="password"
                                 autoComplete="new-password"
                                 autoFocus
@@ -56,11 +62,12 @@ export default function ResetPassword({ token, email, passwordRules }: Props) {
                             <InputError message={errors.password} />
                         </div>
                         <div className="flex flex-col gap-1.5">
-                            <Label htmlFor="password_confirmation">
+                            <Label htmlFor="password_confirmation" required>
                                 {t('auth.password_confirmation')}
                             </Label>
                             <PasswordInput
                                 id="password_confirmation"
+                                aria-required
                                 name="password_confirmation"
                                 autoComplete="new-password"
                                 passwordrules={passwordRules}

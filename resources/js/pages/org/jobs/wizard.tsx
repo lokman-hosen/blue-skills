@@ -306,6 +306,7 @@ function BasicsStep({ code, form: job, options, agency, organizationName }: Prop
                 {agency && (
                     <Field
                         id="job_mandate_id"
+                        required
                         label={t('jobs.field.mandate')}
                         hint={
                             mandate
@@ -321,6 +322,7 @@ function BasicsStep({ code, form: job, options, agency, organizationName }: Prop
                         error={form.errors.job_mandate_id}
                     >
                         <NativeSelect
+                            aria-required
                             id="job_mandate_id"
                             value={form.data.job_mandate_id}
                             onChange={(e) => chooseMandate(e.target.value)}
@@ -339,12 +341,14 @@ function BasicsStep({ code, form: job, options, agency, organizationName }: Prop
                 )}
                 <Field
                     id="title"
+                    required
                     label={t('jobs.field.title')}
                     hint={t('jobs.field.title_hint')}
                     error={form.errors.title}
                 >
                     <Input
                         placeholder={t('jobs.field.title_placeholder')}
+                        aria-required
                         id="title"
                         value={form.data.title}
                         maxLength={120}
@@ -355,10 +359,12 @@ function BasicsStep({ code, form: job, options, agency, organizationName }: Prop
                 <div className="grid gap-4 sm:grid-cols-2">
                     <Field
                         id="destination_country_code"
+                        required
                         label={t('jobs.field.destination')}
                         error={form.errors.destination_country_code}
                     >
                         <NativeSelect
+                            aria-required
                             id="destination_country_code"
                             value={form.data.destination_country_code}
                             onChange={(e) =>
@@ -391,11 +397,13 @@ function BasicsStep({ code, form: job, options, agency, organizationName }: Prop
                     </Field>
                     <Field
                         id="headcount"
+                        required
                         label={t('jobs.field.headcount')}
                         error={form.errors.headcount}
                     >
                         <Input
                             placeholder={t('jobs.field.headcount_placeholder')}
+                            aria-required
                             id="headcount"
                             type="number"
                             inputMode="numeric"
@@ -422,10 +430,12 @@ function BasicsStep({ code, form: job, options, agency, organizationName }: Prop
                     </Field>
                     <Field
                         id="occupation_id"
+                        required
                         label={t('voice.label.occupation')}
                         error={form.errors.occupation_id}
                     >
                         <NativeSelect
+                            aria-required
                             id="occupation_id"
                             value={form.data.occupation_id}
                             onChange={(e) => form.setData('occupation_id', e.target.value)}
@@ -583,10 +593,18 @@ function PayStep({ code, form: job, options }: Props) {
                 <div className="grid gap-4 sm:grid-cols-2">
                     <Field
                         id="salary_currency"
+                        required={
+                            data.salary_amount !== '' ||
+                            (paysForAccommodation && data.accommodation_cost_amount !== '')
+                        }
                         label={t('worker.salary.currency')}
                         error={errors.salary_currency}
                     >
                         <NativeSelect
+                            aria-required={
+                                data.salary_amount !== '' ||
+                                (paysForAccommodation && data.accommodation_cost_amount !== '')
+                            }
                             id="salary_currency"
                             value={data.salary_currency}
                             onChange={(e) => form.setData('salary_currency', e.target.value)}
@@ -603,10 +621,12 @@ function PayStep({ code, form: job, options }: Props) {
                     </Field>
                     <Field
                         id="salary_period"
+                        required={data.salary_amount !== ''}
                         label={t('jobs.field.salary_period')}
                         error={errors.salary_period}
                     >
                         <NativeSelect
+                            aria-required={data.salary_amount !== ''}
                             id="salary_period"
                             value={data.salary_period}
                             onChange={(e) => form.setData('salary_period', e.target.value)}
@@ -620,11 +640,13 @@ function PayStep({ code, form: job, options }: Props) {
                     </Field>
                     <Field
                         id="salary_amount"
+                        required={data.salary_max_amount !== ''}
                         label={t('jobs.field.salary_min')}
                         error={errors.salary_amount}
                     >
                         <Input
                             placeholder={t('jobs.field.salary_placeholder')}
+                            aria-required={data.salary_max_amount !== ''}
                             id="salary_amount"
                             type="number"
                             inputMode="numeric"
@@ -759,6 +781,7 @@ function PayStep({ code, form: job, options }: Props) {
                                 <div className="sm:col-start-2">
                                     <Field
                                         id="accommodation_cost_amount"
+                                        required
                                         label={t('jobs.field.accommodation_cost')}
                                         hint={t('jobs.field.accommodation_cost_hint', {
                                             currency: data.salary_currency || '—',
@@ -769,6 +792,7 @@ function PayStep({ code, form: job, options }: Props) {
                                             placeholder={t(
                                                 'jobs.field.accommodation_cost_placeholder',
                                             )}
+                                            aria-required
                                             id="accommodation_cost_amount"
                                             type="number"
                                             inputMode="numeric"
@@ -900,12 +924,17 @@ function RequirementsStep({ code, form: job, options }: Props) {
                                 className="flex flex-wrap items-end gap-2 sm:flex-nowrap"
                             >
                                 <div className="flex w-24 flex-col gap-1">
-                                    <Label htmlFor={`lang-code-${index}`} className="text-xs">
+                                    <Label
+                                        htmlFor={`lang-code-${index}`}
+                                        className="text-xs"
+                                        required
+                                    >
                                         {t('jobs.field.language_code')}
                                     </Label>
                                     <Input
                                         placeholder={t('jobs.field.language_code_placeholder')}
                                         id={`lang-code-${index}`}
+                                        aria-required
                                         value={row.code}
                                         maxLength={3}
                                         dir="ltr"
@@ -918,11 +947,16 @@ function RequirementsStep({ code, form: job, options }: Props) {
                                     />
                                 </div>
                                 <div className="flex min-w-0 flex-1 flex-col gap-1">
-                                    <Label htmlFor={`lang-level-${index}`} className="text-xs">
+                                    <Label
+                                        htmlFor={`lang-level-${index}`}
+                                        className="text-xs"
+                                        required
+                                    >
                                         {t('jobs.field.language_level')}
                                     </Label>
                                     <NativeSelect
                                         id={`lang-level-${index}`}
+                                        aria-required
                                         value={preset ? row.level : 'other'}
                                         onChange={(e) =>
                                             setLanguage(index, {
@@ -945,11 +979,13 @@ function RequirementsStep({ code, form: job, options }: Props) {
                                         <Label
                                             htmlFor={`lang-level-other-${index}`}
                                             className="text-xs"
+                                            required
                                         >
                                             {t('jobs.field.other_details')}
                                         </Label>
                                         <Input
                                             id={`lang-level-other-${index}`}
+                                            aria-required
                                             value={row.level}
                                             maxLength={40}
                                             placeholder={t('jobs.field.language_level_example')}
@@ -1214,9 +1250,11 @@ function ApplyStep({ code, form: job, options }: Props) {
                             >
                                 <Field
                                     id={`cost-category-${index}`}
+                                    required
                                     label={t('jobs.field.cost_category')}
                                 >
                                     <NativeSelect
+                                        aria-required
                                         id={`cost-category-${index}`}
                                         value={cost.category}
                                         onChange={(e) => setCost(index, 'category', e.target.value)}
@@ -1245,10 +1283,12 @@ function ApplyStep({ code, form: job, options }: Props) {
                                 </Field>
                                 <Field
                                     id={`cost-amount-${index}`}
+                                    required
                                     label={t('worker.salary.amount')}
                                 >
                                     <Input
                                         placeholder={t('jobs.field.cost_amount_placeholder')}
+                                        aria-required
                                         id={`cost-amount-${index}`}
                                         type="number"
                                         inputMode="numeric"
@@ -1260,9 +1300,11 @@ function ApplyStep({ code, form: job, options }: Props) {
                                 </Field>
                                 <Field
                                     id={`cost-currency-${index}`}
+                                    required
                                     label={t('worker.salary.currency')}
                                 >
                                     <NativeSelect
+                                        aria-required
                                         id={`cost-currency-${index}`}
                                         value={cost.currency}
                                         onChange={(e) => setCost(index, 'currency', e.target.value)}
@@ -1276,9 +1318,11 @@ function ApplyStep({ code, form: job, options }: Props) {
                                 </Field>
                                 <Field
                                     id={`cost-payer-${index}`}
+                                    required
                                     label={t('jobs.field.cost_payer')}
                                 >
                                     <NativeSelect
+                                        aria-required
                                         id={`cost-payer-${index}`}
                                         value={cost.payer}
                                         onChange={(e) => setCost(index, 'payer', e.target.value)}
@@ -1348,6 +1392,7 @@ function ApplyStep({ code, form: job, options }: Props) {
                     <OptionSelect
                         id="apply_method"
                         option="apply_method"
+                        required
                         label={t('jobs.field.apply_method')}
                         value={data.apply_method}
                         empty={null}
@@ -1367,11 +1412,13 @@ function ApplyStep({ code, form: job, options }: Props) {
                 {data.apply_method === 'both' && (
                     <Field
                         id="apply_url"
+                        required
                         label={t('jobs.field.apply_url')}
                         hint={t('jobs.field.apply_url_hint')}
                         error={errors.apply_url}
                     >
                         <Input
+                            aria-required
                             id="apply_url"
                             type="url"
                             inputMode="url"

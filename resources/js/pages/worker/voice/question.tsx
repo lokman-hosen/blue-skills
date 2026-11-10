@@ -272,9 +272,12 @@ export default function VoiceQuestion({
                                 send({ text });
                             }}
                         >
-                            <Label htmlFor="voice-text">{t(`voice.label.${question}`)}</Label>
+                            <Label htmlFor="voice-text" required>
+                                {t(`voice.label.${question}`)}
+                            </Label>
                             <textarea
                                 id="voice-text"
+                                aria-required
                                 value={text}
                                 onChange={(event) => setText(event.target.value)}
                                 maxLength={maxTypedCharacters}

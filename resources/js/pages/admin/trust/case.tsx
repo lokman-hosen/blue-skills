@@ -378,10 +378,13 @@ function NoteForm({ caseId }: { caseId: string }) {
             className="flex flex-col gap-2 border-t border-line pt-3"
             noValidate
         >
-            <Label htmlFor="case-note">{t('trust.case.add_note')}</Label>
+            <Label htmlFor="case-note" required>
+                {t('trust.case.add_note')}
+            </Label>
             <textarea
                 placeholder={t('trust.case.add_note_placeholder')}
                 id="case-note"
+                aria-required
                 rows={3}
                 maxLength={5000}
                 value={body}
@@ -459,9 +462,12 @@ function AssignForm({
                     </NativeSelect>
                 </div>
                 <div className="flex flex-col gap-1.5">
-                    <Label htmlFor="priority">{t('trust.priority')}</Label>
+                    <Label htmlFor="priority" required>
+                        {t('trust.priority')}
+                    </Label>
                     <NativeSelect
                         id="priority"
+                        aria-required
                         value={form.data.priority}
                         onChange={(event) => form.setData('priority', event.target.value)}
                     >

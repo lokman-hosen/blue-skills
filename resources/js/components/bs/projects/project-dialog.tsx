@@ -116,9 +116,12 @@ export function ProjectDialog({
                 </DialogHeader>
                 <form onSubmit={submit} className="flex flex-col gap-4" noValidate>
                     <div className="flex flex-col gap-1.5">
-                        <Label htmlFor="project-name">{t('projects.field.name')}</Label>
+                        <Label htmlFor="project-name" required>
+                            {t('projects.field.name')}
+                        </Label>
                         <Input
                             id="project-name"
+                            aria-required
                             className="h-11"
                             placeholder={t('projects.field.name_example')}
                             value={form.data.name}
@@ -129,10 +132,13 @@ export function ProjectDialog({
                     </div>
                     <div className="grid gap-3 sm:grid-cols-2">
                         <div className="flex flex-col gap-1.5">
-                            <Label htmlFor="project-target">{t('projects.field.target')}</Label>
+                            <Label htmlFor="project-target" required>
+                                {t('projects.field.target')}
+                            </Label>
                             <Input
                                 placeholder={t('projects.field.target_placeholder')}
                                 id="project-target"
+                                aria-required
                                 type="number"
                                 inputMode="numeric"
                                 min={1}

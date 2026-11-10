@@ -156,9 +156,12 @@ function ShortlistPanel({
             )}
             {available.length > 0 ? (
                 <form onSubmit={submitAdd} className="flex flex-col gap-2" noValidate>
-                    <Label htmlFor="shortlist-list">{t('talent.add_to')}</Label>
+                    <Label htmlFor="shortlist-list" required>
+                        {t('talent.add_to')}
+                    </Label>
                     <NativeSelect
                         id="shortlist-list"
+                        aria-required
                         value={add.data.list}
                         onChange={(event) => add.setData('list', event.target.value)}
                     >
@@ -169,7 +172,7 @@ function ShortlistPanel({
                         ))}
                     </NativeSelect>
                     <Label htmlFor="shortlist-note" className="text-xs">
-                        {t('shortlists.note')} ({t('common.optional')})
+                        {t('shortlists.note')}
                     </Label>
                     <Input
                         placeholder={t('shortlists.note_placeholder')}
@@ -187,9 +190,12 @@ function ShortlistPanel({
                 </form>
             ) : (
                 <form onSubmit={submitCreate} className="flex flex-col gap-2" noValidate>
-                    <Label htmlFor="shortlist-new">{t('shortlists.new')}</Label>
+                    <Label htmlFor="shortlist-new" required>
+                        {t('shortlists.new')}
+                    </Label>
                     <Input
                         id="shortlist-new"
+                        aria-required
                         className="h-11"
                         value={create.data.name}
                         maxLength={120}
@@ -267,9 +273,12 @@ function InvitePanel({
             )}
             {canInvite && available.length > 0 && (
                 <form onSubmit={submit} className="flex flex-col gap-2" noValidate>
-                    <Label htmlFor="invite-job">{t('invitations.job')}</Label>
+                    <Label htmlFor="invite-job" required>
+                        {t('invitations.job')}
+                    </Label>
                     <NativeSelect
                         id="invite-job"
+                        aria-required
                         value={form.data.job}
                         onChange={(event) => form.setData('job', event.target.value)}
                     >
@@ -280,7 +289,7 @@ function InvitePanel({
                         ))}
                     </NativeSelect>
                     <Label htmlFor="invite-note" className="text-xs">
-                        {t('invitations.note')} ({t('common.optional')})
+                        {t('invitations.note')}
                     </Label>
                     <textarea
                         placeholder={t('invitations.note_placeholder')}

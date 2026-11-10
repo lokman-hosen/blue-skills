@@ -54,12 +54,13 @@ export default function Security(props: Props) {
                     {({ errors, processing }) => (
                         <>
                             <div className="grid gap-2">
-                                <Label htmlFor="current_password">
+                                <Label htmlFor="current_password" required>
                                     {t('settings.password.current')}
                                 </Label>
 
                                 <PasswordInput
                                     id="current_password"
+                                    aria-required
                                     ref={currentPasswordInput}
                                     name="current_password"
                                     className="mt-1 block w-full"
@@ -70,10 +71,13 @@ export default function Security(props: Props) {
                             </div>
 
                             <div className="grid gap-2">
-                                <Label htmlFor="password">{t('auth.new_password')}</Label>
+                                <Label htmlFor="password" required>
+                                    {t('auth.new_password')}
+                                </Label>
 
                                 <PasswordInput
                                     id="password"
+                                    aria-required
                                     ref={passwordInput}
                                     name="password"
                                     className="mt-1 block w-full"
@@ -85,12 +89,13 @@ export default function Security(props: Props) {
                             </div>
 
                             <div className="grid gap-2">
-                                <Label htmlFor="password_confirmation">
+                                <Label htmlFor="password_confirmation" required>
                                     {t('auth.password_confirmation')}
                                 </Label>
 
                                 <PasswordInput
                                     id="password_confirmation"
+                                    aria-required
                                     name="password_confirmation"
                                     className="mt-1 block w-full"
                                     autoComplete="new-password"

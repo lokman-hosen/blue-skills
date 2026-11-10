@@ -28,10 +28,13 @@ export default function WorkerDetails({ countries }: Props) {
                 {({ errors, processing }) => (
                     <>
                         <div className="flex flex-col gap-1.5">
-                            <Label htmlFor="name">{t('auth.worker.name')}</Label>
+                            <Label htmlFor="name" required>
+                                {t('auth.worker.name')}
+                            </Label>
                             <Input
                                 placeholder={t('auth.worker.name_placeholder')}
                                 id="name"
+                                aria-required
                                 name="name"
                                 autoComplete="name"
                                 required
@@ -42,9 +45,12 @@ export default function WorkerDetails({ countries }: Props) {
                             <InputError message={errors.name} />
                         </div>
                         <div className="flex flex-col gap-1.5">
-                            <Label htmlFor="country">{t('auth.worker.country')}</Label>
+                            <Label htmlFor="country" required>
+                                {t('auth.worker.country')}
+                            </Label>
                             <NativeSelect
                                 id="country"
+                                aria-required
                                 name="country"
                                 required
                                 defaultValue=""

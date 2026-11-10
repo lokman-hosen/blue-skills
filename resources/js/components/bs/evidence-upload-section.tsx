@@ -153,9 +153,12 @@ export function EvidenceUploadSection({ evidence, types, maxSizeMb }: Props) {
             >
                 <h2 className="font-semibold">{t('worker.credential.add')}</h2>
                 <div className="flex flex-col gap-1.5">
-                    <Label htmlFor="credential-type">{t('worker.credential.kind')}</Label>
+                    <Label htmlFor="credential-type" required>
+                        {t('worker.credential.kind')}
+                    </Label>
                     <NativeSelect
                         id="credential-type"
+                        aria-required
                         value={type}
                         onChange={(event) => setType(event.target.value)}
                     >
@@ -168,9 +171,12 @@ export function EvidenceUploadSection({ evidence, types, maxSizeMb }: Props) {
                     <InputError message={errors.type} />
                 </div>
                 <div className="flex flex-col gap-1.5">
-                    <Label htmlFor="credential-title">{t('worker.credential.title')}</Label>
+                    <Label htmlFor="credential-title" required>
+                        {t('worker.credential.title')}
+                    </Label>
                     <Input
                         id="credential-title"
+                        aria-required
                         value={title}
                         maxLength={120}
                         onChange={(event) => setTitle(event.target.value)}
@@ -181,9 +187,7 @@ export function EvidenceUploadSection({ evidence, types, maxSizeMb }: Props) {
                     <InputError message={errors.title} />
                 </div>
                 <div className="flex flex-col gap-1.5">
-                    <Label htmlFor="credential-expires">
-                        {t('worker.credential.expires_on')} ({t('common.optional')})
-                    </Label>
+                    <Label htmlFor="credential-expires">{t('worker.credential.expires_on')}</Label>
                     <Input
                         id="credential-expires"
                         type="date"
@@ -195,6 +199,7 @@ export function EvidenceUploadSection({ evidence, types, maxSizeMb }: Props) {
                 </div>
                 <FileUpload
                     label={t('worker.credential.file')}
+                    required
                     value={file}
                     onChange={(selected) => setFile(selected)}
                     accept={['application/pdf', 'image/jpeg', 'image/png']}

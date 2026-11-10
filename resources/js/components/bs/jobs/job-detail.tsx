@@ -156,9 +156,12 @@ function ReportDialog({
                 {canReport ? (
                     <form onSubmit={submit} className="flex flex-col gap-4" noValidate>
                         <div className="flex flex-col gap-1.5">
-                            <Label htmlFor="report-category">{t('jobs.report.category')}</Label>
+                            <Label htmlFor="report-category" required>
+                                {t('jobs.report.category')}
+                            </Label>
                             <NativeSelect
                                 id="report-category"
+                                aria-required
                                 value={form.data.category}
                                 onChange={(event) => form.setData('category', event.target.value)}
                             >
@@ -174,12 +177,16 @@ function ReportDialog({
                             <InputError message={form.errors.category} />
                         </div>
                         <div className="flex flex-col gap-1.5">
-                            <Label htmlFor="report-description">
+                            <Label
+                                htmlFor="report-description"
+                                required={form.data.category === 'other'}
+                            >
                                 {t('jobs.report.description')}
                             </Label>
                             <textarea
                                 placeholder={t('jobs.report.description_placeholder')}
                                 id="report-description"
+                                aria-required={form.data.category === 'other'}
                                 value={form.data.description}
                                 maxLength={1000}
                                 rows={4}

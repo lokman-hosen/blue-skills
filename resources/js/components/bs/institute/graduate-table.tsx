@@ -16,7 +16,7 @@ import {
     DialogTrigger,
 } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
+import { Label, RequiredMark } from '@/components/ui/label';
 import { Spinner } from '@/components/ui/spinner';
 import { useTranslation } from '@/lib/i18n';
 import org from '@/routes/org';
@@ -281,11 +281,12 @@ function AttestDialog({ member }: { member: Member }) {
                 </DialogHeader>
                 <form onSubmit={submit} className="flex flex-col gap-3" noValidate>
                     <div className="flex flex-col gap-1.5 sm:max-w-56">
-                        <Label htmlFor={`attest-date-${member.id}`}>
+                        <Label htmlFor={`attest-date-${member.id}`} required>
                             {t('institute.records.completed_on')}
                         </Label>
                         <Input
                             id={`attest-date-${member.id}`}
+                            aria-required
                             type="date"
                             max={today}
                             className="h-11"
@@ -296,7 +297,7 @@ function AttestDialog({ member }: { member: Member }) {
                     </div>
                     <div className="flex flex-col gap-1.5">
                         <Label htmlFor={`attest-note-${member.id}`}>
-                            {t('institute.records.note_label')} ({t('common.optional')})
+                            {t('institute.records.note_label')}
                         </Label>
                         <textarea
                             placeholder={t('institute.records.note_placeholder')}
@@ -360,12 +361,13 @@ function AssessDialog({ member }: { member: Member }) {
                 </DialogHeader>
                 <form onSubmit={submit} className="flex flex-col gap-3" noValidate>
                     <div className="flex flex-col gap-1.5">
-                        <Label htmlFor={`assess-title-${member.id}`}>
+                        <Label htmlFor={`assess-title-${member.id}`} required>
                             {t('institute.records.test_title')}
                         </Label>
                         <Input
                             placeholder={t('institute.records.test_title_placeholder')}
                             id={`assess-title-${member.id}`}
+                            aria-required
                             className="h-11"
                             maxLength={160}
                             value={form.data.title}
@@ -373,9 +375,10 @@ function AssessDialog({ member }: { member: Member }) {
                         />
                         <InputError message={form.errors.title} />
                     </div>
-                    <fieldset className="flex flex-col gap-1.5">
+                    <fieldset role="radiogroup" aria-required className="flex flex-col gap-1.5">
                         <legend className="text-sm font-medium">
                             {t('institute.records.result')}
+                            <RequiredMark />
                         </legend>
                         <div className="flex flex-wrap gap-2">
                             {(['pass', 'fail'] as const).map((value) => (
@@ -400,7 +403,7 @@ function AssessDialog({ member }: { member: Member }) {
                     <div className="grid gap-3 sm:grid-cols-2">
                         <div className="flex flex-col gap-1.5">
                             <Label htmlFor={`assess-score-${member.id}`}>
-                                {t('institute.records.score_label')} ({t('common.optional')})
+                                {t('institute.records.score_label')}
                             </Label>
                             <Input
                                 placeholder={t('institute.records.score_placeholder')}
@@ -416,11 +419,12 @@ function AssessDialog({ member }: { member: Member }) {
                             <InputError message={form.errors.score} />
                         </div>
                         <div className="flex flex-col gap-1.5">
-                            <Label htmlFor={`assess-date-${member.id}`}>
+                            <Label htmlFor={`assess-date-${member.id}`} required>
                                 {t('institute.records.assessed_on')}
                             </Label>
                             <Input
                                 id={`assess-date-${member.id}`}
+                                aria-required
                                 type="date"
                                 max={today}
                                 className="h-11"
@@ -480,12 +484,13 @@ function WithdrawDialog({
                     <DialogDescription>{t('institute.records.withdraw_hint')}</DialogDescription>
                 </DialogHeader>
                 <form onSubmit={submit} className="flex flex-col gap-3" noValidate>
-                    <Label htmlFor={`withdraw-${record.id}`}>
+                    <Label htmlFor={`withdraw-${record.id}`} required>
                         {t('institute.records.withdraw_reason')}
                     </Label>
                     <textarea
                         placeholder={t('institute.records.withdraw_reason_placeholder')}
                         id={`withdraw-${record.id}`}
+                        aria-required
                         rows={3}
                         maxLength={500}
                         value={form.data.reason}

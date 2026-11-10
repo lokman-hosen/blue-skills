@@ -6,7 +6,7 @@ import { NativeSelect } from '@/components/bs/native-select';
 import InputError from '@/components/input-error';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
+import { Label, RequiredMark } from '@/components/ui/label';
 import { Spinner } from '@/components/ui/spinner';
 import { useTranslation } from '@/lib/i18n';
 import { cn } from '@/lib/utils';
@@ -52,9 +52,10 @@ export default function WorkerBasics({
         <>
             <Head title={t('worker.basics.title')} />
             <form onSubmit={submit('voice')} className="flex flex-col gap-5" noValidate>
-                <fieldset className="flex flex-col gap-2">
+                <fieldset role="radiogroup" aria-required className="flex flex-col gap-2">
                     <legend className="mb-2 text-[13px] font-semibold">
                         {t('worker.basics.trade')}
+                        <RequiredMark />
                     </legend>
                     <div className="grid grid-cols-2 gap-2 sm:grid-cols-3">
                         {occupations.map((occupation) => (
@@ -100,7 +101,7 @@ export default function WorkerBasics({
                                 form.setData('specialization_id', event.target.value)
                             }
                         >
-                            <option value="">{t('common.optional')}</option>
+                            <option value="">{t('common.choose')}</option>
                             {selected.specializations.map((item) => (
                                 <option key={item.id} value={item.id}>
                                     {item.name}
@@ -112,10 +113,13 @@ export default function WorkerBasics({
                 )}
 
                 <div className="flex flex-col gap-1.5">
-                    <Label htmlFor="years_experience">{t('worker.basics.years')}</Label>
+                    <Label htmlFor="years_experience" required>
+                        {t('worker.basics.years')}
+                    </Label>
                     <Input
                         placeholder={t('worker.basics.years_placeholder')}
                         id="years_experience"
+                        aria-required
                         type="number"
                         inputMode="numeric"
                         min={0}

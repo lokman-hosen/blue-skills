@@ -31,10 +31,13 @@ export default function ForgotPassword({ status }: { status?: string }) {
                 {({ processing, errors }) => (
                     <>
                         <div className="flex flex-col gap-1.5">
-                            <Label htmlFor="email">{t('auth.email')}</Label>
+                            <Label htmlFor="email" required>
+                                {t('auth.email')}
+                            </Label>
                             <Input
                                 placeholder={t('auth.email_placeholder')}
                                 id="email"
+                                aria-required
                                 type="email"
                                 name="email"
                                 autoComplete="email"

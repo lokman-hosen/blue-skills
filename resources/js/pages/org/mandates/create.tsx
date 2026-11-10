@@ -6,7 +6,7 @@ import { PageHeader } from '@/components/bs/page-header';
 import InputError from '@/components/input-error';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
+import { Label, RequiredMark } from '@/components/ui/label';
 import { Spinner } from '@/components/ui/spinner';
 import { useTranslation } from '@/lib/i18n';
 import org from '@/routes/org';
@@ -85,9 +85,12 @@ export default function CreateMandate({ employers, occupations, countries, licen
                 />
                 <div className="flex flex-col gap-4 rounded-2xl border border-line bg-surface p-5">
                     <div className="flex flex-col gap-1.5">
-                        <Label htmlFor="mandate-employer">{t('mandates.employer')}</Label>
+                        <Label htmlFor="mandate-employer" required>
+                            {t('mandates.employer')}
+                        </Label>
                         <NativeSelect
                             id="mandate-employer"
+                            aria-required
                             value={form.data.employer_id}
                             onChange={(event) => form.setData('employer_id', event.target.value)}
                         >
@@ -107,7 +110,10 @@ export default function CreateMandate({ employers, occupations, countries, licen
                         />
                     </div>
                     <fieldset className="flex flex-col gap-1">
-                        <legend className="mb-1 text-sm font-medium">{t('mandates.trades')}</legend>
+                        <legend className="mb-1 text-sm font-medium">
+                            {t('mandates.trades')}
+                            <RequiredMark srLabel={t('common.required')} />
+                        </legend>
                         <div className="grid max-h-56 gap-x-4 overflow-y-auto rounded-lg border border-line p-2 sm:grid-cols-2">
                             {occupations.map((occupation) => (
                                 <label
@@ -137,11 +143,12 @@ export default function CreateMandate({ employers, occupations, countries, licen
                     </fieldset>
                     <div className="grid gap-4 sm:grid-cols-2">
                         <div className="flex flex-col gap-1.5">
-                            <Label htmlFor="mandate-destination">
+                            <Label htmlFor="mandate-destination" required>
                                 {t('jobs.field.destination')}
                             </Label>
                             <NativeSelect
                                 id="mandate-destination"
+                                aria-required
                                 value={form.data.destination_country_code}
                                 onChange={(event) =>
                                     form.setData('destination_country_code', event.target.value)
@@ -156,10 +163,13 @@ export default function CreateMandate({ employers, occupations, countries, licen
                             <InputError message={form.errors.destination_country_code} />
                         </div>
                         <div className="flex flex-col gap-1.5">
-                            <Label htmlFor="mandate-headcount">{t('mandates.headcount')}</Label>
+                            <Label htmlFor="mandate-headcount" required>
+                                {t('mandates.headcount')}
+                            </Label>
                             <Input
                                 placeholder={t('mandates.headcount_placeholder')}
                                 id="mandate-headcount"
+                                aria-required
                                 type="number"
                                 inputMode="numeric"
                                 min={1}
@@ -170,9 +180,7 @@ export default function CreateMandate({ employers, occupations, countries, licen
                             <InputError message={form.errors.headcount} />
                         </div>
                         <div className="flex flex-col gap-1.5">
-                            <Label htmlFor="mandate-from">
-                                {t('mandates.valid_from')} ({t('common.optional')})
-                            </Label>
+                            <Label htmlFor="mandate-from">{t('mandates.valid_from')}</Label>
                             <Input
                                 id="mandate-from"
                                 type="date"
@@ -183,9 +191,12 @@ export default function CreateMandate({ employers, occupations, countries, licen
                             <InputError message={form.errors.valid_from} />
                         </div>
                         <div className="flex flex-col gap-1.5">
-                            <Label htmlFor="mandate-until">{t('mandates.valid_until')}</Label>
+                            <Label htmlFor="mandate-until" required>
+                                {t('mandates.valid_until')}
+                            </Label>
                             <Input
                                 id="mandate-until"
+                                aria-required
                                 type="date"
                                 className="h-11"
                                 value={form.data.valid_until}
@@ -198,6 +209,7 @@ export default function CreateMandate({ employers, occupations, countries, licen
                     </div>
                     <FileUpload
                         label={t('mandates.letter')}
+                        required
                         value={form.data.letter}
                         onChange={(file) => form.setData('letter', file)}
                         accept={['application/pdf', 'image/jpeg', 'image/png']}

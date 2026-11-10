@@ -99,6 +99,7 @@ export default function VerificationEvidence({
                         <div className="flex flex-col gap-3">
                             <FileUpload
                                 label={t(`onboarding.evidence.document.${organization.type}`)}
+                                required
                                 value={file}
                                 onChange={(selected) => {
                                     setFile(selected);

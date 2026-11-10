@@ -62,12 +62,13 @@ function RespondPanel({ mandate }: { mandate: App.Domain.Jobs.Data.MandateData }
                 className="flex flex-col gap-3"
                 noValidate
             >
-                <Label htmlFor="mandate-note">
-                    {t('mandates.note')} {declining ? '' : `(${t('common.optional')})`}
+                <Label htmlFor="mandate-note" required={declining}>
+                    {t('mandates.note')}
                 </Label>
                 <textarea
                     placeholder={t('mandates.note_placeholder')}
                     id="mandate-note"
+                    aria-required={declining}
                     rows={2}
                     maxLength={500}
                     value={form.data.note}
@@ -113,6 +114,7 @@ function EvidencePanel({ mandate }: { mandate: App.Domain.Jobs.Data.MandateData 
             <h2 className="font-semibold">{t('mandates.add_evidence')}</h2>
             <FileUpload
                 label={t('mandates.letter')}
+                required
                 value={file}
                 onChange={setFile}
                 accept={['application/pdf', 'image/jpeg', 'image/png']}

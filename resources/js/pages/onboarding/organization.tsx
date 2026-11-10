@@ -7,7 +7,7 @@ import { NativeSelect } from '@/components/bs/native-select';
 import InputError from '@/components/input-error';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
+import { Label, RequiredMark } from '@/components/ui/label';
 import { Spinner } from '@/components/ui/spinner';
 import { useTranslation } from '@/lib/i18n';
 import { cn } from '@/lib/utils';
@@ -58,9 +58,15 @@ export default function RegisterOrganization({ countries }: Props) {
                                 required
                             />
                         )}
-                        <fieldset className="flex flex-col gap-2">
-                            <legend className="mb-2 text-sm font-semibold">
+                        <fieldset
+                            className="flex flex-col gap-2"
+                            role="radiogroup"
+                            aria-required
+                            aria-labelledby="org-type-legend"
+                        >
+                            <legend id="org-type-legend" className="mb-2 text-sm font-semibold">
                                 {t('onboarding.org.type')}
+                                <RequiredMark />
                             </legend>
                             <div className="grid gap-2 sm:grid-cols-3">
                                 {types.map(({ value, icon: Icon }) => (
@@ -112,7 +118,9 @@ export default function RegisterOrganization({ countries }: Props) {
                                 required
                             />
                             <div className="flex flex-col gap-1.5">
-                                <Label htmlFor="country_code">{t('onboarding.org.country')}</Label>
+                                <Label htmlFor="country_code" required>
+                                    {t('onboarding.org.country')}
+                                </Label>
                                 <NativeSelect
                                     id="country_code"
                                     name="country_code"
@@ -213,7 +221,9 @@ function Field({
 
     return (
         <div className="flex flex-col gap-1.5">
-            <Label htmlFor={id}>{label}</Label>
+            <Label htmlFor={id} required={required}>
+                {label}
+            </Label>
             <Input
                 id={id}
                 name={id}

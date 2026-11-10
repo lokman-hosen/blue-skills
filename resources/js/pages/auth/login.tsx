@@ -49,10 +49,13 @@ export default function Login({ status, canResetPassword }: Props) {
                 {({ processing, errors }) => (
                     <>
                         <div className="flex flex-col gap-1.5">
-                            <Label htmlFor="email">{t('auth.email')}</Label>
+                            <Label htmlFor="email" required>
+                                {t('auth.email')}
+                            </Label>
                             <Input
                                 placeholder={t('auth.email_placeholder')}
                                 id="email"
+                                aria-required
                                 type="email"
                                 name="email"
                                 required
@@ -66,7 +69,9 @@ export default function Login({ status, canResetPassword }: Props) {
 
                         <div className="flex flex-col gap-1.5">
                             <div className="flex items-center">
-                                <Label htmlFor="password">{t('auth.password')}</Label>
+                                <Label htmlFor="password" required>
+                                    {t('auth.password')}
+                                </Label>
                                 {canResetPassword && (
                                     <TextLink href={request()} className="ms-auto text-sm">
                                         {t('auth.forgot.link')}
@@ -75,6 +80,7 @@ export default function Login({ status, canResetPassword }: Props) {
                             </div>
                             <PasswordInput
                                 id="password"
+                                aria-required
                                 name="password"
                                 required
                                 autoComplete="current-password"

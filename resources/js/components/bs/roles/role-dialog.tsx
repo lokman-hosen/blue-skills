@@ -88,10 +88,13 @@ export function RoleDialog({ kind, bases, role }: Props) {
                 </DialogHeader>
                 <form onSubmit={submit} className="flex flex-col gap-3" noValidate>
                     <div className="flex flex-col gap-1.5">
-                        <Label htmlFor={`${id}-label`}>{t('roles.field.name')}</Label>
+                        <Label htmlFor={`${id}-label`} required>
+                            {t('roles.field.name')}
+                        </Label>
                         <Input
                             placeholder={t('roles.field.name_placeholder')}
                             id={`${id}-label`}
+                            aria-required
                             className="h-11"
                             maxLength={60}
                             value={form.data.label}
@@ -120,9 +123,12 @@ export function RoleDialog({ kind, bases, role }: Props) {
                     {bases && (
                         <>
                             <div className="flex flex-col gap-1.5">
-                                <Label htmlFor={`${id}-base`}>{t('roles.field.based_on')}</Label>
+                                <Label htmlFor={`${id}-base`} required>
+                                    {t('roles.field.based_on')}
+                                </Label>
                                 <NativeSelect
                                     id={`${id}-base`}
+                                    aria-required
                                     value={form.data.based_on}
                                     onChange={(event) =>
                                         form.setData('based_on', event.target.value)

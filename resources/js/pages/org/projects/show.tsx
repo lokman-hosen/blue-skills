@@ -376,11 +376,12 @@ function ProjectApplicants({
                         {t('applicants.selected', { count: formatNumber(selected.length) })}
                     </p>
                     <div className="flex flex-col gap-1">
-                        <Label htmlFor="bulk-stage" className="text-xs">
+                        <Label htmlFor="bulk-stage" required className="text-xs">
                             {t('applicants.move_to')}
                         </Label>
                         <NativeSelect
                             id="bulk-stage"
+                            aria-required
                             value={target}
                             onChange={(event) => setTarget(event.target.value)}
                         >
@@ -406,11 +407,12 @@ function ProjectApplicants({
                         {t('applicants.move')}
                     </Button>
                     <div className="flex flex-col gap-1">
-                        <Label htmlFor="bulk-reason" className="text-xs">
+                        <Label htmlFor="bulk-reason" required className="text-xs">
                             {t('projects.reject_reason')}
                         </Label>
                         <NativeSelect
                             id="bulk-reason"
+                            aria-required
                             value={reason}
                             onChange={(event) => setReason(event.target.value)}
                         >

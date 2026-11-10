@@ -27,10 +27,13 @@ export function PoolFields({
     return (
         <form onSubmit={onSubmit} className="flex flex-col gap-3" noValidate>
             <div className="flex flex-col gap-1.5">
-                <Label htmlFor={`${id}-name`}>{t('pools.field.name')}</Label>
+                <Label htmlFor={`${id}-name`} required>
+                    {t('pools.field.name')}
+                </Label>
                 <Input
                     placeholder={t('pools.field.name_placeholder')}
                     id={`${id}-name`}
+                    aria-required
                     className="h-11"
                     maxLength={120}
                     value={form.data.name}
@@ -39,9 +42,7 @@ export function PoolFields({
                 <InputError message={form.errors.name} />
             </div>
             <div className="flex flex-col gap-1.5">
-                <Label htmlFor={`${id}-trade`}>
-                    {t('courses.field.trade')} ({t('common.optional')})
-                </Label>
+                <Label htmlFor={`${id}-trade`}>{t('courses.field.trade')}</Label>
                 <NativeSelect
                     id={`${id}-trade`}
                     value={form.data.occupation_id}
@@ -57,9 +58,7 @@ export function PoolFields({
                 <InputError message={form.errors.occupation_id} />
             </div>
             <div className="flex flex-col gap-1.5">
-                <Label htmlFor={`${id}-description`}>
-                    {t('pools.field.description')} ({t('common.optional')})
-                </Label>
+                <Label htmlFor={`${id}-description`}>{t('pools.field.description')}</Label>
                 <Input
                     placeholder={t('pools.field.description_placeholder')}
                     id={`${id}-description`}

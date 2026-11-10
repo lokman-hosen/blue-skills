@@ -168,9 +168,12 @@ export default function Documents({ documents, types, maxSizeMb }: Props) {
                             {t('documents.upload_title')}
                         </h2>
                         <div className="flex flex-col gap-1.5">
-                            <Label htmlFor="document-type">{t('documents.type')}</Label>
+                            <Label htmlFor="document-type" required>
+                                {t('documents.type')}
+                            </Label>
                             <NativeSelect
                                 id="document-type"
+                                aria-required
                                 value={type}
                                 onChange={(event) => setType(event.target.value as DocumentType)}
                             >
@@ -183,9 +186,7 @@ export default function Documents({ documents, types, maxSizeMb }: Props) {
                             <InputError message={errors.type} />
                         </div>
                         <div className="flex flex-col gap-1.5">
-                            <Label htmlFor="document-expires">
-                                {t('documents.expires_label')} ({t('common.optional')})
-                            </Label>
+                            <Label htmlFor="document-expires">{t('documents.expires_label')}</Label>
                             <Input
                                 id="document-expires"
                                 type="date"
@@ -197,6 +198,7 @@ export default function Documents({ documents, types, maxSizeMb }: Props) {
                         </div>
                         <FileUpload
                             label={t('documents.file')}
+                            required
                             value={file}
                             onChange={(selected) => setFile(selected)}
                             accept={['application/pdf', 'image/jpeg', 'image/png']}

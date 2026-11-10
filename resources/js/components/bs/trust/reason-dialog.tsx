@@ -70,9 +70,12 @@ export function ReasonDialog({
                 <form onSubmit={submit} className="flex flex-col gap-3" noValidate>
                     {reasons && (
                         <div className="flex flex-col gap-1.5">
-                            <Label htmlFor={`${id}-reason`}>{t('trust.reason')}</Label>
+                            <Label htmlFor={`${id}-reason`} required>
+                                {t('trust.reason')}
+                            </Label>
                             <NativeSelect
                                 id={`${id}-reason`}
+                                aria-required
                                 value={form.data.reason}
                                 onChange={(event) => form.setData('reason', event.target.value)}
                             >
@@ -89,13 +92,13 @@ export function ReasonDialog({
                         </div>
                     )}
                     <div className="flex flex-col gap-1.5">
-                        <Label htmlFor={`${id}-note`}>
+                        <Label htmlFor={`${id}-note`} required={noteRequired}>
                             {t('trust.note')}
-                            {!noteRequired && ` (${t('common.optional')})`}
                         </Label>
                         <textarea
                             placeholder={t('trust.note_placeholder')}
                             id={`${id}-note`}
+                            aria-required={noteRequired}
                             rows={3}
                             maxLength={1000}
                             value={form.data.note}

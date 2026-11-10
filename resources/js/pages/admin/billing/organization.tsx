@@ -109,9 +109,12 @@ function AssignPlanForm({
             ) : (
                 <form onSubmit={submit} className="flex flex-col gap-3" noValidate>
                     <div className="flex flex-col gap-1.5">
-                        <Label htmlFor="assign-plan">{t('billing.plan')}</Label>
+                        <Label htmlFor="assign-plan" required>
+                            {t('billing.plan')}
+                        </Label>
                         <NativeSelect
                             id="assign-plan"
+                            aria-required
                             value={form.data.plan_id}
                             onChange={(event) => form.setData('plan_id', event.target.value)}
                             aria-invalid={!!form.errors.plan_id}
@@ -125,9 +128,12 @@ function AssignPlanForm({
                         <InputError message={form.errors.plan_id} />
                     </div>
                     <div className="flex flex-col gap-1.5">
-                        <Label htmlFor="assign-start">{t('billing.starts_on')}</Label>
+                        <Label htmlFor="assign-start" required>
+                            {t('billing.starts_on')}
+                        </Label>
                         <Input
                             id="assign-start"
+                            aria-required
                             type="date"
                             className="h-11"
                             value={form.data.starts_on}
@@ -179,10 +185,13 @@ function AdjustCreditsForm({ organizationId }: { organizationId: string }) {
         <Panel title={t('billing.adjust_credits')}>
             <form onSubmit={submit} className="flex flex-col gap-3" noValidate>
                 <div className="flex flex-col gap-1.5">
-                    <Label htmlFor="credits-delta">{t('billing.credits_change')}</Label>
+                    <Label htmlFor="credits-delta" required>
+                        {t('billing.credits_change')}
+                    </Label>
                     <Input
                         placeholder={t('billing.credits_change_placeholder')}
                         id="credits-delta"
+                        aria-required
                         type="number"
                         inputMode="numeric"
                         className="h-11"
@@ -197,10 +206,13 @@ function AdjustCreditsForm({ organizationId }: { organizationId: string }) {
                     <InputError message={form.errors.delta} />
                 </div>
                 <div className="flex flex-col gap-1.5">
-                    <Label htmlFor="credits-note">{t('billing.credits_note')}</Label>
+                    <Label htmlFor="credits-note" required>
+                        {t('billing.credits_note')}
+                    </Label>
                     <Input
                         placeholder={t('billing.credits_note_placeholder')}
                         id="credits-note"
+                        aria-required
                         className="h-11"
                         value={form.data.note}
                         onChange={(event) => form.setData('note', event.target.value)}

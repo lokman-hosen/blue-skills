@@ -300,9 +300,7 @@ function CurrentStagePanel({
                     <InputError message={form.errors.next_action} />
                 </div>
                 <div className="flex flex-col gap-1.5 sm:max-w-56">
-                    <Label htmlFor="due_on">
-                        {t('mobility.field.due_on')} ({t('common.optional')})
-                    </Label>
+                    <Label htmlFor="due_on">{t('mobility.field.due_on')}</Label>
                     <Input
                         id="due_on"
                         type="date"
@@ -367,10 +365,13 @@ function NoteDialog({
                     <DialogDescription>{t('mobility.action.note_hint')}</DialogDescription>
                 </DialogHeader>
                 <form onSubmit={submit} className="flex flex-col gap-3" noValidate>
-                    <Label htmlFor={`${action}-note`}>{t('mobility.field.note')}</Label>
+                    <Label htmlFor={`${action}-note`} required>
+                        {t('mobility.field.note')}
+                    </Label>
                     <textarea
                         placeholder={t('mobility.field.note_placeholder')}
                         id={`${action}-note`}
+                        aria-required
                         rows={3}
                         maxLength={500}
                         value={form.data.note}
@@ -423,9 +424,12 @@ function CloseDialog({
                 </DialogHeader>
                 <form onSubmit={submit} className="flex flex-col gap-3" noValidate>
                     <div className="flex flex-col gap-1.5">
-                        <Label htmlFor="close-reason">{t('mobility.close.reason')}</Label>
+                        <Label htmlFor="close-reason" required>
+                            {t('mobility.close.reason')}
+                        </Label>
                         <NativeSelect
                             id="close-reason"
+                            aria-required
                             value={form.data.reason}
                             onChange={(event) => form.setData('reason', event.target.value)}
                         >
@@ -441,13 +445,13 @@ function CloseDialog({
                         <InputError message={form.errors.reason} />
                     </div>
                     <div className="flex flex-col gap-1.5">
-                        <Label htmlFor="close-note">
+                        <Label htmlFor="close-note" required={form.data.reason === 'other'}>
                             {t('mobility.close.note')}
-                            {form.data.reason !== 'other' && ` (${t('common.optional')})`}
                         </Label>
                         <textarea
                             placeholder={t('mobility.close.note_placeholder')}
                             id="close-note"
+                            aria-required={form.data.reason === 'other'}
                             rows={2}
                             maxLength={500}
                             value={form.data.note}
@@ -553,6 +557,7 @@ function OrgUpload({
     return (
         <div className="flex flex-col gap-3 rounded-xl bg-surface-2 p-3">
             <FileUpload
+                required
                 label={
                     document.fileUrl
                         ? t('mobility.document.replace_file')
@@ -650,11 +655,12 @@ function ReturnDialog({
                 </DialogHeader>
                 <form onSubmit={submit} className="flex flex-col gap-3" noValidate>
                     <div className="flex flex-col gap-1.5">
-                        <Label htmlFor={`return-reason-${document.id}`}>
+                        <Label htmlFor={`return-reason-${document.id}`} required>
                             {t('mobility.document.return_reason_label')}
                         </Label>
                         <NativeSelect
                             id={`return-reason-${document.id}`}
+                            aria-required
                             value={form.data.reason}
                             onChange={(event) => form.setData('reason', event.target.value)}
                         >
@@ -670,13 +676,16 @@ function ReturnDialog({
                         <InputError message={form.errors.reason} />
                     </div>
                     <div className="flex flex-col gap-1.5">
-                        <Label htmlFor={`return-note-${document.id}`}>
+                        <Label
+                            htmlFor={`return-note-${document.id}`}
+                            required={form.data.reason === 'other'}
+                        >
                             {t('mobility.field.note')}
-                            {form.data.reason !== 'other' && ` (${t('common.optional')})`}
                         </Label>
                         <textarea
                             placeholder={t('mobility.field.note_placeholder')}
                             id={`return-note-${document.id}`}
+                            aria-required={form.data.reason === 'other'}
                             rows={3}
                             maxLength={500}
                             value={form.data.note}
@@ -747,9 +756,12 @@ function RequestDocumentDialog({
                 </DialogHeader>
                 <form onSubmit={submit} className="flex flex-col gap-3" noValidate>
                     <div className="flex flex-col gap-1.5">
-                        <Label htmlFor="request-type">{t('documents.type')}</Label>
+                        <Label htmlFor="request-type" required>
+                            {t('documents.type')}
+                        </Label>
                         <NativeSelect
                             id="request-type"
+                            aria-required
                             value={form.data.type}
                             onChange={(event) => form.setData('type', event.target.value)}
                         >
@@ -766,7 +778,7 @@ function RequestDocumentDialog({
                     </div>
                     <div className="flex flex-col gap-1.5">
                         <Label htmlFor="request-title">
-                            {t('mobility.document.request_title')} ({t('common.optional')})
+                            {t('mobility.document.request_title')}
                         </Label>
                         <Input
                             placeholder={t('mobility.document.request_title_placeholder')}
@@ -779,11 +791,12 @@ function RequestDocumentDialog({
                         <InputError message={form.errors.title} />
                     </div>
                     <div className="flex flex-col gap-1.5">
-                        <Label htmlFor="request-provider">
+                        <Label htmlFor="request-provider" required>
                             {t('mobility.document.request_provider')}
                         </Label>
                         <NativeSelect
                             id="request-provider"
+                            aria-required
                             value={form.data.provided_by}
                             onChange={(event) => form.setData('provided_by', event.target.value)}
                         >
@@ -795,9 +808,7 @@ function RequestDocumentDialog({
                         <InputError message={form.errors.provided_by} />
                     </div>
                     <div className="flex flex-col gap-1.5 sm:max-w-56">
-                        <Label htmlFor="request-due">
-                            {t('mobility.field.due_on')} ({t('common.optional')})
-                        </Label>
+                        <Label htmlFor="request-due">{t('mobility.field.due_on')}</Label>
                         <Input
                             id="request-due"
                             type="date"
@@ -808,9 +819,7 @@ function RequestDocumentDialog({
                         <InputError message={form.errors.due_on} />
                     </div>
                     <div className="flex flex-col gap-1.5">
-                        <Label htmlFor="request-note">
-                            {t('mobility.document.request_note')} ({t('common.optional')})
-                        </Label>
+                        <Label htmlFor="request-note">{t('mobility.document.request_note')}</Label>
                         <textarea
                             placeholder={t('mobility.document.request_note_placeholder')}
                             id="request-note"

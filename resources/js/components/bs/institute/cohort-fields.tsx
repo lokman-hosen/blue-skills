@@ -24,9 +24,12 @@ export function CohortFields({
     return (
         <form onSubmit={onSubmit} className="flex flex-col gap-3" noValidate>
             <div className="flex flex-col gap-1.5">
-                <Label htmlFor={`${id}-name`}>{t('cohorts.field.name')}</Label>
+                <Label htmlFor={`${id}-name`} required>
+                    {t('cohorts.field.name')}
+                </Label>
                 <Input
                     id={`${id}-name`}
+                    aria-required
                     className="h-11"
                     maxLength={120}
                     placeholder={t('cohorts.field.name_example')}
@@ -37,9 +40,7 @@ export function CohortFields({
             </div>
             <div className="grid gap-3 sm:grid-cols-2">
                 <div className="flex flex-col gap-1.5">
-                    <Label htmlFor={`${id}-start`}>
-                        {t('cohorts.field.starts_on')} ({t('common.optional')})
-                    </Label>
+                    <Label htmlFor={`${id}-start`}>{t('cohorts.field.starts_on')}</Label>
                     <Input
                         id={`${id}-start`}
                         type="date"
@@ -50,9 +51,7 @@ export function CohortFields({
                     <InputError message={form.errors.starts_on} />
                 </div>
                 <div className="flex flex-col gap-1.5">
-                    <Label htmlFor={`${id}-end`}>
-                        {t('cohorts.field.ends_on')} ({t('common.optional')})
-                    </Label>
+                    <Label htmlFor={`${id}-end`}>{t('cohorts.field.ends_on')}</Label>
                     <Input
                         id={`${id}-end`}
                         type="date"

@@ -298,6 +298,8 @@ function ShareForm({
                 label={
                     scan ? t('mobility.document.or_upload') : t('mobility.document.upload_label')
                 }
+                // With a saved scan, uploading is the alternative (`required_without:document_id`).
+                required={!scan}
                 value={file}
                 onChange={setFile}
                 accept={DOCUMENT_ACCEPT}
@@ -446,12 +448,13 @@ function ContractAnswer({
                             </DialogDescription>
                         </DialogHeader>
                         <form onSubmit={query} className="flex flex-col gap-3" noValidate>
-                            <Label htmlFor={`query-${document.id}`}>
+                            <Label htmlFor={`query-${document.id}`} required>
                                 {t('mobility.document.contract_query_label')}
                             </Label>
                             <textarea
                                 placeholder={t('mobility.document.contract_query_placeholder')}
                                 id={`query-${document.id}`}
+                                aria-required
                                 rows={3}
                                 maxLength={500}
                                 value={form.data.note}
