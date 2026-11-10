@@ -29,6 +29,16 @@ beforeEach(function () {
     $this->electrician = Occupation::query()->where('slug', 'electrician')->firstOrFail();
 });
 
+/** The pay step of a complete AE job; override any key. */
+function completePay(array $overrides = []): array
+{
+    return [
+        'salary_amount' => 2200, 'salary_currency' => 'AED', 'salary_period' => 'month',
+        'working_hours' => 'day_6_8', 'working_days' => 'days_6', 'accommodation' => 'provided',
+        ...$overrides,
+    ];
+}
+
 /** A complete AE job saved through the four wizard steps. */
 function postCompleteJob(User $user, Organization $organization, array $mobility = []): JobPosting
 {
@@ -42,20 +52,20 @@ function postCompleteJob(User $user, Organization $organization, array $mobility
 
     $job = JobPosting::query()->latest()->firstOrFail();
 
-    test()->put(route('org.jobs.update', [$job, 'skills']), [
+    test()->put(route('org.jobs.update', [$job, 'pay']), [
+        ...completePay(),
+        'accommodation' => 'provided', 'accommodation_details' => 'Shared, 4 per room',
+    ])->assertSessionHasNoErrors();
+
+    test()->put(route('org.jobs.update', [$job, 'requirements']), [
         'skill_ids' => Skill::query()->whereIn('slug', ['industrial-wiring', 'db-installation'])->pluck('id')->all(),
-        'min_experience_years' => 3,
+        'experience_level' => '3_5',
         'language_requirements' => [['code' => 'en', 'level' => 'basic']],
     ])->assertSessionHasNoErrors();
 
-    test()->put(route('org.jobs.update', [$job, 'terms']), [
-        'salary_amount' => 2200, 'salary_currency' => 'AED', 'salary_period' => 'month',
-        'hours_per_day' => 8, 'days_per_week' => 6, 'contract_months' => 24,
-    ])->assertSessionHasNoErrors();
-
-    test()->put(route('org.jobs.update', [$job, 'mobility']), [
-        'accommodation' => 'provided', 'accommodation_details' => 'Shared, 4 per room',
-        'permit_payer' => 'employer', 'visa_payer' => 'employer',
+    test()->put(route('org.jobs.update', [$job, 'apply']), [
+        'permit_payer' => 'employer', 'visa_payer' => 'employer', 'contract_duration' => '2_years',
+        'apply_method' => 'blueskills',
         'costs' => [['category' => 'medical', 'description' => 'Medical check', 'amount' => 300, 'currency' => 'AED', 'payer' => 'employer']],
         ...$mobility,
     ])->assertRedirect(route('org.jobs.edit', [$job, 'preview']));
@@ -65,7 +75,7 @@ function postCompleteJob(User $user, Organization $organization, array $mobility
 
 it('walks through the wizard and stores the structured job', function () {
     actingInOrg($this->hr, $this->employer)->get(route('org.jobs.create'))->assertOk()
-        ->assertInertia(fn (Assert $page) => $page->component('org/jobs/wizard')->where('step', 'requirement')->where('code', null));
+        ->assertInertia(fn (Assert $page) => $page->component('org/jobs/wizard')->where('step', 'basics')->where('code', null));
 
     $job = postCompleteJob($this->hr, $this->employer);
 
@@ -73,6 +83,8 @@ it('walks through the wizard and stores the structured job', function () {
         ->and($job->public_code)->toMatch('/^AE-EL-\d{4}$/')
         ->and($job->employer_organization_id)->toBe($this->employer->id)
         ->and($job->salary_amount_minor)->toBe(220000)
+        ->and($job->min_experience_years)->toBe(3)
+        ->and($job->contract_months)->toBe(24)
         ->and($job->skills()->count())->toBe(2)
         ->and($job->costs()->firstOrFail()->amount_minor)->toBe(30000);
 
@@ -105,9 +117,9 @@ it('blocks submission when workers would pay a cost the destination does not all
 
 it('requires the destination\'s mandatory disclosures before submission', function () {
     $job = postCompleteJob($this->hr, $this->employer);
-    $job->update(['salary_amount_minor' => null, 'salary_currency' => null, 'contract_months' => null]);
+    $job->update(['salary_amount_minor' => null, 'salary_currency' => null, 'contract_duration' => null]);
 
-    $this->post(route('org.jobs.submit', $job))->assertSessionHasErrors(['salary_amount_minor', 'contract_months']);
+    $this->post(route('org.jobs.submit', $job))->assertSessionHasErrors(['salary_amount_minor', 'contract_duration']);
 });
 
 it('lets unverified employers draft but not submit', function () {
@@ -133,7 +145,7 @@ it('keeps posting to roles with permission and jobs to their own organization', 
     $other = Organization::factory()->employer()->verified()->create();
     $otherHr = orgMember($other, OrganizationRole::HrAdmin);
     actingInOrg($otherHr, $other)->get(route('org.jobs.show', $job))->assertNotFound();
-    actingInOrg($otherHr, $other)->put(route('org.jobs.update', [$job, 'terms']), ['salary_amount' => 1, 'salary_currency' => 'AED', 'salary_period' => 'month'])->assertNotFound();
+    actingInOrg($otherHr, $other)->put(route('org.jobs.update', [$job, 'pay']), ['salary_amount' => 1, 'salary_currency' => 'AED', 'salary_period' => 'month'])->assertNotFound();
 
     $this->actingAs(makeWorker())->get(route('org.jobs.index'))->assertForbidden();
 });
@@ -144,9 +156,9 @@ it('validates each wizard step', function () {
     ])->assertSessionHasErrors(['title', 'occupation_id', 'headcount', 'destination_country_code']);
 
     $job = postCompleteJob($this->hr, $this->employer);
-    $this->put(route('org.jobs.update', [$job, 'terms']), ['salary_amount' => 2000, 'hours_per_day' => 20, 'days_per_week' => 8])
-        ->assertSessionHasErrors(['salary_currency', 'salary_period', 'hours_per_day', 'days_per_week']);
-    $this->put(route('org.jobs.update', [$job, 'mobility']), ['costs' => [['category' => 'bribe', 'amount' => -1, 'currency' => 'XXX', 'payer' => 'nobody']]])
+    $this->put(route('org.jobs.update', [$job, 'pay']), ['salary_amount' => 2000, 'working_hours' => 'all_day', 'working_days' => '8'])
+        ->assertSessionHasErrors(['salary_currency', 'salary_period', 'working_hours', 'working_days']);
+    $this->put(route('org.jobs.update', [$job, 'apply']), ['apply_method' => 'blueskills', 'costs' => [['category' => 'bribe', 'amount' => -1, 'currency' => 'XXX', 'payer' => 'nobody']]])
         ->assertSessionHasErrors(['costs.0.category', 'costs.0.amount', 'costs.0.currency', 'costs.0.payer']);
 });
 
@@ -154,16 +166,14 @@ it('sends a live job back to review when pay or worker costs change, but not for
     $job = postCompleteJob($this->hr, $this->employer);
     $job->forceFill(['status' => Published::class, 'published_at' => now()])->save();
 
-    $this->put(route('org.jobs.update', [$job, 'requirement']), [
+    $this->put(route('org.jobs.update', [$job, 'basics']), [
         'title' => 'Senior Building Electrician', 'occupation_id' => $this->electrician->id, 'headcount' => 25,
         'destination_country_code' => 'AE', 'destination_city' => 'Dubai',
     ])->assertSessionHasNoErrors();
     expect($job->refresh()->status)->toBeInstanceOf(Published::class);
 
-    $this->put(route('org.jobs.update', [$job, 'terms']), [
-        'salary_amount' => 1800, 'salary_currency' => 'AED', 'salary_period' => 'month',
-        'hours_per_day' => 8, 'days_per_week' => 6, 'contract_months' => 24,
-    ])->assertRedirect(route('org.jobs.show', $job));
+    $this->put(route('org.jobs.update', [$job, 'pay']), completePay(['salary_amount' => 1800]))
+        ->assertRedirect(route('org.jobs.show', $job));
 
     expect($job->refresh()->status)->toBeInstanceOf(Submitted::class)
         ->and($job->material_change_at)->not->toBeNull()
@@ -174,8 +184,8 @@ it('refuses a material change that would charge workers an unlawful fee', functi
     $job = postCompleteJob($this->hr, $this->employer);
     $job->forceFill(['status' => Published::class, 'published_at' => now()])->save();
 
-    $this->put(route('org.jobs.update', [$job, 'mobility']), [
-        'visa_payer' => 'worker', 'accommodation' => 'provided', 'costs' => [],
+    $this->put(route('org.jobs.update', [$job, 'apply']), [
+        'visa_payer' => 'worker', 'apply_method' => 'blueskills', 'costs' => [],
     ])->assertSessionHasErrors('costs');
 
     expect($job->refresh()->status)->toBeInstanceOf(Published::class)
@@ -214,10 +224,8 @@ it('tells workers still in the process when a live job changes materially', func
     $open = Application::factory()->create(['job_id' => $job->id, 'worker_profile_id' => makeWorker()->workerProfile->id]);
     $withdrawn = Application::factory()->create(['job_id' => $job->id, 'worker_profile_id' => makeWorker()->workerProfile->id, 'status' => Withdrawn::class]);
 
-    $this->put(route('org.jobs.update', [$job, 'terms']), [
-        'salary_amount' => 1800, 'salary_currency' => 'AED', 'salary_period' => 'month',
-        'hours_per_day' => 8, 'days_per_week' => 6, 'contract_months' => 24,
-    ])->assertRedirect(route('org.jobs.show', $job));
+    $this->put(route('org.jobs.update', [$job, 'pay']), completePay(['salary_amount' => 1800]))
+        ->assertRedirect(route('org.jobs.show', $job));
 
     expect($open->workerProfile->user->notifications()->sole()->type)->toBe('job_changed')
         ->and($withdrawn->workerProfile->user->notifications()->count())->toBe(0);

@@ -54,13 +54,14 @@ function postAgencyJob(?User $user = null): JobPosting
     actingInOrg($user ?? test()->agencyOwner, test()->agency)->post(route('org.jobs.store'), agencyRequirement())->assertSessionHasNoErrors();
     $job = JobPosting::query()->latest()->firstOrFail();
 
-    test()->put(route('org.jobs.update', [$job, 'skills']), ['skill_ids' => [], 'language_requirements' => []])->assertSessionHasNoErrors();
-    test()->put(route('org.jobs.update', [$job, 'terms']), [
+    test()->put(route('org.jobs.update', [$job, 'pay']), [
         'salary_amount' => 2200, 'salary_currency' => 'AED', 'salary_period' => 'month',
-        'hours_per_day' => 8, 'days_per_week' => 6, 'contract_months' => 24,
+        'working_hours' => 'day_6_8', 'working_days' => 'days_6', 'accommodation' => 'provided',
     ])->assertSessionHasNoErrors();
-    test()->put(route('org.jobs.update', [$job, 'mobility']), [
-        'accommodation' => 'provided', 'permit_payer' => 'employer', 'visa_payer' => 'employer', 'costs' => [],
+    test()->put(route('org.jobs.update', [$job, 'requirements']), ['skill_ids' => [], 'language_requirements' => []])->assertSessionHasNoErrors();
+    test()->put(route('org.jobs.update', [$job, 'apply']), [
+        'permit_payer' => 'employer', 'visa_payer' => 'employer', 'contract_duration' => '2_years',
+        'worker_fees' => 'none', 'apply_method' => 'blueskills', 'costs' => [],
     ])->assertSessionHasNoErrors();
 
     return $job->refresh();
@@ -156,4 +157,20 @@ it('refuses submission and publication once the mandate stops backing the job', 
     $this->mandate->update(['status' => MandateStatus::Verified]);
     $this->patch(route('admin.jobs.decide', $review), ['decision' => 'approved'])->assertSessionHasNoErrors();
     expect($job->fresh()?->status)->toBeInstanceOf(Published::class);
+});
+
+it('duplicates an agency job only while the mandate has places left for the copy', function () {
+    $job = postAgencyJob();
+
+    // 20 of the mandate's 30 places are taken, so a second 20-worker job does not fit.
+    $this->post(route('org.jobs.duplicate', $job))->assertSessionHasErrors('job');
+    expect(JobPosting::query()->count())->toBe(1);
+
+    $job->update(['headcount' => 10]);
+    $this->post(route('org.jobs.duplicate', $job))->assertSessionHasNoErrors();
+
+    $copy = JobPosting::query()->whereKeyNot($job->id)->sole();
+    expect($copy->job_mandate_id)->toBe($this->mandate->id)
+        ->and($copy->agency_organization_id)->toBe($this->agency->id)
+        ->and($copy->employer_organization_id)->toBe($this->employer->id);
 });

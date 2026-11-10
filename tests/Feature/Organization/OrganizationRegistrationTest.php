@@ -42,7 +42,7 @@ it('shows the registration form only to organization users', function () {
     $this->actingAs(User::factory()->create())
         ->get(route('organizations.create'))
         ->assertOk()
-        ->assertInertia(fn (Assert $page) => $page->component('onboarding/organization')->has('countries', 12));
+        ->assertInertia(fn (Assert $page) => $page->component('onboarding/organization')->has('countries', 16));
 
     $this->actingAs(User::factory()->worker()->create())->get(route('organizations.create'))->assertForbidden();
     $this->actingAs(User::factory()->staff()->create())->get(route('organizations.create'))->assertForbidden();

@@ -37,7 +37,7 @@ it('seeds the reference data and the sample world', function () {
     $this->seed(DatabaseSeeder::class);
 
     expect(Country::query()->pluck('code')->sort()->values()->all())
-        ->toBe(['AE', 'BD', 'CZ', 'IN', 'JP', 'LK', 'NP', 'OM', 'PK', 'PL', 'QA', 'SA'])
+        ->toBe(['AE', 'AL', 'BD', 'CZ', 'IN', 'JP', 'LK', 'LT', 'MY', 'NP', 'OM', 'PK', 'PL', 'QA', 'RS', 'SA'])
         ->and(Language::query()->pluck('code')->sort()->values()->all())
         ->toBe(['ar', 'bn', 'en', 'hi', 'ne', 'si', 'ta', 'ur'])
         ->and(Language::query()->where('rtl', true)->pluck('code')->sort()->values()->all())->toBe(['ar', 'ur'])
@@ -129,5 +129,5 @@ it('skips the sample world and the default superuser in production', function ()
 
     expect(Organization::query()->count())->toBe(0)
         ->and(User::query()->count())->toBe(0)
-        ->and(Country::query()->count())->toBe(12);
+        ->and(Country::query()->count())->toBe(16);
 });
