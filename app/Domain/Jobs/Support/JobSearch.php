@@ -18,7 +18,7 @@ final class JobSearch
     public const SORTS = ['newest', 'deadline'];
 
     /**
-     * @param  array{q?: string|null, country?: string|null, occupation?: string|null, no_worker_costs?: bool, accommodation?: bool, salary_disclosed?: bool, sort?: string|null}  $filters
+     * @param  array{q?: string|null, country?: string|null, occupation?: string|null, industry?: string|null, employment_type?: string|null, no_worker_costs?: bool, accommodation?: bool, salary_disclosed?: bool, sort?: string|null}  $filters
      * @return LengthAwarePaginator<int, JobPosting>
      */
     public static function run(array $filters, int $perPage = 20): LengthAwarePaginator
@@ -34,6 +34,8 @@ final class JobSearch
                 ->where('title', 'ilike', $term)
                 ->orWhere('destination_city', 'ilike', $term)
                 ->orWhere('public_code', 'ilike', $term)
+                ->orWhere('other_skills', 'ilike', $term)
+                ->orWhere('duties', 'ilike', $term)
                 ->orWhereHas('employer', fn (Builder $employer) => $employer->where('display_name', 'ilike', $term))
                 ->orWhereHas('occupation', fn (Builder $occupation) => $occupation->whereRaw("name->>'en' ilike ?", [$term]))
                 ->orWhereHas('skills', fn (Builder $skill) => $skill->whereRaw("skills.name->>'en' ilike ?", [$term])));
@@ -45,6 +47,14 @@ final class JobSearch
 
         if (filled($filters['occupation'] ?? null)) {
             $query->whereHas('occupation', fn (Builder $occupation) => $occupation->where('slug', $filters['occupation']));
+        }
+
+        if (filled($filters['industry'] ?? null)) {
+            $query->whereHas('occupation.sector', fn (Builder $sector) => $sector->where('slug', $filters['industry']));
+        }
+
+        if (filled($filters['employment_type'] ?? null)) {
+            $query->where('employment_type', $filters['employment_type']);
         }
 
         if ($filters['no_worker_costs'] ?? false) {

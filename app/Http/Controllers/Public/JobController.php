@@ -7,11 +7,13 @@ use App\Domain\Config\Models\Country;
 use App\Domain\Identity\Models\User;
 use App\Domain\Jobs\Data\JobListingData;
 use App\Domain\Jobs\Data\JobTruthCardData;
+use App\Domain\Jobs\Enums\EmploymentType;
 use App\Domain\Jobs\Models\JobPosting;
 use App\Domain\Jobs\Support\JobMatch;
 use App\Domain\Jobs\Support\JobSearch;
 use App\Domain\Taxonomy\Data\TaxonomyOptionData;
 use App\Domain\Taxonomy\Models\Occupation;
+use App\Domain\Taxonomy\Models\Sector;
 use App\Domain\Trust\Actions\ReportJob;
 use App\Domain\Trust\Enums\ReportCategory;
 use App\Domain\Worker\Models\WorkerProfile;
@@ -35,6 +37,8 @@ class JobController extends Controller
             'q' => mb_substr($request->string('q')->trim()->toString(), 0, 100) ?: null,
             'country' => $request->string('country')->toString() ?: null,
             'occupation' => $request->string('occupation')->toString() ?: null,
+            'industry' => $request->string('industry')->toString() ?: null,
+            'employment_type' => EmploymentType::tryFrom($request->string('employment_type')->toString())?->value,
             'no_worker_costs' => $request->boolean('no_worker_costs'),
             'accommodation' => $request->boolean('accommodation'),
             'salary_disclosed' => $request->boolean('salary_disclosed'),
@@ -51,6 +55,8 @@ class JobController extends Controller
                 ->map(fn (Country $country) => CountryOptionData::fromCountry($country))->values()->all(),
             'occupations' => Occupation::query()->orderBy('slug')->get()
                 ->map(fn (Occupation $occupation) => TaxonomyOptionData::fromModel($occupation))->values()->all(),
+            'industries' => Sector::query()->orderBy('sort_order')->get()
+                ->map(fn (Sector $sector) => TaxonomyOptionData::fromModel($sector))->values()->all(),
         ]);
     }
 

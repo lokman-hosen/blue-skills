@@ -4,6 +4,8 @@ namespace App\Domain\Jobs\Data;
 
 use App\Domain\Jobs\Enums\BenefitProvision;
 use App\Domain\Jobs\Enums\CostPayer;
+use App\Domain\Jobs\Enums\EmploymentType;
+use App\Domain\Jobs\Enums\SalaryBasis;
 use App\Domain\Jobs\Enums\SalaryPeriod;
 use App\Domain\Jobs\Models\JobPosting;
 use App\Support\Data\MoneyData;
@@ -24,7 +26,10 @@ class JobListingData extends Data
         public ?string $destinationCountryName,
         public ?string $destinationCity,
         public ?MoneyData $salary,
+        public ?MoneyData $salaryMax,
         public ?SalaryPeriod $salaryPeriod,
+        public ?SalaryBasis $salaryBasis,
+        public ?EmploymentType $employmentType,
         public ?BenefitProvision $accommodation,
         public bool $workerPaysCosts,
         public ?string $deadline,
@@ -46,7 +51,12 @@ class JobListingData extends Data
             salary: $job->salary_amount_minor !== null && $job->salary_currency !== null
                 ? new MoneyData($job->salary_amount_minor, $job->salary_currency)
                 : null,
+            salaryMax: $job->salary_max_amount_minor !== null && $job->salary_currency !== null
+                ? new MoneyData($job->salary_max_amount_minor, $job->salary_currency)
+                : null,
             salaryPeriod: $job->salary_period,
+            salaryBasis: $job->salary_basis,
+            employmentType: $job->employment_type,
             accommodation: $job->accommodation,
             workerPaysCosts: $job->workerCosts()->isNotEmpty() || $job->visa_payer === CostPayer::Worker || $job->permit_payer === CostPayer::Worker,
             deadline: $job->deadline?->toDateString(),

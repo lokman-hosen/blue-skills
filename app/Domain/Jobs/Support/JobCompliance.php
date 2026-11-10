@@ -29,11 +29,14 @@ final class JobCompliance
         'dormitory_cost' => 'accommodation',
         'hostel_deduction' => 'accommodation',
         'food' => 'food',
-        'working_hours' => 'hours_per_day',
-        'shift_pattern' => 'hours_per_day',
+        'working_hours' => 'working_hours',
+        'shift_pattern' => 'shift_pattern',
         'overtime' => 'overtime_terms',
-        'contract_length' => 'contract_months',
-        'contract_type' => 'contract_months',
+        'contract_length' => 'contract_duration',
+        'contract_type' => 'contract_duration',
+        'insurance' => 'insurance',
+        'pay_basis' => 'salary_basis',
+        'employment_type' => 'employment_type',
     ];
 
     /**

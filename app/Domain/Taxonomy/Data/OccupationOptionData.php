@@ -21,6 +21,8 @@ class OccupationOptionData extends Data
         public string $slug,
         public string $name,
         public string $sector,
+        /** The sector is the job's industry (D-117). */
+        public string $sectorSlug,
         public array $specializations,
         public array $skills,
     ) {}
@@ -32,6 +34,7 @@ class OccupationOptionData extends Data
             slug: $occupation->slug,
             name: $occupation->translatedName(),
             sector: $occupation->sector->translatedName(),
+            sectorSlug: $occupation->sector->slug,
             specializations: $occupation->specializations
                 ->map(fn (Specialization $specialization) => TaxonomyOptionData::fromModel($specialization))
                 ->values()

@@ -18,7 +18,7 @@ class SaveJobStepRequest extends FormRequest
     {
         $rules = JobWizard::rules($this->step(), $this->all());
 
-        if ($this->step() === 'requirement') {
+        if ($this->step() === 'basics') {
             $user = $this->user();
             $organization = $user !== null ? app(CurrentOrganization::class)->resolve($user, $this->session()) : null;
 
@@ -32,12 +32,38 @@ class SaveJobStepRequest extends FormRequest
     }
 
     /**
-     * Creating a job always starts with the requirement step.
+     * The same wording the wizard shows before it sends the step (D-117).
+     *
+     * @return array<string, string>
+     */
+    public function messages(): array
+    {
+        $other = __('jobs.validation.other_required');
+
+        return [
+            'working_hours_other.required_if' => $other,
+            'working_days_other.required_if' => $other,
+            'shift_pattern_other.required_if' => $other,
+            'experience_other.required_if' => $other,
+            'education_other.required_if' => $other,
+            'age_other.required_if' => $other,
+            'contract_other.required_if' => $other,
+            'accommodation_cost_amount.required' => __('jobs.validation.accommodation_cost_required'),
+            'salary_max_amount.gte' => __('jobs.validation.salary_max_below_min'),
+            'salary_amount.required_with' => __('jobs.validation.salary_min_required'),
+            'salary_currency.required_with' => __('jobs.validation.currency_required'),
+            'apply_url.required_if' => __('jobs.validation.apply_url_required'),
+            'apply_url.url' => __('jobs.validation.apply_url_invalid'),
+        ];
+    }
+
+    /**
+     * Creating a job always starts with the basics step.
      */
     public function step(): string
     {
         $step = $this->route('step');
 
-        return is_string($step) ? $step : 'requirement';
+        return is_string($step) ? $step : 'basics';
     }
 }

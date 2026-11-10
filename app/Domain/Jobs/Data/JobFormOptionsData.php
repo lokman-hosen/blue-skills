@@ -5,6 +5,7 @@ namespace App\Domain\Jobs\Data;
 use App\Domain\Config\Models\Country;
 use App\Domain\Jobs\Models\JobMandate;
 use App\Domain\Jobs\Models\JobPosting;
+use App\Domain\Jobs\Support\JobWizard;
 use App\Domain\Organization\Enums\OrganizationType;
 use App\Domain\Organization\Models\Organization;
 use App\Domain\Taxonomy\Data\OccupationOptionData;
@@ -52,7 +53,7 @@ class JobFormOptionsData extends Data
                 ->map(fn (Country $country) => DestinationOptionData::fromCountry($country))
                 ->values()
                 ->all(),
-            currencies: Country::query()->distinct()->orderBy('currency')->pluck('currency')->values()->all(),
+            currencies: JobWizard::currencies(),
             mandates: $mandates,
         );
     }

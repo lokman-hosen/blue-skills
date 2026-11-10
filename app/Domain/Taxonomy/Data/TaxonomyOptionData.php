@@ -3,6 +3,7 @@
 namespace App\Domain\Taxonomy\Data;
 
 use App\Domain\Taxonomy\Models\Occupation;
+use App\Domain\Taxonomy\Models\Sector;
 use App\Domain\Taxonomy\Models\Skill;
 use App\Domain\Taxonomy\Models\Specialization;
 use Spatie\LaravelData\Data;
@@ -15,7 +16,7 @@ class TaxonomyOptionData extends Data
         public string $name,
     ) {}
 
-    public static function fromModel(Occupation|Specialization|Skill $model): self
+    public static function fromModel(Sector|Occupation|Specialization|Skill $model): self
     {
         return new self($model->id, $model->slug, $model->translatedName());
     }

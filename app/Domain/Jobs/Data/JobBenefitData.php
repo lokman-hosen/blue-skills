@@ -11,7 +11,7 @@ use Spatie\LaravelData\Data;
 class JobBenefitData extends Data
 {
     public function __construct(
-        /** accommodation | food | transport | medical | airfare */
+        /** accommodation | food | transport | insurance | medical | airfare */
         public string $key,
         public ?BenefitProvision $provision,
         public ?string $details,

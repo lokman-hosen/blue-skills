@@ -67,7 +67,7 @@ class SaveJobStep
 
             $job->fill($data['attributes']);
 
-            if ($step === 'requirement') {
+            if ($step === 'basics') {
                 $this->ensureWithinMandate($job);
             }
 

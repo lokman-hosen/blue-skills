@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Organization;
 
 use App\Domain\Applications\Models\Application;
 use App\Domain\Jobs\Actions\ChangeJobAvailability;
+use App\Domain\Jobs\Actions\DuplicateJob;
 use App\Domain\Jobs\Actions\SaveJobStep;
 use App\Domain\Jobs\Actions\SubmitJobForReview;
 use App\Domain\Jobs\Data\JobFormData;
@@ -59,7 +60,7 @@ class JobController extends Controller
         $organization = $this->organization($request);
         Gate::authorize('create', [JobPosting::class, $organization]);
 
-        return $this->wizard($organization, null, 'requirement');
+        return $this->wizard($organization, null, 'basics');
     }
 
     public function store(SaveJobStepRequest $request, SaveJobStep $save): RedirectResponse
@@ -67,15 +68,20 @@ class JobController extends Controller
         $organization = $this->organization($request);
         Gate::authorize('create', [JobPosting::class, $organization]);
 
-        $job = $save->handle($organization, null, 'requirement', $request->validated(), $request->user());
+        $job = $save->handle($organization, null, 'basics', $request->validated(), $request->user());
 
-        return to_route('org.jobs.edit', [$job, 'skills']);
+        return to_route('org.jobs.edit', [$job, 'pay']);
     }
 
-    public function edit(Request $request, JobPosting $job, string $step): Response
+    public function edit(Request $request, JobPosting $job, string $step): Response|RedirectResponse
     {
         $organization = $this->ownJob($request, $job);
         Gate::authorize('update', $job);
+
+        // Step names before D-117 (links in older emails and bookmarks).
+        if (isset(JobWizard::LEGACY_STEPS[$step])) {
+            return to_route('org.jobs.edit', [$job, JobWizard::LEGACY_STEPS[$step]], 301);
+        }
 
         return $this->wizard($organization, $job, $step);
     }
@@ -114,8 +120,24 @@ class JobController extends Controller
                 'update' => Gate::allows('update', $job),
                 'submit' => Gate::allows('submit', $job),
                 'manage' => Gate::allows('manage', $job),
+                'duplicate' => Gate::allows('create', [JobPosting::class, $organization]),
             ],
         ]);
+    }
+
+    /**
+     * Copies the job into a new draft (multi-position campaigns, D-117).
+     */
+    public function duplicate(Request $request, JobPosting $job, DuplicateJob $duplicate): RedirectResponse
+    {
+        $organization = $this->ownJob($request, $job);
+        Gate::authorize('view', $job);
+        Gate::authorize('create', [JobPosting::class, $organization]);
+
+        $copy = $duplicate->handle($job, $request->user());
+        Inertia::flash('toast', ['type' => 'success', 'message' => __('jobs.duplicated', ['code' => $copy->public_code])]);
+
+        return to_route('org.jobs.edit', [$copy, 'basics']);
     }
 
     public function submit(Request $request, JobPosting $job, SubmitJobForReview $submit): RedirectResponse
@@ -151,6 +173,7 @@ class JobController extends Controller
             'problems' => $job !== null ? JobCompliance::problems($job) : [],
             'live' => $job?->isLive() ?? false,
             'organizationVerified' => $organization->isVerified(),
+            'organizationName' => $organization->display_name,
             'agency' => $organization->type === OrganizationType::Agency,
             'options' => JobFormOptionsData::load($organization, $job),
         ]);

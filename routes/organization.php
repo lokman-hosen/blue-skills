@@ -70,9 +70,10 @@ Route::middleware(['auth', 'verified', 'user.type:org'])->prefix('org/jobs')->na
     Route::post('/', 'store')->name('store');
     Route::get('{job}', 'show')->name('show');
     Route::get('{job}/applicants', [ApplicantController::class, 'index'])->name('applicants');
-    Route::get('{job}/edit/{step}', 'edit')->whereIn('step', [...JobWizard::STEPS, 'preview'])->name('edit');
+    Route::get('{job}/edit/{step}', 'edit')->whereIn('step', [...JobWizard::STEPS, 'preview', ...array_keys(JobWizard::LEGACY_STEPS)])->name('edit');
     Route::put('{job}/steps/{step}', 'update')->whereIn('step', JobWizard::STEPS)->name('update');
     Route::post('{job}/submit', 'submit')->middleware('throttle:20,1')->name('submit');
+    Route::post('{job}/duplicate', 'duplicate')->middleware('throttle:20,1')->name('duplicate');
     Route::post('{job}/{action}', 'availability')->whereIn('action', ChangeJobAvailability::ACTIONS)->name('availability');
 });
 
